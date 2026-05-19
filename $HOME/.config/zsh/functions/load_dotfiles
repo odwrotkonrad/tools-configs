@@ -8,3 +8,5 @@ emulate -L zsh
 # -f - if file exists, override
 # -v - verbose, prints linked files
 cp -Rlfv ~dotfiles/'$HOME'/. ${HOME}/
+
+sudo cp -Rlfv ~dotfiles/etc/. /etc/

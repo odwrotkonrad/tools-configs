@@ -28,3 +28,9 @@ alias als='ls -lhAFGSW'
 alias alsa='als -O@%'
 
 alias ll='noglob list_dir_contents'
+
+# man 
+alias amans-='man -f -o' ## show relevant manpages list
+alias amanl-='man -a -w' ## show manpages as filepaths list
+alias amanp='manpath'    ## show manpath
+

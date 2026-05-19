@@ -23,13 +23,5 @@ typeset -U fpath=(
     ${fpath}
 )
 
-typeset -U manpath=(
-    /opt/X11/share/man
-    /opt/homebrew/share/man
-    /opt/local/man
-    /usr/share/man
-    ${manpath}
-)
-
 
 unset zsh_params
