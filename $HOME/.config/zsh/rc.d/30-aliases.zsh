@@ -5,8 +5,8 @@ alias abl="brew list"                   # [l]ist installed packages
 alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
 
 ## [d]efaults
-alias add="defaults find"               # [f]ind
-alias adf="defaults delete"             # [d]elete
+alias add="defaults delete"             # [f]ind
+alias adf="defaults find"               # [d]elete
 alias adr="defaults read"               # [r]ead
 alias adw="defaults write"              # [w]rite
 
@@ -15,6 +15,12 @@ alias aga="git add ."                   # [a]dd
 alias agc-="git commit -m"              # [c]ommit
 alias aglr="git remote -v"              # [l]ist [r]emotes
 alias agp="git push"                    # [p]ush
+alias agsa="git stash -u"               # [s]tash all, including untracked files
+alias agsp="git stash pop"              # [s]tash [p]op
+alias agss="git stash show"             # [s]tash [s]how
+alias agst="git stash"                  # [s]tash [t]racked only
+alias agir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent commits
+
 
 ## [l]s
 
