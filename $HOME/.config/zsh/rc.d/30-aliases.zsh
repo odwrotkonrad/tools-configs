@@ -1,11 +1,5 @@
 ### [a]lias
 
-## [g]it
-alias aga="git add ."                   # [a]dd
-alias agc-="git commit -m"              # [c]ommit
-alias agp="git push"                    # [p]ush
-alias aglr="git remote -v"              # [l]ist [r]emotes
-
 ## [b]rew
 alias abl="brew list"                   # [l]ist installed packages
 alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
@@ -14,6 +8,32 @@ alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
 alias adw="defaults write"              # [w]rite
 alias adr="defaults read"               # [r]ead
 alias adf="defaults find"               # [f]ind
+
+## [g]it
+alias aga="git add ."                   # [a]dd
+alias agc-="git commit -m"              # [c]ommit
+alias agp="git push"                    # [p]ush
+alias aglr="git remote -v"              # [l]ist [r]emotes
+
+## [l]s
+
+# -l long format
+# -A show hidden files
+# -h readable size output
+# -F denote inode type by symbol
+# -G colorized output
+# -S sort by size
+# -W display whiteouts
+alias allf='ls -lhAFGSW'     # [l]ist [f]iles
+
+# -O show file flags (chflags)
+# -@ show extended attributes (xattr)
+alias allfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
+
+## [m]an 
+alias amsl-='man -f -o'      # [s]how relevant manpages [l]ist
+alias amsfl-='man -a -w'     # [s]how manpages as [f]ilepaths [l]ist
+alias amsp='manpath'         # [s]how [m]anpath
 
 ## [ss]h
 alias asssc="ssh -G localhost"          # [s]how [c]onfig
@@ -58,25 +78,5 @@ alias asts-='stat -t "%Y-%m-%d %H:%M:%S" -f "
 ⚙️ %Sc
 "'
 
-## [l]s
-
-# -l long format
-# -A show hidden files
-# -h readable size output
-# -F denote inode type by symbol
-# -G colorized output
-# -S sort by size
-# -W display whiteouts
-alias allf='ls -lhAFGSW'     # [l]ist [f]iles
-
-# -O show file flags (chflags)
-# -@ show extended attributes (xattr)
-alias allfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
-
-## [m]an 
-alias amsl-='man -f -o'      # [s]how relevant manpages [l]ist
-alias amsfl-='man -a -w'     # [s]how manpages as [f]ilepaths [l]ist
-alias amsp='manpath'         # [s]how [m]anpath
-
-## other
+## ----
 alias ll='noglob list_dir_contents'
