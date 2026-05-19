@@ -1,0 +1,57 @@
+domains:
+
+  NSGlobalDomain:
+    Default Font: Helvetica
+    AppleShowAllExtensions: true                 # show file extensions
+    NSTableViewDefaultSizeMode: 3                # large left panel (home + other locations)
+    AppleSpacesSwitchOnActivate: true
+
+  com.apple.dock:
+    orientation: right                           # place on the right
+    tilesize: 40                                 # not too big not too small
+    autohide: true                               # auto hide
+    autohide-delay: null                         # use default delay time for hiding
+    autohide-time-modifier: null                 # use default delay time for autoshow
+    show-recents: false                          # do not persist recently opened apps in the dock
+    mineffect: genie                             # minimize with genie effect
+    static-only: false
+    scroll-to-open: true
+    expose-group-apps: true                      # mission control: group windows by app
+
+  com.apple.screencapture:
+    disable-shadow: true
+    include-date: true
+    location: ~/ScreenCapture
+    show-thumbnail: true
+    type: png
+
+  com.apple.Safari:
+    ShowFullURLInSmartSearchField: true
+
+  com.apple.finder:
+    AppleShowAllFiles: true                      # show hidden
+    ShowPathbar: true                            # show pathbar
+    FXPreferredViewStyle: clmv                   # column view as default
+    _FXSortFoldersFirst: true                    # folders on top
+    FinderSpawnTab: true                         # open tabs instead of windows
+    FXDefaultSearchScope: SCcf                   # current folder is default search scope
+    FXRemoveOldTrashItems: false                 # do not empty bin automatically
+    FXEnableExtensionChangeWarning: false        # no warn when changing file extension
+    _FXEnableColumnAutoSizing: true              # dynamic column count, non-fixed width
+    ShowStatusBar: true                          # status bar at the bottom
+    CreateDesktop: true
+    ShowHardDrivesOnDesktop: true
+    ShowExternalHardDrivesOnDesktop: true
+    ShowRemovableMediaOnDesktop: true
+    ShowMountedServersOnDesktop: true
+
+  com.apple.menuextra.clock:
+    IsAnalog: true
+
+  kCFPreferencesAnyApplication:
+    TSMLanguageIndicatorEnabled: false           # do not show language indicator
+
+  com.apple.spaces:
+    spans-displays: true
+
+apps: [Dock, Finder, SystemUIServer, Safari]

@@ -7,6 +7,14 @@ emulate -L zsh
 # -l - create hard links
 # -f - if file exists, override
 # -v - verbose, prints linked files
-cp -Rlfv ~dotfiles/'$HOME'/. ${HOME}/
+typeset -A links=(
+  _home      ~
+  _xdg/bin   ${XDG_BIN_HOME}
+  _etc       /etc
+)
 
-sudo cp -Rlfv ~dotfiles/etc/. /etc/
+for src target in "${(@kv)links}"; do
+  sudo=
+  [[ -w $target ]] || sudo=sudo
+  $sudo cp -Rlfv ~dotfiles/$src/. $target/
+done

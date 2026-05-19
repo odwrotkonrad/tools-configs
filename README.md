@@ -17,7 +17,7 @@ My configuration files
 ```sh
 # copy files as hard links and create intermediate dirs
 # when zsh config is not yet loaded
-cp -Rlfv '$HOME'/. ${HOME}/
+cp -Rlfv _home/. ${HOME}/
 
 # when zsh config is already loaded, using function
 load_dotfiles
