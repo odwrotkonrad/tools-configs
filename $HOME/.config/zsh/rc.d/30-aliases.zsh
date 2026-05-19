@@ -10,6 +10,11 @@ alias aglr="git remote -v"              # [l]ist [r]emotes
 alias abl="brew list"                   # [l]ist installed packages
 alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
 
+## [d]efaults
+alias adw="defaults write"              # [w]rite
+alias adr="defaults read"               # [r]ead
+alias adf="defaults find"               # [f]ind
+
 ## [ss]h
 alias asssc="ssh -G localhost"          # [s]how [c]onfig
 
