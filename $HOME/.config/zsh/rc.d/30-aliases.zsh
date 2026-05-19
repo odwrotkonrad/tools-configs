@@ -5,15 +5,16 @@ alias abl="brew list"                   # [l]ist installed packages
 alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
 
 ## [d]efaults
-alias adw="defaults write"              # [w]rite
+alias add="defaults find"               # [f]ind
+alias adf="defaults delete"             # [d]elete
 alias adr="defaults read"               # [r]ead
-alias adf="defaults find"               # [f]ind
+alias adw="defaults write"              # [w]rite
 
 ## [g]it
 alias aga="git add ."                   # [a]dd
 alias agc-="git commit -m"              # [c]ommit
-alias agp="git push"                    # [p]ush
 alias aglr="git remote -v"              # [l]ist [r]emotes
+alias agp="git push"                    # [p]ush
 
 ## [l]s
 
@@ -31,8 +32,8 @@ alias allf='ls -lhAFGSW'     # [l]ist [f]iles
 alias allfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
 
 ## [m]an 
-alias amsl-='man -f -o'      # [s]how relevant manpages [l]ist
 alias amsfl-='man -a -w'     # [s]how manpages as [f]ilepaths [l]ist
+alias amsl-='man -f -o'      # [s]how relevant manpages [l]ist
 alias amsp='manpath'         # [s]how [m]anpath
 
 ## [ss]h
