@@ -22,6 +22,8 @@ typeset -A dirs_named=(
     dotfiles    "${HOME}/.local/share/dotfiles"             # cd ~dotfiles
     projects    "${HOME}/.local/share/projects"             # cd ~projects
     state       "${HOME}/.local/state"                      # cd ~state
+    desktop     "${HOME}/Desktop"
+    capture     "${HOME}/Desktop/ScreenCapture"
 )
 for k v in "${(@kv)dirs_named}"; hash -d "$k=$v"            # hash -d adds dirs to cd with ~name
 
