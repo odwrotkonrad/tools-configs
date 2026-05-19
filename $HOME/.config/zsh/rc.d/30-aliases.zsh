@@ -14,7 +14,16 @@ alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
 alias asssc="ssh -G localhost"  # [s]how [c]onfig
 
 ## [st]at
-alias asts='stat -f "%HT | %A | %u(%Su):%g(%Sg) | %z bytes | %N"' # [s]imple view
+# -f format
+#   HT - human readable type of file; "Regular File" etc.
+#   A  - permissions in octal; "644" etc.
+#   u  - owner id
+#   U  - owner name
+#   g  - group id
+#   G  - group name
+#   z  - size in bytes
+#   N  - name of filename
+alias asts='stat -f "%HT | %A | %u(%Su):%g(%Sg) | %z bytes | %N"' # [s]how file info
 
 ## [l]s
 
@@ -29,7 +38,7 @@ alias all='ls -lhAFGSW'     # [l]ist
 
 # -O show file flags (chflags)
 # -@ show extended attributes (xattr)
-alias alsa='als -O@%'        # [l]ist [a]ttributes
+alias alsa='als -O@%'       # [l]ist [a]ttributes
 
 ## [m]an 
 alias aml-='man -f -o'      # show relevant manpages [l]ist
