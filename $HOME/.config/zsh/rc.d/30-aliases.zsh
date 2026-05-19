@@ -1,36 +1,40 @@
-alias ga="git add ."
-alias gc="git commit -m"
-alias gp="git push"
-alias gr="git remote -v"
+### [a]lias
 
-alias bl="brew list"
-alias bu="brew update && brew upgrade"
+## [g]it
+alias aga="git add ."           # [a]dd
+alias agc="git commit -m"       # [c]ommit
+alias agp="git push"            # [p]ush
+alias aglr="git remote -v"      # [l]ist [r]emotes
 
-alias ssh_show_config="ssh -G localhost"
+## [b]rew
+alias abl="brew list"           # [l]ist installed packages
+alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
 
-alias stat_h='stat -f "%HT | %A | %u(%Su):%g(%Sg) | %z bytes | %N"'
+## [ss]h
+alias asssc="ssh -G localhost"  # [s]how [c]onfig
 
-alias hist_refresh="fc -RL"
+## [st]at
+alias asts='stat -f "%HT | %A | %u(%Su):%g(%Sg) | %z bytes | %N"' # [s]imple view
 
-# list
-#   -l long format
-#   -A show hidden files except . and ..
-#   -h readable size output
-#   -F denote inode type by symbol
-#   -G colorized output
-#   -S sort by size
-#   -W display whiteouts
-alias als='ls -lhAFGSW'
+## [l]s
 
-# list attributes
-#   -O show file flags (chflags)
-#   -@ show extended attributes (xattr)
-alias alsa='als -O@%'
+# -l long format
+# -A show hidden files except . and ..
+# -h readable size output
+# -F denote inode type by symbol
+# -G colorized output
+# -S sort by size
+# -W display whiteouts
+alias all='ls -lhAFGSW'     # [l]ist
 
+# -O show file flags (chflags)
+# -@ show extended attributes (xattr)
+alias alsa='als -O@%'        # [l]ist [a]ttributes
+
+## [m]an 
+alias aml-='man -f -o'      # show relevant manpages [l]ist
+alias amfl-='man -a -w'     # show manpages as [f]ilepaths [l]ist
+alias amp='manpath'         # show [m]anpath
+
+## other
 alias ll='noglob list_dir_contents'
-
-# man 
-alias amans-='man -f -o' ## show relevant manpages list
-alias amanl-='man -a -w' ## show manpages as filepaths list
-alias amanp='manpath'    ## show manpath
-
