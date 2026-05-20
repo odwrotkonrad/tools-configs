@@ -49,6 +49,13 @@ alias amsp='manpath'        # [s]how [m]anpath
 alias aplt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
 alias apltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 
+
+## [p]s[t]ree - list processes as a tree
+# -g specify graphics (2 = VT100)
+# -p specify process id
+alias aptlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
+alias aptl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
+
 ## [ss]h
 alias asssc="ssh -G localhost"          # [s]how [c]onfig
 
