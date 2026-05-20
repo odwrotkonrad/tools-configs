@@ -53,8 +53,10 @@ alias apltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 ## [p]s[t]ree - list processes as a tree
 # -g specify graphics (2 = VT100)
 # -p specify process id
-alias aptlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
+# -s match string 
 alias aptl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
+alias aptlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
+alias apts+='pstree -g 2 -s '           # [s]earch for string [+]argument
 
 ## [ss]h
 alias asssc="ssh -G localhost"          # [s]how [c]onfig
