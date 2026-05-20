@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+yq=/opt/homebrew/bin/yq
+
 yaml=$(</dev/stdin)
 
 # apply settings
@@ -11,10 +13,10 @@ while IFS=$'\t' read -r domain key tag value; do
     '!!float') defaults write  "$domain" "$key" -float  "$value" ;;
     '!!null')  defaults delete "$domain" "$key" 2>/dev/null ;;
   esac
-done < <(yq -r '
+done < <($yq -r '
   .domains | to_entries[] | .key as $d | .value | to_entries[] |
   [$d, .key, (.value | tag), (.value | tostring)] | @tsv
 ' <<<"$yaml")
 
 # restart affected apps
-xargs -n1 killall 2>/dev/null < <(yq -r '.apps[]' <<<"$yaml")
+xargs -n1 killall 2>/dev/null < <($yq -r '.apps[]' <<<"$yaml")

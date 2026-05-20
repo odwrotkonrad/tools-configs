@@ -18,7 +18,7 @@ My configuration files
 cp -Rlfv _home/. ${HOME}/
 
 # use the function to load full dotfiles
-load_dotfiles
+fn_load_dotfiles
 ```
 
 ## Comments - Information Annotation 

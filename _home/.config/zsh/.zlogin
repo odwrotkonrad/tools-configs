@@ -1,1 +1,1 @@
-[[ "$OSTYPE" =~ ^darwin ]] && configure_macos < ${XDG_CONFIG_HOME}/macos/defaults.yml
+# 8th file sourced after /etc/zlogin; only for login shells

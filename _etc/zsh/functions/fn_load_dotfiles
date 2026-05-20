@@ -11,6 +11,7 @@ typeset -A links=(
   _home      ~
   _xdg/bin   ${XDG_BIN_HOME}
   _etc       /etc
+  _usr       /usr
 )
 
 for src target in "${(@kv)links}"; do

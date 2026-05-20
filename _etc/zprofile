@@ -1,0 +1,2 @@
+# 3rd file sourced after $ZDOTDIR/.zshenv, only for login shells
+[[ "$OSTYPE" =~ ^darwin ]] && /usr/local/bin/configure_os_defaults < /etc/os/defaults.yml

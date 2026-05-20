@@ -1,13 +1,5 @@
 emulate -L zsh
 
-# TODO install brew
-
-# install brew managed tools
-
-brew bundle install --global
-
-# install asdf managed tools
-
 typeset -rA plugins=(
     nodejs    "https://github.com/asdf-vm/asdf-nodejs.git"
     python    "https://github.com/danhper/asdf-python.git"
@@ -18,7 +10,7 @@ typeset -rA plugins=(
 )
 
 for name url in ${(kv)plugins}; do
-    asdf plugin add "$name" "$url"
+    sudo asdf plugin add "$name" "$url"
 done
 
 asdf install # install versions of tools from .tool-versions

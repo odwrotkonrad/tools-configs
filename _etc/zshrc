@@ -1,0 +1,57 @@
+# 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
+
+typeset -A dirs_env=(
+    XDG_BIN_HOME        "${HOME}/.local/bin"                # xdg - bin recommendation
+    XDG_CACHE_HOME      "${HOME}/.cache"                    # user-specific non-esseintial data
+    XDG_CONFIG_HOME     "${HOME}/.config"                   # user-specific configuration files
+    XDG_DATA_HOME       "${HOME}/.local/share"              # user-specific data files
+    XDG_STATE_HOME      "${HOME}/.local/state"              # user-specific state data
+    XDG_LOCAL           "${HOME}/.local"
+)
+typeset -a dirs_other=(
+    "${HOME}/.local/state/zsh"                              # zsh history
+)
+mkdir -p ${(v)dirs_env} ${dirs_other}                       # create dirs if non existing
+
+
+hash -d bin="$HOME/.local/bin" \
+        cache="$HOME/.cache" \
+        config="$HOME/.config" \
+        data="$HOME/.local/share" \
+        state="$HOME/.local/state" \
+        desktop="$HOME/Desktop" \
+        capture="$HOME/Desktop/ScreenCapture"     # adds dirs to cd with ~name
+
+
+typeset -A env_vars=(
+    EDITOR              "vim"
+    FCEDIT              "vim"
+    LC_COLLATE          "pl_PL.UTF-8"
+    LC_CTYPE            "en_US.UTF-8"
+    LC_MESSAGES         "en_US.UTF-8"
+    LC_NUMERIC          "en_US.UTF-8"
+    LC_TIME             "en_US.UTF-8"
+    VISUAL              "vim"
+)
+for k v in "${(@kv)dirs_env}" "${(@kv)env_vars}"; export "$k=$v"
+
+
+typeset -U path=(
+    /opt/homebrew/bin                                       # homebrew bin
+    /opt/homebrew/share/google-cloud-sdk/bin                # gcloud bin
+    /opt/local/bin
+    /opt/X11/bin
+    /usr/local/bin
+    /usr/bin
+    /usr/sbin
+    /sbin
+    /bin
+)
+
+
+#[I] source all files from zsh/rc.d in ascending by name order
+for rc in /etc/zsh/rc.d/*.zsh(on); {
+  . $rc
+}
+
+unset dirs_env dirs_other dirs_named env_vars
