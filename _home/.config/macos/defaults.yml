@@ -54,4 +54,7 @@ domains:
   com.apple.spaces:
     spans-displays: true
 
+  com.apple.WindowManager:
+    StandardHideWidgets: true                   # hide widgets on desktop, if dekstop is dirty with apps windows
+
 apps: [Dock, Finder, SystemUIServer, Safari]
