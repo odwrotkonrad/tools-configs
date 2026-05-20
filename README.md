@@ -4,22 +4,20 @@ My configuration files
 
 ## Configured Tools
 
-- zsh - https://zsh.sourceforge.io/
-- ssh - https://man7.org/linux/man-pages/man1/ssh.1.html
 - asdf - https://asdf-vm.com/
 - direnv - https://direnv.net/
-- alacritty - https://alacritty.org/
 - git - https://git-scm.com/
-- homebrew - https://brew.sh/
+- kitty - https://sw.kovidgoyal.net/kitty/
+- ssh - https://man7.org/linux/man-pages/man1/ssh.1.html
+- zsh - https://zsh.sourceforge.io/
 
 ## Loading Configuration
 
 ```sh
-# copy files as hard links and create intermediate dirs
-# when zsh config is not yet loaded
+# load parts that include load_dotfiles function definition
 cp -Rlfv _home/. ${HOME}/
 
-# when zsh config is already loaded, using function
+# use the function to load full dotfiles
 load_dotfiles
 ```
 
