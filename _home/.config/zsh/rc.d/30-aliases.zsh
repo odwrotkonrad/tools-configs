@@ -24,11 +24,11 @@ alias agir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent
 
 ## [l]s
 
-# -l long format
-# -A show hidden files
-# -h readable size output
+# -A include hidden files
 # -F denote inode type by symbol
 # -G colorized output
+# -h readable size output
+# -l long format
 # -S sort by size
 # -W display whiteouts
 alias allf='ls -lhAFGSW'     # [l]ist [f]iles
@@ -38,9 +38,16 @@ alias allf='ls -lhAFGSW'     # [l]ist [f]iles
 alias allfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
 
 ## [m]an 
-alias amsfl-='man -a -w'     # [s]how manpages as [f]ilepaths [l]ist
-alias amsl-='man -f -o'      # [s]how relevant manpages [l]ist
-alias amsp='manpath'         # [s]how [m]anpath
+alias aml-='man -f -o'      # [l]ist relevant manpages
+alias amlf-='man -a -w'     # [l]ist manpages as [f]ilepaths
+alias amsp='manpath'        # [s]how [m]anpath
+
+## [p]s - process status
+# -o specify output columns
+# -ww wide output (do not truncate cmd)
+
+alias aplt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
+alias apltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 
 ## [ss]h
 alias asssc="ssh -G localhost"          # [s]how [c]onfig
