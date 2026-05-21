@@ -1,0 +1,62 @@
+" Enable mouse support in all modes (normal, visual, insert, command)
+set mouse=a
+
+" Yank/paste use the system clipboard by default (the + register)
+set clipboard=unnamedplus
+
+" Show line numbers
+set number
+
+" (duplicate of the mouse=a above — can be removed)
+set mouse=a
+
+" Keep up to 1000 levels of undo
+set undolevels=1000
+
+" A tab counts as 2 columns wide
+set tabstop=2
+
+" Auto-wrap inserted text at 20 characters (very narrow — see note)
+set textwidth=20
+
+" Remember up to 1000 lines of command/search history
+set history=1000
+
+" Wrap long lines visually (display only, doesn't insert line breaks)
+set wrap
+
+" When wrapping, break at word boundaries instead of mid-word
+set linebreak
+
+" Highlight all matches of the last search ('hlsearch')
+set hls
+
+" Case-insensitive searching ('ignorecase')
+set ic
+
+" cmd + c -> copy
+vnoremap <Esc>[99;9u "*y
+
+" Alt+Left / Alt+Right: move by word (normal + insert mode)
+nnoremap <M-Left>  b
+nnoremap <M-Right> w
+inoremap <M-Left>  <C-o>b
+inoremap <M-Right> <C-o>w
+
+" Alt+Up / Alt+Down: jump 10 lines (normal + visual mode)
+nnoremap <M-Up>   10k
+nnoremap <M-Down> 10j
+vnoremap <M-Up>   10k
+vnoremap <M-Down> 10j
+
+" Home / End: jump to top / bottom of file (overrides default line start/end)
+nnoremap <Home> gg
+nnoremap <End>  G
+vnoremap <Home> gg
+vnoremap <End>  G
+
+" Enable persistent undo — undo history is saved to disk and survives
+set undofile
+
+" Where to store the undo files.
+set undodir=$XDG_STATE_HOME/vim/undo//

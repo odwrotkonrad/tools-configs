@@ -12,6 +12,7 @@ typeset -A dirs_env=(
 )
 typeset -a dirs_other=(
     "${HOME}/.local/state/zsh"                              # zsh history                   
+    "${HOME}/.local/state/vim/undo"              
 )
 mkdir -p ${(v)dirs_env} ${dirs_other}                       # create dirs if non existing
 
