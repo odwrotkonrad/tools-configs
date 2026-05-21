@@ -1,8 +1,9 @@
-#!/usr/bin/env zsh
+#!/bin/zsh
 
 yq=/opt/homebrew/bin/yq
 
 yaml=$(</dev/stdin)
+
 
 # apply settings
 while IFS=$'\t' read -r domain key tag value; do
@@ -11,7 +12,7 @@ while IFS=$'\t' read -r domain key tag value; do
     '!!bool')  defaults write  "$domain" "$key" -bool   "$value" ;;
     '!!int')   defaults write  "$domain" "$key" -int    "$value" ;;
     '!!float') defaults write  "$domain" "$key" -float  "$value" ;;
-    '!!null')  defaults delete "$domain" "$key" 2>/dev/null ;;
+    '!!null')  defaults delete "$domain" "$key" ;;
   esac
 done < <($yq -r '
   .domains | to_entries[] | .key as $d | .value | to_entries[] |

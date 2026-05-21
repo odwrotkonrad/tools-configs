@@ -1,5 +1,7 @@
 # 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
 
+disable log # it's shadowing /usr/bin/log binary
+
 typeset -A dirs_env=(
     XDG_BIN_HOME        "${HOME}/.local/bin"                # xdg - bin recommendation
     XDG_CACHE_HOME      "${HOME}/.cache"                    # user-specific non-esseintial data
@@ -9,7 +11,7 @@ typeset -A dirs_env=(
     XDG_LOCAL           "${HOME}/.local"
 )
 typeset -a dirs_other=(
-    "${HOME}/.local/state/zsh"                              # zsh history
+    "${HOME}/.local/state/zsh"                              # zsh history                   
 )
 mkdir -p ${(v)dirs_env} ${dirs_other}                       # create dirs if non existing
 
@@ -20,6 +22,7 @@ hash -d bin="$HOME/.local/bin" \
         data="$HOME/.local/share" \
         state="$HOME/.local/state" \
         desktop="$HOME/Desktop" \
+        ulog="${HOME}/.local/log" \
         capture="$HOME/Desktop/ScreenCapture"     # adds dirs to cd with ~name
 
 
