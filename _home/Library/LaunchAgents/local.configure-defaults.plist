@@ -2,19 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Label</key>
-    <string>local.configure-defaults</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/local/bin/configure_defaults</string>
-    </array>
-    <key>StandardInPath</key>
-    <string>/etc/defaults.yml</string>
-    <key>StandardOutPath</key>
-    <string>/tmp/configure-defaults.log</string>
-    <key>StandardErrorPath</key>
-    <string>/tmp/configure-defaults.log</string>
-    <key>RunAtLoad</key>
-    <true/>
+	<key>Label</key>
+	<string>local.configure-defaults</string>
+	<key>LimitLoadToSessionType</key>
+	<array>
+		<string>Aqua</string>
+	</array>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/bin/configure_defaults</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/konradodwrot/Library/Logs/configure-defaults.log</string>
+	<key>StandardInPath</key>
+	<string>/etc/defaults.yml</string>
+	<key>StandardOutPath</key>
+	<string>/Users/konradodwrot/Library/Logs/configure-defaults.log</string>
+	<key>ThrottleInterval</key>
+	<integer>1</integer>
 </dict>
 </plist>

@@ -25,7 +25,16 @@ alias agst="git stash"                  # [s]tash [t]racked only
 alias agir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent commits
 
 
-## [l]s
+## [l]aunch[c]tl - launchd interface
+
+alias alcb+="launchctl bootstrap"            # [b]ootstrap
+alias alcbo+="launchctl bootout --wait"      # [b]oot[o]ut
+alias alck+="launchctl kickstart -k"         # [k]ickstart  (-k - shutdown before starting)
+alias alcl="launchctl list"                  # [l]ist
+alias alcp+="launchctl print"                # [p]rint
+
+
+## [ls]
 # -A include hidden files
 # -F denote inode type by symbol
 # -G colorized output
@@ -33,32 +42,39 @@ alias agir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent
 # -l long format
 # -S sort by size
 # -W display whiteouts
-alias allf='ls -lhAFGSW'     # [l]ist [f]iles
+alias alslf='ls -lhAFGSW'     # [l]ist [f]iles
 
 # -O show file flags (chflags)
 # -@ show extended attributes (xattr)
-alias allfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
+alias alslfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
 
 ## [m]an 
 alias aml-='man -f -o'      # [l]ist relevant manpages
 alias amlf-='man -a -w'     # [l]ist manpages as [f]ilepaths
 alias amsp='manpath'        # [s]how [m]anpath
 
-## [p]s - process status
+## [pl]util - property list utility
+alias aplp+='plutil -p'                  # [p]rint
+alias apll+='plutil -lint'               # [l]int
+alias aplc+='plutil -convert'            # [c]onvert 
+alias aplcj+='plutil -convert json'      # [c]onvert to json
+alias aplcx+='plutil -convert xml1'      # [c]onvert to xml
+
+## [ps] - process status
 # -o specify output columns
 # -ww wide output (do not truncate cmd)
 
-alias aplt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
-alias apltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
+alias apslt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
+alias apsltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 
 
-## [p]s[t]ree - list processes as a tree
+## [pst]ree - list processes as a tree
 # -g specify graphics (2 = VT100)
 # -p specify process id
 # -s match string 
-alias aptl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
-alias aptlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
-alias apts+='pstree -g 2 -s '           # [s]earch for string [+]argument
+alias apsttl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
+alias apsttlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
+alias apstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
 
 
 ## [ss]h
