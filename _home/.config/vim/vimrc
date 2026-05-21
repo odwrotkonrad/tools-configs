@@ -49,11 +49,11 @@ nnoremap <M-Down> 10j
 vnoremap <M-Up>   10k
 vnoremap <M-Down> 10j
 
-" Home / End: jump to top / bottom of file (overrides default line start/end)
-nnoremap <Home> gg
-nnoremap <End>  G
-vnoremap <Home> gg
-vnoremap <End>  G
+" Cmd+Up / Cmd+Down: jump to top / bottom of file
+nnoremap <Esc>[1;9A gg
+nnoremap <Esc>[1;9B G
+vnoremap <Esc>[1;9A gg
+vnoremap <Esc>[1;9B G
 
 " Enable persistent undo — undo history is saved to disk and survives
 set undofile

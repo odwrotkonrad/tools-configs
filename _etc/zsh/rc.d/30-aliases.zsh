@@ -25,6 +25,10 @@ alias agst="git stash"                  # [s]tash [t]racked only
 alias agir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent commits
 
 
+## [k]itten
+
+alias akki-="kitten show-key -m kitty"       # show [k]eys sequences [i]nteractively
+
 ## [l]aunch[c]tl - launchd interface
 
 alias alcb+="launchctl bootstrap"            # [b]ootstrap
@@ -122,3 +126,5 @@ alias asts+='stat -t "%Y-%m-%d %H:%M:%S" -f "
 
 ## misc
 alias afld='noglob fn_list_dir' # [f]unction [l]ist [d]ir
+
+
