@@ -79,8 +79,24 @@ nnoremap Ú <C-r>
 " Cmd+S: save file
 nnoremap <Esc>[115;9u :update<CR>
 
-" Cmd+W: quit, prompting t save if there are unsaved changes
+" Cmd+W: quit, prompting to save if there are unsaved changes
 nnoremap <Esc>[119;9u :confirm q<CR>
+
+" Cmd+Shift+Up: select from cursor to top of file
+nnoremap <Esc>[1;10A vgg
+
+" Cmd+Shift+Down: select from cursor to bottom of file
+nnoremap <Esc>[1;10B vG
+
+" Shift+Arrows: start/extend selection (normal -> enters visual, visual -> extends)
+nnoremap <Esc>[1;2A vk
+nnoremap <Esc>[1;2B vj
+nnoremap <Esc>[1;2D vh
+nnoremap <Esc>[1;2C vl
+vnoremap <Esc>[1;2A k
+vnoremap <Esc>[1;2B j
+vnoremap <Esc>[1;2D h
+vnoremap <Esc>[1;2C l
 
 " persistent undo — undo history is saved to disk and survives
 set undofile
