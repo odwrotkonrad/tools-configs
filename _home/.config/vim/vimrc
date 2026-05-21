@@ -1,16 +1,13 @@
 set virtualedit=onemore
 
-" Enable mouse support in all modes (normal, visual, insert, command)
+" Enable mouse support
 set mouse=a
 
-" Yank/paste use the system clipboard by default (the + register)
+" Yank/paste use the system clipboard by default
 set clipboard=unnamedplus
 
 " Show line numbers
 set number
-
-" (duplicate of the mouse=a above — can be removed)
-set mouse=a
 
 " Keep up to 1000 levels of undo
 set undolevels=1000
@@ -24,16 +21,16 @@ set textwidth=100
 " Remember up to 1000 lines of command/search history
 set history=1000
 
-" Wrap long lines visually (display only, doesn't insert line breaks)
+" toggle line wrap
 set wrap
 
-" When wrapping, break at word boundaries instead of mid-word
+" line wrap on word boundaries
 set linebreak
 
-" Highlight all matches of the last search ('hlsearch')
+" highlight all matches when searching
 set hls
 
-" Case-insensitive searching ('ignorecase')
+" ignore case when searching
 set ic
 
 " cmd + c -> copy
@@ -59,7 +56,6 @@ nnoremap <Esc>[1;9B G
 nnoremap <BS> X
 
 " Alt+Backspace: delete word backward
-" NOTE: sequence ^[[127;3u derived from pattern — verify
 nnoremap <Esc>[127;3u db
 
 " Cmd+Backspace: delete to start of line
@@ -71,14 +67,14 @@ nnoremap <Esc>[122;9u u
 " Cmd+Shift+Z: redo
 nnoremap Ú <C-r>
 
-" Cmd+S: save file (if modified)
+" Cmd+S: save file
 nnoremap <Esc>[115;9u :update<CR>
 
 " Cmd+W: quit, prompting to save if there are unsaved changes
 nnoremap <Esc>[119;9u :confirm q<CR>
 
-" Enable persistent undo — undo history is saved to disk and survives
+" persistent undo — undo history is saved to disk and survives
 set undofile
 
-" Where to store the undo files.
+" undo files location
 set undodir=$XDG_STATE_HOME/vim/undo//
