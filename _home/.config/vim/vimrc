@@ -61,6 +61,15 @@ nnoremap <Esc>[127;3u db
 " Cmd+Backspace: delete to start of line
 nnoremap <Esc>[127;9u d0
 
+" Delete: delete char forward
+nnoremap <Del> x
+
+" Alt+Delete: delete word forward
+nnoremap <Esc>[3;3~ dw
+
+" Cmd+Delete: delete to end of line
+nnoremap <Esc>[3;9~ d$
+
 " Cmd+Z: undo
 nnoremap <Esc>[122;9u u
 
@@ -70,7 +79,7 @@ nnoremap Ú <C-r>
 " Cmd+S: save file
 nnoremap <Esc>[115;9u :update<CR>
 
-" Cmd+W: quit, prompting to save if there are unsaved changes
+" Cmd+W: quit, prompting t save if there are unsaved changes
 nnoremap <Esc>[119;9u :confirm q<CR>
 
 " persistent undo — undo history is saved to disk and survives
