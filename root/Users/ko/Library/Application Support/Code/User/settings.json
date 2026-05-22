@@ -1,4 +1,7 @@
 {
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
   "[graphql]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
