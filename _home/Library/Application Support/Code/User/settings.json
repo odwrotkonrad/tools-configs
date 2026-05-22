@@ -92,6 +92,9 @@
   "prettier.useEditorConfig": true,
   "ruff.configuration": "~/.config/ruff/ruff.toml",
   "ruff.format.preview": true,
+  "search.exclude": {
+    "**/.user/**": true
+  },
   "terminal.external.osxExec": "kitty.app",
   "window.autoDetectColorScheme": true,
   "window.commandCenter": false,
@@ -99,7 +102,7 @@
   "workbench.activityBar.location": "top",
   "workbench.browser.showInTitleBar": false,
   "workbench.editor.enablePreview": false,
-  "workbench.editor.showTabs": "multiple",
+  "workbench.editor.showTabs": "single",
   "workbench.layoutControl.enabled": false,
   "workbench.preferredDarkColorTheme": "Dark Modern",
   "workbench.preferredLightColorTheme": "Quiet Light",
