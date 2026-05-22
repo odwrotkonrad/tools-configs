@@ -1,12 +1,8 @@
 # DESCRIPTION
 #   install config files by creating hard links of all leaf config files, creating dirs on the fly
-#   files not tracked by dotfiles are not touched 
+#   files not tracked by dotfiles are not touched
 emulate -L zsh
 
-# -R - entire subtree
-# -l - create hard links
-# -f - if file exists, override
-# -v - verbose, prints linked files
 typeset -A links=(
   _home      ~
   _xdg/bin   ${XDG_BIN_HOME}
@@ -17,5 +13,10 @@ typeset -A links=(
 for src target in "${(@kv)links}"; do
   sudo=
   [[ -w $target ]] || sudo=sudo
-  $sudo cp -Rlfv ~dotfiles/$src/. $target/
+
+  # -R - entire subtree
+  # -s - create symbolic links
+  # -f - if file exists, override
+  # -v - verbose, prints linked files
+  $sudo cp -Rsfv ~dotfiles/$src/. $target/
 done

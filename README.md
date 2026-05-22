@@ -15,18 +15,17 @@ My configuration files
 
 ```sh
 # load parts that include load_dotfiles function definition
-cp -Rlfv _home/. ${HOME}/
+cp -Rsfv _home/. ${HOME}/
 
 # use the function to load full dotfiles
 fn_load_dotfiles
 ```
 
-## Comments - Information Annotation 
+## Comments - Information Annotation
 
 Configuration is annotated with comments to justify selection in following format:
 
-
-### #> - Where can this be read about? 
+### #> - Where can this be read about?
 
 Notation:
 
@@ -84,7 +83,6 @@ Example:
 CORRECT_ALL #[O] not useful when advanced completions are on
 ```
 
-
 ### #[I] - Info - Explanatory Information
 
 Notation:
@@ -101,9 +99,10 @@ PS1  '%# '  #[I] # for root, % for non root
 
 ## Contributions
 
-I'd be glad to accept contributions in form of public as well as private criticizm, discussion and questions. I'm actively monitoring: 
+I'd be glad to accept contributions in form of public as well as private criticizm, discussion and questions. I'm actively monitoring:
+
 - gitlab work items
-- github issues 
+- github issues
 - email: odwrotkonrad@gmail.com
 
 ## Source Code
