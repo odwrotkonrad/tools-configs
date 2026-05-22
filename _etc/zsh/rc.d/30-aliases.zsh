@@ -52,7 +52,7 @@ alias alslf='ls -lhAFGSW'     # [l]ist [f]iles
 # -@ show extended attributes (xattr)
 alias alslfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
 
-## [m]an 
+## [m]an
 alias aml-='man -f -o'      # [l]ist relevant manpages
 alias amlf-='man -a -w'     # [l]ist manpages as [f]ilepaths
 alias amsp='manpath'        # [s]how [m]anpath
@@ -60,7 +60,7 @@ alias amsp='manpath'        # [s]how [m]anpath
 ## [pl]util - property list utility
 alias aplp+='plutil -p'                  # [p]rint
 alias apll+='plutil -lint'               # [l]int
-alias aplc+='plutil -convert'            # [c]onvert 
+alias aplc+='plutil -convert'            # [c]onvert
 alias aplcj+='plutil -convert json'      # [c]onvert to json
 alias aplcx+='plutil -convert xml1'      # [c]onvert to xml
 
@@ -75,7 +75,7 @@ alias apsltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 ## [pst]ree - list processes as a tree
 # -g specify graphics (2 = VT100)
 # -p specify process id
-# -s match string 
+# -s match string
 alias apsttl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
 alias apsttlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
 alias apstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
@@ -96,7 +96,7 @@ alias asssc="ssh -G localhost"          # [s]how [c]onfig
 #   %Sf - File flags
 #
 #   %Su - Owner name
-#   %u  - Owner ID 
+#   %u  - Owner ID
 #   %Sg - Group name
 #   %g  - Group ID
 #
@@ -126,5 +126,3 @@ alias asts+='stat -t "%Y-%m-%d %H:%M:%S" -f "
 
 ## misc
 alias afld='noglob fn_list_dir' # [f]unction [l]ist [d]ir
-
-

@@ -1,0 +1,107 @@
+{
+  "[graphql]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "chat.titleBar.signIn.enabled": false,
+  "chat.viewSessions.orientation": "stacked",
+  "claudeCode.preferredLocation": "panel",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.cursorBlinking": "solid",
+  "editor.cursorStyle": "block-outline",
+  "editor.cursorSurroundingLines": 4,
+  "editor.cursorSurroundingLinesStyle": "all",
+  "editor.cursorWidth": 8,
+  "editor.find.addExtraSpaceOnTop": false,
+  "editor.find.autoFindInSelection": "multiline",
+  "editor.find.loop": false,
+  "editor.fontFamily": "Source Code Pro",
+  "editor.fontSize": 14,
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "editorconfig.generateAuto": false,
+  "editorconfig.showMenuEntry": false,
+  "files.autoSave": "off",
+  "files.insertFinalNewline": true,
+  "git.blame.editorDecoration.template": "${hashShort}, (${authorDateAgo}), ${subject}",
+  "git.blame.ignoreWhitespace": true,
+  "git.branchSortOrder": "alphabetically",
+  "git.confirmCommittedDelete": false,
+  "git.confirmEmptyCommits": false,
+  "git.confirmSync": false,
+  "git.countBadge": "off",
+  "git.decorations.enabled": false,
+  "git.defaultCloneDirectory": "~/projects/",
+  "git.openAfterClone": "always",
+  "git.openDiffOnClick": false,
+  "git.promptToSaveFilesBeforeCommit": "never",
+  "git.promptToSaveFilesBeforeStash": "never",
+  "git.repositoryScanIgnoredFolders": [
+    "node_modules",
+    ".user"
+  ],
+  "git.showActionButton": {
+    "commit": false,
+    "publish": false,
+    "sync": false
+  },
+  "git.showCommitInput": false,
+  "git.showProgress": false,
+  "git.suggestSmartCommit": false,
+  "git.timeline.showAuthor": false,
+  "git.timeline.showUncommitted": true,
+  "git.untrackedChanges": "mixed",
+  "git.useEditorAsCommitInput": false,
+  "github.copilot.enable": {
+    "*": false,
+    "markdown": false,
+    "plaintext": false,
+    "scminput": false
+  },
+  "github.showAvatar": false,
+  "prettier.configPath": "~/.config/prettier/.prettierrc.yml",
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": true,
+  "ruff.configuration": "~/.config/ruff/ruff.toml",
+  "ruff.format.preview": true,
+  "terminal.external.osxExec": "kitty.app",
+  "window.autoDetectColorScheme": true,
+  "window.commandCenter": false,
+  "workbench.activityBar.compact": true,
+  "workbench.activityBar.location": "top",
+  "workbench.browser.showInTitleBar": false,
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.showTabs": "multiple",
+  "workbench.layoutControl.enabled": false,
+  "workbench.preferredDarkColorTheme": "Dark Modern",
+  "workbench.preferredLightColorTheme": "Quiet Light",
+  "workbench.sideBar.location": "left"
+}

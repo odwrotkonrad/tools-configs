@@ -34,69 +34,70 @@ set hls
 set ic
 
 " cmd + c -> copy
-vnoremap <Esc>[99;9u "*y
+vmap <Esc>[99;9u "+y
+
 
 " Alt+Left / Alt+Right: move by word
-nnoremap <M-Left>  b
-nnoremap <M-Right> w
+nmap <M-Left>  b
+nmap <M-Right> w
 
 " Cmd+Left / Cmd+Right: beginning (first non-blank) / end of line
-nnoremap <Esc>[1;9D ^
-nnoremap <Esc>[1;9C $
+nmap <Esc>[1;9D ^
+nmap <Esc>[1;9C $
 
 " Alt+Up / Alt+Down: jump 10 lines
-nnoremap <M-Up>   10k
-nnoremap <M-Down> 10j
+nmap <M-Up>   10k
+nmap <M-Down> 10j
 
 " Cmd+Up / Cmd+Down: jump to top / bottom of file
-nnoremap <Esc>[1;9A gg
-nnoremap <Esc>[1;9B G
+nmap <Esc>[1;9A gg
+nmap <Esc>[1;9B G
 
 " Plain backspace: delete one char back
-nnoremap <BS> X
+nmap <BS> X
 
 " Alt+Backspace: delete word backward
-nnoremap <Esc>[127;3u db
+nmap <Esc>[127;3u db
 
 " Cmd+Backspace: delete to start of line
-nnoremap <Esc>[127;9u d0
+nmap <Esc>[127;9u d0
 
 " Delete: delete char forward
-nnoremap <Del> x
+nmap <Del> x
 
 " Alt+Delete: delete word forward
-nnoremap <Esc>[3;3~ dw
+nmap <Esc>[3;3~ dw
 
 " Cmd+Delete: delete to end of line
-nnoremap <Esc>[3;9~ d$
+nmap <Esc>[3;9~ d$
 
 " Cmd+Z: undo
-nnoremap <Esc>[122;9u u
+nmap <Esc>[122;9u u
 
 " Cmd+Shift+Z: redo
-nnoremap Ú <C-r>
+nmap Ú <C-r>
 
 " Cmd+S: save file
-nnoremap <Esc>[115;9u :update<CR>
+nmap <Esc>[115;9u :update<CR>
 
 " Cmd+W: quit, prompting to save if there are unsaved changes
-nnoremap <Esc>[119;9u :confirm q<CR>
+nmap <Esc>[119;9u :confirm q<CR>
 
 " Cmd+Shift+Up: select from cursor to top of file
-nnoremap <Esc>[1;10A vgg
+nmap <Esc>[1;10A vgg
 
 " Cmd+Shift+Down: select from cursor to bottom of file
-nnoremap <Esc>[1;10B vG
+nmap <Esc>[1;10B vG
 
 " Shift+Arrows: start/extend selection (normal -> enters visual, visual -> extends)
-nnoremap <Esc>[1;2A vk
-nnoremap <Esc>[1;2B vj
-nnoremap <Esc>[1;2D vh
-nnoremap <Esc>[1;2C vl
-vnoremap <Esc>[1;2A k
-vnoremap <Esc>[1;2B j
-vnoremap <Esc>[1;2D h
-vnoremap <Esc>[1;2C l
+nmap <Esc>[1;2A vk
+nmap <Esc>[1;2B vj
+nmap <Esc>[1;2D vh
+nmap <Esc>[1;2C vl
+vmap <Esc>[1;2A k
+vmap <Esc>[1;2B j
+vmap <Esc>[1;2D h
+vmap <Esc>[1;2C l
 
 " persistent undo — undo history is saved to disk and survives
 set undofile
