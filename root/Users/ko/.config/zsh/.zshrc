@@ -1,7 +1,7 @@
 # 6th zsh file sourced, after /etc/zshrc; only for interactive shells
 
-hash -d dotfiles="$HOME/.local/share/dotfiles" \
-        projects="$HOME/.local/share/projects"
+hash -d configs="$HOME/projects/configs" \
+        projects="$HOME/projects"
 
 
 typeset -U path=(${XDG_BIN_HOME} $path)
@@ -9,4 +9,3 @@ typeset -U path=(${XDG_BIN_HOME} $path)
 for rc in ${XDG_CONFIG_HOME}/zsh/rc.d/*.zsh(on); {
   . $rc
 }
-

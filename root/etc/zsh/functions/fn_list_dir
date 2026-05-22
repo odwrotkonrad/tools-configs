@@ -27,7 +27,7 @@
 #   ll ./*/*
 #   ll --hide ./**/*
 #   ll --flat --hide ./**/*
-#   ll ~dotfiles
+#   ll ~configs
 #
 # FILES
 #   docs/images/list_dir_contents_func_sample_output.png   Sample output

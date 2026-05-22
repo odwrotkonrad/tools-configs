@@ -1,4 +1,4 @@
-# .files
+# Configs
 
 My configuration files
 
@@ -10,15 +10,20 @@ My configuration files
 - kitty - https://sw.kovidgoyal.net/kitty/
 - ssh - https://man7.org/linux/man-pages/man1/ssh.1.html
 - zsh - https://zsh.sourceforge.io/
+- vscode - https://code.visualstudio.com/
+- vim - https://www.vim.org/
 
 ## Loading Configuration
 
 ```sh
-# load parts that include load_dotfiles function definition
-cp -Rsfv _home/. ${HOME}/
+# initial load
+cd root
+find * -type d -exec mkdir -p /{} \;
+find * -type f -exec  ln -fvws $PWD/{} /{} \;
 
-# use the function to load full dotfiles
-fn_load_dotfiles
+
+# function for subsequent updates
+fn_load_configs
 ```
 
 ## Comments - Information Annotation
@@ -107,5 +112,5 @@ I'd be glad to accept contributions in form of public as well as private critici
 
 ## Source Code
 
-- GitLab: https://gitlab.com/konradodwrot/dotfiles.git
-- GitHub: https://github.com/odwrotkonrad/dotfiles.git
+- GitLab: https://gitlab.com/konradodwrot/configs.git
+- GitHub: https://github.com/odwrotkonrad/configs.git
