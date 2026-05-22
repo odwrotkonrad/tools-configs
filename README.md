@@ -107,5 +107,5 @@ I'd be glad to accept contributions in form of public as well as private critici
 
 ## Source Code
 
-- Primary Location: https://gitlab.com/konradodwrot/che/dotfiles.git
-- Mirror: https://github.com/odwrotkonrad/dotfiles.git
+- GitLab: https://gitlab.com/konradodwrot/dotfiles.git
+- GitHub: https://github.com/odwrotkonrad/dotfiles.git
