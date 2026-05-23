@@ -1,6 +1,18 @@
 {
   "folders": [
     {
+      "name": "home",
+      "path": "root/Users/ko"
+    },
+    {
+      "name": "etc",
+      "path": "root/etc"
+    },
+    {
+      "name": "bin",
+      "path": "root/usr/local/bin"
+    },
+    {
       "name": ".user",
       "path": ".user"
     },
@@ -8,14 +20,6 @@
       "name": ".",
       "path": "."
     },
-    {
-      "name": ".config",
-      "path": "root/Users/ko/.config"
-    },
-    {
-      "name": "etc",
-      "path": "root/etc"
-    }
   ],
   "settings": {}
 }

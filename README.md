@@ -23,13 +23,11 @@ My configuration files
 ## Installing Configs
 
 ```sh
-# first installation
-cd root
-find * -type d -exec mkdir -p /{} \;            # create dirs
-find * -type f -exec  ln -fvws $PWD/{} /{} \;   # link files
+# first installation (script not yet on PATH)
+zsh root/usr/local/bin/s_install_configs
 
 # subsequent installations
-fn_load_configs
+s_install_configs
 ```
 
 ## Documentation

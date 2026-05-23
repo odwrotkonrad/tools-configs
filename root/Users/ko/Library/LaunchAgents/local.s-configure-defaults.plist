@@ -10,16 +10,16 @@
 	</array>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/bin/configure_defaults</string>
+		<string>/usr/local/bin/s_configure_defaults</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/Library/Logs/configure-defaults.log</string>
+	<string>/Users/ko/Library/Logs/s_configure_defaults.log</string>
 	<key>StandardInPath</key>
 	<string>/etc/defaults.yml</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/Library/Logs/configure-defaults.log</string>
+	<string>/Users/ko/Library/Logs/s_configure_defaults.log</string>
 	<key>ThrottleInterval</key>
 	<integer>1</integer>
 </dict>
