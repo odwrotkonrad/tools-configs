@@ -11,4 +11,4 @@ warn_timeout = "300ms"
 [whitelist]
 
 # trust projects having the prefix without asking
-prefix = ["~/projects/konradodwrot"]
+prefix = ["~/projects/ko"]

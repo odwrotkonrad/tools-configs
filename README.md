@@ -9,9 +9,9 @@ My configuration files
 - git - https://git-scm.com/
 - kitty - https://sw.kovidgoyal.net/kitty/
 - ssh - https://man7.org/linux/man-pages/man1/ssh.1.html
-- zsh - https://zsh.sourceforge.io/
-- vscode - https://code.visualstudio.com/
 - vim - https://www.vim.org/
+- vscode - https://code.visualstudio.com/
+- zsh - https://zsh.sourceforge.io/
 
 ## Loading Configuration
 

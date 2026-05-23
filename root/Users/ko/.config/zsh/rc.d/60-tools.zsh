@@ -12,7 +12,10 @@ mkdir -p "${ASDF_DATA_DIR}/completions"
 [[ ! -s "${ASDF_DATA_DIR}/completions/_asdf" ]] && asdf completion zsh > "${ASDF_DATA_DIR}/completions/_asdf"
 
 # direnv
-eval "$(direnv hook zsh)" #> https://direnv.net/docs/hook.html            
+eval "$(direnv hook zsh)" #> https://direnv.net/docs/hook.html
 
 # fzf
 . <(fzf --zsh) #> https://github.com/junegunn/fzf#setting-up-shell-integration
+
+# claude
+export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/claude"
