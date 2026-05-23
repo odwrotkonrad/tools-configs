@@ -29,6 +29,10 @@ eval "$(pyenv init - zsh)"
 
 export GOPATH="${HOME}/go"
 
+# ruby
+
+export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
+
 # claude
 export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/claude"
 export CLAUDE_CODE_DISABLE_AUTO_MEMORY=0
