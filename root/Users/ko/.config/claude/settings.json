@@ -1,8 +1,8 @@
 {
+  "alwaysThinkingEnabled": false,
+  "autoMemoryEnabled": true,
   "cleanupPeriodDays": 90,
-  "permissions": {
-    "defaultMode": "plan"
-  },
+  "disableAutoMode": "disable",
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
@@ -18,9 +18,9 @@
     }
   },
   "outputStyle": "Proactive",
-  "alwaysThinkingEnabled": false,
+  "permissions": {
+    "defaultMode": "plan"
+  },
   "showClearContextOnPlanAccept": true,
-  "autoMemoryEnabled": true,
-  "disableAutoMode": "disable",
   "theme": "auto"
 }

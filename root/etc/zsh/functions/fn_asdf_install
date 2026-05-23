@@ -1,7 +1,6 @@
 emulate -L zsh
 
 typeset -rA plugins=(
-    nodejs    "https://github.com/asdf-vm/asdf-nodejs.git"
     terraform "https://github.com/asdf-community/asdf-hashicorp.git"
     kubectl   "https://github.com/asdf-community/asdf-kubectl.git"
     kubectx   "https://gitlab.com/wt0f/asdf-kubectx.git"

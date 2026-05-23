@@ -1,6 +1,6 @@
 # TODO
 
-#> param definition in - manual: ZSHPARAM(1) 
+#> param definition in - manual: ZSHPARAM(1)
 WORDCHARS=""
 
 
@@ -78,14 +78,14 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[cr]"               accept-line
     "$keystrokes[tab]"              expand-or-complete
 )
-for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}" 
+for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
 
 
-# STTY 
+# STTY
 
-#> stty -a # source of cchars 
+#> stty -a # source of cchars
 typeset -a disabled_cchars=(
     start
     stop

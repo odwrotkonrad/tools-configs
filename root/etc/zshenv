@@ -1,4 +1,33 @@
 # 1st file sourced
 
-export LANG="en_US.UTF-8"
-export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/claude"
+disable log # this builtin would shadow /usr/bin/log binary
+
+typeset -A xdg_default_locations=(
+    XDG_BIN_HOME        "${HOME}/.local/bin"                # xdg - bin recommendation
+    XDG_CACHE_HOME      "${HOME}/.cache"                    # user-specific non-esseintial data
+    XDG_CONFIG_HOME     "${HOME}/.config"                   # user-specific configuration files
+    XDG_DATA_HOME       "${HOME}/.local/share"              # user-specific data files
+    XDG_LOCAL           "${HOME}/.local"
+    XDG_STATE_HOME      "${HOME}/.local/state"                 # user-specific state data
+)
+for k v in "${(@kv)xdg_default_locations}"; export "$k=$v"
+
+typeset -A env_vars=(
+    EDITOR              "vim"
+    VISUAL              "vim"
+    LANG                "C.UTF-8"
+    LC_COLLATE          "C.UTF-8"
+    LC_CTYPE            "C.UTF-8"
+    LC_MESSAGES         "C.UTF-8"
+    LC_NUMERIC          "C.UTF-8"
+    LC_TIME             "C.UTF-8"
+    GOPATH              "${HOME}/go"
+    ASDF_DATA_DIR       "${XDG_STATE_HOME}/asdf"
+    ASDF_CONFIG_FILE    "${XDG_CONFIG_HOME}/asdf/.asdfrc"
+    PKG_CONFIG_PATH     "/opt/homebrew/opt/ruby/lib/pkgconfig"
+    PYENV_ROOT          "${HOME}/.pyenv"
+    PYENV_VERSION       "3.14"
+)
+for k v in "${(@kv)env_vars}"; export "$k=$v"
+
+unset env_vars

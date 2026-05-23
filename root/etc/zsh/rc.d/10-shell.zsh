@@ -1,6 +1,5 @@
 #> https://zsh.sourceforge.io/Doc/Release/Options.html
 
-
 typeset -a opts_disabled=(
   APPEND_HISTORY
   AUTO_CD                      #[DF] #[?] to avoid confusion, for better completion control
@@ -15,7 +14,7 @@ typeset -a opts_disabled=(
   CSH_JUNKIE_HISTORY           #[DF]
   CSH_JUNKIE_LOOPS             #[DF]
   GLOB_ASSIGN                  #[D]
-  GLOB_SUBST                   #[D] 
+  GLOB_SUBST                   #[D]
   HIST_ALLOW_CLOBBER           #[D]
   HIST_BEEP                    #[DF] #[?] to reduce interruptions
   HIST_EXPIRE_DUPS_FIRST       #[DF] #[O] history completeness and chronological order is important
@@ -81,5 +80,13 @@ typeset -a opts_enabled=(
 )
 for opt in ${opts_enabled}; setopt ${opt}
 
+typeset -A zsh_params=(
+  HISTFILE    "${XDG_STATE_HOME}/zsh/history"
+  HISTSIZE    15_000
+  PS1         '%# '                             #[I] # for root, % for non root
+  PS2         '> '                              #[I] shell waits for input
+  PS4         '+ '                              #[I] debugging prompt when XTRACE is set
+  SAVEHIST    10_000
+)
+for k v in "${(@kv)zsh_params}"; typeset "$k=$v"
 
-unset opts_disabled opts_enabled
