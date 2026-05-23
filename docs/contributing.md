@@ -1,4 +1,4 @@
-## Contributions
+# Contributing
 
 I'd be glad to accept contributions in form of public as well as private criticizm, discussion and questions. I'm actively monitoring:
 
