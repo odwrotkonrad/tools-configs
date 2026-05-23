@@ -1,4 +1,5 @@
 typeset -U fpath=(
+    /opt/homebrew/share/zsh/site-functions
     /etc/zsh/functions
     ${fpath}
 )

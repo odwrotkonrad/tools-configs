@@ -13,6 +13,12 @@ eval "$(direnv hook zsh)" #> https://direnv.net/docs/hook.html
 # fzf
 . <(fzf --zsh) #> https://github.com/junegunn/fzf#setting-up-shell-integration
 
+# nvm
+
+export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+. "$NVM_DIR/nvm.sh"
+. "$NVM_DIR/bash_completion"
+
 # pyenv
 
 export PYENV_ROOT="$HOME/.pyenv"
