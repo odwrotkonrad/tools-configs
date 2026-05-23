@@ -7,5 +7,6 @@
 
 typeset -U fpath=(
     ${XDG_CONFIG_HOME}/zsh/functions
+    ${XDG_STATE_HOME}/zsh/completions
     ${fpath}
 )

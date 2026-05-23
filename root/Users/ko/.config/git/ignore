@@ -3,11 +3,14 @@
 
 **/venv/
 **/node_modules/
+
 **/terraform.tfstate*
+**/CLAUDE.local.md
 
 # inverse rules
 !**/.github/
 !**/.devcontainer/
+!**/.claude/
 
 !**/.gitignore
 !**/.dockerignore

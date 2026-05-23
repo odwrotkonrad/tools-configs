@@ -1,0 +1,24 @@
+{
+  "cleanupPeriodDays": 90,
+  "permissions": {
+    "defaultMode": "plan"
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "git",
+        "url": "git@github.com:anthropics/claude-plugins-official.git"
+      }
+    }
+  },
+  "outputStyle": "Proactive",
+  "alwaysThinkingEnabled": false,
+  "showClearContextOnPlanAccept": true,
+  "autoMemoryEnabled": true,
+  "disableAutoMode": "disable",
+  "theme": "auto"
+}

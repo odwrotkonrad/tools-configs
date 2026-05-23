@@ -11,8 +11,9 @@ typeset -A dirs_env=(
     XDG_LOCAL           "${HOME}/.local"
 )
 typeset -a dirs_other=(
-    "${HOME}/.local/state/zsh"                              # zsh history                   
-    "${HOME}/.local/state/vim/undo"              
+    "${HOME}/.local/state/zsh/completions"                  # generated completions
+    "${HOME}/.local/state/vim/undo"
+    "${HOME}/.local/state/zsh"                              # zsh history
 )
 mkdir -p ${(v)dirs_env} ${dirs_other}                       # create dirs if non existing
 
@@ -42,6 +43,7 @@ for k v in "${(@kv)dirs_env}" "${(@kv)env_vars}"; export "$k=$v"
 
 typeset -U path=(
     /opt/homebrew/bin                                       # homebrew bin
+    /usr/local/go/bin
     /opt/homebrew/share/google-cloud-sdk/bin                # gcloud bin
     /opt/local/bin
     /opt/X11/bin
