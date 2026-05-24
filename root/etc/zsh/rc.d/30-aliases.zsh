@@ -88,15 +88,14 @@ alias sa_pstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
 
 function sf_rg { command rg --max-columns=$(( COLUMNS - 5 )) "$@" }
 
-# -g '*': glob matching all files bypasses ignore rules (.gitignore, .rgignore, etc.)
 alias sa_rgc+='sf_rg -A1 -B3 '                                          # [c]ontext (1 line after, 3 lines before)
-alias sa_rgflc+='sf_rg --count --no-multiline --no-multiline-dotall '   # [f]iles with [l]ines with matches [c]ount
-alias sa_rgfmc+='sf_rg --count-matches '                                # [f]iles with [m]atches [c]ount
-alias sa_rgfs='sf_rg --files'                                           # [f]iles that would be [s]earched
-alias sa_rgg+='sf_rg -g '                                               # search by glob (and ignore ignore files)
+alias sa_rgg+='sf_rg -g '                                               # [g]lob (with ignore ignore files)
 alias sa_rgj+='sf_rg --json '                                           # [j]son output
-alias sa_rgom+='sf_rg --only-matching --column '                        # [o]nly [m]atching text
-alias sa_rgsp+='sf_rg --sort=path '                                     # [s]ort by [p]ath lexicographically
+alias sa_rglc+='sf_rg --count --no-multiline --no-multiline-dotall '    # list files [l]ines with matches [c]ount
+alias sa_rgmc+='sf_rg --count-matches '                                 # list files with [m]atches [c]ount
+alias sa_rgom+='sf_rg --only-matching --column '                        # [o]nly [m]atching text (without surrounding characters)
+alias sa_rgs='sf_rg --files'                                            # list files that would be [s]earched (do not search)
+alias sa_rgsl+='sf_rg --sort=path '                                     # [s]ort by path [l]exicographically
 
 ## [ss]h
 alias sa_sssc="ssh -G localhost"        # [s]how [c]onfig

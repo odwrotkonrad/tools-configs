@@ -36,16 +36,17 @@
 --no-mmap
 --regex-size-limit=1G
 
-## defaults
---color=auto
---encoding=auto
---heading
---line-number
---path-separator=/
---threads=0
---with-filename
+#### --- defaults ---
 
-#### --- not set ---
+# --color=auto
+# --encoding=auto
+# --heading
+# --line-number
+# --path-separator=/
+# --threads=0
+# --with-filename
+
+#### --- unset ---
 
 # --block-buffered
 # --byte-offset
