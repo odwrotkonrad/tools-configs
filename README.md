@@ -1,36 +1,24 @@
 # Configs
 
-My configuration files
+My configuration files.
 
-## Configured Tools
+## Purpose
 
-- asdf - https://asdf-vm.com/
-- claude - https://code.claude.com/
-- defaults - macos defaults cmd (defaults – access the macOS user defaults system)
-- direnv - https://direnv.net/
-- editorconfig - https://editorconfig.org/
-- git - https://git-scm.com/
-- kitty - https://sw.kovidgoyal.net/kitty/
-- man - display online manual documentation pages
-- prettier - https://prettier.io/
-- ruff - https://docs.astral.sh/ruff/
-- ssh - https://man7.org/linux/man-pages/man1/ssh.1.html
-- tmux - https://github.com/tmux/tmux/wiki
-- vim - https://www.vim.org/
-- vscode - https://code.visualstudio.com/
-- zsh - https://zsh.sourceforge.io/
+To maintain a stateful configuration of a system and tools.
+A secondary goal is to ensure configurations are justified, so the reader can understand the choices.
 
-## Installing Configs
+## Configuration Approach
 
-```sh
-# first installation (script not yet on PATH)
-zsh root/usr/local/bin/s_install_configs
+Optimized for a reader, future reference and not frequent, regular software updates to facilitate config options review:
 
-# subsequent installations
-s_install_configs
-```
+- Comprehensive, explicit configuration including all possible settings.
+- Modified settings differing from defaults are separated from unmodified settings.
+- Explicitly include every configuration option, marking which are defaults and which are modified.
+- Follow the comment convention specified in @docs/comments.md, explaining choices and pointing to documentation.
 
-## Documentation
+## Index
 
-- [Contributing](docs/contributing.md)
+- [Installation](docs/installation.md)
+- [Configured Tools](docs/tools.yml)
 - [Comments Convention](docs/comments.md)
+- [Contributions](docs/contributing.md)

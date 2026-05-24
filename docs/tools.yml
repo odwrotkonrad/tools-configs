@@ -1,0 +1,57 @@
+- name: asdf
+  config: root/Users/ko/.config/asdf/.asdfrc
+  url: https://asdf-vm.com/
+
+- name: claude
+  config: root/Users/ko/.config/claude/settings.json
+  url: https://code.claude.com/
+
+- name: defaults
+  config: root/etc/defaults.yml
+
+- name: direnv
+  config: root/Users/ko/.config/direnv/direnv.toml
+  url: https://direnv.net/
+
+- name: editorconfig
+  config: root/Users/ko/.editorconfig
+  url: https://editorconfig.org/
+
+- name: git
+  config: root/Users/ko/.config/git/config
+  url: https://git-scm.com/
+
+- name: kitty
+  config: root/Users/ko/.config/kitty/kitty.conf
+  url: https://sw.kovidgoyal.net/kitty/
+
+- name: man
+  config: root/etc/man.conf
+
+- name: prettier
+  config: root/Users/ko/.config/prettier/.prettierrc.yml
+  url: https://prettier.io/
+
+- name: ruff
+  config: root/Users/ko/.config/ruff/ruff.toml
+  url: https://docs.astral.sh/ruff/
+
+- name: ssh
+  config: root/Users/ko/.ssh/config
+  url: https://man7.org/linux/man-pages/man1/ssh.1.html
+
+- name: tmux
+  config: root/Users/ko/.config/tmux/tmux.conf
+  url: https://github.com/tmux/tmux/wiki
+
+- name: vim
+  config: root/Users/ko/.config/vim/vimrc
+  url: https://www.vim.org/
+
+- name: vscode
+  config: root/Users/ko/Library/Application Support/Code/User/settings.json
+  url: https://code.visualstudio.com/
+
+- name: zsh
+  config: root/Users/ko/.config/zsh/.zshrc
+  url: https://zsh.sourceforge.io/
