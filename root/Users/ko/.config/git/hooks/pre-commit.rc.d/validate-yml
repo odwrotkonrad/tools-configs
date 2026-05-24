@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+staged_yml_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(yml|yaml)$')
+
+[ -z "$staged_yml_files" ] && return 0
+
+has_error=0
+
+for file in $staged_yml_files; do
+    yq e '.' "$file" || has_error=1
+done
+
+return $has_error

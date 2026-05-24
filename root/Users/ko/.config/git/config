@@ -16,3 +16,8 @@
 [push]
     autoSetupRemote = true
     default = current
+
+# defaults
+[core]
+    # customized via GIT_HOOKS_PATH env var instead
+    hooksPath = .git/hooks
