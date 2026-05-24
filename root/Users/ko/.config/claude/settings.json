@@ -18,6 +18,7 @@
       "Agent(general-purpose)",
       "Agent(Plan)",
       "Agent(statusline-setup)",
+      "Agent",
       "Bash",
       "CronCreate",
       "CronDelete",
@@ -62,11 +63,16 @@
       }
     }
   },
+  "model": "sonnet",
+  "availableModels": [
+    "sonnet",
+    "opus"
+  ],
+  "effortLevel": "medium",
   "outputStyle": "Proactive",
   "alwaysThinkingEnabled": false,
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto",
-  "effortLevel": "medium"
+  "theme": "auto"
 }
