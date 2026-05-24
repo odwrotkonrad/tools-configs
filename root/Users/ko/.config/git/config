@@ -17,6 +17,9 @@
     autoSetupRemote = true
     default = current
 
+[alias]
+    lg = log --pretty=format:"%h %ar %s" --decorate -n 10
+
 # defaults
 [core]
     # customized via GIT_HOOKS_PATH env var instead

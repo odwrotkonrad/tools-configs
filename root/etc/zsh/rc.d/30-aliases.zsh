@@ -14,15 +14,18 @@ alias sa_dw="defaults write"              # [w]rite
 
 
 ## [g]it
-alias sa_ga="git add ."                   # [a]dd
-alias sa_gc-="git commit -m"              # [c]ommit
-alias sa_glr="git remote -v"              # [l]ist [r]emotes
-alias sa_gp="git push"                    # [p]ush
-alias sa_gsa="git stash -u"               # [s]tash all, including untracked files
-alias sa_gsp="git stash pop"              # [s]tash [p]op
-alias sa_gss="git stash show"             # [s]tash [s]how
-alias sa_gst="git stash"                  # [s]tash [t]racked only
-alias sa_gir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent commits
+alias sa_ga="git add ."                     # [a]dd
+alias sa_gc-="git commit -m"                # [c]ommit
+alias sa_gh="git lg"                        # [h]istory of recent commits
+alias sa_gir="git rebase -i HEAD~10"        # open [i]nteractive [r]ebase for recent commits
+alias sa_glr="git remote -v"                # [l]ist [r]emotes
+alias sa_gp="git push"                      # [p]ush
+alias sa_gpf="git push --force-with-lease"  # [p]ush [f]orce safely
+alias sa_gs="git status --short"            # [s]tatus compact
+alias sa_gsa="git stash -u"                 # [s]tash all, including untracked files
+alias sa_gsp="git stash pop"                # [s]tash [p]op
+alias sa_gss="git stash show"               # [s]tash [s]how
+alias sa_gst="git stash"                    # [s]tash [t]racked only
 
 
 ## [k]itten
