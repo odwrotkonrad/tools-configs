@@ -84,62 +84,19 @@ alias sa_psttlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
 alias sa_pstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
 
 
-## [ss]h
-alias sa_sssc="ssh -G localhost"          # [s]how [c]onfig
-
-## [st]at
-# -t: Format for string time output (YYYY-MM-DD HH:MM:SS)
-# -f: Format string
-#   %HT - Human readable file type
-#   %N  - File name
-#   %T  - One-character file type
-#
-#   %Lp - Permission bits in octal "644"
-#   %Sp - Symbolic permissions string "-rw-r--r--"
-#   %Sf - File flags
-#
-#   %Su - Owner name
-#   %u  - Owner ID
-#   %Sg - Group name
-#   %g  - Group ID
-#
-#   %l  - Hard links count
-#   %z  - File size in bytes
-#   %i  - Inode number
-#   %d  - Device ID
-#
-#   %SB - Time of birth
-#   %Sa - Time of last access
-#   %Sm - Time of last modification
-#   %Sc - Time of last metadata change
-
-# [s]how file info
-alias sa_sts+='stat -t "%Y-%m-%d %H:%M:%S" -f "
-🏷️ %HT | %N%T
-🔐 %Lp [%Sp] | 🚩 %Sf
-👤 %Su(%u) 👥 %Sg(%g)
-🔗 %l | 🐘 %z B | 🪪 %i |  🏗️ %d
-
----- 🕒 ----
-🐣 %SB
-👁️ %Sa
-📝 %Sm
-⚙️ %Sc
-"'
-
 ## [r]g - ripgrep
 
 function sf_rg { command rg --max-columns=$(( COLUMNS - 5 )) "$@" }
 
 # -g '*': glob matching all files bypasses ignore rules (.gitignore, .rgignore, etc.)
-alias sa_rgc+='sf_rg -A1 -B3 '                                       # [c]ontext (1 line after, 3 lines before)
-alias sa_rgcl+='sf_rg --count --no-multiline --no-multiline-dotall ' # [f]iles with lines with matches [c]ount
-alias sa_rgcm+='sf_rg --count-matches '                              # [f]iles with matches [c]ount
-alias sa_rgfs='sf_rg --files'                                        # [f]iles that would be [s]earched
-alias sa_rgj+='sf_rg --json '                                        # [j]son output
-alias sa_rgom+='sf_rg --only-matching --column '                     # [o]nly [m]atching text
-alias sa_rgu+='sf_rg -g '                                            # search by [+]glob (do not read ignore files)
-alias sa_rgsp+='sf_rg --sort=path '                                  # [s]ort by [p]ath lexicographically
+alias sa_rgc+='sf_rg -A1 -B3 '                                          # [c]ontext (1 line after, 3 lines before)
+alias sa_rgflc+='sf_rg --count --no-multiline --no-multiline-dotall '   # [f]iles with [l]ines with matches [c]ount
+alias sa_rgfmc+='sf_rg --count-matches '                                # [f]iles with [m]atches [c]ount
+alias sa_rgfs='sf_rg --files'                                           # [f]iles that would be [s]earched
+alias sa_rgg+='sf_rg -g '                                               # search by glob (and ignore ignore files)
+alias sa_rgj+='sf_rg --json '                                           # [j]son output
+alias sa_rgom+='sf_rg --only-matching --column '                        # [o]nly [m]atching text
+alias sa_rgsp+='sf_rg --sort=path '                                     # [s]ort by [p]ath lexicographically
 
-## misc
-alias sa_fld='noglob fn_list_dir' # [f]unction [l]ist [d]ir
+## [ss]h
+alias sa_sssc="ssh -G localhost"        # [s]how [c]onfig
