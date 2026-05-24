@@ -2,40 +2,40 @@
 
 
 ## [b]rew
-alias abl="brew list"                   # [l]ist installed packages
-alias abu="brew update && brew upgrade" # [u]update remotes; install upgrades
+alias sa_bl="brew list"                   # [l]ist installed packages
+alias sa_bu="brew update && brew upgrade" # [u]update remotes; install upgrades
 
 
 ## [d]efaults
-alias add="defaults delete"             # [d]elete
-alias adf="defaults find"               # [f]ind
-alias adr="defaults read"               # [r]ead
-alias adw="defaults write"              # [w]rite
+alias sa_dd="defaults delete"             # [d]elete
+alias sa_df="defaults find"               # [f]ind
+alias sa_dr="defaults read"               # [r]ead
+alias sa_dw="defaults write"              # [w]rite
 
 
 ## [g]it
-alias aga="git add ."                   # [a]dd
-alias agc-="git commit -m"              # [c]ommit
-alias aglr="git remote -v"              # [l]ist [r]emotes
-alias agp="git push"                    # [p]ush
-alias agsa="git stash -u"               # [s]tash all, including untracked files
-alias agsp="git stash pop"              # [s]tash [p]op
-alias agss="git stash show"             # [s]tash [s]how
-alias agst="git stash"                  # [s]tash [t]racked only
-alias agir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent commits
+alias sa_ga="git add ."                   # [a]dd
+alias sa_gc-="git commit -m"              # [c]ommit
+alias sa_glr="git remote -v"              # [l]ist [r]emotes
+alias sa_gp="git push"                    # [p]ush
+alias sa_gsa="git stash -u"               # [s]tash all, including untracked files
+alias sa_gsp="git stash pop"              # [s]tash [p]op
+alias sa_gss="git stash show"             # [s]tash [s]how
+alias sa_gst="git stash"                  # [s]tash [t]racked only
+alias sa_gir="git rebase -i HEAD~10"      # open [i]nteractive [r]ebase for recent commits
 
 
 ## [k]itten
 
-alias akki-="kitten show-key -m kitty"       # show [k]eys sequences [i]nteractively
+alias sa_kki-="kitten show-key -m kitty"       # show [k]eys sequences [i]nteractively
 
 ## [l]aunch[c]tl - launchd interface
 
-alias alcb+="launchctl bootstrap"            # [b]ootstrap
-alias alcbo+="launchctl bootout --wait"      # [b]oot[o]ut
-alias alck+="launchctl kickstart -k"         # [k]ickstart  (-k - shutdown before starting)
-alias alcl="launchctl list"                  # [l]ist
-alias alcp+="launchctl print"                # [p]rint
+alias sa_lcb+="launchctl bootstrap"            # [b]ootstrap
+alias sa_lcbo+="launchctl bootout --wait"      # [b]oot[o]ut
+alias sa_lck+="launchctl kickstart -k"         # [k]ickstart  (-k - shutdown before starting)
+alias sa_lcl="launchctl list"                  # [l]ist
+alias sa_lcp+="launchctl print"                # [p]rint
 
 
 ## [ls]
@@ -46,43 +46,43 @@ alias alcp+="launchctl print"                # [p]rint
 # -l long format
 # -S sort by size
 # -W display whiteouts
-alias alslf='ls -lhAFGSW'     # [l]ist [f]iles
+alias sa_lslf='ls -lhAFGSW'     # [l]ist [f]iles
 
 # -O show file flags (chflags)
 # -@ show extended attributes (xattr)
-alias alslfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
+alias sa_lslfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
 
 ## [m]an
-alias aml-='man -f -o'      # [l]ist relevant manpages
-alias amlf-='man -a -w'     # [l]ist manpages as [f]ilepaths
-alias amsp='manpath'        # [s]how [m]anpath
+alias sa_ml-='man -f -o'      # [l]ist relevant manpages
+alias sa_mlf-='man -a -w'     # [l]ist manpages as [f]ilepaths
+alias sa_msp='manpath'        # [s]how [m]anpath
 
 ## [pl]util - property list utility
-alias aplp+='plutil -p'                  # [p]rint
-alias apll+='plutil -lint'               # [l]int
-alias aplc+='plutil -convert'            # [c]onvert
-alias aplcj+='plutil -convert json'      # [c]onvert to json
-alias aplcx+='plutil -convert xml1'      # [c]onvert to xml
+alias sa_plp+='plutil -p'                  # [p]rint
+alias sa_pll+='plutil -lint'               # [l]int
+alias sa_plc+='plutil -convert'            # [c]onvert
+alias sa_plcj+='plutil -convert json'      # [c]onvert to json
+alias sa_plcx+='plutil -convert xml1'      # [c]onvert to xml
 
 ## [ps] - process status
 # -o specify output columns
 # -ww wide output (do not truncate cmd)
 
-alias apslt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
-alias apsltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
+alias sa_pslt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
+alias sa_psltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 
 
 ## [pst]ree - list processes as a tree
 # -g specify graphics (2 = VT100)
 # -p specify process id
 # -s match string
-alias apsttl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
-alias apsttlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
-alias apstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
+alias sa_psttl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
+alias sa_psttlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
+alias sa_pstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
 
 
 ## [ss]h
-alias asssc="ssh -G localhost"          # [s]how [c]onfig
+alias sa_sssc="ssh -G localhost"          # [s]how [c]onfig
 
 ## [st]at
 # -t: Format for string time output (YYYY-MM-DD HH:MM:SS)
@@ -111,7 +111,7 @@ alias asssc="ssh -G localhost"          # [s]how [c]onfig
 #   %Sc - Time of last metadata change
 
 # [s]how file info
-alias asts+='stat -t "%Y-%m-%d %H:%M:%S" -f "
+alias sa_sts+='stat -t "%Y-%m-%d %H:%M:%S" -f "
 🏷️ %HT | %N%T
 🔐 %Lp [%Sp] | 🚩 %Sf
 👤 %Su(%u) 👥 %Sg(%g)
@@ -125,4 +125,4 @@ alias asts+='stat -t "%Y-%m-%d %H:%M:%S" -f "
 "'
 
 ## misc
-alias afld='noglob fn_list_dir' # [f]unction [l]ist [d]ir
+alias sa_fld='noglob fn_list_dir' # [f]unction [l]ist [d]ir

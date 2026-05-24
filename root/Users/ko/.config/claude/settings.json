@@ -1,8 +1,12 @@
 {
-  "alwaysThinkingEnabled": false,
-  "autoMemoryEnabled": true,
   "cleanupPeriodDays": 90,
-  "disableAutoMode": "disable",
+  "permissions": {
+    "defaultMode": "dontAsk",
+    "allow": [
+      "Read(./**)",
+      "Edit(./**)"
+    ]
+  },
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
@@ -18,9 +22,10 @@
     }
   },
   "outputStyle": "Proactive",
-  "permissions": {
-    "defaultMode": "plan"
-  },
+  "alwaysThinkingEnabled": false,
   "showClearContextOnPlanAccept": true,
-  "theme": "auto"
+  "autoMemoryEnabled": true,
+  "disableAutoMode": "disable",
+  "theme": "auto",
+  "effortLevel": "medium"
 }

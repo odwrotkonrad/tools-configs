@@ -106,9 +106,9 @@
   "workbench.activityBar.location": "top",
   "workbench.browser.showInTitleBar": false,
   "workbench.editor.enablePreview": false,
-  "workbench.editor.showTabs": "single",
+  "workbench.editor.showTabs": "multiple",
   "workbench.layoutControl.enabled": false,
   "workbench.preferredDarkColorTheme": "Dark Modern",
-  "workbench.preferredLightColorTheme": "Quiet Light",
+  "workbench.preferredLightColorTheme": "Solarized Light",
   "workbench.sideBar.location": "left"
 }
