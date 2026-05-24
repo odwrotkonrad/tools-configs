@@ -6,6 +6,7 @@
     email = odwrotkonrad@gmail.com
 [commit]
     gpgsign = true
+    template = ~/.config/git/commit-template
 [gpg "ssh"]
     allowedSignersFile = ~/.ssh/allowed_signers
 [init]
