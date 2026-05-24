@@ -32,6 +32,10 @@
   config: root/Users/ko/.config/prettier/.prettierrc.yml
   url: https://prettier.io/
 
+- name: rg
+  config: root/etc/rg/rgrc
+  url: https://github.com/BurntSushi/ripgrep
+
 - name: ruff
   config: root/Users/ko/.config/ruff/ruff.toml
   url: https://docs.astral.sh/ruff/

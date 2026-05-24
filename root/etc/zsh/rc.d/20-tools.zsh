@@ -5,3 +5,6 @@ eval "$(pyenv init - zsh)"
 
 # direnv #> https://direnv.net/docs/hook.html
 eval "$(direnv hook zsh)"
+
+[[ ! -s "/etc/zsh/completions/_rg" ]] && rg --generate=complete-zsh > "/etc/zsh/completions/_rg"
+

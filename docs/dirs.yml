@@ -13,6 +13,7 @@ root:
           - homebrew
           - kitty
           - prettier
+          - rg
           - ruff
           - tmux
           - vim
