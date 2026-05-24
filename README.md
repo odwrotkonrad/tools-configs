@@ -1,4 +1,4 @@
-My **config**uration file**s**
+**Config**uration file**s**
 
 ## Purpose
 
