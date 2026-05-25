@@ -4,6 +4,6 @@
 
 ## Directories
 
-<!-- docs/dirs.yml is generated with script s_generate_yaml_dir_tree  -->
+<!-- make docs/dirs.yml  -->
 
 @docs/dirs.yml

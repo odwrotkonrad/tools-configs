@@ -14,6 +14,6 @@ def convert:
 [.[] | convert] | add
 '
 
-tree --condense --noreport -dFa -J -- *(/) \
+tree --noreport -dFa -J -- *(/) \
   | jq "${JQ_FILTER}" \
   | yq --prettyPrint

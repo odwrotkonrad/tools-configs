@@ -1,0 +1,15 @@
+stages:
+  - validate
+
+validate-docsgen:
+  stage: validate
+  image: alpine:3.20
+  before_script:
+    - apk add --no-cache zsh tree jq yq
+  script:
+    - zsh ci/scripts/s_generate_yaml_dir_tree > docs/dirs.yml.new
+    - |
+      if ! diff -u docs/dirs.yml docs/dirs.yml.new; then
+        echo "docs/dirs.yml is out of date. Regenerate it with s_generate_yaml_dir_tree and commit the result."
+        exit 1
+      fi
