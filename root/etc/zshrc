@@ -30,6 +30,7 @@ typeset -U fpath=(
     ${fpath}
 )
 
+
 #[I] source all files from zsh/rc.d in ascending by name order
 for rc in /etc/zsh/rc.d/*.zsh(on); {
   . $rc
@@ -39,3 +40,5 @@ for rc in /etc/zsh/rc.d/*.zsh(on); {
 for f in /etc/zsh/functions/**(:t); {
   emulate zsh -LRc "autoload $f"
 }
+
+fn_load_static_history

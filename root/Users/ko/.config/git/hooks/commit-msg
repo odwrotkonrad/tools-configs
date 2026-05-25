@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 commit_msg=$(cat "$1")
 
-if ! echo "$commit_msg" | grep -qE '^(feat|fix|refactor|perf|test|infra|ci|deps|config|docs|chore)(\(.+\))?: .+'; then
+if ! echo "$commit_msg" | grep -qE '^(feat|fix|refactor|perf|test|infra|ci|deps|config|scaffold|docs|chore)(\(.+\))?: .+'; then
     echo "error: commit message must start with a valid type prefix" >&2
-    echo "       valid types: feat, fix, refactor, perf, test, infra, ci, deps, config, docs, chore" >&2
+    echo "       valid types: feat, fix, refactor, perf, test, infra, ci, deps, config, scaffold, docs, chore" >&2
     echo "       got: $commit_msg" >&2
     exit 1
 fi

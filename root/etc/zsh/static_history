@@ -1,0 +1,18 @@
+git lg           # single-line history of recent commits
+git stash        # stash tracked files
+git add .
+git commit
+git push
+git push --force-with-lease
+git status
+git stash pop
+git stash show
+
+brew list       # list all packages installed
+brew update     # update remotes
+brew upgrade    # install upgrades
+
+defaults delete com.apple.dock "autohide"
+defaults read com.apple.dock
+defaults find com.apple.dock
+defaults write com.apple.dock "autohide" -bool "false"

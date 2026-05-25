@@ -1,3 +1,5 @@
+[advice]
+	statusHints = false
 [gpg]
     format = ssh
 [user]

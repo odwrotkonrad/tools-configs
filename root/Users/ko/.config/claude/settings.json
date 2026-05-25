@@ -1,7 +1,6 @@
 {
   "cleanupPeriodDays": 90,
   "permissions": {
-    "defaultMode": "dontAsk",
     "allow": [
       "Read(./**)",
       "Edit(./**)",
@@ -10,9 +9,6 @@
       "LSP",
       "ListMcpResourcesTool",
       "ReadMcpResourceTool"
-    ],
-    "ask": [
-      "AskUserQuestion"
     ],
     "deny": [
       "Agent(claude-code-guide)",
@@ -50,8 +46,17 @@
       "WebSearch",
       "Skill",
       "mcp__computer"
-    ]
+    ],
+    "ask": [
+      "AskUserQuestion"
+    ],
+    "defaultMode": "dontAsk"
   },
+  "model": "sonnet",
+  "availableModels": [
+    "sonnet",
+    "opus"
+  ],
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
@@ -66,14 +71,9 @@
       }
     }
   },
-  "model": "sonnet",
-  "availableModels": [
-    "sonnet",
-    "opus"
-  ],
-  "effortLevel": "medium",
   "outputStyle": "Proactive",
   "alwaysThinkingEnabled": false,
+  "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",

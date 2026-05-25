@@ -78,6 +78,7 @@
 # --quiet
 # --smart-case
 # --stop-on-nonmatch
+# --only-matching
 # --trim
 # --unrestricted
 # --vimgrep
