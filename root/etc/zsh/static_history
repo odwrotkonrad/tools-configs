@@ -38,3 +38,14 @@ plutil -p  /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist      
 plutil -lint  /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist                     # lint plist
 plutil -convert json /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist              # plist to json
 plutil -convert xml1 /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist              # plist to xml (from various formats)
+
+## zsh builtins
+
+### emulate
+emulate -R zsh  # reset shell opts to defaults for current shell
+emulate -L zsh  # set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
+
+### setopt
+setopt          # show all enabled shell options
+unsetopt        # show all disabled shell options
+set -o          # show all shell options with on/off status
