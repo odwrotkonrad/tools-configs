@@ -3,5 +3,5 @@
 
 # types:
 #   infra, ci, deps, config, scaffold
-#   docs, chore
+#   docs, chore, style
 #   feat, fix, refactor, perf, test
