@@ -1,8 +1,8 @@
-ci:
+ci/:
   - scripts
-docs:
+docs/:
   - images
-root:
+root/:
   - Users:
       - ko:
           - .config:

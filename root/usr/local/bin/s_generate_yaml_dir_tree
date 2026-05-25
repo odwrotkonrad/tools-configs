@@ -1,5 +1,5 @@
-#!/bin/zsh
-# Generate tree in yaml format,
+#!/bin/sh
+# Generate directory tree in yaml format,
 # it will exclude top level hidden dirs
 # it will include hidden nested dirs
 
@@ -14,6 +14,12 @@ def convert:
 [.[] | convert] | add
 '
 
-tree --noreport -dFa -J -- *(/) \
+# tree options:
+#   --noreport  omit the file/directory count footer
+#   -d          list directories only
+#   -a          include nested hidden dirs
+#   -J          output JSON
+#   */          glob that grabs top-level non-hidden directories
+tree --noreport -da -J -- */ \
   | jq "${JQ_FILTER}" \
   | yq --prettyPrint
