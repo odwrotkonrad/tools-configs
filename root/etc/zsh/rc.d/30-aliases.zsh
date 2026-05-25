@@ -14,15 +14,6 @@ alias sa_history_list_show="fc -ln 1"   # all in-memory history
 
 alias sa_keys_listen-="kitten show-key -m kitty"
 
-## [l]aunch[c]tl - launchd interface
-
-alias sa_lcb+="launchctl bootstrap"            # [b]ootstrap
-alias sa_lcbo+="launchctl bootout --wait"      # [b]oot[o]ut
-alias sa_lck+="launchctl kickstart -k"         # [k]ickstart  (-k - shutdown before starting)
-alias sa_lcl="launchctl list"                  # [l]ist
-alias sa_lcp+="launchctl print"                # [p]rint
-
-
 ## [ls]
 # -A include hidden files
 # -F denote inode type by symbol
@@ -31,53 +22,45 @@ alias sa_lcp+="launchctl print"                # [p]rint
 # -l long format
 # -S sort by size
 # -W display whiteouts
-alias sa_lslf='ls -lhAFGSW'     # [l]ist [f]iles
+alias sa_list_directory='ls -lhAFGSW'
 
 # -O show file flags (chflags)
 # -@ show extended attributes (xattr)
-alias sa_lslfa="all -O@%"       # [l]ist [f]iles with [a]ttributes
+alias sa_list_directory_attr="sa_list_directory -O@%"       # list with attributes
 
-## [m]an
-alias sa_ml-='man -f -o'      # [l]ist relevant manpages
-alias sa_mlf-='man -a -w'     # [l]ist manpages as [f]ilepaths
-alias sa_msp='manpath'        # [s]how [m]anpath
+## manual pages
+alias sa_manpage_list_pages-='man -f -o'
+alias sa_manpage_list_files='man -a -w'
+alias sa_manpage_show_manpath='manpath'
 
-## [pl]util - property list utility
-alias sa_plp+='plutil -p'                  # [p]rint
-alias sa_pll+='plutil -lint'               # [l]int
-alias sa_plc+='plutil -convert'            # [c]onvert
-alias sa_plcj+='plutil -convert json'      # [c]onvert to json
-alias sa_plcx+='plutil -convert xml1'      # [c]onvert to xml
+## processes
 
-## [ps] - process status
+# ps
 # -o specify output columns
 # -ww wide output (do not truncate cmd)
+alias sa_process_list_tty_current='ps -o ppid,pid,uid,tty,start,command'
+alias sa_process_list_tty_current_verbose='ps -ww -o ppid,pid,uid,tty,start,command'
 
-alias sa_pslt='ps -o ppid,pid,uid,tty,start,command'       # [l]ist processes with [t]ty attached belonging to current user
-alias sa_psltw='ps -ww -o ppid,pid,uid,tty,start,command'  # [lt] [w]ide
 
-
-## [pst]ree - list processes as a tree
+## pstree - list processes as a tree
 # -g specify graphics (2 = VT100)
 # -p specify process id
 # -s match string
-alias sa_psttl+='pstree -g 2 -p '           # [l]ist processes specifying pid as [+]argument
-alias sa_psttlc-='pstree -g 2 -p $$'        # [l]ist [c]urrent shell process
-alias sa_pstts+='pstree -g 2 -s '           # [s]earch for string [+]argument
+alias sa_process_list_tree+='pstree -g 2 -p '
+alias sa_process_list_tree_search+='pstree -g 2 -s
 
-
-## [r]g - ripgrep
+## searching files
 
 function sf_rg { command rg --max-columns=$(( COLUMNS - 5 )) "$@" }
 
-alias sa_rgc+='sf_rg -A1 -B3 '                                          # [c]ontext (1 line after, 3 lines before)
-alias sa_rgg+='sf_rg -g '                                               # [g]lob (with ignore ignore files)
-alias sa_rgj+='sf_rg --json '                                           # [j]son output
-alias sa_rglc+='sf_rg --count --no-multiline --no-multiline-dotall '    # list files [l]ines with matches [c]ount
-alias sa_rgmc+='sf_rg --count-matches '                                 # list files with [m]atches [c]ount
-alias sa_rgom+='sf_rg --only-matching --column '                        # [o]nly [m]atching text (without surrounding characters)
-alias sa_rgs='sf_rg --files'                                            # list files that would be [s]earched (do not search)
-alias sa_rgsl+='sf_rg --sort=path '                                     # [s]ort by path [l]exicographically
+alias sa_search_file_show_context+='sf_rg -A1 -B3 '
+alias sa_search_files_glob_include_all+='sf_rg -g '
+alias sa_search_files_no='sf_rg --files' # instead of searching list files that would be searched
+alias sa_search_files_output_json+='sf_rg --json '
+alias sa_search_files_output_line_count+='sf_rg --count --no-multiline --no-multiline-dotall '
+alias sa_search_files_output_match_count+='sf_rg --count-matches '
+alias sa_search_files_output_no_context+='sf_rg --only-matching --column '
+alias sa_search_files_output_sort_lex+='sf_rg --sort=path '
 
-## [ss]h
-alias sa_sssc="ssh -G localhost"        # [s]how [c]onfig
+## ssh
+alias sa_ssh_show_config="ssh -G localhost"

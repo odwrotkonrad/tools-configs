@@ -52,7 +52,7 @@
     ],
     "defaultMode": "dontAsk"
   },
-  "model": "sonnet",
+  "model": "opus",
   "availableModels": [
     "sonnet",
     "opus"

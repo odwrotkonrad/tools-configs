@@ -1,13 +1,3 @@
-git lg           # single-line history of recent commits
-git stash        # stash tracked files
-git add .
-git commit
-git push
-git push --force-with-lease
-git status
-git stash pop
-git stash show
-
 brew list       # list all packages installed
 brew update     # update remotes
 brew upgrade    # install upgrades
@@ -16,3 +6,24 @@ defaults delete com.apple.dock "autohide"
 defaults read com.apple.dock
 defaults find com.apple.dock
 defaults write com.apple.dock "autohide" -bool "false"
+
+git lg                          # single-line history of recent commits
+git stash                       # stash tracked files
+git add .
+git commit
+git push
+git push --force-with-lease
+git status
+git stash pop
+git stash show
+
+launchctl bootstrap gui/$(id -u) /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist  # load service
+launchctl bootout gui/$(id -u)/local.s-configure-defaults                                         # unload service
+launchctl kickstart -k gui/$(id -u)/local.s-configure-defaults                                    # run service
+launchctl list                                                                                    # list all services
+launchctl print gui/$(id -u)/local.s-configure-defaults                                           # show details of a service
+
+plutil -p  /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist                        # print plist
+plutil -lint  /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist                     # lint plist
+plutil -convert json /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist              # plist to json
+plutil -convert xml1 /Users/ko/Library/LaunchAgents/local.s-configure-defaults.plist              # plist to xml (from various formats)
