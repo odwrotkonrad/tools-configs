@@ -7,8 +7,8 @@ typeset -A xdg_default_locations=(
     XDG_CACHE_HOME      "${HOME}/.cache"                    # user-specific non-esseintial data
     XDG_CONFIG_HOME     "${HOME}/.config"                   # user-specific configuration files
     XDG_DATA_HOME       "${HOME}/.local/share"              # user-specific data files
-    XDG_LOCAL           "${HOME}/.local"
-    XDG_STATE_HOME      "${HOME}/.local/state"                 # user-specific state data
+    XDG_LOCAL_HOME      "${HOME}/.local"
+    XDG_STATE_HOME      "${HOME}/.local/state"              # user-specific state data
 )
 for k v in "${(@kv)xdg_default_locations}"; export "$k=$v"
 

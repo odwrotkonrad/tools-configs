@@ -2,6 +2,6 @@
 # type(scope): subject
 
 # types:
-#   infra, ci, deps, config, scaffold
+#   infra, ci, deps, config, scaffold, install
 #   docs, chore, style
 #   feat, fix, refactor, perf, test

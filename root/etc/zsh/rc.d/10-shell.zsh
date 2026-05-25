@@ -42,6 +42,8 @@ typeset -a opts_disabled=(
   SH_WORD_SPLIT                #[DF]
   SHARE_HISTORY                #[DF]
   SINGLE_LINE_ZLE              #[DF]
+  ERR_EXIT                     #[D]
+  PIPE_FAIL                    #[D]
 )
 for opt in ${opts_disabled}; unsetopt ${opt}
 

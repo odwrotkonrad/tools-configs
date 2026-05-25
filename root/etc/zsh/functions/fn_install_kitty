@@ -1,0 +1,26 @@
+emulate -L zsh
+setopt ERR_EXIT PIPE_FAIL
+
+prefix=/usr/local
+kitty_app_contents=/Applications/kitty.app/Contents
+
+# 1. install kitty to /Applications (launch=n - do not launch right away)
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin \
+    launch=n
+
+# 2. link binaries to standard PATH location
+sudo ln -fs "$kitty_app_contents/MacOS/kitten" "$prefix/bin/kitten"
+sudo ln -fs "$kitty_app_contents/MacOS/kitty" "$prefix/bin/kitty"
+
+# 3. copy man pages to expected location (bin/../share/man)
+pushd "$kitty_app_contents/Resources/man"
+
+for man_dir in *(/); do
+    sudo mkdir -p "$prefix/share/man/$man_dir"
+done
+
+for man_page in **/*(.); do
+    sudo cp -f "$man_page" "$prefix/share/man/$man_page"
+done
+
+popd
