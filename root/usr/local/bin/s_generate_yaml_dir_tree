@@ -1,0 +1,19 @@
+#!/bin/zsh
+# Generate tree in yaml format,
+# it will exclude top level hidden dirs
+# it will include hidden nested dirs
+
+set -e
+
+JQ_FILTER='
+def convert:
+  if .contents then { (.name): [.contents[] | convert] }
+  else .name
+  end;
+
+[.[] | convert] | add
+'
+
+tree --condense --noreport -dFa -J -- *(/) \
+  | jq "${JQ_FILTER}" \
+  | yq --prettyPrint

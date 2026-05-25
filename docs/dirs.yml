@@ -1,5 +1,3 @@
-# Directories
----
 docs:
   - images
 root:
@@ -7,13 +5,19 @@ root:
       - .config:
           - asdf
           - claude:
+              - agent-memory
+              - agents
+              - commands
+              - output-styles
               - plugins/marketplaces
+              - rules
+              - skills
+              - themes
           - direnv
-          - git/hooks
+          - git/hooks/pre-commit.rc.d
           - homebrew
           - kitty
           - prettier
-          - rg
           - ruff
           - tmux
           - vim
@@ -25,7 +29,9 @@ root:
       - Library:
           - Application Support/Code/User
           - LaunchAgents
-  - etc/zsh:
-      - functions
-      - rc.d
+  - etc:
+      - rg
+      - zsh:
+          - functions
+          - rc.d
   - usr/local/bin
