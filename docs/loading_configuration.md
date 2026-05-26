@@ -1,9 +1,9 @@
-## Installing Configs
+## Loading Configs
 
 ```sh
-# first installation (script not yet on PATH)
+#[≟] first load (script not yet on PATH)
 zsh root/usr/local/bin/s_install_configs
 
-# subsequent installations
+#[≟] subsequent loads
 s_install_configs
 ```
