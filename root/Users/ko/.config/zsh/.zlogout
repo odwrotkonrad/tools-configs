@@ -1,1 +1,1 @@
-# 1st file sourced after login shell exits
+#[≟] 1st file sourced after login shell exits

@@ -91,4 +91,3 @@ typeset -A zsh_params=(
   SAVEHIST    10_000
 )
 for k v in "${(@kv)zsh_params}"; typeset "$k=$v"
-

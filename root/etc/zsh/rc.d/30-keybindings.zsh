@@ -1,6 +1,6 @@
 # TODO
 
-#> param definition in - manual: ZSHPARAM(1)
+#[⌖] param definition in - manual: ZSHPARAM(1)
 WORDCHARS=""
 
 
@@ -8,12 +8,12 @@ bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
 
 
-#> https://en.wikipedia.org/wiki/ANSI_escape_code
+#[⌖] https://en.wikipedia.org/wiki/ANSI_escape_code
 
-ESC=$'\u001B'         #[I] introducer for escape sequences; also the Alt/Meta prefix
-CSI=$'\u001B['        #[I] Control Sequence Introducer; prefix for standard key sequences
-DCS=$'\u0090'         #[I] Device Control String; used here as a prefix used for self-defined non canonical keystrokes
-BS="${terminfo[kbs]}" #[?] Backspace byte; varies by terminal - ^H (BS, 0x08) on some, ^? (DEL, 0x7F)
+ESC=$'\u001B'         #[≟] introducer for escape sequences; also the Alt/Meta prefix
+CSI=$'\u001B['        #[≟] Control Sequence Introducer; prefix for standard key sequences
+DCS=$'\u0090'         #[≟] Device Control String; used here as a prefix used for self-defined non canonical keystrokes
+BS="${terminfo[kbs]}" #[≟] Backspace byte; varies by terminal - ^H (BS, 0x08) on some, ^? (DEL, 0x7F)
 
 typeset -A keystrokes=(
     bracketedPaste     "${CSI}200~"
@@ -83,9 +83,9 @@ for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 bindkey -A key_map main
 
 
-# STTY
+###[≟] STTY
 
-#> stty -a # source of cchars
+#[⌖] stty -a # source of cchars
 typeset -a disabled_cchars=(
     start
     stop
@@ -93,10 +93,10 @@ typeset -a disabled_cchars=(
 for cchar in ${disabled_cchars}; stty ${cchar} undef
 
 typeset -A cchars=(
-    susp    '^Z'        # Process Suspend (SIGTSTP)
-    quit    '^\\'       # Process Quit + core dump (SIGQUIT)
-    intr    '^C'        # Process Interrupt (SIGINT)
-    status  '^T'        # Process Status (SIGINFO)
+    susp    '^Z'        #[≟] Process Suspend (SIGTSTP)
+    quit    '^\\'       #[≟] Process Quit + core dump (SIGQUIT)
+    intr    '^C'        #[≟] Process Interrupt (SIGINT)
+    status  '^T'        #[≟] Process Status (SIGINFO)
 )
 
 for action char in ${(kv)cchars}; stty ${action} ${char}

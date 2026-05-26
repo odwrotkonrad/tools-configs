@@ -11,4 +11,4 @@ for name url in ${(kv)plugins}; do
     sudo asdf plugin add "$name" "$url"
 done
 
-asdf install # install versions of tools from .tool-versions
+asdf install #[≟] install versions of tools from .tool-versions

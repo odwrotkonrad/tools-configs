@@ -6,12 +6,17 @@ typeset -a dirs=(
     "${XDG_STATE_HOME}/homebrew"
     "${XDG_STATE_HOME}/log"
     "${XDG_STATE_HOME}/vim/undo"
-    "${XDG_STATE_HOME}/zsh"                              # zsh history
-    "${XDG_STATE_HOME}/zsh/completions"                  # generated completions
+    "${XDG_STATE_HOME}/zsh"                              #[≟] dir for e.g. zsh history
+    "${XDG_STATE_HOME}/zsh/completions"                  #[≟] for generated completions
 )
-mkdir -p ${(v)xdg_default_locations} ${dirs}             # create dirs if non existing
+mkdir -p ${(v)xdg_default_locations} ${dirs}             #[≟] create dirs if non existing
 unset dirs
 
+#>[≟]
+# hash - zsh builtin - modify the contents of the cmd and dir hash tables
+#   -d - target named directory hash table rather than command hash table
+# dir hash table is used to expand `~` e.g. ~x_bin -> $XDG_BIN_HOME
+#/[≟]
 hash -d x_bin="${XDG_BIN_HOME}" \
         x_cache="${XDG_CACHE_HOME}" \
         x_config="${XDG_CONFIG_HOME}" \
@@ -22,4 +27,4 @@ hash -d x_bin="${XDG_BIN_HOME}" \
 hash -d u_configs="$HOME/projects/configs" \
         u_projects="$HOME/projects"
         u_desktop="$HOME/Desktop" \
-        u_capture="$HOME/ScreenCapture"     # adds dirs to cd with ~name
+        u_capture="$HOME/ScreenCapture"

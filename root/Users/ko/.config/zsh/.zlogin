@@ -1,1 +1,1 @@
-# 8th file sourced after /etc/zlogin; only for login shells
+#[≟] 8th file sourced after /etc/zlogin; only for login shells

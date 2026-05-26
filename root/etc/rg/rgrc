@@ -1,8 +1,11 @@
-# ripgrep configuration
+#[≟] ripgrep configuration
 
-#> https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
+#>[⌖]
+# https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
+# $ man rg
+#/[⌖]
 
-#### --- modified ---
+##[≟] --- modified ---
 
 
 --ignore-file=/etc/rg/rgignore
@@ -36,7 +39,7 @@
 --no-mmap
 --regex-size-limit=1G
 
-#### --- defaults ---
+##[≟] --- defaults ---
 
 # --color=auto
 # --encoding=auto
@@ -46,7 +49,7 @@
 # --threads=0
 # --with-filename
 
-#### --- unset ---
+##[≟] --- unset ---
 
 # --block-buffered
 # --byte-offset
@@ -60,7 +63,7 @@
 # --line-buffered
 # --line-regexp
 # --max-columns-preview
-# --max-columns=(terminal width - 5) # dynamically set via function
+# --max-columns=(terminal width - 5) #[⌖] dynamically set via sf_rg in root/etc/zsh/rc.d/20-aliases.zsh
 # --max-count=NUM
 # --no-filename
 # --no-ignore
@@ -84,7 +87,7 @@
 # --vimgrep
 # --word-regexp
 
-#### --- deprecated
+##[≟] --- deprecated ---
 
 # --auto-hybrid-regex
 # --no-pcre2-unicode

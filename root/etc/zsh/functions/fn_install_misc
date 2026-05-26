@@ -2,7 +2,7 @@
 
 enmulate -L zsh
 
-# install language servers
+#[≟] install language servers
 
 go install golang.org/x/tools/gopls@latest
 

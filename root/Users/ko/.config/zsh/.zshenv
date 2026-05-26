@@ -1,1 +1,1 @@
-# 2nd file sourced after /etc/zshenv
+#[≟] 2nd file sourced after /etc/zshenv

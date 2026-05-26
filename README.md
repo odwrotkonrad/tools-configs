@@ -1,4 +1,4 @@
-**Config**uration file**s**
+## **Config**uration file**s**
 
 To maintain a stateful configuration of a system and tools.
 

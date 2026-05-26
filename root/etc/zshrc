@@ -1,4 +1,4 @@
-# 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
+#[≟] 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
 
 
 typeset -U path=(
@@ -30,12 +30,12 @@ typeset -U fpath=(
     ${fpath}
 )
 
-#[I] source all files from zsh/rc.d in ascending by name order
+#[≟] source all files from zsh/rc.d in ascending by name order
 for rc in /etc/zsh/rc.d/*.zsh(on); {
   . $rc
 }
 
-#[I] load functions
+#[≟] load functions
 for f in /etc/zsh/functions/**(:t); {
   emulate zsh -LRc "autoload $f"
 }

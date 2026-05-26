@@ -4,15 +4,15 @@ setopt ERR_EXIT PIPE_FAIL
 prefix=/usr/local
 kitty_app_contents=/Applications/kitty.app/Contents
 
-# 1. install kitty to /Applications (launch=n - do not launch right away)
+#[≟] 1. install kitty to /Applications
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin \
-    launch=n
+    launch=n  #[∵] do not launch right away
 
-# 2. link binaries to standard PATH location
+#[≟] 2. link binaries to standard PATH location
 sudo ln -fs "$kitty_app_contents/MacOS/kitten" "$prefix/bin/kitten"
 sudo ln -fs "$kitty_app_contents/MacOS/kitty" "$prefix/bin/kitty"
 
-# 3. copy man pages to expected location (bin/../share/man)
+#[≟] 3. copy man pages to expected location (bin/../share/man)
 pushd "$kitty_app_contents/Resources/man"
 
 for man_dir in *(/); do

@@ -7,7 +7,7 @@
 **/terraform.tfstate*
 **/CLAUDE.local.md
 
-# inverse rules
+#[≟] inverse rules
 !**/.github/
 !**/.devcontainer/
 !**/.claude/

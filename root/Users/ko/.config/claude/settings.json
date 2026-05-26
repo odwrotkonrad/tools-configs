@@ -2,8 +2,8 @@
   "cleanupPeriodDays": 90,
   "permissions": {
     "allow": [
-      "Read(./**)",
-      "Edit(./**)",
+      "Read(**/*)",
+      "Edit(**/*)",
       "Glob",
       "Grep",
       "LSP",
