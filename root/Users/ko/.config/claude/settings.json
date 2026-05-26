@@ -45,11 +45,10 @@
       "WebFetch",
       "WebSearch",
       "Skill",
-      "mcp__computer"
-    ],
-    "ask": [
+      "mcp__computer",
       "AskUserQuestion"
     ],
+    "ask": [],
     "defaultMode": "dontAsk"
   },
   "model": "opus",
