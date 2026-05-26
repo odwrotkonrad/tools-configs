@@ -12,7 +12,6 @@ defaults write com.apple.dock "autohide" -bool "false"
 
 
 ## git - the stupid content tracker
-git lg                          # single-line history of recent commits
 git stash                       # stash tracked files
 git add .
 git commit

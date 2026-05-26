@@ -1,5 +1,6 @@
 ## git - the stupid content tracker
 alias sa_git_interactive_rebase="git rebase --interactive HEAD~10"
+alias sa_git_log_pretty="git log --pretty=format:'%h %ar %s' --decorate -n 10"
 alias sa_git_remotes_all_list="git remote --verbose"
 alias sa_git_stash_all="git stash --include-untracked"
 alias sa_git_status_all="git stash --show-stash"

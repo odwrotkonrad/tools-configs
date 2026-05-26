@@ -1,14 +1,16 @@
+#[⌖] $ man 1 direnv.toml
+
 [global]
-# enable .env loading, not just .envrc
+#[≟] enable .env loading, not just .envrc
 load_dotenv = true
 
-# .envrc file loading must succeed, otherwise fire error
+#[≟] .envrc file loading must succeed, otherwise fire error
 strict_env = true
 
-# fire warning if .envrc loading is slow
+#[≟] fire warning if .envrc loading is slow
 warn_timeout = "300ms"
 
 [whitelist]
 
-# trust projects having the prefix without asking
+#[≟] trust projects having the prefix without asking
 prefix = ["~/projects/ko"]

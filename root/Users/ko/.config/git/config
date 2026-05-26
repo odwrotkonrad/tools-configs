@@ -1,28 +1,28 @@
+#[⌖] $ man git-config
+
 [advice]
 	statusHints = false
 [gpg]
-    format = ssh
+  format = ssh
 [user]
-    signingkey = ~/.ssh/id_signing.pub
-    name = konradodwrot
-    email = odwrotkonrad@gmail.com
+  signingkey = ~/.ssh/id_signing.pub
+  name = konradodwrot
+  email = odwrotkonrad@gmail.com
 [commit]
-    gpgsign = true
-    template = ~/.config/git/commit-template
+  gpgsign = true
+  template = ~/.config/git/commit-template
 [gpg "ssh"]
-    allowedSignersFile = ~/.ssh/allowed_signers
+  allowedSignersFile = ~/.ssh/allowed_signers
 [init]
-    defaultBranch = main
+  defaultBranch = main
 [color]
-    ui = auto
+  ui = auto
 [push]
-    autoSetupRemote = true
-    default = current
-
-[alias]
-    lg = log --pretty=format:"%h %ar %s" --decorate -n 10
-
-# defaults
+  autoSetupRemote = true
+  default = current
 [core]
-    # customized via GIT_HOOKS_PATH env var instead
-    hooksPath = .git/hooks
+  hooksPath = ~/.config/git/hooks
+[alias]
+  lg = log --pretty=format:'%h %ar %s' --decorate -n 10
+
+
