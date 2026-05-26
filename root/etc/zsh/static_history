@@ -23,7 +23,7 @@ git stash show
 
 
 ##[≟] kitten - kitty's CLI utility
-kitten themes                   #[≟] interactive theme selection; writes ~/.config/kitty/*-theme.auto.conf
+kitten themes                   #[≟] interactive theme selection
 
 
 ##>[≟]
