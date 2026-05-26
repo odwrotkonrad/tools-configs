@@ -66,7 +66,6 @@ alias sa_search_files_output_sort_lex+='sf_rg --sort=path '
 alias sa_manpage_list_pages-='man -f -o'
 alias sa_manpage_list_files='man -a -w'
 alias sa_manpage_show_manpath='manpath'
-alias catman='MANPAGER=cat man' #
 
 ###[≟] processes
 ##[≟] ps – process status
