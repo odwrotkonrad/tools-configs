@@ -1,9 +1,7 @@
-# Repository
+@docs/commenting_convention.md
 
 @README.md
 
 ## Directories
-
-<!-- make docs/dirs.yml  -->
 
 @docs/dirs.yml
