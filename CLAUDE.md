@@ -2,6 +2,6 @@
 
 @README.md
 
-## Directories
-
 @docs/dirs.yml
+
+@docs/tools-inventory-index.yml

@@ -1,0 +1,136 @@
+#[≟] Inventory of tools and their config files.
+
+#[≟] Shared files referenced by many tools.
+files:
+  root/Users/ko/.config/zsh/rc.d/10-tools.zsh:
+  root/etc/:
+    zshenv:
+    zshrc:
+    zsh/rc.d/10-tools.zsh:
+    zsh/rc.d/20-aliases.zsh:
+    zsh/static_history:
+
+#>[≟] Tool specific files
+tools:
+  - asdf:
+      files:
+        root/Users/ko/:
+          .config/asdf/.asdfrc:
+          .tool-versions:
+        root/etc/zsh/functions/fn_asdf_install:
+
+  - claude:
+      files:
+        root/Users/ko/.config/claude/:
+          CLAUDE.md:
+          settings.json:
+          agents/:
+          rules/:
+          skills/:
+          plugins/:
+            known_marketplaces.json:
+            installed_plugins.json:
+
+  - defaults:
+      files:
+        root/:
+          etc/defaults.yml:
+          usr/local/bin/s_load_defaults_config:
+          Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist:
+
+  - direnv:
+      files:
+        root/Users/ko/.config/direnv/direnv.toml:
+
+  - editorconfig:
+      files:
+        root/Users/ko/.editorconfig:
+
+  - fzf:
+
+  - git:
+      files:
+        root/Users/ko/.config/git/:
+          config:
+          ignore:
+          commit-template:
+          hooks/:
+            commit-msg:
+            pre-commit:
+            pre-commit.rc.d/:
+              validate-yml:
+        root/etc/zsh/functions/fn_ssh_test_git_connection:
+
+  - golang:
+
+  - homebrew:
+
+  - kitty:
+      files:
+        root/Users/ko/.config/kitty/:
+          kitty.conf:
+          dark-theme.auto.conf:
+          light-theme.auto.conf:
+          no-preference-theme.auto.conf:
+
+  - man:
+      files:
+        root/etc/man.conf:
+
+  - nvm:
+      files:
+        root/Users/ko/.nvmrc:
+
+  - prettier:
+      files:
+        root/Users/ko/.config/prettier/.prettierrc.yml:
+
+  - pyenv:
+
+  - rg:
+      files:
+        root/etc/rg/:
+          rgrc:
+          rgignore:
+        root/etc/zsh/functions/fn_load_static_history:
+
+  - ruff:
+      files:
+        root/Users/ko/.config/ruff/ruff.toml:
+
+  - ssh:
+      files:
+        root/Users/ko/.ssh/config:
+        root/etc/zsh/functions/:
+          fn_ssh_generate_keys:
+          fn_ssh_test_git_connection:
+
+  - tmux:
+      files:
+        root/Users/ko/.config/tmux/tmux.conf:
+
+  - vim:
+      files:
+        root/Users/ko/.config/vim/vimrc:
+
+  - vscode:
+      files:
+        root/Users/ko/Library/Application Support/Code/User/settings.json:
+
+  - zsh:
+      files:
+        root/Users/ko/.config/zsh/:
+          .zshenv:
+          .zprofile:
+          .zshrc:
+          .zlogin:
+          .zlogout:
+          rc.d/00-dirs.zsh:
+        root/etc/:
+          zprofile:
+          zlogin:
+          zlogout:
+          zsh/rc.d/00-shell.zsh:
+          zsh/rc.d/30-keybindings.zsh:
+          zsh/functions/fn_install_misc:
+          zsh/functions/fn_install_kitty:

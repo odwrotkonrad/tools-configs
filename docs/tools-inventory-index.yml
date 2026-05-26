@@ -1,0 +1,22 @@
+#[≟] Tool -> primary config file. Full file lists in tools-inventory-full.yml.
+asdf: root/Users/ko/.config/asdf/.asdfrc
+claude: root/Users/ko/.config/claude/settings.json
+defaults: root/etc/defaults.yml
+direnv: root/Users/ko/.config/direnv/direnv.toml
+editorconfig: root/Users/ko/.editorconfig
+fzf: root/etc/zsh/rc.d/10-tools.zsh
+git: root/Users/ko/.config/git/config
+golang: root/etc/zshenv
+homebrew: root/etc/zshrc
+kitty: root/Users/ko/.config/kitty/kitty.conf
+man: root/etc/man.conf
+nvm: root/Users/ko/.nvmrc
+prettier: root/Users/ko/.config/prettier/.prettierrc.yml
+pyenv: root/etc/zshenv
+rg: root/etc/rg/rgrc
+ruff: root/Users/ko/.config/ruff/ruff.toml
+ssh: root/Users/ko/.ssh/config
+tmux: root/Users/ko/.config/tmux/tmux.conf
+vim: root/Users/ko/.config/vim/vimrc
+vscode: root/Users/ko/Library/Application Support/Code/User/settings.json
+zsh: root/etc/zshrc

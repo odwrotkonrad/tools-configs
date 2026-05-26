@@ -12,6 +12,6 @@ Attempting to use any other tools is forbidden.
 
 ## IMPORTANT!
 
-<!-- it happens claude tries to ask questions even if it doesn't have permissions to do so -->
+<!--[∵] it happens claude tries to ask questions even if it doesn't have permissions to do so -->
 
 Do not ask questions and use common sense to fulfill user asks!
