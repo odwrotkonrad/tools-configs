@@ -1,60 +1,58 @@
 domains:
-
   NSGlobalDomain:
-    Default Font: Helvetica
-    AppleShowAllExtensions: true                 #[≟] show file extensions
-    NSTableViewDefaultSizeMode: 3                #[≟] large left panel (home + other locations)
-    AppleSpacesSwitchOnActivate: true
+    AppleShowAllExtensions: true #[≟] do not hide file extensions e.g. Google Chrome -> Google Chrome.app
+    NSTableViewDefaultSizeMode: 3 #[≟] increase size of TableView, e.g. in Finder it's the favourites and locations left bar
+    AppleSpacesSwitchOnActivate: true #[≟] when activating an app, switch to the space where its window is open instead of pulling it to the current space
 
   com.apple.dock:
-    orientation: right                           #[≟] place on the right
-    tilesize: 40                                 #[∵] not too big not too small
-    autohide: true                               #[≟] auto hide
-    autohide-delay: null                         #[≟] use default delay time for hiding
-    autohide-time-modifier: null                 #[≟] use default delay time for autoshow
-    show-recents: false                          #[≟] do not persist recently opened apps in the dock
-    mineffect: genie                             #[≟] minimize with genie effect
-    static-only: false
-    scroll-to-open: true
-    expose-group-apps: true                      #[≟] mission control: group windows by app
+    orientation: right #[≟] place the dock on the right
+    tilesize: 40 #[≟] size of the dock
+    autohide: true #[≟] toggle auto-hiding dock
+    autohide-delay: null #[≟] delay time for hiding dock
+    autohide-time-modifier: null #[≟] delay time for showing dock
+    show-recents: false #[≟] recently closed apps won't show in the dock
+    mineffect: genie #[≟] effect when minimizing an app
+    static-only: false #[≟] show running apps alongside pinned ones, not only running apps
+    scroll-to-open: true #[≟] scrolling up on a dock icon opens exposé for that app
+    expose-group-apps: true #[≟] group apps together in mission control
 
   com.apple.screencapture:
-    disable-shadow: true
-    include-date: true
-    location: ~/ScreenCapture
-    show-thumbnail: true
-    type: png
+    disable-shadow: false #[≟] do not add a drop shadow around the window in window-capture screenshots
+    include-date: true #[≟] include the date and time in screenshot filenames
+    location: ~/ScreenCapture #[≟] save screenshots to ~/ScreenCapture instead of the desktop
+    show-thumbnail: true #[≟] show the floating thumbnail preview in the bottom-right corner after capturing
+    type: png #[≟] save screenshots in PNG format
 
   com.apple.Safari:
-    ShowFullURLInSmartSearchField: true
+    ShowFullURLInSmartSearchField: true #[≟] show the full URL in the address bar instead of just the domain
 
   com.apple.finder:
-    AppleShowAllFiles: true                      #[≟] show hidden
-    ShowPathbar: true                            #[≟] show pathbar
-    FXPreferredViewStyle: clmv                   #[≟] column view as default
-    _FXSortFoldersFirst: true                    #[≟] folders on top
-    FinderSpawnTab: true                         #[≟] open tabs instead of windows
-    FXDefaultSearchScope: SCcf                   #[≟] current folder is default search scope
-    FXRemoveOldTrashItems: false                 #[≟] do not empty bin automatically
-    FXEnableExtensionChangeWarning: false        #[≟] no warn when changing file extension
-    _FXEnableColumnAutoSizing: true              #[≟] dynamic column count, non-fixed width
-    ShowStatusBar: true                          #[≟] status bar at the bottom
-    CreateDesktop: true
+    AppleShowAllFiles: true #[≟] show hidden files
+    ShowPathbar: true #[≟] show pathbar at the bottom
+    FXPreferredViewStyle: clmv #[≟] set default view to column view
+    _FXSortFoldersFirst: true #[≟] sort items with directories at the top
+    FinderSpawnTab: false #[≟] new directories are opened as windows
+    FXDefaultSearchScope: SCcf #[≟] when starting a search, use the currently opened directory as the search scope
+    FXRemoveOldTrashItems: false #[≟] disable auto-scheduled bin clearing
+    FXEnableExtensionChangeWarning: false #[≟] do not show warning when changing file extension
+    _FXEnableColumnAutoSizing: true #[≟] toggle dynamic column view with non-fixed width and non-fixed number of columns
+    ShowStatusBar: true #[≟] show status bar at the bottom with number of items and available space
+    CreateDesktop: true #[≟] whether to show items (dirs, hard drives, etc.) on the desktop at all
     ShowHardDrivesOnDesktop: true
     ShowExternalHardDrivesOnDesktop: true
     ShowRemovableMediaOnDesktop: true
     ShowMountedServersOnDesktop: true
 
   com.apple.menuextra.clock:
-    IsAnalog: true
+    IsAnalog: true #[≟] show clock as an analog clock
 
   kCFPreferencesAnyApplication:
-    TSMLanguageIndicatorEnabled: false           #[≟] do not show language indicator
+    TSMLanguageIndicatorEnabled: false #[≟] hide language indicator
 
   com.apple.spaces:
-    spans-displays: true
+    spans-displays: true #[≟] toggle desktops spanning displays; changing desktop changes it on all displays
 
   com.apple.WindowManager:
-    StandardHideWidgets: true                   #[≟] hide widgets on desktop, if dekstop is dirty with apps windows
+    StandardHideWidgets: true #[≟] hide widgets on desktop when desktop is not the main view
 
 apps: [Dock, Finder, SystemUIServer, Safari]
