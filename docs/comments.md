@@ -1,75 +1,55 @@
-# Comments Conventions
+# Comments Convention
 
-Configuration is annotated with comments to justify selection in following format:
+Comments advertise themselves to a reader with a label prefix, to facilitate reader decision whether it'd like to invest energy into consuming parcticular information, helping with prose-in-code postprocessing and programmatic retrieval. Comments answers questions readers may be curious about. Questions types have choosen constant symbol assigned.
 
-### #> - Where can this be read about?
+## Notation
 
-Notation:
+| Question | Symbol | Name                | Code Point |
+| -------- | ------ | ------------------- | ---------- |
+| Where?   | ⌖      | Position Indicator  | U+2316     |
+| What?    | ≟      | Questioned Equal To | U+225F     |
+| Why?     | ∵      | Because             | U+2235     |
 
-```shell
-#> <url>
-<subject>
+## Examples
+
+### Inline
+
+```sh
+$ foo 123       #[⌖] http://foo.bar.io
+$ foo 123       #[⌖] $ man 5 foo
+$ param=foo     #[∵] foo was set over bar because it improves developer experience
+$ cmd -f        #[≟] -f means foo
 ```
 
-Example:
+### Block
 
-```shell
-#> https://zsh.sourceforge.io/Doc/Release/Options.html
-typeset -a opts_disabled=(
+```sh
+#>[⌖]
+# http://foo.bar.io
+#   pages descriptions and encoding
+# $ man 5 foo
+#   sections DESCRIPTION, ENCODING
+#/[⌖]
+foo 123
 ```
 
-### #[?] - Why why was this particular setting chosen?
-
-Notation:
-
-```shell
-<subject> #[?] <justification>
+```sh
+#>[∵]
+#   bar
+#   is
+#   better
+#   than
+#   foo
+#/[∵]
+param=foo
 ```
 
-Example:
-
-```shell
-AUTO_CD #[?] to avoid confusion, for better completion control
-```
-
-### #[DF] - Explicit Default Setting
-
-Notation:
-
-```shell
-<subject> #[DF]
-```
-
-Example:
-
-```shell
-AUTO_NAME_DIRS #[DF]
-```
-
-### #[O] - Opinion
-
-Notation:
-
-```shell
-<subject> #[O] <opinion>
-```
-
-Example:
-
-```shell
-CORRECT_ALL #[O] not useful when advanced completions are on
-```
-
-### #[I] - Info - Explanatory Information
-
-Notation:
-
-```shell
-<subject> #[I]
-```
-
-Example:
-
-```shell
-PS1  '%# '  #[I] # for root, % for non root
+```sh
+#>[≟]
+#   source is available but I'm putting a dump
+#   of my current understanding of a topic
+#   to enable peer correction and learnings
+#   because "what is" could differ by person
+#/[∵]
+param=bar
 ```
