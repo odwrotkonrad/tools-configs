@@ -1,4 +1,8 @@
 #!/bin/zsh
+#>[≟]
+#   Symlink every file under <configs>/root into the system root.
+#   Mirrors the directory structure and replaces any existing regular file / link.
+#/[≟]
 
 set -e
 
