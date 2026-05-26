@@ -1,0 +1,17 @@
+#[≟] zsh config loaded within claude-spawned shells
+#[∵] this file exists because these shells are non-interactive
+# and most of the actual shell config targets interactive shells
+
+#[∵] claude's non-interactive shell skips .zshrc; source it to match interactive env
+if [[ ! -o interactive ]]; then
+  . /etc/zshrc
+  . "${ZDOTDIR}/.zshrc"
+fi
+
+#[≟] render manpage as plain text #[∵] for claude consumption
+function man {
+  mandoc -T utf8 -O indent=0 "$(/usr/bin/man -w "$@")" \
+    | col -bx \
+    | sed 's/^[[:space:]]*//' \
+    | cat -s
+}

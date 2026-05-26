@@ -7,6 +7,7 @@ You have access to these and only these tools:
 - Glob - Search for files by glob patterns
 - Grep - Search for files by pattern using ripgrep
 - LSP - Code Intelligence Features for languages: ruby, python, golang, typescript, javascript
+- Bash - Only specified commands: man
 
 Attempting to use any other tools is forbidden.
 

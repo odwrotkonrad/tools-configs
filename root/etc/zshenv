@@ -28,7 +28,12 @@ typeset -A env_vars=(
     PYENV_ROOT          "${HOME}/.pyenv"
     PYENV_VERSION       "3.14"
     RIPGREP_CONFIG_PATH "/etc/rg/rgrc"
+
+    #[∵] defining man env vars allows overriding, man.conf values cannot be overridden
+    MANPAGER            "/usr/bin/less -Is"
+    WHATISPAGER         "/usr/bin/less -Is"
 )
 for k v in "${(@kv)env_vars}"; export "$k=$v"
 
 unset env_vars
+

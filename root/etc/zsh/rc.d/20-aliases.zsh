@@ -41,6 +41,9 @@ alias sa_list_directory_attr="sa_list_directory -O@%"
 # -B<num> - show <num> context lines before a match
 # -g - specify glob, overrides all other ignore herustics
 #/[≟]
+
+#[≟] rg wrapper limiting column width to terminal size
+#[∵] to set --max-columns dynamically based on current terminal width
 function sf_rg { command rg --max-columns=$(( COLUMNS - 5 )) "$@" }
 alias sa_search_file_show_context+='sf_rg -A1 -B3 '
 alias sa_search_files_glob_include_all+='sf_rg -g '
@@ -63,7 +66,7 @@ alias sa_search_files_output_sort_lex+='sf_rg --sort=path '
 alias sa_manpage_list_pages-='man -f -o'
 alias sa_manpage_list_files='man -a -w'
 alias sa_manpage_show_manpath='manpath'
-
+alias catman='MANPAGER=cat man' #
 
 ###[≟] processes
 ##[≟] ps – process status

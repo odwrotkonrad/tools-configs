@@ -1,9 +1,13 @@
 {
   "cleanupPeriodDays": 90,
   "permissions": {
+    "ask": [
+      "Bash"
+    ],
     "allow": [
       "Read(**/*)",
       "Edit(**/*)",
+      "Bash(man *)",
       "Glob",
       "Grep",
       "LSP",
@@ -17,7 +21,6 @@
       "Agent(Plan)",
       "Agent(statusline-setup)",
       "Agent",
-      "Bash",
       "CronCreate",
       "CronDelete",
       "CronList",
@@ -48,7 +51,6 @@
       "mcp__computer",
       "AskUserQuestion"
     ],
-    "ask": [],
     "defaultMode": "dontAsk"
   },
   "model": "opus",
