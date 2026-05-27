@@ -74,7 +74,6 @@
   "git.confirmEmptyCommits": false,
   "git.confirmSync": false,
   "git.countBadge": "off",
-  "git.decorations.enabled": false,
   "git.defaultCloneDirectory": "~/projects/",
   "git.openAfterClone": "always",
   "git.openDiffOnClick": false,
@@ -140,5 +139,24 @@
   "workbench.preferredLightColorTheme": "Solarized Light",
   "workbench.sideBar.location": "left",
   "workbench.startupEditor": "none",
-  "workbench.tips.enabled": false
+  "workbench.tips.enabled": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": true,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.profiles.osx": {
+    "zsh": {
+      "path": "/bin/zsh",
+      "env": {
+        "ZDOTDIR": "/Users/ko/.config/zsh"
+      }
+    },
+  },
+  "terminal.integrated.macOptionIsMeta": true,
+  "terminal.integrated.enableKittyKeyboardProtocol": true,
+  "terminal.integrated.fontFamily": "Source Code Pro",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.showCommandGuide": true,
+  "terminal.integrated.allowChords": true
 }

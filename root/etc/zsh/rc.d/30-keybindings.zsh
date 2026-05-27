@@ -1,6 +1,10 @@
-# TODO
+#>[⌖]
+# root/Users/ko/.config/kitty/kitty.conf                                #[≟] keystroke producer
+# root/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
+# $ man zshzle > bindkey                                                #[≟] zsh doc on bindings
+#/[⌖]
 
-#[⌖] param definition in - manual: ZSHPARAM(1)
+#[≟] non-alnum chars counted as word; empty = strict word boundaries #>[⌖] $ man zshparam
 WORDCHARS=""
 
 
@@ -9,12 +13,9 @@ bindkey -M key_map -R "^@"-"~" self-insert
 
 
 #[⌖] https://en.wikipedia.org/wiki/ANSI_escape_code
-
-ESC=$'\u001B'         #[≟] introducer for escape sequences; also the Alt/Meta prefix
-CSI=$'\u001B['        #[≟] Control Sequence Introducer; prefix for standard key sequences
-DCS=$'\u0090'         #[≟] Device Control String; used here as a prefix used for self-defined non canonical keystrokes
-BS="${terminfo[kbs]}" #[≟] Backspace byte; varies by terminal - ^H (BS, 0x08) on some, ^? (DEL, 0x7F)
-
+ESC=$'\u001B'         #[≟] introducer for escape sequences
+CSI=$'\u001B['        #[≟] Control Sequence Introducer
+DCS=$'\u0090'         #[≟] Device Control String
 typeset -A keystrokes=(
     bracketedPaste     "${CSI}200~"
 
@@ -23,21 +24,22 @@ typeset -A keystrokes=(
     right              "${CSI}C"
     left               "${CSI}D"
 
-    cmdUp              "${CSI}1;9A"
-    cmdDown            "${CSI}1;9B"
-    cmdRight           "${CSI}1;9C"
-    cmdLeft            "${CSI}1;9D"
+    cmdUp              "${DCS}U"
+    cmdDown            "${DCS}D"
+    cmdRight           $'\x05'
+    cmdLeft            $'\x01'
 
-    altLeft            "${CSI}1;3D"
-    altRight           "${CSI}1;3C"
+    altLeft            "${ESC}b"
+    altRight           "${ESC}f"
 
-    backspace          "${BS}"
-    cmdBackspace       "${DCS}${BS}"
-    altBackspace       "${ESC}${BS}"
+    backspace          $'\x7f'
+    altBackspace       $'\x17'
+    cmdBackspace       $'\x15'
+    ctrlBackspace      $'\x08'
 
     delete             "${CSI}3~"
-    altDelete          "${CSI}3;3~"
-    cmdDelete          "${CSI}3;9~"
+    altDelete          "${ESC}d"
+    cmdDelete          "${DCS}K"
 
     cmdZ               "${DCS}z"
     cmdShiftZ          "${DCS}Z"
@@ -64,8 +66,9 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[altRight]"         vi-forward-word
 
     "$keystrokes[backspace]"        backward-delete-char
-    "$keystrokes[cmdBackspace]"     backward-kill-line
     "$keystrokes[altBackspace]"     backward-delete-word
+    "$keystrokes[cmdBackspace]"     backward-kill-line
+    "$keystrokes[ctrlBackspace]"    backward-kill-line
 
     "$keystrokes[delete]"           delete-char
     "$keystrokes[altDelete]"        delete-word
