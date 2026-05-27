@@ -39,6 +39,7 @@ root/:
                       - User
               - LaunchAgents
   - etc:
+      - prometheus
       - rg
       - zsh:
           - completions

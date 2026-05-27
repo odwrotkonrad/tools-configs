@@ -85,6 +85,12 @@ tools:
       files:
         root/Users/ko/.config/prettier/.prettierrc.yml:
 
+  - prometheus:
+      files:
+        root/etc/prometheus/prometheus.yml:
+        root/etc/zsh/functions/fn_install_prometheus:
+        root/Users/ko/Library/LaunchAgents/local.sd.prometheus.plist:
+
   - pyenv:
 
   - rg:

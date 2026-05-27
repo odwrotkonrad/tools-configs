@@ -89,3 +89,11 @@ alias sa_process_list_tree_search+='pstree -g 2 -s '
 ###[≟] ssh - OpenSSH remote login client
 #[≟] -G print configuration
 alias sa_ssh_show_config="ssh -G localhost"
+
+
+###[≟] prometheus - monitoring system & time series database
+#>[≟]
+# --config.file       - path to prometheus configuration
+# --storage.tsdb.path - on-disk location for the time series database
+#/[≟]
+alias prometheus="prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=${XDG_STATE_HOME:-$HOME/.local/state}/prometheus"

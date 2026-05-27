@@ -6,7 +6,7 @@
 
 set -e
 
-configs=${1:-$HOME/projects/configs}
+configs=${1:-/Users/ko/projects/configs}
 
 pushd "$configs/root"
 find * -type d -exec mkdir -p /{} \;

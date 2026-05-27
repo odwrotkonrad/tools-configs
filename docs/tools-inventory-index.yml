@@ -12,6 +12,7 @@ kitty: root/Users/ko/.config/kitty/kitty.conf
 man: root/etc/man.conf
 nvm: root/Users/ko/.nvmrc
 prettier: root/Users/ko/.config/prettier/.prettierrc.yml
+prometheus: root/etc/prometheus/prometheus.yml
 pyenv: root/etc/zshenv
 rg: root/etc/rg/rgrc
 ruff: root/Users/ko/.config/ruff/ruff.toml
