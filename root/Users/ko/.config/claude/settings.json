@@ -1,26 +1,24 @@
 {
   "cleanupPeriodDays": 90,
   "permissions": {
-    "ask": [
-      "Bash"
-    ],
     "allow": [
-      "Read(**/*)",
-      "Edit(**/*)",
       "Bash(man *)",
-      "Glob",
-      "Grep",
-      "LSP",
+      "Bash(rg *)",
+      "Bash(tree *)",
+      "Edit(**/*)",
       "ListMcpResourcesTool",
+      "LSP",
+      "Read(**/*)",
       "ReadMcpResourceTool"
     ],
     "deny": [
+      "Agent",
       "Agent(claude-code-guide)",
       "Agent(Explore)",
       "Agent(general-purpose)",
       "Agent(Plan)",
       "Agent(statusline-setup)",
-      "Agent",
+      "AskUserQuestion",
       "CronCreate",
       "CronDelete",
       "CronList",
@@ -28,6 +26,9 @@
       "EnterWorktree",
       "ExitPlanMode",
       "ExitWorktree",
+      "Glob",
+      "Grep",
+      "mcp__computer",
       "Monitor",
       "NotebookEdit",
       "PowerShell",
@@ -36,6 +37,7 @@
       "ScheduleWakeup",
       "SendMessage",
       "ShareOnboardingGuide",
+      "Skill",
       "TaskCreate",
       "TaskGet",
       "TaskList",
@@ -46,10 +48,7 @@
       "TeamDelete",
       "TodoWrite",
       "WebFetch",
-      "WebSearch",
-      "Skill",
-      "mcp__computer",
-      "AskUserQuestion"
+      "WebSearch"
     ],
     "defaultMode": "dontAsk"
   },

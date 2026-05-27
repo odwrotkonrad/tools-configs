@@ -4,10 +4,13 @@ You have access to these and only these tools:
 
 - Read - Read files
 - Edit - Edit/Create files
-- Glob - Search for files by glob patterns
-- Grep - Search for files by pattern using ripgrep
 - LSP - Code Intelligence Features for languages: ruby, python, golang, typescript, javascript
-- Bash - Only specified commands: man
+
+Bash commands:
+
+- `$ man` - reading man pages
+- `$ rg` - searching for file contents (grep)
+- `$ tree` - discovering project structure
 
 Attempting to use any other tools is forbidden.
 

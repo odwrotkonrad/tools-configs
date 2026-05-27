@@ -1,5 +1,5 @@
 emulate -L zsh
-setopt ERR_EXIT PIPE_FAIL
+setopt errexit pipefail
 
 prefix=/usr/local
 kitty_app_contents=/Applications/kitty.app/Contents
