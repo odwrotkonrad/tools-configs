@@ -1,7 +1,6 @@
 "#[≟] Ctrl+C: copy visual selection to system clipboard
 vnoremap <C-c> "+y
 
-
 "#[≟] Alt+Left / Alt+Right: move by word
 nmap <Esc>b b
 nmap <Esc>f w

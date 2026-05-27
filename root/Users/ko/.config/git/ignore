@@ -17,3 +17,5 @@
 !**/.python-version
 !**/.gitlab-ci.yml
 !**/.env.example
+
+**/.claude/settings.local.json

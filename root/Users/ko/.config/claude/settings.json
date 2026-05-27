@@ -57,10 +57,10 @@
     }
   },
   "outputStyle": "Proactive",
-  "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto"
+  "theme": "auto",
+  "alwaysThinkingEnabled": false
 }

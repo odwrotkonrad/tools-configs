@@ -1,4 +1,201 @@
 [
+  ////[≟] core navigation
+
+  //[≟] q - close actions
+  {
+    "key": "alt+q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "activeEditor && !sideBarFocus && !panelFocus && !auxiliaryBarFocus && !terminalFocus"
+  },
+  {
+    "key": "alt+q",
+    "command": "workbench.action.closeSidebar",
+    "when": "sideBarFocus"
+  },
+  {
+    "key": "alt+q",
+    "command": "workbench.action.closePanel",
+    "when": "panelFocus"
+  },
+  {
+    "key": "alt+q",
+    "command": "workbench.action.closeAuxiliaryBar",
+    "when": "auxiliaryBarFocus"
+  },
+  //[≟] w - quick open files action
+  {
+    "key": "alt+w",
+    "command": "workbench.action.quickOpen"
+  },
+
+  //[≟] r - search actions
+  {
+    "key": "alt+r",
+    "command": "actions.find",
+    "when": "editorFocus"
+  },
+  {
+    "key": "alt+r",
+    "command": "workbench.action.terminal.focusFind",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "alt+shift+r",
+    "command": "workbench.action.findInFiles"
+  },
+  {
+    "key": "alt+shift+r",
+    "command": "workbench.action.closePanel",
+    "when": "panelFocus && activePanel == 'workbench.view.search'"
+  },
+
+  //[≟] a - file explorer toggle view
+  {
+    "key": "alt+shift+a",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "alt+a",
+    "command": "workbench.files.action.focusFilesExplorer"
+  },
+  {
+    "key": "alt+a",
+    "command": "workbench.files.action.focusFilesExplorer",
+    "when": "terminalFocus"
+  },
+
+  //[≟] s - (srodek) editor focus actions
+  {
+    "key": "alt+s",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "!editorFocus && !activeEditor"
+  },
+  {
+    "key": "alt+s",
+    "command": "workbench.action.focusNextGroup",
+    "when": "activeEditor"
+  },
+
+  //[≟] d - integrated terminal focus actions
+  {
+    "key": "alt+d",
+    "command": "workbench.action.terminal.focus"
+  },
+  {
+    "key": "alt+shift+d",
+    "command": "workbench.action.terminal.toggleTerminal"
+  },
+  //[≟] t - external terminal actions
+  {
+    "key": "alt+t",
+    "command": "workbench.action.terminal.openNativeConsole"
+  },
+
+  //[≟] f - git view actions
+  {
+    "key": "alt+f",
+    "command": "workbench.scm.focus"
+  },
+  {
+    "key": "alt+f",
+    "command": "workbench.scm.focus",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "alt+shift+f",
+    "command": "workbench.view.scm"
+  },
+
+  //[≟] g - extensions view actions
+  {
+    "key": "alt+g",
+    "command": "workbench.extensions.action.focusExtensionsView"
+  },
+  {
+    "key": "alt+shift+g",
+    "command": "workbench.view.extensions",
+    "when": "!auxiliaryBarFocus || activeAuxiliary != 'workbench.view.extensions'"
+  },
+  {
+    "key": "alt+shift+g",
+    "command": "workbench.action.closeAuxiliaryBar",
+    "when": "auxiliaryBarFocus && activeAuxiliary == 'workbench.view.extensions'"
+  },
+
+  //[≟] editor actions
+  {
+    "key": "alt+up",
+    "command": "cursorMove",
+    "args": {
+      "to": "up",
+      "by": "line",
+      "value": 10
+    },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "alt+down",
+    "command": "cursorMove",
+    "args": {
+      "to": "down",
+      "by": "line",
+      "value": 10
+    },
+    "when": "editorTextFocus"
+  },
+
+  //[≟] cycle open editor group tabs
+  {
+    "key": "alt+tab",
+    "command": "workbench.action.nextEditorInGroup"
+  },
+  {
+    "key": "alt+shift+tab",
+    "command": "workbench.action.previousEditorInGroup"
+  },
+
+  //[≟] file explorer actions
+  {
+    "key": "enter",
+    "command": "explorer.openAndPassFocus",
+    "when": "filesExplorerFocus && !inputFocus && !explorerResourceIsFolder"
+  },
+  {
+    "key": "enter",
+    "command": "list.toggleExpand",
+    "when": "filesExplorerFocus && !inputFocus && explorerResourceIsFolder"
+  },
+  {
+    "key": "alt+up",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "list.focusUp",
+        "list.focusUp",
+        "list.focusUp"
+      ]
+    },
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "alt+down",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "list.focusDown",
+        "list.focusDown",
+        "list.focusDown"
+      ]
+    },
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "alt+enter",
+    "command": "renameFile",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+
+  ////[≟]  sequences sent to integrated terminal
   {
     "key": "cmd+z",
     "command": "workbench.action.terminal.sendSequence",
