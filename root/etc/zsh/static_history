@@ -7,6 +7,7 @@ brew upgrade    #[≟] install upgrades
 ##[≟] defaults – access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
 defaults read com.apple.dock
+defaults read | rg --only-matching  'com.apple[.\w]+' - | sort | uniq
 defaults find com.apple.dock
 defaults write com.apple.dock "autohide" -bool "false"
 
