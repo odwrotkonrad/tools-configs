@@ -47,6 +47,63 @@
     "command": "actions.find",
     "when": "editorFocus"
   },
+  //[≟] alt+r - toggle replace in find widget
+  {
+    "key": "alt+r",
+    "command": "editor.action.startFindReplaceAction",
+    "when": "findWidgetVisible && findInputFocussed"
+  },
+
+  {
+    "key": "pageup",
+    "command": "cursorTop",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "pagedown",
+    "command": "cursorBottom",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "cmd+up",
+    "command": "cursorMove",
+    "args": { "to": "up", "by": "line", "value": 12 },
+    "when": "textInputFocus"
+  },
+  {
+    "key": "cmd+down",
+    "command": "cursorMove",
+    "args": { "to": "down", "by": "line", "value": 12 },
+    "when": "textInputFocus"
+  },
+  {
+    "key": "shift+cmd+up",
+    "command": "cursorMove",
+    "args": { "to": "up", "by": "line", "value": 3, "select": true },
+    "when": "textInputFocus"
+  },
+  {
+    "key": "shift+cmd+down",
+    "command": "cursorMove",
+    "args": { "to": "down", "by": "line", "value": 3, "select": true },
+    "when": "textInputFocus"
+  },
+
+  // editor actions
+  {
+    "key": "alt+/",
+    "command": "editor.action.formatDocument",
+    "when": "editorTextFocus && !editorHasSelection && !editorReadonly"
+  },
+  {
+    "key": "alt+/",
+    "command": "editor.action.formatSelection",
+    "when": "editorTextFocus && editorHasSelection && !editorReadonly"
+  },
+  {
+    "key": "alt+\\",
+    "command": "editor.action.toggleWordWrap"
+  },
   //[≟] f2 - rename the currently opened file
   {
     "key": "f2",
@@ -59,12 +116,7 @@
     },
     "when": "editorFocus"
   },
-  //[≟] alt+r - toggle replace in find widget
-  {
-    "key": "alt+r",
-    "command": "editor.action.startFindReplaceAction",
-    "when": "findWidgetVisible && findInputFocussed"
-  },
+
   ///[≟] editor
 
   //>[≟] search

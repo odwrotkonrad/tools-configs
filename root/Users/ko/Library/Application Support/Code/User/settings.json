@@ -1,154 +1,155 @@
 {
+  // window
+  "window.autoDetectColorScheme": true,
+  "window.confirmBeforeClose": "keyboardOnly",
+  "window.confirmSaveUntitledWorkspace": false,
+  "window.density.editorTabHeight": "compact",
+  "window.newWindowDimensions": "inherit",
+  "window.restoreWindows": "preserve",
+  "window.systemColorTheme": "auto",
+  "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
+  "window.titleSeparator": " ━━ ",
+  "window.zoomLevel": 1,
+
+  // workbench
+  "workbench.activityBar.autoHide": true,
+  "workbench.activityBar.location": "hidden",
+  "workbench.browser.showInTitleBar": false,
+  "workbench.colorTheme": "Solarized Light", // fallback
+  "workbench.editor.closeOnFileDelete": true,
+  "workbench.editor.decorations.badges": true,
+  "workbench.editor.editorActionsLocation": "hidden",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.editor.enablePreviewFromCodeNavigation": true,
+  "workbench.editor.languageDetection": false,
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.editor.limit.value": 5,
+  "workbench.editor.tabActionCloseVisibility": false,
+  "workbench.editor.titleScrollbarVisibility": "hidden",
+  "workbench.layoutControl.enabled": false,
+  "workbench.navigationControl.enabled": false,
+  "workbench.panel.defaultLocation": "top",
+  "workbench.panel.showLabels": false,
   "workbench.preferredDarkColorTheme": "Dark Modern",
   "workbench.preferredLightColorTheme": "Solarized Light",
+  "workbench.secondarySideBar.defaultVisibility": "visible",
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.tree.renderIndentGuides": "none",
+
   "workbench.colorCustomizations": {
     "[Dark Modern]": {
-      "editorCursor.foreground": "#ffffff",
-      "terminalCursor.foreground": "#ffffff",
-      "terminal.background": "#2a2a2a",
       "editor.background": "#1f1f1f",
+      "editor.lineHighlightBackground": "#ffffff30",
+      "editor.lineHighlightBorder": "#ffffffaa",
+      "editorCursor.foreground": "#ffffff",
+      "editorGroup.border": "#3a3a3a",
+      "editorGroup.focusedEmptyBorder": "#ffffff",
+      "editorGroupHeader.tabsBackground": "#000000",
+      "editorGroupHeader.tabsBorder": "#ffffff",
+      "list.activeSelectionBackground": "#ffffff30",
+      "list.activeSelectionForeground": "#ffffff",
       "list.focusBackground": "#ffffff30",
       "list.focusForeground": "#ffffff",
       "list.focusOutline": "#ffffffaa",
-      "list.activeSelectionBackground": "#ffffff30",
-      "list.activeSelectionForeground": "#ffffff",
+      "list.hoverBackground": "#00000000",
       "list.inactiveSelectionBackground": "#00000000",
       "list.inactiveSelectionForeground": "#7a7a7a",
-      "list.hoverBackground": "#00000000",
-      "editor.lineHighlightBackground": "#ffffff30",
-      "editor.lineHighlightBorder": "#ffffffaa",
-      "editorGroup.border": "#3a3a3a",
-      "editorGroup.focusedEmptyBorder": "#ffffff",
-      "editorGroupHeader.tabsBorder": "#ffffff",
-      "editorGroupHeader.tabsBackground": "#000000",
-      "tab.inactiveBackground": "#0a0a0a",
-      "tab.inactiveForeground": "#6a6a6a",
-      "tab.unfocusedInactiveForeground": "#3a3a3a",
       "tab.activeBackground": "#1f1f1f",
-      "tab.activeForeground": "#ffffff",
       "tab.activeBorder": "#ffffff",
       "tab.activeBorderTop": "#ffffff",
+      "tab.activeForeground": "#ffffff",
+      "tab.hoverBackground": "#2a2a2a",
+      "tab.hoverForeground": "#ffffff",
+      "tab.inactiveBackground": "#0a0a0a",
+      "tab.inactiveForeground": "#6a6a6a",
       "tab.unfocusedActiveBackground": "#0f0f0f",
-      "tab.unfocusedActiveForeground": "#7a7a7a",
       "tab.unfocusedActiveBorder": "#00000000",
       "tab.unfocusedActiveBorderTop": "#00000000",
-      "tab.hoverBackground": "#2a2a2a",
-      "tab.hoverForeground": "#ffffff"
+      "tab.unfocusedActiveForeground": "#7a7a7a",
+      "tab.unfocusedInactiveForeground": "#3a3a3a",
+      "terminal.background": "#2a2a2a",
+      "terminalCursor.foreground": "#ffffff"
     },
     "[Solarized Light]": {
-      "editorCursor.foreground": "#000000",
-      "terminalCursor.foreground": "#000000",
-      "terminal.background": "#e8dfc4",
       "editor.background": "#fdf6e3",
+      "editor.lineHighlightBackground": "#00000025",
+      "editor.lineHighlightBorder": "#000000aa",
+      "editorCursor.foreground": "#000000",
+      "editorGroup.border": "#c8bf9d",
+      "editorGroup.focusedEmptyBorder": "#000000",
+      "editorGroupHeader.tabsBackground": "#d6cdb4",
+      "editorGroupHeader.tabsBorder": "#000000",
+      "list.activeSelectionBackground": "#00000025",
+      "list.activeSelectionForeground": "#000000",
       "list.focusBackground": "#00000025",
       "list.focusForeground": "#000000",
       "list.focusOutline": "#000000aa",
-      "list.activeSelectionBackground": "#00000025",
-      "list.activeSelectionForeground": "#000000",
+      "list.hoverBackground": "#00000000",
       "list.inactiveSelectionBackground": "#00000000",
       "list.inactiveSelectionForeground": "#93a1a1",
-      "list.hoverBackground": "#00000000",
-      "editor.lineHighlightBackground": "#00000025",
-      "editor.lineHighlightBorder": "#000000aa",
-      "editorGroup.border": "#c8bf9d",
-      "editorGroup.focusedEmptyBorder": "#000000",
-      "editorGroupHeader.tabsBorder": "#000000",
-      "editorGroupHeader.tabsBackground": "#d6cdb4",
-      "tab.inactiveBackground": "#e8dfc4",
-      "tab.inactiveForeground": "#93a1a1",
-      "tab.unfocusedInactiveForeground": "#c8bf9d",
       "tab.activeBackground": "#fdf6e3",
-      "tab.activeForeground": "#000000",
       "tab.activeBorder": "#000000",
       "tab.activeBorderTop": "#000000",
+      "tab.activeForeground": "#000000",
+      "tab.hoverBackground": "#f5edd6",
+      "tab.hoverForeground": "#000000",
+      "tab.inactiveBackground": "#e8dfc4",
+      "tab.inactiveForeground": "#93a1a1",
       "tab.unfocusedActiveBackground": "#ece3c8",
-      "tab.unfocusedActiveForeground": "#7a7a7a",
       "tab.unfocusedActiveBorder": "#00000000",
       "tab.unfocusedActiveBorderTop": "#00000000",
-      "tab.hoverBackground": "#f5edd6",
-      "tab.hoverForeground": "#000000"
-    }
-  },
-  "[go]": {
-    "editor.defaultFormatter": "golang.go"
-  },
-  "[graphql]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[python]": {
-    "editor.codeActionsOnSave": {
-      "source.fixAll": "explicit",
-      "source.organizeImports": "explicit"
+      "tab.unfocusedActiveForeground": "#7a7a7a",
+      "tab.unfocusedInactiveForeground": "#c8bf9d",
+      "terminal.background": "#e8dfc4",
+      "terminalCursor.foreground": "#000000"
     },
-    "editor.defaultFormatter": "charliermarsh.ruff"
   },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "breadcrumbs.enabled": false,
-  "chat.agent.enabled": false,
-  "chat.commandCenter.enabled": false,
-  "chat.disableAIFeatures": true,
-  "chat.titleBar.signIn.enabled": false,
-  "chat.viewSessions.orientation": "stacked",
-  "claudeCode.preferredLocation": "panel",
-  "diffEditor.ignoreTrimWhitespace": false,
+
+  // editor
+
+  "editor.accessibilitySupport": "off",
   "editor.cursorBlinking": "solid",
   "editor.cursorStyle": "block",
   "editor.cursorSurroundingLines": 1,
   "editor.cursorSurroundingLinesStyle": "all",
   "editor.cursorWidth": 8,
   "editor.find.addExtraSpaceOnTop": false,
-  "editor.find.autoFindInSelection": "multiline",
+  "editor.find.autoFindInSelection": "never",
   "editor.find.loop": false,
   "editor.fontFamily": "Source Code Pro",
   "editor.fontSize": 13,
   "editor.formatOnSave": false,
-  "editor.guides.indentation": false,
   "editor.guides.highlightActiveIndentation": false,
-  "editor.renderLineHighlight": "none",
-  "editor.scrollbar.verticalScrollbarSize": 6,
-  "editor.scrollbar.horizontalScrollbarSize": 6,
-  "editor.scrollBeyondLastLine": false,
-  "editor.hideCursorInOverviewRuler": true,
-  "editor.overviewRulerBorder": false,
-  "scm.diffDecorationsGutterVisibility": "always",
-  "scm.diffDecorations": "all",
-  "editor.renderLineHighlightOnlyWhenFocus": true,
+  "editor.guides.indentation": false,
+  "editor.hideCursorInOverviewRuler": false,
   "editor.minimap.enabled": false,
+  "editor.occurrencesHighlight": "off",
+  "editor.overviewRulerBorder": false,
+  "editor.renderLineHighlight": "none",
+  "editor.renderLineHighlightOnlyWhenFocus": true,
+  "editor.scrollbar.horizontalScrollbarSize": 2,
+  "editor.scrollbar.verticalScrollbarSize": 2,
+  "editor.scrollBeyondLastLine": false,
   "editor.stickyScroll.enabled": false,
   "editor.stickyScroll.maxLineCount": 1,
-  "editor.suggest.filterGraceful": true,
   "editor.suggest.preview": true,
   "editor.suggest.showColors": false,
-  "editor.suggest.showInlineDetails": true,
   "editor.suggest.showStatusBar": true,
-  "editor.suggestLineHeight": 0,
-  "editor.wordWrap": "on",
-  "editorconfig.generateAuto": false,
-  "editorconfig.showMenuEntry": false,
-  "explorer.compactFolders": true,
-  "extensions.ignoreRecommendations": true,
-  "files.autoSave": "onFocusChange",
-  "files.insertFinalNewline": true,
+
+  // explorer
+
+  "explorer.autoOpenDroppedFile": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmPasteNative": false,
+  "explorer.confirmUndo": "light",
+  "explorer.incrementalNaming": "smart",
+  "explorer.sortOrder": "type",
+
+  //// TODO split actually set / defaults
+  // search
+
   "search.actionsPosition": "auto",
   "search.collapseResults": "alwaysCollapse",
   "search.maxResults": null,
@@ -158,7 +159,6 @@
   "search.quickOpen.history.filterSortOrder": "recency",
   "search.mode": "view",
   "search.searchEditor.focusResultsOnSearch": true,
-  "editor.find.seedSearchStringFromSelection": "always",
   "search.useIgnoreFiles": true,
   "search.useParentIgnoreFiles": false,
   "search.useReplacePreview": true,
@@ -181,7 +181,13 @@
   "search.seedOnFocus": false,
   "search.seedWithNearestWord": false,
   "search.showLineNumbers": false,
-  "editor.occurrencesHighlight": "off",
+  "search.exclude": {
+    "**/.user/**": true
+  },
+  "search.smartCase": true,
+
+  // git
+
   "git.addAICoAuthor": "off",
   "git.allowForcePush": true,
   "git.allowNoVerifyCommit": false,
@@ -222,126 +228,13 @@
   "git.timeline.showUncommitted": true,
   "git.untrackedChanges": "mixed",
   "git.useEditorAsCommitInput": false,
-  "github.copilot.enable": {
-    "*": false,
-    "markdown": false,
-    "plaintext": false,
-    "scminput": false
-  },
   "git.decorations.enabled": true,
-  "github.showAvatar": false,
-  "prettier.configPath": "~/.config/prettier/.prettierrc.yml",
-  "prettier.requireConfig": true,
-  "prettier.useEditorConfig": true,
-  "ruff.configuration": "~/.config/ruff/ruff.toml",
-  "ruff.format.preview": true,
-  "search.exclude": {
-    "**/.user/**": true
-  },
-  "search.smartCase": true,
-  "terminal.external.osxExec": "kitty.app",
-  "window.autoDetectColorScheme": true,
-  "window.commandCenter": true,
-  "window.confirmSaveUntitledWorkspace": false,
-  "window.customTitleBarVisibility": "auto",
-  "window.density.editorTabHeight": "compact",
-  "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
-  "window.titleBarStyle": "custom",
-  "window.titleSeparator": " ━━ ",
-  "window.zoomLevel": 1,
-  "workbench.activityBar.compact": true,
-  "workbench.browser.showInTitleBar": false,
-  "workbench.editor.editorActionsLocation": "hidden",
-  "workbench.editor.empty.hint": "hidden",
-  "workbench.editor.enablePreview": true,
-  "workbench.editor.labelFormat": "default",
-  "workbench.editor.pinnedTabSizing": "normal",
-  "workbench.editor.showTabs": "multiple",
-  "workbench.editor.tabActionCloseVisibility": false,
-  "workbench.editor.tabSizing": "fixed",
-  "workbench.panel.alignment": "right",
-  "workbench.panel.defaultLocation": "bottom",
-  "workbench.layoutControl.enabled": false,
-  "workbench.layoutControl.type": "menu",
-  "workbench.navigationControl.enabled": false,
-  "workbench.startupEditor": "none",
-  "workbench.tips.enabled": false,
-  "workbench.editor.enablePreviewFromCodeNavigation": true,
-  "workbench.editor.enablePreviewFromQuickOpen": true,
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.profiles.osx": {
-    "zsh": {
-      "path": "/bin/zsh",
-      "env": {
-        "ZDOTDIR": "/Users/ko/.config/zsh"
-      }
-    },
-  },
-  "terminal.integrated.macOptionIsMeta": true,
-  "terminal.integrated.enableKittyKeyboardProtocol": true,
-  "terminal.integrated.fontFamily": "Source Code Pro",
-  "terminal.integrated.fontSize": 13,
-  "terminal.integrated.scrollback": 10000,
-  "terminal.integrated.shellIntegration.enabled": true,
-  "terminal.integrated.shellIntegration.showCommandGuide": true,
-  "terminal.integrated.allowChords": true,
-  "terminal.integrated.commandsToSkipShell": [
-    "workbench.action.reopenClosedEditor",
-    "workbench.action.closeAuxiliaryBar",
-    "workbench.action.closePanel",
-    "workbench.action.findInFiles",
-    "workbench.action.terminal.focusFind",
-    "workbench.action.closeSidebar",
-    "workbench.action.focusActiveEditorGroup",
-    "workbench.action.focusNextGroup",
-    "workbench.action.focusPreviousGroup",
-    "workbench.action.nextAuxiliaryBarView",
-    "workbench.action.focusPanel",
-    "workbench.action.quickOpen",
-    "workbench.action.quickTextSearch",
-    "workbench.action.terminal.focus",
-    "workbench.action.terminal.focusFind",
-    "workbench.action.terminal.toggleTerminal",
-    "workbench.action.terminal.openNativeConsole",
-    "workbench.extensions.action.focusExtensionsView",
-    "workbench.files.action.focusFilesExplorer",
-    "workbench.action.toggleSidebarVisibility",
-    "workbench.scm.focus",
-    "workbench.view.explorer",
-    "workbench.view.extensions",
-    "workbench.view.scm"
-  ],
-  "workbench.editor.highlightModifiedTabs": true,
-  "workbench.editor.decorations.badges": true,
-  "workbench.editor.decorations.colors": true,
-  "workbench.tree.renderIndentGuides": "none",
-  "workbench.list.typeNavigationMode": "automatic",
-  "workbench.quickOpen.includeHistory": false,
-  "explorer.autoReveal": true,
-  "explorer.confirmDelete": false,
-  "explorer.autoOpenDroppedFile": true,
-  "explorer.confirmUndo": "light",
-  "explorer.confirmPasteNative": false,
-  "explorer.enableUndo": true,
-  "explorer.fileNesting.enabled": false,
-  "explorer.decorations.badges": true,
-  "explorer.decorations.colors": true,
-  "explorer.excludeGitIgnore": false,
-  "explorer.fileNesting.expand": false,
-  "explorer.incrementalNaming": "smart",
-  "explorer.sortOrder": "mixed",
-  "workbench.secondarySideBar.forceMaximized": false,
-  "workbench.sideBar.location": "left",
-  "terminal.integrated.suggest.showStatusBar": false,
-  "terminal.integrated.enableMultiLinePasteWarning": "auto",
-  "terminal.explorerKind": "both",
-  "terminal.integrated.tabs.showActiveTerminal": "never",
-  "terminal.integrated.rightClickBehavior": "default",
-  "workbench.panel.showLabels": false,
-  "problems.decorations.enabled": false,
-  "problems.autoReveal": false,
-  "outline.problems.enabled": false,
-  "outline.problems.colors": false,
+
+  "scm.diffDecorationsGutterVisibility": "always",
+  "scm.diffDecorations": "all",
+
+
+  // terminal
   "terminal.integrated.detectLocale": "auto",
   "terminal.integrated.enableImages": false,
   "terminal.integrated.gpuAcceleration": "off",
@@ -390,7 +283,137 @@
   "terminal.integrated.hideOnStartup": "never",
   "terminal.integrated.autoReplies": {},
   "terminal.integrated.smoothScrolling": true,
-  "workbench.secondarySideBar.defaultVisibility": "maximized",
-  "workbench.activityBar.location": "hidden",
-  "editor.accessibilitySupport": "off",
+  "terminal.external.osxExec": "kitty.app",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.profiles.osx": {
+    "zsh": {
+      "path": "/bin/zsh",
+      "env": {
+        "ZDOTDIR": "/Users/ko/.config/zsh"
+      }
+    },
+  },
+  "terminal.integrated.macOptionIsMeta": true,
+  "terminal.integrated.enableKittyKeyboardProtocol": true,
+  "terminal.integrated.fontFamily": "Source Code Pro",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.showCommandGuide": true,
+  "terminal.integrated.allowChords": true,
+  "terminal.integrated.commandsToSkipShell": [
+    "workbench.action.reopenClosedEditor",
+    "workbench.action.closeAuxiliaryBar",
+    "workbench.action.closePanel",
+    "workbench.action.findInFiles",
+    "workbench.action.terminal.focusFind",
+    "workbench.action.closeSidebar",
+    "workbench.action.focusActiveEditorGroup",
+    "workbench.action.focusNextGroup",
+    "workbench.action.focusPreviousGroup",
+    "workbench.action.nextAuxiliaryBarView",
+    "workbench.action.focusPanel",
+    "workbench.action.quickOpen",
+    "workbench.action.quickTextSearch",
+    "workbench.action.terminal.focus",
+    "workbench.action.terminal.focusFind",
+    "workbench.action.terminal.toggleTerminal",
+    "workbench.action.terminal.openNativeConsole",
+    "workbench.extensions.action.focusExtensionsView",
+    "workbench.files.action.focusFilesExplorer",
+    "workbench.action.toggleSidebarVisibility",
+    "workbench.scm.focus",
+    "workbench.view.explorer",
+    "workbench.view.extensions",
+    "workbench.view.scm"
+  ],
+  "terminal.integrated.suggest.showStatusBar": false,
+  "terminal.integrated.enableMultiLinePasteWarning": "auto",
+  "terminal.explorerKind": "both",
+  "terminal.integrated.tabs.showActiveTerminal": "never",
+  "terminal.integrated.rightClickBehavior": "default",
+
+  // chat
+
+  "chat.agent.enabled": false,
+  "chat.commandCenter.enabled": false,
+  "chat.disableAIFeatures": true,
+  "chat.titleBar.signIn.enabled": false,
+  "chat.viewSessions.orientation": "stacked",
+
+  "breadcrumbs.enabled": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "problems.decorations.enabled": false,
+  "problems.autoReveal": false,
+  "outline.problems.enabled": false,
+  "outline.problems.colors": false,
+  "chat.editor.wordWrap": "off",
+  "diffEditor.wordWrap": "inherit",
+  "debug.console.wordWrap": true,
+
+  // def
+  "files.enableTrash": true,
+
+  // per language customizations
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "[graphql]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // extensions
+
+  "extensions.ignoreRecommendations": true,
+
+  "claudeCode.preferredLocation": "sidebar",
+  "claudeCode.allowDangerouslySkipPermissions": false,
+
+  "editorconfig.generateAuto": false,
+  "editorconfig.showMenuEntry": false,
+
+  "prettier.configPath": "~/.config/prettier/.prettierrc.yml",
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": true,
+
+  "ruff.configuration": "~/.config/ruff/ruff.toml",
+  "ruff.format.preview": true,
+
+  "github.showAvatar": false,
+  "github.copilot.enable": {
+    "*": false,
+    "markdown": false,
+    "plaintext": false,
+    "scminput": false
+  },
 }
