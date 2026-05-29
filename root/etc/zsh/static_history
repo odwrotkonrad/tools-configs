@@ -57,4 +57,6 @@ unsetopt        #[≟] show all disabled shell options
 set -o          #[≟] show all shell options with on/off status
 #[⫶⫶]
 
+exec zsh     #[≟] reload config by replacing current process (no nested shell); re-runs full startup chain
+
 #[⫶]

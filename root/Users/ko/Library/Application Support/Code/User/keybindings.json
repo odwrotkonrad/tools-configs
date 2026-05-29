@@ -81,6 +81,14 @@
     "when": "textCompareEditorActive && editorPartMaximizedEditorGroup"
   },
   { "key": "escape", "command": "workbench.action.closeActiveEditor", "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup" },
+  //[≟] alt+esc on diff — close diff; if maximized, also unmaximize
+  {
+    "key": "alt+escape",
+    "command": "runCommands",
+    "args": { "commands": ["workbench.action.closeActiveEditor", "workbench.action.toggleMaximizeEditorGroup"] },
+    "when": "textCompareEditorActive && editorPartMaximizedEditorGroup"
+  },
+  { "key": "alt+escape", "command": "workbench.action.closeActiveEditor", "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup" },
   //[⫶]
 
   //[…] search
@@ -90,9 +98,11 @@
   //[≟] alt+w — toggle quick file open
   { "key": "alt+w", "command": "workbench.action.quickOpen" },
   { "key": "alt+w", "command": "workbench.action.closeQuickOpen", "when": "inQuickOpen" },
-  //[≟] alt+d — toggle global search panel
-  { "key": "alt+d", "command": "workbench.action.findInFiles", "when": "!searchViewletVisible" },
-  { "key": "alt+d", "command": "workbench.action.closePanel",  "when": "searchViewletVisible" },
+  //[≟] alt+d — closed: open; open but unfocused: focus results (if any) else input; focused: close
+  { "key": "alt+d", "command": "workbench.action.findInFiles",        "when": "!searchViewletVisible" },
+  { "key": "alt+d", "command": "search.action.focusSearchList",       "when": "searchViewletVisible && !searchViewletFocus && hasSearchResult" },
+  { "key": "alt+d", "command": "workbench.action.findInFiles",        "when": "searchViewletVisible && !searchViewletFocus && !hasSearchResult" },
+  { "key": "alt+d", "command": "workbench.action.closePanel",         "when": "searchViewletFocus" },
   //[≟] alt+g — search view → editor / elsewhere → new search editor in first group / inside search editor → close
   {
     "key": "alt+g",
@@ -113,14 +123,15 @@
   { "key": "alt+escape", "command": "workbench.action.closeActiveEditor",          "when": "searchViewletFocus && activeEditorIsPreview" },
   { "key": "alt+escape", "command": "workbench.action.closePanel",                 "when": "searchViewletFocus && !activeEditorIsPreview" },
   { "key": "alt+escape", "command": "workbench.action.closePanel",                 "when": "editorFocus && view.workbench.view.search.visible" },
-  //[≟] enter — input → focus results / result → open in second group
-  { "key": "enter", "command": "search.action.focusSearchList", "when": "searchViewletFocus && inputBoxFocus" },
+  //[≟] enter — input → re-run search, keep focus in input (down enters results) / result → open in second group
   {
     "key": "enter",
     "command": "runCommands",
     "args": { "commands": ["workbench.action.focusSecondEditorGroup", "search.action.focusSearchList", "list.select"] },
     "when": "searchViewletFocus && !inputBoxFocus"
   },
+  //[≟] down — search input → enter results (only if any; state is settled by now)
+  { "key": "down", "command": "search.action.focusSearchList", "when": "searchViewletFocus && inputBoxFocus && hasSearchResult" },
   //[≟] up/down on search result — focus group 2 first so preview lands there
   {
     "key": "down",
@@ -138,19 +149,23 @@
   { "key": "escape", "command": "workbench.action.focusActiveEditorGroup", "when": "searchInputBoxFocus && !inSearchEditor" },
   { "key": "escape", "command": "workbench.action.findInFiles",            "when": "searchViewletFocus && !inputBoxFocus" },
   { "key": "escape", "command": "workbench.action.focusFirstEditorGroup",  "when": "searchViewletFocus && inputBoxFocus" },
-  //[≟] esc — search editor: results→input, input→first group
-  { "key": "escape", "command": "search.action.focusQueryEditorWidget", "when": "inSearchEditor && !searchInputBoxFocus" },
-  { "key": "escape", "command": "workbench.action.focusFirstEditorGroup", "when": "inSearchEditor && searchInputBoxFocus" },
-  //[≟] esc from editor — priority: 1) search panel → focus results; 2) sidebar → reveal in explorer; 3) → focus first group
+  //[≟] esc — search editor: close (no save prompt), like alt+esc
+  { "key": "escape", "command": "workbench.action.revertAndCloseActiveEditor", "when": "inSearchEditor" },
+  //[≟] esc from editor — priority: 1) search panel → results if any, else input; 2) sidebar → reveal in explorer; 3) → focus first group
   {
     "key": "escape",
     "command": "search.action.focusSearchList",
-    "when": "view.workbench.view.search.visible && editorTextFocus && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
+    "when": "view.workbench.view.search.visible && hasSearchResult && editorTextFocus && !textCompareEditorActive && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
+  },
+  {
+    "key": "escape",
+    "command": "workbench.action.findInFiles",
+    "when": "view.workbench.view.search.visible && !hasSearchResult && editorTextFocus && !textCompareEditorActive && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
   {
     "key": "escape",
     "command": "workbench.action.focusFirstEditorGroup",
-    "when": "editorTextFocus && !view.workbench.view.search.visible && !sideBarVisible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
+    "when": "editorTextFocus && !textCompareEditorActive && !view.workbench.view.search.visible && !sideBarVisible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
   //[⫶]
 
@@ -188,7 +203,7 @@
   {
     "key": "escape",
     "command": "revealInExplorer",
-    "when": "editorTextFocus && sideBarVisible && !view.workbench.view.search.visible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
+    "when": "editorTextFocus && sideBarVisible && !textCompareEditorActive && !view.workbench.view.search.visible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
   //[≟] enter — open file / toggle folder
   { "key": "enter", "command": "explorer.openAndPassFocus", "when": "filesExplorerFocus && !inputFocus && !explorerResourceIsFolder" },

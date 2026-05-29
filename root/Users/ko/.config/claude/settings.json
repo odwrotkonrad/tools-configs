@@ -6,6 +6,7 @@
       "Bash(man *)",
       "Bash(rg *)",
       "Bash(tree *)",
+      "Bash(cd ./*)",
       "Edit(**/*)",
       "LSP",
       "Read(**/*)"

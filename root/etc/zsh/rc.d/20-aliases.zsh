@@ -71,6 +71,15 @@ alias sa_process_list_tree+='pstree -g 2 -p '
 alias sa_process_list_tree_search+='pstree -g 2 -s '
 #[⫶]
 
+#[…] claude >[≟] agentic coding tool
+# --permission-mode dontAsk - skip permission prompts for the session, deny if not explicity granted permission
+# --append-system-prompt    - append text to the default system prompt
+#/[≟]
+
+#[∵] it happens claude tries to ask questions in dontAsk mode
+alias sa_claude_no_ask='claude --permission-mode dontAsk --append-system-prompt "IMPORTANT! Never ask user any questions! User your best judgement when in doubt!"'
+#[⫶]
+
 #[…] other
 
 #>[≟] fc - zsh builtin, controls the interactive history mechanism
