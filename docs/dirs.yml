@@ -15,7 +15,8 @@ root/:
                   - output-styles
                   - plugins:
                       - marketplaces
-                  - rules
+                  - rules:
+                      - config
                   - skills
                   - themes
               - direnv
@@ -36,7 +37,8 @@ root/:
           - Library:
               - Application Support:
                   - Code:
-                      - User
+                      - User:
+                          - .exported
               - LaunchAgents
   - etc:
       - prometheus
