@@ -4,13 +4,13 @@ You have access to these and only these tools:
 
 - Read
 - Glob
-- Grep
 - Edit
 - LSP - Code Intelligence Features for languages: ruby, python, golang, typescript, javascript
 
 Bash commands:
 
-- `$ man` - reading man pages
+- `$ man` - read  manual documentation pages
+- `$ rg` - recursively searches the current directory for lines matching a regex pattern. (pcre2)
 
 Attempting to use any other tools is forbidden.
 

@@ -3,20 +3,21 @@
   "cleanupPeriodDays": 90,
   "permissions": {
     "allow": [
-      "Bash(man *)",
-      "Grep",
-      "Glob",
       "Bash(cd ./*)",
+      "Bash(man *)",
+      "Bash(rg *)",
       "Edit(**/*)",
+      "Glob(./*)",
+      "Glob(//Applications/Visual Studio Code.app/Contents/Resources/**)",
       "LSP",
       "Read(**/*)",
-      "Read(//Applications/Visual Studio Code.app/Contents/Resources/app/extensions/**)",
-      "Glob(//Applications/Visual Studio Code.app/Contents/Resources/**)"
+      "Read(//Applications/Visual Studio Code.app/Contents/Resources/app/extensions/**)"
     ],
     "deny": [
       "Agent",
       "Agent(claude-code-guide)",
       "Agent(Explore)",
+      "Grep",
       "Agent(general-purpose)",
       "Agent(Plan)",
       "Agent(statusline-setup)",
