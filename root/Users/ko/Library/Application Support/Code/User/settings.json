@@ -21,8 +21,8 @@
   "workbench.editor.decorations.badges": true,
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.empty.hint": "hidden",
-  "workbench.editor.enablePreviewFromQuickOpen": true,
   "workbench.editor.enablePreviewFromCodeNavigation": true,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
   "workbench.editor.languageDetection": false,
   "workbench.editor.limit.enabled": true,
   "workbench.editor.limit.perEditorGroup": true,
@@ -31,6 +31,11 @@
   "workbench.editor.tabActionCloseVisibility": false,
   "workbench.editor.titleScrollbarVisibility": "hidden",
   "workbench.layoutControl.enabled": false,
+  "workbench.localHistory.enabled": false,
+  "workbench.localHistory.exclude": {},
+  "workbench.localHistory.maxFileEntries": 50,
+  "workbench.localHistory.maxFileSize": 256,
+  "workbench.localHistory.mergeWindow": 10,
   "workbench.navigationControl.enabled": false,
   "workbench.panel.defaultLocation": "top",
   "workbench.panel.showLabels": false,
@@ -121,7 +126,7 @@
   "editor.find.addExtraSpaceOnTop": false,
   "editor.find.autoFindInSelection": "never",
   "editor.find.loop": false,
-  "editor.folding": false, //[∵] more space for contents
+  "editor.folding": false, //[∵] more space for contents; toggled on with sticky scroll via alt+p
   "editor.fontFamily": "Source Code Pro",
   "editor.fontSize": 13,
   "editor.formatOnSave": false,
@@ -138,7 +143,6 @@
   "editor.scrollbar.horizontalScrollbarSize": 2,
   "editor.scrollbar.verticalScrollbarSize": 2,
   "editor.scrollBeyondLastLine": false,
-  "editor.stickyScroll.enabled": false,
   "editor.stickyScroll.maxLineCount": 1,
   "editor.suggest.preview": true,
   "editor.suggest.showColors": false,
@@ -166,7 +170,6 @@
   "search.searchEditor.doubleClickBehaviour": "selectWord",
   "search.searchEditor.focusResultsOnSearch": true,
   "search.searchOnType": false,
-  "search.searchView.semanticSearchBehavior": "auto",
   "search.seedOnFocus": true,
   "search.seedWithNearestWord": true,
   "search.showLineNumbers": false,
@@ -176,57 +179,84 @@
   "search.useParentIgnoreFiles": true,
   //[⫶]
 
-  // TODO below settings - split to actually set / defaults
-  //[…] git
-  "git.addAICoAuthor": "off",
-  "git.allowForcePush": true,
-  "git.allowNoVerifyCommit": false,
+  //[…] source control
+
+  //[……] git
   "git.alwaysShowStagedChangesResourceGroup": true,
   "git.alwaysSignOff": true,
-  "git.autofetch": false,
-  "git.autofetchPeriod": 0,
-  "git.autorefresh": true,
   "git.autoRepositoryDetection": false,
-  "git.autoStash": true,
-  "git.blame.editorDecoration.disableHover": false,
-  "git.blame.editorDecoration.enabled": false,
-  "git.blame.editorDecoration.template": "${hashShort}, (${authorDateAgo}), ${subject}",
-  "git.blame.ignoreWhitespace": true,
-  "git.branchSortOrder": "alphabetically",
+  "git.blame.editorDecoration.template": "(${authorDateAgo} ${authorEmail}): ${subject}",
+  "git.blame.statusBarItem.enabled": false,
+  "git.branchSortOrder": "committerdate",
+  "git.closeDiffOnOperation": true,
   "git.confirmCommittedDelete": false,
   "git.confirmEmptyCommits": false,
+  "git.confirmNoVerifyCommit": false,
   "git.confirmSync": false,
   "git.countBadge": "off",
-  "git.defaultCloneDirectory": "~/projects/",
-  "git.openAfterClone": "always",
-  "git.openDiffOnClick": true,
-  "mergeEditor.diffAlgorithm": "advanced",
-  "git.closeDiffOnOperation": true,
-  "git.promptToSaveFilesBeforeCommit": "never",
-  "git.promptToSaveFilesBeforeStash": "never",
-  "git.repositoryScanIgnoredFolders": [
-    "node_modules",
-    ".user"
-  ],
+  "git.decorations.enabled": false,
+  "git.defaultCloneDirectory": "~/.local/share/projects",
+  "git.diagnosticsCommitHook.enabled": true,
+  "git.enableCommitSigning": true,
+  "git.enableSmartCommit": true,
+  "git.ignoreRebaseWarning": true,
+  "git.inputValidation": true,
+  "git.inputValidationLength": 300,
+  "git.inputValidationSubjectLength": 80,
+  "git.mergeEditor": true,
+  "git.openAfterClone": "alwaysNewWindow",
+  "git.openDiffOnClick": false,
+  "git.openRepositoryInParentFolders": "never",
+  "git.optimisticUpdate": false,
+  "git.path": "/opt/homebrew/bin/git",
+  "git.pruneOnFetch": true,
+  "git.pullBeforeCheckout": true,
+  "git.rebaseWhenSync": true,
+  "git.statusLimit": 0,
+  "git.terminalGitEditor": true,
+  "git.timeline.showAuthor": false,
+  "git.timeline.showUncommitted": true,
+  "git.untrackedChanges": "mixed",
+  "git.useCommitInputAsStashMessage": true,
+  "git.useForcePushIfIncludes": false, //[∵] frequent amends break the includes check
+  "git.useForcePushWithLease": true,
+  "git.useIntegratedAskPass": true,
   "git.showActionButton": {
     "commit": false,
     "publish": false,
     "sync": false
   },
-  "git.showCommitInput": false,
-  "git.showProgress": false,
-  "git.suggestSmartCommit": false,
-  "git.timeline.showAuthor": false,
-  "git.timeline.showUncommitted": true,
-  "git.untrackedChanges": "mixed",
-  "git.useEditorAsCommitInput": false,
-  "git.decorations.enabled": true,
-  "git.blame.statusBarItem.enabled": true,
+  //[⫶⫶]
 
-  "scm.diffDecorationsGutterVisibility": "always",
-  "scm.diffDecorations": "all",
+  //[……] scm
+  "scm.alwaysShowRepositories": true,
+  "scm.autoReveal": false,
+  "scm.compactFolders": true,
+  "scm.countBadge": "off",
+  "scm.defaultViewSortKey": "status",
+  "scm.diffDecorations": "gutter",
+  "scm.diffDecorationsGutterAction": "none",
+  "scm.diffDecorationsIgnoreTrimWhitespace": "inherit",
+  "scm.graph.badges": "filter",
+  "scm.graph.pageSize": 200,
+  "scm.graph.showIncomingChanges": false,
+  "scm.graph.showOutgoingChanges": false,
+  "scm.inputFontFamily": "editor",
+  "scm.inputMaxLineCount": 5,
+  "scm.inputMinLineCount": 2,
+  "scm.providerCountBadge": "hidden",
+  "scm.repositories.selectionMode": "single",
+  "scm.repositories.visible": 1,
+  "scm.showActionButton": false,
+  "scm.diffDecorationsGutterPattern": {
+    "added": false,
+    "modified": true
+  },
+  //[⫶⫶]
+
   //[⫶]
 
+  // TODO below settings - split to actually set / defaults
   //[…] terminal
   "terminal.integrated.detectLocale": "auto",
   "terminal.integrated.enableImages": false,
@@ -338,10 +368,13 @@
   //[…] chat
   "chat.agent.enabled": false,
   "chat.commandCenter.enabled": false,
-  "chat.disableAIFeatures": true,
   "chat.titleBar.signIn.enabled": false,
   "chat.viewSessions.orientation": "stacked",
   "chat.editor.wordWrap": "off",
+
+  // default
+  "chat.disableAIFeatures": false,
+
   //[⫶]
 
   //[…] misc
@@ -430,5 +463,4 @@
   "diffEditor.ignoreTrimWhitespace": true,
   "diffEditor.wordWrap": "inherit",
   //[⫶]
-
 }

@@ -227,6 +227,8 @@
 
   //[…] source control
   { "key": "alt+c", "command": "workbench.view.scm" },
+  //[≟] alt+p — force push (--force-with-lease, no pull); for re-pushing amended commits without Sync's merge conflicts
+  { "key": "alt+p", "command": "git.pushForce", "when": "scmFocus" },
   //[⫶]
 
   //[…] font zoom — terminal in terminal focus, editor elsewhere

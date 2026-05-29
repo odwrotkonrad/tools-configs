@@ -1,1 +1,4 @@
 !root/**/.*
+
+# exported default config / keybindings of vscode
+**/Code/User/.exported/

@@ -4,12 +4,14 @@
   "permissions": {
     "allow": [
       "Bash(man *)",
-      "Bash(rg *)",
-      "Bash(tree *)",
+      "Grep",
+      "Glob",
       "Bash(cd ./*)",
       "Edit(**/*)",
       "LSP",
-      "Read(**/*)"
+      "Read(**/*)",
+      "Read(//Applications/Visual Studio Code.app/Contents/Resources/app/extensions/**)",
+      "Glob(//Applications/Visual Studio Code.app/Contents/Resources/**)"
     ],
     "deny": [
       "Agent",
@@ -19,8 +21,6 @@
       "Agent(Plan)",
       "Agent(statusline-setup)",
       "ExitPlanMode",
-      "Glob",
-      "Grep",
       "mcp__computer",
       "Monitor",
       "NotebookEdit",
@@ -36,7 +36,7 @@
       "WebFetch",
       "WebSearch"
     ],
-    "defaultMode": "dontAsk"
+    "defaultMode": "default"
   },
   "model": "opus",
   "availableModels": [
@@ -58,10 +58,10 @@
     }
   },
   "outputStyle": "Proactive",
+  "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto",
-  "alwaysThinkingEnabled": false
+  "theme": "auto"
 }

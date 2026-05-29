@@ -1,0 +1,203 @@
+{
+  //[…] window
+  "window.titleBarStyle": "custom",
+  "window.customTitleBarVisibility": "auto",
+  "window.commandCenter": true,
+  "window.autoDetectHighContrast": true,
+  "window.clickThroughInactive": true,
+  "window.closeWhenEmpty": false,
+  "window.dialogStyle": "native",
+  "window.doubleClickIconToClose": false,
+  "window.menuStyle": "native",
+  "window.nativeFullScreen": true,
+  "window.nativeTabs": false,
+  "window.newWindowProfile": null,
+  "window.openFilesInNewWindow": "off",
+  "window.openFoldersInNewWindow": "default",
+  "window.openWithoutArgumentsInNewWindow": "off",
+  "window.restoreFullscreen": false,
+  "window.zoomPerWindow": true,
+  //[⫶]
+
+  //[…] workbench
+  "workbench.sideBar.location": "left",
+  "workbench.secondarySideBar.forceMaximized": false,
+  "workbench.editor.decorations.colors": true,
+  "workbench.editor.highlightModifiedTabs": false,
+  "workbench.list.typeNavigationMode": "automatic",
+  "workbench.quickOpen.closeOnFocusLost": true,
+  "workbench.quickOpen.preserveInput": false,
+  "workbench.editor.enablePreview": true,
+  "workbench.editor.limit.excludeDirty": false,
+  "workbench.editor.dragToOpenWindow": true,
+  "workbench.editor.defaultBinaryEditor": "",
+  "workbench.editor.centeredLayoutFixedWidth": false,
+  "workbench.editor.closeEmptyGroups": true,
+  "workbench.editor.centeredLayoutAutoResize": true,
+  "workbench.editor.alwaysShowEditorActions": false,
+  "workbench.diffEditorAssociations": {},
+  "workbench.commandPalette.showAskInChat": true,
+  "workbench.commandPalette.preserveInput": false,
+  "workbench.commandPalette.history": 50,
+  "workbench.commandPalette.experimental.suggestCommands": false,
+  "workbench.commandPalette.experimental.enableNaturalLanguageSearch": true,
+  "workbench.commandPalette.experimental.askChatLocation": "chatView",
+  "workbench.cloudChanges.continueOn": "prompt",
+  "workbench.cloudChanges.autoResume": "onReload",
+  "workbench.browser.pageZoom": "Match Window",
+  "workbench.browser.openLocalhostLinks": true,
+  "workbench.browser.enableChatTools": true,
+  "workbench.browser.dataStorage": "global",
+  "workbench.activityBar.iconClickBehavior": "toggle",
+  "workbench.activityBar.compact": true,
+  "workbench.layoutControl.type": "both",
+  "workbench.editor.tabSizing": "fit",
+  "workbench.editor.showTabs": "multiple",
+  "workbench.editor.labelFormat": "default",
+  "workbench.editor.pinnedTabSizing": "normal",
+  //[⫶]
+
+  //[…] editor
+  "editor.find.seedSearchStringFromSelection": "always",
+  "editor.wordWrap": "off", //[∵] toggled using shortcut
+  "editor.suggestLineHeight": 0,
+  "editor.suggest.showInlineDetails": true,
+  "editor.suggest.filterGraceful": true,
+  "editor.mouseWheelScrollSensitivity": 1,
+  "editor.scrollbar.horizontal": "auto",
+  "editor.scrollbar.vertical": "auto",
+  "editor.multiCursorModifier": "alt",
+  "editor.suggest.insertMode": "insert",
+  //[⫶]
+
+  //[…] explorer
+  "explorer.compactFolders": true,
+  "explorer.excludeGitIgnore": false,
+  "explorer.decorations.colors": true,
+  "explorer.decorations.badges": true,
+  "explorer.enableUndo": true,
+  "explorer.autoReveal": true,
+  "explorer.fileNesting.enabled": false,
+  "explorer.fileNesting.expand": true,
+  //[⫶]
+
+  //[…] search
+  "search.decorations.badges": true,
+  "search.decorations.colors": true,
+  "search.defaultViewMode": "list",
+  "search.followSymlinks": true,
+  "search.mode": "view",
+  "search.quickAccess.preserveInput": false,
+  "search.quickOpen.history.filterSortOrder": "default",
+  "search.quickOpen.includeSymbols": false,
+  "search.ripgrep.maxThreads": 0,
+  "search.searchEditor.defaultNumberOfContextLines": 1,
+  "search.searchEditor.reusePriorSearchConfiguration": false,
+  "search.searchEditor.singleClickBehaviour": "default",
+  "search.searchOnTypeDebouncePeriod": 300,
+  "search.searchView.keywordSuggestions": false,
+  "search.searchView.semanticSearchBehavior": "manual",
+  "search.useIgnoreFiles": true,
+  "search.useReplacePreview": true,
+  //[⫶]
+
+  //[…] source control
+
+  //[……] git
+  "git.worktreeIncludeFiles": [],
+  "git.verboseCommit": false,
+  "git.terminalAuthentication": true,
+  "git.supportCancellation": false,
+  "git.similarityThreshold": 50,
+  "git.showReferenceDetails": false,
+  "git.showPushSuccessNotification": false,
+  "git.showInlineOpenFileAction": false,
+  "git.scanRepositories": [],
+  "git.requireGitUserConfig": true,
+  "git.repositoryScanMaxDepth": 1,
+  "git.replaceTagsWhenPull": false,
+  "git.rememberPostCommitCommand": false,
+  "git.pullTags": true,
+  "git.postCommitCommand": "none",
+  "git.ignoreWindowsGit27Warning": false,
+  "git.ignoreSubmodules": false,
+  "git.ignoreMissingGitWarning": false,
+  "git.ignoreLimitWarning": false,
+  "git.ignoreLegacyWarning": false,
+  "git.ignoredRepositories": [],
+  "git.followTagsWhenSync": false,
+  "git.fetchOnPull": false,
+  "git.enableStatusBarSync": true,
+  "git.enabled": true,
+  "git.discardUntrackedChangesToTrash": true,
+  "git.detectWorktreesLimit": 50,
+  "git.detectWorktrees": false,
+  "git.detectSubmodulesLimit": 10,
+  "git.detectSubmodules": true,
+  "git.defaultBranchName": "main",
+  "git.confirmForcePush": true, // ?
+  "git.commitShortHashLength": 7,
+  "git.commandsToLog": [],
+  "git.branchWhitespaceChar": "-",
+  "git.branchValidationRegex": "", // per repo / folder
+  "git.branchRandomName.enable": false,
+  "git.branchProtectionPrompt": "alwaysPrompt",
+  "git.branchProtection": [], // todo
+  "git.branchPrefix": "", // per repo or per folder
+  "git.blame.statusBarItem.template": "${authorName} (${authorDateAgo})",
+  "git.timeline.date": "committed",
+  "git.useEditorAsCommitInput": false,  // maybe?
+  "git.suggestSmartCommit": true,
+  "git.smartCommitChanges": "all",
+  "git.showProgress": true,
+  "git.showCommitInput": true,
+  "git.promptToSaveFilesBeforeStash": "always",
+  "git.promptToSaveFilesBeforeCommit": "always",
+  "mergeEditor.diffAlgorithm": "advanced",
+  "git.blame.ignoreWhitespace": false,
+  "git.blame.editorDecoration.enabled": false,
+  "git.blame.editorDecoration.disableHover": false,
+  "git.autoStash": false,
+  "git.autorefresh": true,
+  "git.autofetchPeriod": 180,
+  "git.autofetch": false,
+  "git.allowNoVerifyCommit": false,
+  "git.allowForcePush": false,
+  "git.addAICoAuthor": "off",
+  "git.repositoryScanIgnoredFolders": [
+    "node_modules"
+  ],
+  "git.branchRandomName.dictionary": [
+    "adjectives",
+    "animals"
+  ],
+  "git.checkoutType": [
+    "local",
+    "remote",
+    "tags"
+  ],
+  "git.diagnosticsCommitHook.sources": {
+      "*": "error"
+    },
+  //[⫶⫶]
+
+  //[……] scm
+  "scm.workingSets.enabled": false,
+  "scm.defaultViewMode": "list",
+  "scm.workingSets.default": "current",
+  "scm.showInputActionButton": true,
+  "scm.repositories.sortOrder": "discovery time",
+  "scm.repositories.explorer": false,
+  "scm.inputFontSize": 13,
+  "scm.graph.pageOnScroll": true,
+  "scm.diffDecorationsGutterWidth": 3,
+  "scm.alwaysShowActions": false,
+  "scm.diffDecorationsGutterVisibility": "always",
+  //[⫶⫶]
+
+  //[⫶]
+
+  //[…] terminal
+  "terminal.integrated.fontSize": 12
+  //[⫶]
+}

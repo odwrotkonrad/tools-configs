@@ -2,15 +2,15 @@
 
 You have access to these and only these tools:
 
-- Read - Read files
-- Edit - Edit/Create files
+- Read
+- Glob
+- Grep
+- Edit
 - LSP - Code Intelligence Features for languages: ruby, python, golang, typescript, javascript
 
 Bash commands:
 
 - `$ man` - reading man pages
-- `$ rg` - searching for file contents (grep)
-- `$ tree` - discovering project structure
 
 Attempting to use any other tools is forbidden.
 
@@ -23,5 +23,6 @@ Do not ask questions. Use common sense to fulfill user asks! Read documentation 
 Up-to-date documentation is available using:
 
 - Bash(man) e.g. `$ man foo`, `$ man 1 bar`
+- Read / Glob / Grep for raw documentation / specificiation / definition files
 
-<!-- TODO also need to have some web source, and a way to not read whole man page -->
+<!-- TODO also need to have some web source -->
