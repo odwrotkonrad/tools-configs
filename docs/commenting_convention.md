@@ -10,6 +10,17 @@ Comments advertise themselves to a reader with a label prefix, to facilitate rea
 | What?    | ≟      | Questioned Equal To | U+225F     |
 | Why?     | ∵      | Because             | U+2235     |
 
+
+### Structural Grouping
+
+Contents of a file might be divided into sections and subsections. Each section is named at its start. Nesting is expressed by repeating the symbol.
+
+| Description         | Symbol | Name                           | Code Point |
+| ------------------- | ------ | ------------------------------ | ---------- |
+| Section introducer  | …      | Horizontal Ellipsis            | U+2026     |
+| Section terminator  | ⫶      | Triple Vertical Dot Separatrix | U+2AF6     |
+
+
 ## Examples
 
 ### Inline
@@ -52,4 +63,19 @@ param=foo
 #   because "what is" could differ by person
 #/[∵]
 param=bar
+```
+
+### Sections
+
+```sh
+#[…] foo
+foo_a=1
+foo_b=2
+
+  #[……] bar
+  bar_a=1
+  bar_b=2
+  #[⫶⫶] bar
+
+#[⫶] foo
 ```
