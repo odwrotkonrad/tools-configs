@@ -1,5 +1,5 @@
 {
-  // window
+  //[…] window
   "window.titleBarStyle": "custom",
   "window.customTitleBarVisibility": "auto",
   "window.commandCenter": true,
@@ -17,8 +17,9 @@
   "window.openWithoutArgumentsInNewWindow": "off",
   "window.restoreFullscreen": false,
   "window.zoomPerWindow": true,
+  //[⫶]
 
-  // workbench
+  //[…] workbench
   "workbench.sideBar.location": "left",
   "workbench.secondarySideBar.forceMaximized": false,
   "workbench.editor.decorations.colors": true,
@@ -54,10 +55,11 @@
   "workbench.editor.showTabs": "multiple",
   "workbench.editor.labelFormat": "default",
   "workbench.editor.pinnedTabSizing": "normal",
+  //[⫶]
 
-  // editor
+  //[…] editor
   "editor.find.seedSearchStringFromSelection": "always",
-  "editor.wordWrap": "off", // toggled using shortcut
+  "editor.wordWrap": "off", //[∵] toggled using shortcut
   "editor.suggestLineHeight": 0,
   "editor.suggest.showInlineDetails": true,
   "editor.suggest.filterGraceful": true,
@@ -66,8 +68,9 @@
   "editor.scrollbar.vertical": "auto",
   "editor.multiCursorModifier": "alt",
   "editor.suggest.insertMode": "insert",
+  //[⫶]
 
-  // explorer
+  //[…] explorer
   "explorer.compactFolders": true,
   "explorer.excludeGitIgnore": false,
   "explorer.decorations.colors": true,
@@ -76,8 +79,9 @@
   "explorer.autoReveal": true,
   "explorer.fileNesting.enabled": false,
   "explorer.fileNesting.expand": true,
+  //[⫶]
 
-  // search
+  //[…] search
   "search.mode": "view",
   "search.searchEditor.singleClickBehaviour": "default",
   "search.quickOpen.includeSymbols": false,
@@ -94,7 +98,9 @@
   "search.useIgnoreFiles": true,
   "search.searchOnTypeDebouncePeriod": 300,
   "search.quickOpen.history.filterSortOrder": "default",
+  //[⫶]
 
-  // terminal
+  //[…] terminal
   "terminal.integrated.fontSize": 12
+  //[⫶]
 }

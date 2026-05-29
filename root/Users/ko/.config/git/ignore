@@ -1,13 +1,17 @@
+#[…] dotfiles
 **/.*/
 **/.*
+#[⫶]
 
+#[…] other
 **/venv/
 **/node_modules/
 
 **/terraform.tfstate*
 **/CLAUDE.local.md
+#[⫶]
 
-#[≟] inverse rules
+#[…] inverse rules
 !**/.github/
 !**/.devcontainer/
 !**/.claude/
@@ -19,3 +23,4 @@
 !**/.env.example
 
 **/.claude/settings.local.json
+#[⫶]

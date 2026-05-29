@@ -2,10 +2,7 @@
 # https://prometheus.io/docs/prometheus/latest/configuration/configuration/
 #/[⌖]
 
-##>[≟]
-## below is the default prometheus.yml shipped with the prometheus binary
-##/[≟]
-
+#[…] default prometheus.yml shipped with the prometheus binary
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
@@ -27,3 +24,4 @@ scrape_configs:
       - targets: ["localhost:9090"]
         labels:
           app: "prometheus"
+#[⫶]

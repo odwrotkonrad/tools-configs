@@ -1,5 +1,5 @@
 {
-  //[≟] window
+  //[…] window
   "window.autoDetectColorScheme": true,
   "window.confirmBeforeClose": "keyboardOnly",
   "window.confirmSaveUntitledWorkspace": false,
@@ -10,8 +10,9 @@
   "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
   "window.titleSeparator": " ━━ ",
   "window.zoomLevel": 1,
+  //[⫶]
 
-  //[≟] workbench
+  //[…] workbench
   "workbench.activityBar.autoHide": true,
   "workbench.activityBar.location": "hidden",
   "workbench.browser.showInTitleBar": false,
@@ -107,9 +108,9 @@
       "terminalCursor.foreground": "#000000"
     },
   },
+  //[⫶]
 
-  //[≟] editor
-
+  //[…] editor
   "editor.accessibilitySupport": "off",
   "editor.cursorBlinking": "solid",
   "editor.cursorStyle": "block",
@@ -142,9 +143,9 @@
   "editor.suggest.showColors": false,
   "editor.suggest.showStatusBar": true,
   "editor.wordBasedSuggestions": "off",
+  //[⫶]
 
-  //[≟] explorer
-
+  //[…] explorer
   "explorer.autoReveal": "focusNoScroll",
   "explorer.autoOpenDroppedFile": false,
   "explorer.confirmDelete": false,
@@ -152,9 +153,9 @@
   "explorer.confirmUndo": "light",
   "explorer.incrementalNaming": "smart",
   "explorer.sortOrder": "type",
+  //[⫶]
 
-  //[≟] search
-
+  //[…] search
   "search.actionsPosition": "auto",
   "search.collapseResults": "alwaysCollapse",
   "search.experimental.useIgnoreFilesInFindFiles": true,
@@ -172,10 +173,10 @@
   "search.sortOrder": "modified",
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
+  //[⫶]
 
   // TODO below settings - split to actually set / defaults
-  //[≟] git
-
+  //[…] git
   "git.addAICoAuthor": "off",
   "git.allowForcePush": true,
   "git.allowNoVerifyCommit": false,
@@ -223,9 +224,9 @@
 
   "scm.diffDecorationsGutterVisibility": "always",
   "scm.diffDecorations": "all",
+  //[⫶]
 
-
-  //[≟] terminal
+  //[…] terminal
   "terminal.integrated.detectLocale": "auto",
   "terminal.integrated.enableImages": false,
   "terminal.integrated.gpuAcceleration": "off",
@@ -331,30 +332,33 @@
   "terminal.explorerKind": "both",
   "terminal.integrated.tabs.showActiveTerminal": "never",
   "terminal.integrated.rightClickBehavior": "default",
+  //[⫶]
 
-  //[≟] chat
-
+  //[…] chat
   "chat.agent.enabled": false,
   "chat.commandCenter.enabled": false,
   "chat.disableAIFeatures": true,
   "chat.titleBar.signIn.enabled": false,
   "chat.viewSessions.orientation": "stacked",
+  "chat.editor.wordWrap": "off",
+  //[⫶]
 
+  //[…] misc
   "breadcrumbs.enabled": false,
-
   "files.insertFinalNewline": true,
   "problems.decorations.enabled": false,
   "problems.autoReveal": false,
   "outline.problems.enabled": false,
   "outline.problems.colors": false,
-  "chat.editor.wordWrap": "off",
   "debug.console.wordWrap": true,
+  //[⫶]
 
-  //[≟] files
+  //[…] files
   "files.enableTrash": true,
   "files.autoSave": "off",
+  //[⫶]
 
-  //[≟] per-language formatters
+  //[…] per-language formatters
   "[go]": {
     "editor.defaultFormatter": "golang.go"
   },
@@ -389,9 +393,9 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  //[⫶]
 
-  //[≟] extensions
-
+  //[…] extensions
   "extensions.ignoreRecommendations": true,
 
   "claudeCode.preferredLocation": "sidebar",
@@ -414,7 +418,9 @@
     "plaintext": false,
     "scminput": false
   },
+  //[⫶]
 
+  //[…] diff editor
   "diffEditor.codeLens": false,
   "diffEditor.diffAlgorithm": "advanced",
   "diffEditor.experimental.showEmptyDecorations": true,
@@ -422,5 +428,6 @@
   "diffEditor.renderSideBySide": true,
   "diffEditor.ignoreTrimWhitespace": true,
   "diffEditor.wordWrap": "inherit",
+  //[⫶]
 
 }

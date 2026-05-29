@@ -1,8 +1,10 @@
 #>[⌖]
 # root/Users/ko/.config/kitty/kitty.conf                                #[≟] keystroke producer
 # root/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
-# $ man zshzle > bindkey                                                #[≟] zsh doc on bindings
 #/[⌖]
+
+#[…] zshzle
+#[⌖] man zshzle > bindkey [≟] zsh doc on bindings
 
 #[≟] non-alnum chars counted as word; empty = strict word boundaries #>[⌖] $ man zshparam
 WORDCHARS=""
@@ -84,9 +86,9 @@ typeset -A keystrokes_widgets=(
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
+#[⫶]
 
-
-###[≟] STTY
+#[…] stty [⌖] man stty [≟] set the options for a terminal device interface
 
 #[⌖] stty -a # source of cchars
 typeset -a disabled_cchars=(
@@ -103,6 +105,7 @@ typeset -A cchars=(
 )
 
 for action char in ${(kv)cchars}; stty ${action} ${char}
+#[⫶]
 
 
 unset keystrokes_widgets disabled_cchars cchars

@@ -5,9 +5,7 @@
 # $ man rg
 #/[⌖]
 
-##[≟] --- modified ---
-
-
+#[…] modified
 --ignore-file=/etc/rg/rgignore
 --no-ignore-exclude
 --no-ignore-global
@@ -38,9 +36,9 @@
 --max-filesize=4G
 --no-mmap
 --regex-size-limit=1G
+#[⫶]
 
-##[≟] --- defaults ---
-
+#[…] defaults
 # --color=auto
 # --encoding=auto
 # --heading
@@ -48,9 +46,9 @@
 # --path-separator=/
 # --threads=0
 # --with-filename
+#[⫶]
 
-##[≟] --- unset ---
-
+#[…] unset
 # --block-buffered
 # --byte-offset
 # --case-sensitive
@@ -86,9 +84,10 @@
 # --unrestricted
 # --vimgrep
 # --word-regexp
+#[⫶]
 
-##[≟] --- deprecated ---
-
+#[…] deprecated
 # --auto-hybrid-regex
 # --no-pcre2-unicode
 # --sort-files
+#[⫶]

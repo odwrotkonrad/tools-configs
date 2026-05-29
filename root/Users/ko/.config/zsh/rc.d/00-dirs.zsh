@@ -1,4 +1,4 @@
-
+#[…] create dirs
 typeset -a dirs=(
     "${HOME}/ScreenCapture"
     "${XDG_CACHE_HOME}/homebrew"
@@ -11,7 +11,9 @@ typeset -a dirs=(
 )
 mkdir -p ${(v)xdg_default_locations} ${dirs}             #[≟] create dirs if non existing
 unset dirs
+#[⫶]
 
+#[…] named dirs
 #>[≟]
 # hash - zsh builtin - modify the contents of the cmd and dir hash tables
 #   -d - target named directory hash table rather than command hash table
@@ -28,3 +30,4 @@ hash -d u_configs="$HOME/projects/configs" \
         u_projects="$HOME/projects"
         u_desktop="$HOME/Desktop" \
         u_capture="$HOME/ScreenCapture"
+#[⫶]

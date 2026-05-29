@@ -4,7 +4,7 @@
   // keyboard: alt placed directly left of space (macos external QWERTY, no remaps)
   ///[≟]
 
-  //>[≟] cursor / selection
+  //[…] cursor / selection
   { "key": "pageup",         "command": "cursorTop",    "when": "textInputFocus" },
   { "key": "pagedown",       "command": "cursorBottom", "when": "textInputFocus" },
   {
@@ -31,9 +31,9 @@
     "args": { "to": "down", "by": "line", "value": 3, "select": true },
     "when": "textInputFocus"
   },
-  ///[≟] cursor / selection
+  //[⫶]
 
-  //>[≟] editor
+  //[…] editor
   //[≟] alt+esc — close editor then focus first group (avoids landing in terminal group)
   {
     "key": "alt+escape",
@@ -81,9 +81,9 @@
     "when": "textCompareEditorActive && editorPartMaximizedEditorGroup"
   },
   { "key": "escape", "command": "workbench.action.closeActiveEditor", "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup" },
-  ///[≟] editor
+  //[⫶]
 
-  //>[≟] search
+  //[…] search
   //[≟] alt+q — toggle quick text search
   { "key": "alt+q", "command": "workbench.action.quickTextSearch",   "when": "!inQuickOpen" },
   { "key": "alt+q", "command": "workbench.action.closeQuickOpen",    "when": "inQuickOpen" },
@@ -152,9 +152,9 @@
     "command": "workbench.action.focusFirstEditorGroup",
     "when": "editorTextFocus && !view.workbench.view.search.visible && !sideBarVisible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
-  ///[≟] search
+  //[⫶]
 
-  //>[≟] terminal
+  //[…] terminal
   //>[≟] alt+t
   //  no terminal: create in last editor group
   //  terminal exists: focus (move from panel to editor)
@@ -178,9 +178,9 @@
   { "key": "alt+f",       "command": "workbench.action.terminal.focusFind",        "when": "terminalFocus" },
   { "key": "alt+escape",  "command": "workbench.action.focusNextGroup",            "when": "terminalFocus" },
   { "key": "alt+shift+t", "command": "workbench.action.terminal.openNativeConsole" },
-  ///[≟] terminal
+  //[⫶]
 
-  //>[≟] file explorer
+  //[…] file explorer
   //[≟] alt+a — toggle explorer
   { "key": "alt+a", "command": "workbench.view.explorer",                "when": "!explorerViewletFocus" },
   { "key": "alt+a", "command": "workbench.action.toggleSidebarVisibility", "when": "explorerViewletFocus" },
@@ -208,13 +208,13 @@
   },
   { "key": "f2",     "command": "renameFile",                          "when": "filesExplorerFocus && !inputFocus" },
   { "key": "escape", "command": "workbench.action.focusActiveEditorGroup", "when": "filesExplorerFocus && !inputFocus" },
-  ///[≟] file explorer
+  //[⫶]
 
-  //>[≟] source control
+  //[…] source control
   { "key": "alt+c", "command": "workbench.view.scm" },
-  ///[≟] source control
+  //[⫶]
 
-  //>[≟] font zoom — terminal in terminal focus, editor elsewhere
+  //[…] font zoom — terminal in terminal focus, editor elsewhere
   { "key": "alt+.", "command": "workbench.action.terminal.fontZoomIn",    "when": "terminalFocus" },
   { "key": "alt+,", "command": "workbench.action.terminal.fontZoomOut",   "when": "terminalFocus" },
   { "key": "alt+0", "command": "workbench.action.terminal.fontZoomReset", "when": "terminalFocus" },
@@ -222,17 +222,18 @@
   { "key": "alt+,", "command": "editor.action.fontZoomOut",   "when": "!terminalFocus" },
   { "key": "alt+0", "command": "editor.action.fontZoomReset", "when": "!terminalFocus" },
   { "key": "cmd+0", "command": "workbench.action.zoomReset" },
-  ///[≟] font zoom
+  //[⫶]
 
-  //>[≟] default unbinds
+  //[…] default unbinds
   { "key": "cmd+w",       "command": "-workbench.action.closeActiveEditor" },
   { "key": "cmd+w",       "command": "-workbench.action.closeGroup",  "when": "activeEditorGroupEmpty && multipleEditorGroups" },
   { "key": "cmd+w",       "command": "-workbench.action.closeWindow", "when": "!editorIsOpen && !multipleEditorGroups" },
   { "key": "cmd+w",       "command": "-workbench.action.terminal.killEditor", "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported" },
   { "key": "shift+cmd+w", "command": "-workbench.action.closeWindow" },
   { "key": "cmd+q",       "command": "-workbench.action.quit" },
-  ///[≟] default unbinds
-  ////[≟]  sequences sent to integrated terminal
+  //[⫶]
+
+  //[…] sequences sent to integrated terminal
   {
     "args": {
       "text": "\u0090z"
@@ -394,4 +395,5 @@
     "key": "shift+enter",
     "when": "terminalFocus"
   },
+  //[⫶]
 ]

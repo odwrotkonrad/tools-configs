@@ -1,18 +1,18 @@
-##[≟] brew - The Missing Package Manager for macOS (or Linux)
+#[…] brew [≟] The Missing Package Manager for macOS (or Linux)
 brew list       #[≟] list all packages installed
 brew update     #[≟] update remotes
 brew upgrade    #[≟] install upgrades
+#[⫶]
 
-
-##[≟] defaults – access the macOS user defaults system
+#[…] defaults [≟] access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
 defaults read com.apple.dock
 defaults read | rg --only-matching  'com.apple[.\w]+' - | sort | uniq
 defaults find com.apple.dock
 defaults write com.apple.dock "autohide" -bool "false"
+#[⫶]
 
-
-##[≟] git - the stupid content tracker
+#[…] git [≟] the stupid content tracker
 git stash                       #[≟] stash tracked files
 git add .
 git commit
@@ -21,39 +21,40 @@ git push --force-with-lease
 git status
 git stash pop
 git stash show
+#[⫶]
 
-
-##[≟] kitten - kitty's CLI utility
+#[…] kitten [≟] kitty's CLI utility
 kitten themes                   #[≟] interactive theme selection
+#[⫶]
 
-
-##>[≟]
-# launchctl – Interfaces with launchd
-#   -k - if service is running remove it and start again
-##/[≟]
+#[…] launchctl [≟] Interfaces with launchd
+#[≟] -k - if service is running remove it and start again
 launchctl bootstrap gui/$(id -u) /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist  #[≟] load service
 launchctl bootout gui/$(id -u)/local.s.load-defaults-config                                         #[≟] unload service
 launchctl kickstart -k gui/$(id -u)/local.s.load-defaults-config                                    #[≟] run service
 launchctl list                                                                                      #[≟] list all services
 launchctl print gui/$(id -u)/local.s.load-defaults-config                                           #[≟] show details of a service
+#[⫶]
 
-
-##>[≟]
-# plutil – property list utility
-#   -p - pretty print
-##/[≟]
+#[…] plutil [≟] property list utility
+#[≟] -p - pretty print
 plutil -p  /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist                        #[≟] print plist
 plutil -lint  /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist                     #[≟] lint plist
 plutil -convert json /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist              #[≟] plist to json
 plutil -convert xml1 /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist              #[≟] plist to xml (from various formats)
+#[⫶]
 
-##[≟] zsh builtins
+#[…] zsh builtins
 
-###[≟] emulate
+#[……] emulate
 emulate -R zsh  #[≟] reset shell opts to defaults for current shell
 emulate -L zsh  #[≟] set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
+#[⫶⫶]
 
-###[≟] setopt
+#[……] setopt
 setopt          #[≟] show all enabled shell options
 unsetopt        #[≟] show all disabled shell options
 set -o          #[≟] show all shell options with on/off status
+#[⫶⫶]
+
+#[⫶]

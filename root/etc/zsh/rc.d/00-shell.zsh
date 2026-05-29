@@ -1,5 +1,6 @@
 #[⌖] $ man zshoptions
 
+#[…] enabled options
 typeset -a opts_enabled=(
   autopushd
   cdsilent
@@ -29,8 +30,9 @@ typeset -a opts_enabled=(
   # zle
 )
 for opt in ${opts_enabled}; setopt ${opt}
+#[⫶]
 
-
+#[…] disabled options
 typeset -a opts_disabled=(
   #[≟] disabled by default
   aliasfuncdef
@@ -196,7 +198,9 @@ typeset -a opts_disabled=(
   xtrace
 )
 for opt in ${opts_disabled}; unsetopt ${opt}
+#[⫶]
 
+#[…] parameters
 typeset -A zsh_params=(
   HISTFILE    "${XDG_STATE_HOME}/zsh/history"
   HISTSIZE    15_000
@@ -206,3 +210,4 @@ typeset -A zsh_params=(
   SAVEHIST    10_000
 )
 for k v in "${(@kv)zsh_params}"; typeset "$k=$v"
+#[⫶]

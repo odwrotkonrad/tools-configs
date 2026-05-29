@@ -10,10 +10,11 @@ Comments advertise themselves to a reader with a label prefix, to facilitate rea
 | What?    | ≟      | Questioned Equal To | U+225F     |
 | Why?     | ∵      | Because             | U+2235     |
 
+Unlabeled comments are temporary or do not target readers and can be ignored.
 
 ### Structural Grouping
 
-Contents of a file might be divided into sections and subsections. Each section is named at its start. Nesting is expressed by repeating the symbol.
+Contents of a file might be divided into sections and subsections. The introducer carries the section name; the terminator is bare. Nesting is expressed by repeating the symbol.
 
 | Description         | Symbol | Name                           | Code Point |
 | ------------------- | ------ | ------------------------------ | ---------- |
@@ -75,7 +76,7 @@ foo_b=2
   #[……] bar
   bar_a=1
   bar_b=2
-  #[⫶⫶] bar
+  #[⫶⫶]
 
-#[⫶] foo
+#[⫶]
 ```

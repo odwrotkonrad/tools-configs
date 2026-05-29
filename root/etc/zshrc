@@ -1,5 +1,6 @@
 #[≟] 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
 
+#[…] set params
 typeset -U path=(
     ${XDG_BIN_HOME}
     ${GOPATH}/bin
@@ -28,7 +29,9 @@ typeset -U fpath=(
     /opt/homebrew/share/zsh/site-functions
     ${fpath}
 )
+#[⫶]
 
+#[…] plug-in files
 
 #[≟] source all files from zsh/rc.d in ascending by name order
 for rc in /etc/zsh/rc.d/*.zsh(on); {
@@ -41,4 +44,4 @@ for f in /etc/zsh/functions/**(:t); {
 }
 
 fn_load_static_history
-
+#[⫶]
