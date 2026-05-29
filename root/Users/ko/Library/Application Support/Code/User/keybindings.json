@@ -1,69 +1,12 @@
 [
   //>[≟] layout
-  // - primary sidebar (left): file explorer
-  // - secondary sidebar (right): source control, extensions
-  // - panel (top): search
-  // - editor area: terminals, editors
+  // sidebar left: file explorer | sidebar right: scm, extensions | panel top: search | editor area: terminals, search editor, editors
+  // keyboard: alt placed directly left of space (macos external QWERTY, no remaps)
   ///[≟]
 
-  //>[≟] editor
-  //[≟] alt+esc - close editor
-  {
-    "key": "alt+escape",
-    "command": "workbench.action.closeActiveEditor",
-    "when": "editorFocus && !view.workbench.view.search.visible"
-  },
-  //[≟] alt+r - reopen last closed tab
-  {
-    "key": "alt+r",
-    "command": "workbench.action.reopenClosedEditor",
-    "when": "!findWidgetVisible"
-  },
-  //[≟] alt+tab - cycle editors in group
-  {
-    "key": "alt+tab",
-    "command": "workbench.action.nextEditorInGroup"
-  },
-  //[≟] alt+1 - cycle editor groups
-  {
-    "key": "alt+1",
-    "command": "workbench.action.focusNextGroup",
-    "when": "activeEditor"
-  },
-  //[≟] alt+down / alt+up - move lines
-  {
-    "key": "alt+down",
-    "command": "editor.action.moveLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "alt+up",
-    "command": "editor.action.moveLinesUpAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  //[≟] alt+f - find within current file
-  {
-    "key": "alt+f",
-    "command": "actions.find",
-    "when": "editorFocus"
-  },
-  //[≟] alt+r - toggle replace in find widget
-  {
-    "key": "alt+r",
-    "command": "editor.action.startFindReplaceAction",
-    "when": "findWidgetVisible && findInputFocussed"
-  },
-
-  {
-    "key": "pageup",
-    "command": "cursorTop",
-    "when": "textInputFocus"
-  },
-  {
-    "key": "pagedown",
-    "command": "cursorBottom",
-    "when": "textInputFocus"
-  },
+  //>[≟] cursor / selection
+  { "key": "pageup",         "command": "cursorTop",    "when": "textInputFocus" },
+  { "key": "pagedown",       "command": "cursorBottom", "when": "textInputFocus" },
   {
     "key": "cmd+up",
     "command": "cursorMove",
@@ -88,279 +31,207 @@
     "args": { "to": "down", "by": "line", "value": 3, "select": true },
     "when": "textInputFocus"
   },
+  ///[≟] cursor / selection
 
-  // editor actions
+  //>[≟] editor
+  //[≟] alt+esc — close editor then focus first group (avoids landing in terminal group)
   {
-    "key": "alt+/",
-    "command": "editor.action.formatDocument",
-    "when": "editorTextFocus && !editorHasSelection && !editorReadonly"
+    "key": "alt+escape",
+    "command": "runCommands",
+    "args": { "commands": ["workbench.action.closeActiveEditor", "workbench.action.focusFirstEditorGroup"] },
+    "when": "editorFocus && !view.workbench.view.search.visible"
   },
-  {
-    "key": "alt+/",
-    "command": "editor.action.formatSelection",
-    "when": "editorTextFocus && editorHasSelection && !editorReadonly"
-  },
-  {
-    "key": "alt+\\",
-    "command": "editor.action.toggleWordWrap"
-  },
-  //[≟] f2 - rename the currently opened file
+  { "key": "alt+r",   "command": "workbench.action.reopenClosedEditor", "when": "!findWidgetVisible" },
+  { "key": "alt+tab", "command": "workbench.action.focusNextGroup",     "when": "activeEditor" },
+  //[≟] alt+1 — cycle tabs; if only one, open Quick Open
+  { "key": "alt+1", "command": "workbench.action.nextEditorInGroup", "when": "groupEditorsCount > 1" },
+  { "key": "alt+1", "command": "workbench.action.quickOpen",         "when": "groupEditorsCount <= 1" },
+  { "key": "alt+down", "command": "editor.action.moveLinesDownAction", "when": "editorTextFocus && !editorReadonly" },
+  { "key": "alt+up",   "command": "editor.action.moveLinesUpAction",   "when": "editorTextFocus && !editorReadonly" },
+  { "key": "alt+f",    "command": "actions.find",                       "when": "editorFocus" },
+  { "key": "alt+r",    "command": "editor.action.startFindReplaceAction", "when": "findWidgetVisible && findInputFocussed" },
+  //[≟] alt+/ — format selection or document
+  { "key": "alt+/", "command": "editor.action.formatDocument",  "when": "editorTextFocus && !editorHasSelection && !editorReadonly" },
+  { "key": "alt+/", "command": "editor.action.formatSelection", "when": "editorTextFocus && editorHasSelection && !editorReadonly" },
+  { "key": "alt+\\", "command": "editor.action.toggleWordWrap" },
+  { "key": "alt+s",  "command": "workbench.action.files.save" },
+  { "key": "alt+m",  "command": "workbench.action.toggleMaximizeEditorGroup" },
+  { "key": "alt+b",  "command": "workbench.action.evenEditorWidths" },
+  //[≟] alt+l — toggle command palette
+  { "key": "alt+l", "command": "workbench.action.showCommands",    "when": "!inQuickOpen" },
+  { "key": "alt+l", "command": "workbench.action.closeQuickOpen",  "when": "inQuickOpen" },
+  //[≟] f2 — rename currently opened file
   {
     "key": "f2",
     "command": "runCommands",
-    "args": {
-      "commands": [
-        "revealInExplorer",
-        "renameFile"
-      ]
-    },
+    "args": { "commands": ["revealInExplorer", "renameFile"] },
     "when": "editorFocus"
   },
-
+  //[≟] esc — unmaximize maximized editor group (regular editors)
+  {
+    "key": "escape",
+    "command": "workbench.action.toggleMaximizeEditorGroup",
+    "when": "editorPartMaximizedEditorGroup && editorTextFocus && !textCompareEditorActive && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
+  },
+  //[≟] esc on diff — close diff; if maximized, also unmaximize
+  {
+    "key": "escape",
+    "command": "runCommands",
+    "args": { "commands": ["workbench.action.closeActiveEditor", "workbench.action.toggleMaximizeEditorGroup"] },
+    "when": "textCompareEditorActive && editorPartMaximizedEditorGroup"
+  },
+  { "key": "escape", "command": "workbench.action.closeActiveEditor", "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup" },
   ///[≟] editor
 
   //>[≟] search
-  //[≟] alt+q - quick text search
-  {
-    "key": "alt+q",
-    "command": "workbench.action.quickTextSearch"
-  },
-  //[≟] alt+w - quick file open; toggle
-  {
-    "key": "alt+w",
-    "command": "workbench.action.quickOpen"
-  },
-  {
-    "key": "alt+w",
-    "command": "workbench.action.closeQuickOpen",
-    "when": "inQuickOpen"
-  },
-  //[≟] alt+g - open / close global search panel
+  //[≟] alt+q — toggle quick text search
+  { "key": "alt+q", "command": "workbench.action.quickTextSearch",   "when": "!inQuickOpen" },
+  { "key": "alt+q", "command": "workbench.action.closeQuickOpen",    "when": "inQuickOpen" },
+  //[≟] alt+w — toggle quick file open
+  { "key": "alt+w", "command": "workbench.action.quickOpen" },
+  { "key": "alt+w", "command": "workbench.action.closeQuickOpen", "when": "inQuickOpen" },
+  //[≟] alt+d — toggle global search panel
+  { "key": "alt+d", "command": "workbench.action.findInFiles", "when": "!searchViewletVisible" },
+  { "key": "alt+d", "command": "workbench.action.closePanel",  "when": "searchViewletVisible" },
+  //[≟] alt+g — search view → editor / elsewhere → new search editor in first group / inside search editor → close
   {
     "key": "alt+g",
-    "command": "workbench.action.findInFiles"
-  },
-  {
-    "key": "alt+g",
-    "command": "workbench.action.closePanel",
-    "when": "searchViewletFocus"
-  },
-  //[≟] alt+esc - close search panel
-  {
-    "key": "alt+escape",
-    "command": "workbench.action.closePanel",
-    "when": "searchViewletFocus"
-  },
-  //[≟] alt+f - move search (carry query) into search editor
-  {
-    "key": "alt+f",
     "command": "runCommands",
-    "args": {
-      "commands": [
-        "search.action.openInEditor",
-        "workbench.action.closePanel"
-      ]
-    },
+    "args": { "commands": ["search.action.openInEditor", "workbench.action.closePanel"] },
     "when": "searchViewletFocus"
   },
-  //[≟] alt+esc - close search editor without save prompt
   {
-    "key": "alt+escape",
-    "command": "workbench.action.revertAndCloseActiveEditor",
-    "when": "inSearchEditor"
+    "key": "alt+g",
+    "command": "runCommands",
+    "args": { "commands": ["search.action.openNewEditor", "workbench.action.moveEditorToFirstGroup", "workbench.action.closePanel"] },
+    "when": "!inSearchEditor && !searchViewletFocus"
   },
-  //[≟] alt+r - toggle replace in search view
-  {
-    "key": "alt+r",
-    "command": "workbench.action.replaceInFiles",
-    "when": "searchViewletFocus"
-  },
-  //[≟] enter - from search input, focus first result
+  { "key": "alt+g", "command": "workbench.action.closeActiveEditor", "when": "inSearchEditor" },
+  { "key": "alt+r", "command": "workbench.action.replaceInFiles",    "when": "searchViewletFocus" },
+  //[≟] alt+esc — search editor: close (no save prompt) / search panel: close preview first, else close panel / editor with panel open: close panel
+  { "key": "alt+escape", "command": "workbench.action.revertAndCloseActiveEditor", "when": "inSearchEditor" },
+  { "key": "alt+escape", "command": "workbench.action.closeActiveEditor",          "when": "searchViewletFocus && activeEditorIsPreview" },
+  { "key": "alt+escape", "command": "workbench.action.closePanel",                 "when": "searchViewletFocus && !activeEditorIsPreview" },
+  { "key": "alt+escape", "command": "workbench.action.closePanel",                 "when": "editorFocus && view.workbench.view.search.visible" },
+  //[≟] enter — input → focus results / result → open in second group
+  { "key": "enter", "command": "search.action.focusSearchList", "when": "searchViewletFocus && inputBoxFocus" },
   {
     "key": "enter",
-    "command": "search.action.focusSearchList",
-    "when": "searchViewletFocus && inputBoxFocus"
+    "command": "runCommands",
+    "args": { "commands": ["workbench.action.focusSecondEditorGroup", "search.action.focusSearchList", "list.select"] },
+    "when": "searchViewletFocus && !inputBoxFocus"
   },
-  //[≟] esc - in search view, results -> input; input -> close
+  //[≟] up/down on search result — focus group 2 first so preview lands there
   {
-    "key": "escape",
-    "command": "workbench.action.findInFiles",
+    "key": "down",
+    "command": "runCommands",
+    "args": { "commands": ["workbench.action.focusSecondEditorGroup", "search.action.focusSearchList", "list.focusDown"] },
     "when": "searchViewletFocus && !inputBoxFocus"
   },
   {
-    "key": "escape",
-    "command": "workbench.action.closePanel",
-    "when": "searchViewletFocus && inputBoxFocus"
+    "key": "up",
+    "command": "runCommands",
+    "args": { "commands": ["workbench.action.focusSecondEditorGroup", "search.action.focusSearchList", "list.focusUp"] },
+    "when": "searchViewletFocus && !inputBoxFocus"
   },
-  //[≟] esc - from editor, return to search results
+  //[≟] esc — search input (not search-editor): focus editor / search view: results→input, input→first group
+  { "key": "escape", "command": "workbench.action.focusActiveEditorGroup", "when": "searchInputBoxFocus && !inSearchEditor" },
+  { "key": "escape", "command": "workbench.action.findInFiles",            "when": "searchViewletFocus && !inputBoxFocus" },
+  { "key": "escape", "command": "workbench.action.focusFirstEditorGroup",  "when": "searchViewletFocus && inputBoxFocus" },
+  //[≟] esc — search editor: results→input, input→first group
+  { "key": "escape", "command": "search.action.focusQueryEditorWidget", "when": "inSearchEditor && !searchInputBoxFocus" },
+  { "key": "escape", "command": "workbench.action.focusFirstEditorGroup", "when": "inSearchEditor && searchInputBoxFocus" },
+  //[≟] esc from editor — priority: 1) search panel → focus results; 2) sidebar → reveal in explorer; 3) → focus first group
   {
     "key": "escape",
     "command": "search.action.focusSearchList",
     "when": "view.workbench.view.search.visible && editorTextFocus && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
-  //[≟] alt+esc - from editor, close it and return to search results
   {
-    "key": "alt+escape",
-    "command": "runCommands",
-    "args": {
-      "commands": [
-        "workbench.action.closeActiveEditor",
-        "search.action.focusSearchList"
-      ]
-    },
-    "when": "editorFocus && view.workbench.view.search.visible"
+    "key": "escape",
+    "command": "workbench.action.focusFirstEditorGroup",
+    "when": "editorTextFocus && !view.workbench.view.search.visible && !sideBarVisible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
   ///[≟] search
 
   //>[≟] terminal
   //>[≟] alt+t
-  //  no terminal exists: create one in last editor group
-  //  terminal exists: focus it (move panel terminal to editor, close aux bar)
+  //  no terminal: create in last editor group
+  //  terminal exists: focus (move from panel to editor)
   //  on terminal alone in group: jump to previous group
-  //  on terminal with other editors in group: move to next editor in group
+  //  on terminal sharing group: move to next editor in group
   ///[≟]
   {
     "key": "alt+t",
     "command": "runCommands",
-    "args": {
-      "commands": [
-        "workbench.action.focusLastEditorGroup",
-        "workbench.action.createTerminalEditor"
-      ]
-    },
+    "args": { "commands": ["workbench.action.focusLastEditorGroup", "workbench.action.createTerminalEditor"] },
     "when": "!terminalIsOpen"
   },
   {
     "key": "alt+t",
     "command": "runCommands",
-    "args": {
-      "commands": [
-        "workbench.action.focusLastEditorGroup",
-        "workbench.action.terminal.focus",
-        "workbench.action.terminal.moveToEditor",
-        "workbench.action.closeAuxiliaryBar"
-      ]
-    },
+    "args": { "commands": ["workbench.action.focusLastEditorGroup", "workbench.action.terminal.focus", "workbench.action.terminal.moveToEditor"] },
     "when": "terminalIsOpen"
   },
-  {
-    "key": "alt+t",
-    "command": "workbench.action.focusPreviousGroup",
-    "when": "activeEditor == 'terminalEditor' && groupEditorsCount == 1"
-  },
-  {
-    "key": "alt+t",
-    "command": "workbench.action.nextEditorInGroup",
-    "when": "activeEditor == 'terminalEditor' && groupEditorsCount > 1"
-  },
-  //[≟] alt+f - find within terminal contents
-  {
-    "key": "alt+f",
-    "command": "workbench.action.terminal.focusFind",
-    "when": "terminalFocus"
-  },
-  //[≟] alt+esc - from terminal, jump to next editor group
-  {
-    "key": "alt+escape",
-    "command": "workbench.action.focusNextGroup",
-    "when": "terminalFocus"
-  },
-  //[≟] alt+shift+t - external terminal
-  {
-    "key": "alt+shift+t",
-    "command": "workbench.action.terminal.openNativeConsole"
-  },
+  { "key": "alt+t", "command": "workbench.action.focusPreviousGroup", "when": "activeEditor == 'terminalEditor' && groupEditorsCount == 1" },
+  { "key": "alt+t", "command": "workbench.action.nextEditorInGroup",  "when": "activeEditor == 'terminalEditor' && groupEditorsCount > 1" },
+  { "key": "alt+f",       "command": "workbench.action.terminal.focusFind",        "when": "terminalFocus" },
+  { "key": "alt+escape",  "command": "workbench.action.focusNextGroup",            "when": "terminalFocus" },
+  { "key": "alt+shift+t", "command": "workbench.action.terminal.openNativeConsole" },
   ///[≟] terminal
 
   //>[≟] file explorer
-  //[≟] alt+a - open / toggle file explorer
-  {
-    "key": "alt+a",
-    "command": "workbench.view.explorer",
-    "when": "!explorerViewletFocus"
-  },
-  {
-    "key": "alt+a",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "explorerViewletFocus"
-  },
-  //[≟] esc - from editor, reveal current file in explorer (when visible, no search)
+  //[≟] alt+a — toggle explorer
+  { "key": "alt+a", "command": "workbench.view.explorer",                "when": "!explorerViewletFocus" },
+  { "key": "alt+a", "command": "workbench.action.toggleSidebarVisibility", "when": "explorerViewletFocus" },
+  //[≟] esc from editor — reveal current file in explorer (when visible, no search)
   {
     "key": "escape",
     "command": "revealInExplorer",
     "when": "editorTextFocus && sideBarVisible && !view.workbench.view.search.visible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
-  //[≟] enter - open file / toggle folder
-  {
-    "key": "enter",
-    "command": "explorer.openAndPassFocus",
-    "when": "filesExplorerFocus && !inputFocus && !explorerResourceIsFolder"
-  },
-  {
-    "key": "enter",
-    "command": "list.toggleExpand",
-    "when": "filesExplorerFocus && !inputFocus && explorerResourceIsFolder"
-  },
-  //[≟] alt+up / alt+down - jump 3 entries
+  //[≟] enter — open file / toggle folder
+  { "key": "enter", "command": "explorer.openAndPassFocus", "when": "filesExplorerFocus && !inputFocus && !explorerResourceIsFolder" },
+  { "key": "enter", "command": "list.toggleExpand",         "when": "filesExplorerFocus && !inputFocus && explorerResourceIsFolder" },
+  //[≟] alt+up / alt+down — jump 3 entries
   {
     "key": "alt+up",
     "command": "runCommands",
-    "args": {
-      "commands": ["list.focusUp", "list.focusUp", "list.focusUp"]
-    },
+    "args": { "commands": ["list.focusUp", "list.focusUp", "list.focusUp"] },
     "when": "filesExplorerFocus && !inputFocus"
   },
   {
     "key": "alt+down",
     "command": "runCommands",
-    "args": {
-      "commands": ["list.focusDown", "list.focusDown", "list.focusDown"]
-    },
+    "args": { "commands": ["list.focusDown", "list.focusDown", "list.focusDown"] },
     "when": "filesExplorerFocus && !inputFocus"
   },
-  //[≟] f2 - rename
-  {
-    "key": "f2",
-    "command": "renameFile",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
-  //[≟] esc - from explorer, focus the active editor
-  {
-    "key": "escape",
-    "command": "workbench.action.focusActiveEditorGroup",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
+  { "key": "f2",     "command": "renameFile",                          "when": "filesExplorerFocus && !inputFocus" },
+  { "key": "escape", "command": "workbench.action.focusActiveEditorGroup", "when": "filesExplorerFocus && !inputFocus" },
   ///[≟] file explorer
 
   //>[≟] source control
-  //[≟] alt+c - git view
-  {
-    "key": "alt+c",
-    "command": "workbench.view.scm"
-  },
+  { "key": "alt+c", "command": "workbench.view.scm" },
   ///[≟] source control
 
-  //>[≟] default unbinds
-  { "key": "cmd+w", "command": "-workbench.action.closeActiveEditor" },
-  {
-    "key": "cmd+w",
-    "command": "-workbench.action.closeGroup",
-    "when": "activeEditorGroupEmpty && multipleEditorGroups"
-  },
-  { "key": "shift+cmd+w", "command": "-workbench.action.closeWindow" },
-  {
-    "key": "cmd+w",
-    "command": "-workbench.action.closeWindow",
-    "when": "!editorIsOpen && !multipleEditorGroups"
-  },
-  {
-    "key": "cmd+w",
-    "command": "-workbench.action.terminal.killEditor",
-    "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
-  },
-  { "key": "cmd+q", "command": "-workbench.action.quit" }
-  ///[≟] default unbinds
+  //>[≟] font zoom — terminal in terminal focus, editor elsewhere
+  { "key": "alt+.", "command": "workbench.action.terminal.fontZoomIn",    "when": "terminalFocus" },
+  { "key": "alt+,", "command": "workbench.action.terminal.fontZoomOut",   "when": "terminalFocus" },
+  { "key": "alt+0", "command": "workbench.action.terminal.fontZoomReset", "when": "terminalFocus" },
+  { "key": "alt+.", "command": "editor.action.fontZoomIn",    "when": "!terminalFocus" },
+  { "key": "alt+,", "command": "editor.action.fontZoomOut",   "when": "!terminalFocus" },
+  { "key": "alt+0", "command": "editor.action.fontZoomReset", "when": "!terminalFocus" },
+  { "key": "cmd+0", "command": "workbench.action.zoomReset" },
+  ///[≟] font zoom
 
+  //>[≟] default unbinds
+  { "key": "cmd+w",       "command": "-workbench.action.closeActiveEditor" },
+  { "key": "cmd+w",       "command": "-workbench.action.closeGroup",  "when": "activeEditorGroupEmpty && multipleEditorGroups" },
+  { "key": "cmd+w",       "command": "-workbench.action.closeWindow", "when": "!editorIsOpen && !multipleEditorGroups" },
+  { "key": "cmd+w",       "command": "-workbench.action.terminal.killEditor", "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported" },
+  { "key": "shift+cmd+w", "command": "-workbench.action.closeWindow" },
+  { "key": "cmd+q",       "command": "-workbench.action.quit" },
+  ///[≟] default unbinds
   ////[≟]  sequences sent to integrated terminal
   {
     "args": {
@@ -514,9 +385,11 @@
     "key": "cmd+shift+down",
     "when": "terminalFocus"
   },
-    //[≟] terminal - shift+enter just like alt+enter
+  //[≟] terminal - shift+enter just like alt+enter
   {
-    "args": { "text": "\u001b\n" },
+    "args": {
+      "text": "\u001b\n"
+    },
     "command": "workbench.action.terminal.sendSequence",
     "key": "shift+enter",
     "when": "terminalFocus"

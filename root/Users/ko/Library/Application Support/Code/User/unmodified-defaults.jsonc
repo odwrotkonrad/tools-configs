@@ -26,7 +26,6 @@
   "workbench.list.typeNavigationMode": "automatic",
   "workbench.quickOpen.closeOnFocusLost": true,
   "workbench.quickOpen.preserveInput": false,
-  "workbench.editor.enablePreviewFromQuickOpen": false,
   "workbench.editor.enablePreview": true,
   "workbench.editor.limit.excludeDirty": false,
   "workbench.editor.dragToOpenWindow": true,
@@ -66,6 +65,7 @@
   "editor.scrollbar.horizontal": "auto",
   "editor.scrollbar.vertical": "auto",
   "editor.multiCursorModifier": "alt",
+  "editor.suggest.insertMode": "insert",
 
   // explorer
   "explorer.compactFolders": true,
@@ -75,5 +75,26 @@
   "explorer.enableUndo": true,
   "explorer.autoReveal": true,
   "explorer.fileNesting.enabled": false,
-  "explorer.fileNesting.expand": true
+  "explorer.fileNesting.expand": true,
+
+  // search
+  "search.mode": "view",
+  "search.searchEditor.singleClickBehaviour": "default",
+  "search.quickOpen.includeSymbols": false,
+  "search.quickAccess.preserveInput": false,
+  "search.defaultViewMode": "list",
+  "search.searchEditor.reusePriorSearchConfiguration": false,
+  "search.searchView.keywordSuggestions": false,
+  "search.searchEditor.defaultNumberOfContextLines": 1,
+  "search.ripgrep.maxThreads": 0,
+  "search.followSymlinks": true,
+  "search.decorations.badges": true,
+  "search.decorations.colors": true,
+  "search.useReplacePreview": true,
+  "search.useIgnoreFiles": true,
+  "search.searchOnTypeDebouncePeriod": 300,
+  "search.quickOpen.history.filterSortOrder": "default",
+
+  // terminal
+  "terminal.integrated.fontSize": 12
 }
