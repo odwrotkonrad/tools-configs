@@ -10,7 +10,7 @@
 	</array>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/bin/s_load_defaults_config</string>
+		<string>/usr/local/scripts/s_load_defaults_config</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

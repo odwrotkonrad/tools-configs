@@ -1,6 +1,6 @@
-# TODO
+#!/bin/sh
 
-enmulate -L zsh
+set -e
 
 go install golang.org/x/tools/gopls@latest
 

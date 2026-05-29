@@ -35,7 +35,7 @@ tools:
       files:
         root/:
           etc/defaults.yml:
-          usr/local/bin/s_load_defaults_config:
+          usr/local/scripts/s_load_defaults_config:
           Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist:
 
   - direnv:

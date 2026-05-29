@@ -42,14 +42,14 @@ paths:
             20-aliases.zsh:
             30-keybindings.zsh:
           functions/:
-            fn_asdf_install:
-            fn_install_kitty:
-            fn_install_misc:
-            fn_install_prometheus:
             fn_load_static_history:
             fn_ssh_generate_keys:
             fn_ssh_test_git_connection:
-      root/usr/local/bin/:
+      root/usr/local/scripts/:
+        s_install_asdf:
+        s_install_kitty:
+        s_install_misc:
+        s_install_prometheus:
         s_load_configs:
         s_load_defaults_config:
 ```
