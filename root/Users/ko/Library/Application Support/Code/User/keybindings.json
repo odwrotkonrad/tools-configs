@@ -434,10 +434,21 @@
     "command": "workbench.action.terminal.focusFind",
     "when": "terminalFocus"
   },
+  //[≟] alt+ctrl+t — new terminal in the currently focused editor group
+  {
+    "key": "alt+ctrl+t",
+    "command": "workbench.action.createTerminalEditor"
+  },
+  //[≟] alt+esc — terminal editor: close it; panel terminal: focus next group
+  {
+    "key": "alt+escape",
+    "command": "workbench.action.terminal.killEditor",
+    "when": "terminalFocus && terminalEditorFocus"
+  },
   {
     "key": "alt+escape",
     "command": "workbench.action.focusNextGroup",
-    "when": "terminalFocus"
+    "when": "terminalFocus && !terminalEditorFocus"
   },
   {
     "key": "alt+shift+t",

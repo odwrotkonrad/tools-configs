@@ -107,5 +107,12 @@ typeset -A cchars=(
 for action char in ${(kv)cchars}; stty ${action} ${char}
 #[⫶]
 
+# [≟] SIGINT (^C) signal handler, clear the screen and reset prompt input, only when zle is active
+TRAPINT() {
+    [[ -o zle ]] && clear
+    return $(( 128 + $1 ))
+}
+
+
 
 unset keystrokes_widgets disabled_cchars cchars

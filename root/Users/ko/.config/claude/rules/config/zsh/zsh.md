@@ -85,6 +85,7 @@ paths:
 - `zshoptions` — setopt, completion, globbing, history, emulation
 - `zshbuiltins` — builtin commands, autoload, setopt, zstyle, bindkey
 - `zsh` — overview, invocation, startup files, compatibility, manpage index
+- `zshmisc` — grammar, redirection, functions, traps, prompt escapes, conditionals, job control
 
 and these:
 - `zshroadmap` — overview, startup, interactive use, pattern matching
