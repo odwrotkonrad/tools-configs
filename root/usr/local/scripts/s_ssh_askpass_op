@@ -1,7 +1,4 @@
 #!/bin/bash
 
-case "$1" in
-	*id_access*)  op read "op://Personal/ssh_id_access/passphrase" ;;
-	*id_signing*) op read "op://Personal/ssh_id_signing/passphrase" ;;
-	*) exit 1 ;;
-esac
+name=$(echo "$1" | rg -o '/(\w+)\W*$' -r '$1')
+op read "op://Personal/ssh_$name/password"
