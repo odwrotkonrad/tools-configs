@@ -58,9 +58,20 @@
   },
   //[⫶]
   //[…] editor
-  //[≟] alt+esc — close editor then focus first group (avoids landing in terminal group)
+  //[≟] alt+esc | alt+q — close editor then focus first group (avoids landing in terminal group)
   {
     "key": "alt+escape",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.closeActiveEditor",
+        "workbench.action.focusFirstEditorGroup"
+      ]
+    },
+    "when": "editorFocus && !view.workbench.view.search.visible"
+  },
+  {
+    "key": "alt+q",
     "command": "runCommands",
     "args": {
       "commands": [
@@ -75,21 +86,20 @@
     "command": "workbench.action.reopenClosedEditor",
     "when": "!findWidgetVisible"
   },
+  //[≟] alt+tab — cycle tabs within the group
   {
     "key": "alt+tab",
-    "command": "workbench.action.focusNextGroup",
+    "command": "workbench.action.nextEditorInGroup",
     "when": "activeEditor"
   },
-  //[≟] alt+1 — cycle tabs; if only one, open Quick Open
+  //[≟] alt+1/2 — focus first/second group
   {
     "key": "alt+1",
-    "command": "workbench.action.nextEditorInGroup",
-    "when": "groupEditorsCount > 1"
+    "command": "workbench.action.focusFirstEditorGroup"
   },
   {
-    "key": "alt+1",
-    "command": "workbench.action.quickOpen",
-    "when": "groupEditorsCount <= 1"
+    "key": "alt+2",
+    "command": "workbench.action.focusSecondEditorGroup"
   },
   {
     "key": "alt+down",
@@ -127,16 +137,61 @@
     "command": "editor.action.toggleWordWrap"
   },
   {
-    "key": "alt+s",
-    "command": "workbench.action.files.save"
-  },
-  {
     "key": "alt+m",
     "command": "workbench.action.toggleMaximizeEditorGroup"
   },
   {
     "key": "alt+b",
     "command": "workbench.action.evenEditorWidths"
+  },
+  //[≟] alt+ctrl+arrow — spatial nav across groups & parts (grid-aware)
+  {
+    "key": "alt+ctrl+left",
+    "command": "workbench.action.navigateLeft"
+  },
+  {
+    "key": "alt+ctrl+right",
+    "command": "workbench.action.navigateRight"
+  },
+  {
+    "key": "alt+ctrl+up",
+    "command": "workbench.action.navigateUp"
+  },
+  {
+    "key": "alt+ctrl+down",
+    "command": "workbench.action.navigateDown"
+  },
+  //[≟] alt+ctrl+up/down — cycle SCM aux-bar views: Changes ⇄ Graph ⇄ Timeline
+  {
+    "key": "alt+ctrl+down",
+    "command": "workbench.scm.history.focus",
+    "when": "auxiliaryBarFocus && focusedView == 'workbench.scm'"
+  },
+  {
+    "key": "alt+ctrl+down",
+    "command": "timeline.focus",
+    "when": "auxiliaryBarFocus && focusedView == 'workbench.scm.history'"
+  },
+  {
+    "key": "alt+ctrl+up",
+    "command": "workbench.scm.history.focus",
+    "when": "auxiliaryBarFocus && focusedView == 'timeline'"
+  },
+  {
+    "key": "alt+ctrl+up",
+    "command": "workbench.scm.focus",
+    "when": "auxiliaryBarFocus && focusedView == 'workbench.scm.history'"
+  },
+  //[≟] alt+ctrl+up/down — cycle side-bar views: Explorer ⇄ Outline
+  {
+    "key": "alt+ctrl+down",
+    "command": "outline.focus",
+    "when": "sideBarFocus && focusedView == 'workbench.explorer.fileView'"
+  },
+  {
+    "key": "alt+ctrl+up",
+    "command": "workbench.explorer.fileView.focus",
+    "when": "sideBarFocus && focusedView == 'outline'"
   },
   //[≟] alt+l — toggle command palette
   {
@@ -184,9 +239,20 @@
     "command": "workbench.action.closeActiveEditor",
     "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup"
   },
-  //[≟] alt+esc on diff — close diff; if maximized, also unmaximize
+  //[≟] alt+esc | alt+q on diff — close diff; if maximized, also unmaximize
   {
     "key": "alt+escape",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.closeActiveEditor",
+        "workbench.action.toggleMaximizeEditorGroup"
+      ]
+    },
+    "when": "textCompareEditorActive && editorPartMaximizedEditorGroup"
+  },
+  {
+    "key": "alt+q",
     "command": "runCommands",
     "args": {
       "commands": [
@@ -201,6 +267,11 @@
     "command": "workbench.action.closeActiveEditor",
     "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup"
   },
+  {
+    "key": "alt+q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "textCompareEditorActive && !editorPartMaximizedEditorGroup"
+  },
   //[≟] esc — in the git commit message editor: closes
   {
     "key": "escape",
@@ -209,47 +280,37 @@
   },
   //[⫶]
   //[…] search
-  //[≟] alt+q — toggle quick text search
+  //[≟] alt+w — toggle quick text search
   {
-    "key": "alt+q",
+    "key": "alt+w",
     "command": "workbench.action.quickTextSearch",
     "when": "!inQuickOpen"
   },
   {
-    "key": "alt+q",
+    "key": "alt+w",
     "command": "workbench.action.closeQuickOpen",
     "when": "inQuickOpen"
   },
-  //[≟] alt+w — toggle quick file open
+  //[≟] alt+x — toggle quick file open
   {
-    "key": "alt+w",
+    "key": "alt+x",
     "command": "workbench.action.quickOpen"
   },
   {
-    "key": "alt+w",
+    "key": "alt+x",
     "command": "workbench.action.closeQuickOpen",
     "when": "inQuickOpen"
   },
-  //[≟] alt+d — closed: open; open but unfocused: focus results (if any) else input; focused: close
+  //[≟] alt+s — toggle search panel
   {
-    "key": "alt+d",
+    "key": "alt+s",
     "command": "workbench.action.findInFiles",
     "when": "!searchViewletVisible"
   },
   {
-    "key": "alt+d",
-    "command": "search.action.focusSearchList",
-    "when": "searchViewletVisible && !searchViewletFocus && hasSearchResult"
-  },
-  {
-    "key": "alt+d",
-    "command": "workbench.action.findInFiles",
-    "when": "searchViewletVisible && !searchViewletFocus && !hasSearchResult"
-  },
-  {
-    "key": "alt+d",
+    "key": "alt+s",
     "command": "workbench.action.closePanel",
-    "when": "searchViewletFocus"
+    "when": "searchViewletVisible"
   },
   //[≟] alt+g — search view → editor / elsewhere → new search editor in first group / inside search editor → close
   {
@@ -285,9 +346,14 @@
     "command": "workbench.action.replaceInFiles",
     "when": "searchViewletFocus"
   },
-  //[≟] alt+esc — search editor: close (no save prompt) / search panel: close preview first, else close panel / editor with panel open: close panel
+  //[≟] alt+esc | alt+q — search editor: close (no prompt) / panel: close preview then panel
   {
     "key": "alt+escape",
+    "command": "workbench.action.revertAndCloseActiveEditor",
+    "when": "inSearchEditor"
+  },
+  {
+    "key": "alt+q",
     "command": "workbench.action.revertAndCloseActiveEditor",
     "when": "inSearchEditor"
   },
@@ -297,12 +363,27 @@
     "when": "searchViewletFocus && activeEditorIsPreview"
   },
   {
+    "key": "alt+q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "searchViewletFocus && activeEditorIsPreview"
+  },
+  {
     "key": "alt+escape",
     "command": "workbench.action.closePanel",
     "when": "searchViewletFocus && !activeEditorIsPreview"
   },
   {
+    "key": "alt+q",
+    "command": "workbench.action.closePanel",
+    "when": "searchViewletFocus && !activeEditorIsPreview"
+  },
+  {
     "key": "alt+escape",
+    "command": "workbench.action.closePanel",
+    "when": "editorFocus && view.workbench.view.search.visible"
+  },
+  {
+    "key": "alt+q",
     "command": "workbench.action.closePanel",
     "when": "editorFocus && view.workbench.view.search.visible"
   },
@@ -393,7 +474,7 @@
   //>[≟] alt+t
   //  no terminal: create in last editor group
   //  terminal exists: focus (move from panel to editor)
-  //  on terminal alone in group: jump to previous group
+  //  on terminal alone in group: spawn another terminal in this group
   //  on terminal sharing group: move to next editor in group
   ///[≟]
   {
@@ -417,17 +498,17 @@
         "workbench.action.terminal.moveToEditor"
       ]
     },
-    "when": "terminalIsOpen"
+    "when": "terminalIsOpen && !terminalFocus"
   },
   {
     "key": "alt+t",
-    "command": "workbench.action.focusPreviousGroup",
-    "when": "activeEditor == 'terminalEditor' && groupEditorsCount == 1"
+    "command": "workbench.action.createTerminalEditorSameGroup",
+    "when": "terminalFocus && terminalEditorFocus && groupEditorsCount == 1"
   },
   {
     "key": "alt+t",
     "command": "workbench.action.nextEditorInGroup",
-    "when": "activeEditor == 'terminalEditor' && groupEditorsCount > 1"
+    "when": "terminalFocus && terminalEditorFocus && groupEditorsCount > 1"
   },
   {
     "key": "alt+f",
@@ -439,7 +520,7 @@
     "key": "alt+ctrl+t",
     "command": "workbench.action.createTerminalEditor"
   },
-  //[≟] alt+esc — terminal editor: close it; panel terminal: focus next group
+  //[≟] alt+esc | alt+q — terminal editor: close it; panel terminal: focus next group
   {
     "key": "alt+escape",
     "command": "workbench.action.terminal.killEditor",
@@ -447,6 +528,16 @@
   },
   {
     "key": "alt+escape",
+    "command": "workbench.action.focusNextGroup",
+    "when": "terminalFocus && !terminalEditorFocus"
+  },
+  {
+    "key": "alt+q",
+    "command": "workbench.action.terminal.killEditor",
+    "when": "terminalFocus && terminalEditorFocus"
+  },
+  {
+    "key": "alt+q",
     "command": "workbench.action.focusNextGroup",
     "when": "terminalFocus && !terminalEditorFocus"
   },
@@ -460,12 +551,12 @@
   {
     "key": "alt+a",
     "command": "workbench.view.explorer",
-    "when": "!explorerViewletFocus"
+    "when": "!sideBarVisible || activeViewlet != 'workbench.view.explorer'"
   },
   {
     "key": "alt+a",
     "command": "workbench.action.toggleSidebarVisibility",
-    "when": "explorerViewletFocus"
+    "when": "sideBarVisible && activeViewlet == 'workbench.view.explorer'"
   },
   //[≟] esc from editor — reveal current file in explorer (when visible, no search)
   {
@@ -521,9 +612,14 @@
   },
   //[⫶]
   //[…] output
-  //[≟] alt+esc | esc — output view focused: close the panel (focus returns to the previous editor)
+  //[≟] alt+esc | alt+q | esc — output focused: close panel
   {
     "key": "alt+escape",
+    "command": "workbench.action.closePanel",
+    "when": "focusedView == 'workbench.panel.output'"
+  },
+  {
+    "key": "alt+q",
     "command": "workbench.action.closePanel",
     "when": "focusedView == 'workbench.panel.output'"
   },
@@ -534,9 +630,27 @@
   },
   //[⫶]
   //[…] source control
+  //[≟] alt+c — toggle SCM aux bar
   {
     "key": "alt+c",
-    "command": "workbench.view.scm"
+    "command": "workbench.view.scm",
+    "when": "activeAuxiliary != 'workbench.view.scm'"
+  },
+  {
+    "key": "alt+c",
+    "command": "workbench.action.closeAuxiliaryBar",
+    "when": "activeAuxiliary == 'workbench.view.scm'"
+  },
+  //[≟] alt+d — toggle SCM Graph panel
+  {
+    "key": "alt+d",
+    "command": "workbench.scm.history.focus",
+    "when": "focusedView != 'workbench.scm.history'"
+  },
+  {
+    "key": "alt+d",
+    "command": "workbench.action.closePanel",
+    "when": "focusedView == 'workbench.scm.history'"
   },
   //[≟] alt+/ — commit / alt+shift+/ — amend; from the SCM view or an editor
   {

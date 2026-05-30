@@ -10,11 +10,11 @@
   "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
   "window.titleSeparator": " ━━ ",
   "window.zoomLevel": 1,
+  "update.titleBar": false, //[≟] update indicator in the title bar
   //[⫶]
 
   //[…] workbench
   "workbench.activityBar.autoHide": true,
-  "workbench.activityBar.location": "hidden",
   "workbench.browser.showInTitleBar": false,
   "workbench.colorTheme": "Solarized Light", //[∵] fallback when system theme detection fails
   "workbench.editor.closeOnFileDelete": true,
@@ -38,11 +38,11 @@
   "workbench.localHistory.mergeWindow": 10,
   "workbench.navigationControl.enabled": false,
   "workbench.panel.defaultLocation": "top",
-  "workbench.panel.showLabels": false,
   "workbench.preferredDarkColorTheme": "Dark Modern",
   "workbench.preferredLightColorTheme": "Solarized Light",
   "workbench.secondarySideBar.defaultVisibility": "visible",
   "workbench.startupEditor": "none",
+  "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.renderIndentGuides": "none",
 
@@ -186,6 +186,7 @@
   "git.alwaysShowStagedChangesResourceGroup": true,
   "git.alwaysSignOff": true,
   "git.autoRepositoryDetection": false,
+  "git.blame.editorDecoration.enabled": false,
   "git.blame.editorDecoration.template": "(${authorDateAgo} ${authorEmail}): ${subject}",
   "git.blame.statusBarItem.enabled": false,
   "git.branchSortOrder": "committerdate",
@@ -230,7 +231,7 @@
   //[⫶⫶]
 
   //[……] scm
-  "scm.alwaysShowRepositories": true,
+  "scm.alwaysShowRepositories": false,
   "scm.autoReveal": false,
   "scm.compactFolders": true,
   "scm.countBadge": "off",
@@ -328,6 +329,7 @@
     "workbench.action.reopenClosedEditor",
     "workbench.action.closeAuxiliaryBar",
     "workbench.action.closePanel",
+    "workbench.action.terminal.killEditor",
     "workbench.action.evenEditorWidths",
     "workbench.action.findInFiles",
     "search.action.focusSearchList",
@@ -336,6 +338,15 @@
     "workbench.action.focusActiveEditorGroup",
     "workbench.action.focusNextGroup",
     "workbench.action.focusPreviousGroup",
+    "workbench.action.navigateLeft",
+    "workbench.action.navigateRight",
+    "workbench.action.navigateUp",
+    "workbench.action.navigateDown",
+    "workbench.action.focusAuxiliaryBar",
+    "workbench.action.focusSideBar",
+    "workbench.action.focusFirstEditorGroup",
+    "workbench.action.focusSecondEditorGroup",
+    "workbench.action.focusLastEditorGroup",
     "workbench.action.nextAuxiliaryBarView",
     "workbench.action.focusPanel",
     "workbench.action.quickOpen",
@@ -346,6 +357,8 @@
     "editor.action.fontZoomOut",
     "editor.action.fontZoomReset",
     "workbench.action.createTerminalEditor",
+    "workbench.action.createTerminalEditorSameGroup",
+    "workbench.action.nextEditorInGroup",
     "workbench.action.terminal.focus",
     "workbench.action.terminal.focusFind",
     "workbench.action.terminal.fontZoomIn",
@@ -357,6 +370,7 @@
     "workbench.files.action.focusFilesExplorer",
     "workbench.action.toggleSidebarVisibility",
     "workbench.scm.focus",
+    "workbench.scm.history.focus",
     "workbench.view.explorer",
     "workbench.view.extensions",
     "workbench.view.scm"
@@ -370,9 +384,9 @@
 
   //[…] chat
   "chat.agent.enabled": false,
+  "chat.agentsControl.enabled": "hidden",
   "chat.commandCenter.enabled": false,
   "chat.titleBar.signIn.enabled": false,
-  "chat.viewSessions.orientation": "stacked",
   "chat.editor.wordWrap": "off",
 
   // default
@@ -432,7 +446,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   //[⫶]
-
   //[…] extensions
   "extensions.ignoreRecommendations": true,
 
@@ -467,5 +480,9 @@
   "diffEditor.ignoreTrimWhitespace": true,
   "diffEditor.wordWrap": "inherit",
   "terminal.integrated.fontSize": 13,
+  "workbench.secondarySideBar.showLabels": false,
+  "workbench.panel.showLabels": false,
+  "chat.viewSessions.orientation": "stacked",
+  "workbench.activityBar.compact": true,
   //[⫶]
 }
