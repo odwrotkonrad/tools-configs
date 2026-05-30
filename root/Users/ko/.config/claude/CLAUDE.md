@@ -14,6 +14,10 @@ Bash commands:
 
 Attempting to use any other tools is forbidden.
 
+## System Wide Tools Configuration
+
+Non project scoped configuration files must be edited in the designated `~/projects/configs` project. The project's `root/` dir mirrors and is linked to the live files in the system, so never edit config files at their system paths directly — edit their counterparts under `~/projects/configs` projects `root`.
+
 ## IMPORTANT!
 
 <!--[∵] it happens claude tries to ask questions even if it doesn't have permissions to do so -->
@@ -24,5 +28,6 @@ Up-to-date documentation is available using:
 
 - Bash(man) e.g. `$ man foo`, `$ man 1 bar`
 - Read / Glob / Grep for raw documentation / specificiation / definition files
+- `$ <cmd> --help|-h`
 
 <!-- TODO also need to have some web source -->

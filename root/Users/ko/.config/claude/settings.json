@@ -6,6 +6,8 @@
       "Bash(cd ./*)",
       "Bash(man *)",
       "Bash(rg *)",
+      "Bash(* --help)",
+      "Bash(* -h)",
       "Edit(**/*)",
       "Glob(./*)",
       "Glob(//Applications/Visual Studio Code.app/Contents/Resources/**)",
