@@ -42,6 +42,7 @@ paths:
             20-aliases.zsh:
             30-keybindings.zsh:
           functions/:
+            rm:
             fn_load_static_history:
             fn_ssh_generate_keys:
             fn_ssh_test_git_connection:
@@ -78,21 +79,22 @@ paths:
 
 `$ man`:
 
-- `zshzle` — line editor + bindkey widgets (rc.d/30-keybindings.zsh)
-- `zshroadmap` — informal intro; pointers into the rest of the manual
-- `zshparam` — special params (path, fpath, WORDCHARS, HIST\*) (rc.d/00-shell.zsh)
-- `zshoptions` — setopt/unsetopt names (rc.d/00-shell.zsh)
-- `zshmodules` — loadable modules (zmodload); backs zle, completion, stat/glob
-- `zshexpn` — glob qualifiers `(on)`, `(N)`, `(:t)`, `(@kv)` used across rc.d
-- `zshcontrib` — user-contributed functions + autoload patterns (functions/)
-- `zshcompwid` — writing completion widgets
-- `zshcompsys` — compinit / completion system (completions/)
-- `zshbuiltins` — hash, typeset, setopt, fc, bindkey, autoload
-- `zshall` — umbrella page; links the topic pages below
-- `zsh` — overview, startup/shutdown file order
-- `stty` — terminal cchars (rc.d/30-keybindings.zsh)
+- `zshzle` — line editor, keymaps, widgets, bindkey, highlighting
+- `zshall` — all-in-one, concatenation, searchable, every section, other zsh pages
+- `zshparam` — parameters, arrays, positional, scalars, shell variables
+- `zshoptions` — setopt, completion, globbing, history, emulation
+- `zshbuiltins` — builtin commands, autoload, setopt, zstyle, bindkey
+- `zsh` — overview, invocation, startup files, compatibility, manpage index
+
+and these:
+- `zshroadmap` — overview, startup, interactive use, pattern matching
+- `zshmodules` — zmodload, zsh/complete, zsh/pcre, zsh/zutil, zsh/datetime
+- `zshexpn` — expansion, parameter, history, globbing, brace
+- `zshcontrib` — prompt themes, vcs_info, zle functions, zcalc, zmv
+- `zshcompwid` — completion widgets, compadd, special params, matching control, condition codes
+- `zshcompsys` — compinit, compdef, zstyle, completers, autoload
+- `stty` — terminal settings, control/input/output/local modes, control chars
 
 Links:
 
 - [XDG base dirs](https://specifications.freedesktop.org/basedir-spec/latest/) — zshenv
-

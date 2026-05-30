@@ -16,7 +16,8 @@ root/:
                   - plugins:
                       - marketplaces
                   - rules:
-                      - config
+                      - config:
+                          - zsh
                   - skills
                   - themes
               - direnv

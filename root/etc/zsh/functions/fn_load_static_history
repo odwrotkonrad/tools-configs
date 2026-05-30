@@ -4,7 +4,7 @@
 # whitespace before comments is folded into two spaces
 #/[≟]
 
-emulate -L zsh
+emulate -LR zsh
 
 local TEMP_HIST=$(mktemp)
 local RGX_LINE='^(\w.*)'  #[≟] match commands (starting with a word character)

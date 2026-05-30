@@ -202,8 +202,8 @@
   "git.enableSmartCommit": true,
   "git.ignoreRebaseWarning": true,
   "git.inputValidation": true,
-  "git.inputValidationLength": 300,
-  "git.inputValidationSubjectLength": 80,
+  "git.inputValidationLength": 500,
+  "git.inputValidationSubjectLength": 180,
   "git.mergeEditor": true,
   "git.openAfterClone": "alwaysNewWindow",
   "git.openDiffOnClick": true,
@@ -391,7 +391,8 @@
 
   //[…] files
   "files.enableTrash": true,
-  "files.autoSave": "off",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
   //[⫶]
 
   //[…] per-language formatters

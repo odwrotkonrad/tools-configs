@@ -1,4 +1,4 @@
-emulate -L zsh
+emulate -LR zsh
 
 ssh -vT git@github.com 2>&1 | tee /dev/tty | grep "successfully authenticated"
 typeset -r github_status=$?

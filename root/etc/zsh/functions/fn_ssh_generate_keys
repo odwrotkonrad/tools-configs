@@ -1,4 +1,4 @@
-emulate -L zsh
+emulate -LR zsh
 
 local email=$1
 if [[ -z $email ]]; then
