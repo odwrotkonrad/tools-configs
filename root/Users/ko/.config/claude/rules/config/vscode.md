@@ -13,7 +13,7 @@ Library/Application Support/Code/User/
 │   └── defaultSettings.jsonc
 ├── keybindings.json                       # actual keybindings configuration
 ├── settings.json                          # actual settings
-└── unmodified-default-settings.jsonc      # unmodified default settings
+└── unmodified-settings.jsonc              # unmodified settings
 ```
 
 ### Documentation
