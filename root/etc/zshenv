@@ -33,6 +33,10 @@ typeset -A env_vars=(
     PYENV_VERSION       "3.14"
     RIPGREP_CONFIG_PATH "/etc/rg/rgrc"
 
+    #[≟] 1Password ssh passphrase helper
+    SSH_ASKPASS         "/usr/local/scripts/s_ssh_askpass_op"
+    SSH_ASKPASS_REQUIRE "force"
+
     #[∵] defining man env vars allows overriding, man.conf values cannot be overridden
     MANPAGER            "/usr/bin/less -Is"
     WHATISPAGER         "/usr/bin/less -Is"
