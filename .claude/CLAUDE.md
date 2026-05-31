@@ -1,4 +1,4 @@
-@../docs/commenting_convention.md
+@memory/comments.md
 
 @../README.md
 
