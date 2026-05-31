@@ -223,6 +223,7 @@
   "git.useForcePushIfIncludes": false, //[∵] frequent amends break the includes check
   "git.useForcePushWithLease": true,
   "git.useIntegratedAskPass": true,
+  "git.suggestSmartCommit": false,
   "git.showActionButton": {
     "commit": false,
     "publish": false,
