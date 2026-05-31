@@ -9,7 +9,7 @@
   "window.systemColorTheme": "auto",
   "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
   "window.titleSeparator": " ━━ ",
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 2,
   "update.titleBar": false, //[≟] update indicator in the title bar
   //[⫶]
 
@@ -123,7 +123,7 @@
   "editor.find.loop": false,
   "editor.folding": false, //[∵] more space for contents; toggled on with sticky scroll via alt+p
   "editor.fontFamily": "'JetBrains Mono'",
-  "editor.fontSize": 13,
+  "editor.fontSize": 12,
   "editor.formatOnSave": false,
   "editor.glyphMargin": false, //[∵] more space for contents
   "editor.guides.highlightActiveIndentation": false,
@@ -272,7 +272,7 @@
   "terminal.integrated.fastScrollSensitivity": 2,
   "terminal.integrated.fontFamily": "'CaskaydiaCove Nerd Font Mono'",
   "terminal.integrated.fontLigatures.enabled": false,
-  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontSize": 13,
   "terminal.integrated.gpuAcceleration": "on",
   "terminal.integrated.inheritEnv": false,
   "terminal.integrated.initialHintCopilotCli": false,
@@ -352,20 +352,20 @@
   ],
   //[⫶]
 
-  // TODO below settings - split to actually set / defaults
-
-  //[…] chat
-  "chat.agent.enabled": false,
-  "chat.agentsControl.enabled": "hidden",
-  "chat.commandCenter.enabled": false,
-  "chat.titleBar.signIn.enabled": false,
-  "chat.editor.wordWrap": "off",
-
-  // default
-  "chat.disableAIFeatures": false,
-
+  //[…] Claude Code
+  "claudeCode.useCtrlEnterToSend": true,
+  "claudeCode.hideOnboarding": true,
+  "claudeCode.initialPermissionMode": "default",
+  "claudeCode.respectGitIgnore": false,
+  "claudeCode.enableNewConversationShortcut": true,
+  "claudeCode.usePythonEnvironment": false,
+  "claudeCode.useTerminal": true,
+  "claudeCode.enableReopenClosedSessionShortcut": false,
+  "claudeCode.autosave": false,
   //[⫶]
 
+
+  // TODO below settings - split to actually set / defaults
   //[…] misc
   "breadcrumbs.enabled": false,
   "files.insertFinalNewline": true,
@@ -453,8 +453,8 @@
   "diffEditor.wordWrap": "inherit",
   "workbench.secondarySideBar.showLabels": false,
   "workbench.panel.showLabels": false,
-  "chat.viewSessions.orientation": "stacked",
   "workbench.activityBar.compact": true,
+  "chat.viewSessions.orientation": "stacked",
 
   //[⫶]
 }

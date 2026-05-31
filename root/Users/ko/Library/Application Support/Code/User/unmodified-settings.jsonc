@@ -305,5 +305,11 @@
   "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’“”|",
   "terminal.sourceControlRepositoriesKind": "integrated",
 
+  //[…] Claude Code
+
+  "claudeCode.claudeProcessWrapper": "",
+  "claudeCode.disableLoginPrompt": false,
+  "claudeCode.environmentVariables": []
+
   //[⫶]
 }
