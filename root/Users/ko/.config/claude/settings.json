@@ -60,7 +60,7 @@
       }
     }
   },
-  "outputStyle": "Proactive",
+  "outputStyle": "Interactive Code",
   "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
