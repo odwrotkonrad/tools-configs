@@ -9,7 +9,7 @@
   "window.systemColorTheme": "auto",
   "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
   "window.titleSeparator": " ━━ ",
-  "window.zoomLevel": 2,
+  "window.zoomLevel": 1,
   "update.titleBar": false, //[≟] update indicator in the title bar
   //[⫶]
 
@@ -40,6 +40,9 @@
   "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.renderIndentGuides": "none",
+  "workbench.secondarySideBar.showLabels": false,
+  "workbench.panel.showLabels": false,
+  "workbench.activityBar.compact": true,
 
   "workbench.colorCustomizations": {
     "[Dark Modern]": {
@@ -123,7 +126,7 @@
   "editor.find.loop": false,
   "editor.folding": false, //[∵] more space for contents; toggled on with sticky scroll via alt+p
   "editor.fontFamily": "'JetBrains Mono'",
-  "editor.fontSize": 12,
+  "editor.fontSize": 14,
   "editor.formatOnSave": false,
   "editor.glyphMargin": false, //[∵] more space for contents
   "editor.guides.highlightActiveIndentation": false,
@@ -198,7 +201,6 @@
   "git.defaultCloneDirectory": "~/.local/share/projects",
   "git.diagnosticsCommitHook.enabled": true,
   "git.enableCommitSigning": true,
-  "git.enableSmartCommit": true,
   "git.ignoreRebaseWarning": true,
   "git.inputValidation": true,
   "git.inputValidationLength": 500,
@@ -272,7 +274,7 @@
   "terminal.integrated.fastScrollSensitivity": 2,
   "terminal.integrated.fontFamily": "'CaskaydiaCove Nerd Font Mono'",
   "terminal.integrated.fontLigatures.enabled": false,
-  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontSize": 14,
   "terminal.integrated.gpuAcceleration": "on",
   "terminal.integrated.inheritEnv": false,
   "terminal.integrated.initialHintCopilotCli": false,
@@ -364,25 +366,67 @@
   "claudeCode.autosave": false,
   //[⫶]
 
-
-  // TODO below settings - split to actually set / defaults
-  //[…] misc
-  "breadcrumbs.enabled": false,
+  //[…] Files
+  "files.autoSaveWhenNoErrors": true,
   "files.insertFinalNewline": true,
-  "problems.decorations.enabled": false,
-  "problems.autoReveal": false,
-  "outline.problems.enabled": false,
+  "files.autoSaveWorkspaceFilesOnly": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimTrailingWhitespaceInRegexAndStrings": true,
+  "files.simpleDialog.enable": true,
+  "files.hotExit": "off",
+  "files.autoSave": "onFocusChange",
+  //[⫶]
+
+  //[…] outline
+  "outline.collapseItems": "alwaysCollapse",
+  "outline.problems.badges": false,
   "outline.problems.colors": false,
-  "debug.console.wordWrap": true,
+  "outline.icons": false,
   //[⫶]
 
-  //[…] files
-  "files.enableTrash": true,
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000,
+  //[…] diff editor
+  "diffEditor.experimental.useTrueInlineView": true,
+  "diffEditor.wordWrap": "off",
+  "diffEditor.experimental.showEmptyDecorations": false,
+  "diffEditor.experimental.showMoves": true, // ?
+  "diffEditor.renderSideBySide": false,
+  "diffEditor.ignoreTrimWhitespace": true,
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "diffEditor.hideUnchangedRegions.contextLineCount": 2,
+  "diffEditor.hideUnchangedRegions.minimumLineCount": 10,
+  "diffEditor.hideUnchangedRegions.revealLineCount": 15,
+  "diffEditor.renderGutterMenu": true,
+  "diffEditor.renderIndicators": true,
+  "diffEditor.renderMarginRevertIcon": true,
   //[⫶]
 
-  //[…] per-language formatters
+  //[⫶]
+
+  //[…] extensions
+  "extensions.ignoreRecommendations": true,
+  "extensions.allowOpenInModalEditor": true,
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+
+  "editorconfig.generateAuto": false,
+  "editorconfig.showMenuEntry": false,
+
+  "prettier.configPath": "~/.config/prettier/.prettierrc.yml",
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": true,
+
+  "ruff.configuration": "~/.config/ruff/ruff.toml",
+  "ruff.format.preview": true,
+  //[⫶]
+
+  //[…] other
+  "chat.disableAIFeatures": true,
+  "chat.agent.enabled": false,
+  "breadcrumbs.enabled": false,
+  //[⫶]
+
+  //[…] per-language settings
   "[go]": {
     "editor.defaultFormatter": "golang.go"
   },
@@ -417,44 +461,5 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  //[⫶]
-  //[…] extensions
-  "extensions.ignoreRecommendations": true,
-
-  "claudeCode.preferredLocation": "sidebar",
-  "claudeCode.allowDangerouslySkipPermissions": false,
-
-  "editorconfig.generateAuto": false,
-  "editorconfig.showMenuEntry": false,
-
-  "prettier.configPath": "~/.config/prettier/.prettierrc.yml",
-  "prettier.requireConfig": true,
-  "prettier.useEditorConfig": true,
-
-  "ruff.configuration": "~/.config/ruff/ruff.toml",
-  "ruff.format.preview": true,
-
-  "github.showAvatar": false,
-  "github.copilot.enable": {
-    "*": false,
-    "markdown": false,
-    "plaintext": false,
-    "scminput": false
-  },
-  //[⫶]
-
-  //[…] diff editor
-  "diffEditor.codeLens": false,
-  "diffEditor.diffAlgorithm": "advanced",
-  "diffEditor.experimental.showEmptyDecorations": true,
-  "diffEditor.experimental.showMoves": false,
-  "diffEditor.renderSideBySide": true,
-  "diffEditor.ignoreTrimWhitespace": true,
-  "diffEditor.wordWrap": "inherit",
-  "workbench.secondarySideBar.showLabels": false,
-  "workbench.panel.showLabels": false,
-  "workbench.activityBar.compact": true,
-  "chat.viewSessions.orientation": "stacked",
-
   //[⫶]
 }

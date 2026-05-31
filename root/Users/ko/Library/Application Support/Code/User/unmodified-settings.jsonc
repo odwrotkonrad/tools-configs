@@ -141,18 +141,18 @@
   "git.detectSubmodulesLimit": 10,
   "git.detectSubmodules": true,
   "git.defaultBranchName": "main",
-  "git.confirmForcePush": true, // ?
+  "git.confirmForcePush": true,
   "git.commitShortHashLength": 7,
   "git.commandsToLog": [],
   "git.branchWhitespaceChar": "-",
-  "git.branchValidationRegex": "", // per repo / folder
+  "git.branchValidationRegex": "",
   "git.branchRandomName.enable": false,
   "git.branchProtectionPrompt": "alwaysPrompt",
-  "git.branchProtection": [], // todo
-  "git.branchPrefix": "", // per repo or per folder
+  "git.branchProtection": [],
+  "git.branchPrefix": "",
   "git.blame.statusBarItem.template": "${authorName} (${authorDateAgo})",
   "git.timeline.date": "committed",
-  "git.useEditorAsCommitInput": false,  // maybe?
+  "git.useEditorAsCommitInput": false,
   "git.suggestSmartCommit": true,
   "git.smartCommitChanges": "all",
   "git.showProgress": true,
@@ -170,21 +170,11 @@
   "git.allowNoVerifyCommit": false,
   "git.allowForcePush": false,
   "git.addAICoAuthor": "off",
-  "git.repositoryScanIgnoredFolders": [
-    "node_modules"
-  ],
-  "git.branchRandomName.dictionary": [
-    "adjectives",
-    "animals"
-  ],
-  "git.checkoutType": [
-    "local",
-    "remote",
-    "tags"
-  ],
-  "git.diagnosticsCommitHook.sources": {
-      "*": "error"
-    },
+  "git.repositoryScanIgnoredFolders": [],
+  "git.branchRandomName.dictionary": [],
+  "git.checkoutType": [],
+  "git.diagnosticsCommitHook.sources": {},
+  "git.enableSmartCommit": false,
   //[⫶⫶]
 
   //[……] scm
@@ -309,7 +299,65 @@
 
   "claudeCode.claudeProcessWrapper": "",
   "claudeCode.disableLoginPrompt": false,
-  "claudeCode.environmentVariables": []
+  "claudeCode.environmentVariables": [],
+  "claudeCode.allowDangerouslySkipPermissions": false,
+  "claudeCode.preferredLocation": "panel",
 
   //[⫶]
+
+  //[…] Files
+  "files.candidateGuessEncodings": [],
+  "files.refactoring.autoSave": true,
+  "files.saveConflictResolution": "askUser",
+  "files.restoreUndoStack": true,
+  "files.participants.timeout": 60000,
+  "files.exclude": {},
+  "files.eol": "auto",
+  "files.encoding": "utf8",
+  "files.dialog.defaultPath": "",
+  "files.defaultLanguage": "",
+  "files.autoGuessEncoding": false,
+  "files.associations": {},
+  "files.enableTrash": true,
+  "files.autoSaveDelay": 1000,
+  //[⫶]
+
+  "outline.problems.enabled": false,
+  "outline.showArrays": true,
+  "outline.showClasses": true,
+  "outline.showConstants": true,
+  "outline.showConstructors": true,
+  "outline.showEnumMembers": true,
+  "outline.showEnums": true,
+  "outline.showEvents": true,
+  "outline.showFiles": true,
+  "outline.showFunctions": true,
+  "outline.showInterfaces": true,
+  "outline.showMethods": true,
+  "outline.showModules": true,
+  "outline.showNamespaces": true,
+  "outline.showNull": true,
+  "outline.showNumbers": true,
+  "outline.showObjects": true,
+  "outline.showOperators": true,
+  "outline.showPackages": true,
+  "outline.showStrings": true,
+  "outline.showStructs": true,
+  "outline.showTypeParameters": true,
+
+  //[…] diff editor
+  "diffEditor.useInlineViewWhenSpaceIsLimited": true,
+  "diffEditor.renderSideBySideInlineBreakpoint": 900,
+  "diffEditor.maxFileSize": 50,
+  "diffEditor.maxComputationTime": 5000,
+  "diffEditor.diffAlgorithm": "advanced",
+  "diffEditor.codeLens": true,
+  //[⫶]
+
+  // other
+  "github.branchProtection": true,
+  "github.gitAuthentication": true,
+  "github.gitProtocol": "https",
+  "github.showAvatar": true
+
 }
