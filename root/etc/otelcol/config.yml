@@ -1,0 +1,33 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: localhost:4317
+      http:
+        endpoint: localhost:4318
+
+processors:
+  memory_limiter:
+    check_interval: 5s
+    limit_mib: 4000
+    spike_limit_mib: 500
+
+extensions:
+  health_check:
+    endpoint: localhost:13133
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+exporters:
+  prometheus:
+    endpoint: localhost:8889
+    namespace: default
+
+
+service:
+  extensions: [health_check, zpages]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter]
+      exporters: [prometheus]
