@@ -42,7 +42,11 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "query": "label_values(claude_code_session_count_total{project=~\"$project\"}, session_id)",
+        "query": {
+          "qryType": 3,
+          "query": "query_result(sum by (session_id) (increase(claude_code_cost_usage_USD_total[$__range])) > 0)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "includeAll": true,
         "allValue": ".*",
@@ -50,7 +54,9 @@
         "current": {
           "text": "All",
           "value": "$__all"
-        }
+        },
+        "regex": "/session_id=\"([^\"]+)\"/",
+        "sort": 1
       },
       {
         "name": "model",
@@ -65,6 +71,51 @@
         "includeAll": true,
         "allValue": ".*",
         "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      },
+      {
+        "name": "tool_name",
+        "label": "Tool",
+        "type": "custom",
+        "query": "AskUserQuestion,Bash,Edit,Read,Write",
+        "includeAll": true,
+        "allValue": ".+",
+        "multi": true,
+        "options": [
+          {
+            "text": "All",
+            "value": "$__all",
+            "selected": true
+          },
+          {
+            "text": "AskUserQuestion",
+            "value": "AskUserQuestion",
+            "selected": false
+          },
+          {
+            "text": "Bash",
+            "value": "Bash",
+            "selected": false
+          },
+          {
+            "text": "Edit",
+            "value": "Edit",
+            "selected": false
+          },
+          {
+            "text": "Read",
+            "value": "Read",
+            "selected": false
+          },
+          {
+            "text": "Write",
+            "value": "Write",
+            "selected": false
+          }
+        ],
         "current": {
           "text": "All",
           "value": "$__all"
@@ -486,6 +537,406 @@
               "Value #cost": "Cost (USD)"
             }
           }
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Logs",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 9,
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": false,
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending",
+        "prettifyLogMessage": false
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "{service_name=\"claude-code\"} | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\"",
+          "maxLines": 200
+        }
+      ],
+      "links": [
+        {
+          "title": "Open in Explore",
+          "url": "/explore?left=%7B%22datasource%22%3A%20%22loki%22%2C%20%22queries%22%3A%20%5B%7B%22refId%22%3A%20%22A%22%2C%20%22datasource%22%3A%20%7B%22type%22%3A%20%22loki%22%2C%20%22uid%22%3A%20%22loki%22%7D%2C%20%22expr%22%3A%20%22%7Bservice_name%3D%5C%22claude-code%5C%22%7D%20%7C%20project%3D~%5C%22.%2B%5C%22%20%7C%20session_id%3D~%5C%22.%2B%5C%22%22%7D%5D%2C%20%22range%22%3A%20%7B%22from%22%3A%20%22now-30d%22%2C%20%22to%22%3A%20%22now%22%7D%7D",
+          "targetBlank": true
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Tools",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 210,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Full Command"
+            },
+            "properties": [
+              {
+                "id": "custom.inspect",
+                "value": true
+              },
+              {
+                "id": "custom.width",
+                "value": 720
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tool"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Decision"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Command"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 320
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "Time",
+            "desc": true
+          }
+        ]
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "{service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=~\"${tool_name:regex}\" | line_format `{{.tool_parameters}}` | json bash_command=\"bash_command\", full_command=\"full_command\" | label_format command=`{{ if .bash_command }}{{.bash_command}}{{ else }}{{ .tool_name }}{{ end }}` | label_format full_command=`{{ if gt (len .full_command) 90 }}{{ substr 0 90 .full_command }}...{{ else }}{{ .full_command }}{{ end }}`",
+          "queryType": "range",
+          "maxLines": 500
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "labels": true,
+              "tsNs": true,
+              "id": true,
+              "bash_command": true,
+              "tool_parameters": true,
+              "app_entrypoint": true,
+              "app_version": true,
+              "cwd": true,
+              "detected_level": true,
+              "event_name": true,
+              "event_sequence": true,
+              "event_timestamp": true,
+              "flags": true,
+              "host_arch": true,
+              "observed_timestamp": true,
+              "organization_id": true,
+              "os_type": true,
+              "os_version": true,
+              "prompt_id": true,
+              "scope_name": true,
+              "scope_version": true,
+              "service_name": true,
+              "service_version": true,
+              "source": true,
+              "span_id": true,
+              "terminal_type": true,
+              "tool_use_id": true,
+              "trace_id": true,
+              "user_account_id": true,
+              "user_account_uuid": true,
+              "user_email": true,
+              "user_id": true,
+              "decision_source": true,
+              "decision_type": true,
+              "decision": true,
+              "labelTypes": true,
+              "trace_id 1": true,
+              "trace_id 2": true,
+              "project": true,
+              "session_id": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "tool_name": 1,
+              "command": 2,
+              "full_command": 3
+            },
+            "renameByName": {
+              "tool_name": "Tool",
+              "command": "Command",
+              "full_command": "Full Command"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Tool Usage Stats",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 15,
+        "y": 9
+      },
+      "id": 211,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "right"
+              },
+              {
+                "id": "custom.width",
+                "value": 120
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tool"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Command"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "Count",
+            "desc": true
+          }
+        ],
+        "footer": {
+          "show": true,
+          "reducer": [
+            "sum"
+          ],
+          "fields": [
+            "Count"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (tool_name, command) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=~\"${tool_name:regex}\" | line_format `{{.tool_parameters}}` | json bash_command=\"bash_command\" | label_format raw=`{{ if .bash_command }}{{.bash_command}}{{ else }}{{ .tool_name }}{{ end }}` | label_format command=`{{ if gt (len .raw) 30 }}{{ substr 0 30 .raw }}...{{ else }}{{ .raw }}{{ end }}` [$__range]))",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "raw": true
+            },
+            "indexByName": {
+              "tool_name": 0,
+              "command": 1,
+              "Value #A": 2
+            },
+            "renameByName": {
+              "tool_name": "Tool",
+              "command": "Command",
+              "Value #A": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Tool invocations over time",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 15,
+        "x": 0,
+        "y": 9
+      },
+      "id": 212,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 25,
+            "stacking": {
+              "mode": "normal"
+            },
+            "drawStyle": "bars",
+            "lineWidth": 1
+          }
+        }
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "placement": "bottom",
+          "displayMode": "list"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=~\"${tool_name:regex}\" [5m]))",
+          "legendFormat": "{{tool_name}}",
+          "interval": "5m"
         }
       ]
     }

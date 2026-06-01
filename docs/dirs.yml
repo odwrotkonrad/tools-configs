@@ -3,6 +3,7 @@ ci/:
   - scripts
 docs/:
   - images
+  - recordings
 root/:
   - Users:
       - ko:
@@ -44,6 +45,8 @@ root/:
   - etc:
       - grafana:
           - provisioning:
+              - dashboards:
+                  - json
               - datasources
       - jaeger
       - loki
