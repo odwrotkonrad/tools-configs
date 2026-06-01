@@ -41,6 +41,7 @@ paths:
             10-tools.zsh:
             20-aliases.zsh:
             30-keybindings.zsh:
+            40-hooks.zsh:
           functions/:
             rm:
             fn_load_static_history:

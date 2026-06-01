@@ -19,6 +19,13 @@ datasources:
     uid: loki
     access: proxy
     url: http://localhost:3100
+    jsonData:
+      derivedFields:
+        - name: trace_id
+          matcherType: label
+          matcherRegex: trace_id
+          datasourceUid: jaeger
+          url: "$${__value.raw}"
 
   #[≟] Jaeger — traces, served by the jaeger_query extension in otelcol.
   - name: Jaeger
@@ -26,3 +33,11 @@ datasources:
     uid: jaeger
     access: proxy
     url: http://localhost:16686
+    jsonData:
+      tracesToLogsV2:
+        datasourceUid: loki
+        spanStartTimeShift: -1h
+        spanEndTimeShift: 1h
+        filterByTraceID: true
+        customQuery: true
+        query: '{service_name="claude-code"} | trace_id="$${__trace.traceId}"'

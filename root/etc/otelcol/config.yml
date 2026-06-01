@@ -21,6 +21,8 @@ extensions:
 exporters:
   prometheus:
     endpoint: localhost:8889
+    resource_to_telemetry_conversion:
+      enabled: true
   otlphttp/loki:
     endpoint: http://localhost:3100/otlp
   otlp/jaeger:

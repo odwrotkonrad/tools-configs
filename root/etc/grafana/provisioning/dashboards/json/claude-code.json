@@ -1,0 +1,493 @@
+{
+  "uid": "claude-code",
+  "title": "Claude Code",
+  "tags": [
+    "claude-code",
+    "observability"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "editable": true,
+  "graphTooltip": 1,
+  "refresh": false,
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "project",
+        "label": "Project",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(claude_code_session_count_total, project)",
+        "refresh": 2,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      },
+      {
+        "name": "session_id",
+        "label": "Session",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(claude_code_session_count_total{project=~\"$project\"}, session_id)",
+        "refresh": 2,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      },
+      {
+        "name": "model",
+        "label": "Model",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(claude_code_token_usage_tokens_total, model)",
+        "refresh": 2,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "table",
+      "title": "Tokens, Cache, Lines Of Code",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 11,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "right"
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Tokens In|Tokens Out|Cache Read|Cache Create|Total)$"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache Create"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache Read"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tokens Out"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tokens In"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lines Added"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lines Removed"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-RdYlGr"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cost (USD)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Project"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Session"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Model"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Total",
+            "desc": true
+          }
+        ],
+        "footer": {
+          "show": true,
+          "reducer": [
+            "sum"
+          ],
+          "fields": [
+            "Tokens In",
+            "Tokens Out",
+            "Cache Read",
+            "Cache Create",
+            "Total",
+            "Lines Added",
+            "Lines Removed",
+            "Cost (USD)"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "refId": "in",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"input\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "out",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"output\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "cacheRead",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"cacheRead\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "cacheCreate",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"cacheCreation\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "total",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "linesAdded",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join((sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0)) * 0 + on (project, session_id) group_left sum by (project, session_id) (increase(claude_code_lines_of_code_count_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"added\"}[$__range])), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "linesRemoved",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join((sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0)) * 0 + on (project, session_id) group_left sum by (project, session_id) (increase(claude_code_lines_of_code_count_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"removed\"}[$__range])), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        },
+        {
+          "refId": "cost",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_cost_usage_USD_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "pms",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "pms": true,
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true,
+              "Time 7": true,
+              "Time 8": true,
+              "project 2": true,
+              "session_id 2": true,
+              "model 2": true,
+              "project 3": true,
+              "session_id 3": true,
+              "model 3": true,
+              "project 4": true,
+              "session_id 4": true,
+              "model 4": true,
+              "project 5": true,
+              "session_id 5": true,
+              "model 5": true,
+              "project 6": true,
+              "session_id 6": true,
+              "model 6": true,
+              "project 7": true,
+              "session_id 7": true,
+              "model 7": true,
+              "project 8": true,
+              "session_id 8": true,
+              "model 8": true
+            },
+            "indexByName": {
+              "project 1": 0,
+              "session_id 1": 1,
+              "model 1": 2,
+              "Value #in": 3,
+              "Value #out": 4,
+              "Value #cacheRead": 5,
+              "Value #cacheCreate": 6,
+              "Value #total": 7,
+              "Value #linesAdded": 8,
+              "Value #linesRemoved": 9,
+              "Value #cost": 10
+            },
+            "renameByName": {
+              "project 1": "Project",
+              "session_id 1": "Session",
+              "model 1": "Model",
+              "Value #in": "Tokens In",
+              "Value #out": "Tokens Out",
+              "Value #cacheRead": "Cache Read",
+              "Value #cacheCreate": "Cache Create",
+              "Value #total": "Total",
+              "Value #linesAdded": "Lines Added",
+              "Value #linesRemoved": "Lines Removed",
+              "Value #cost": "Cost (USD)"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
