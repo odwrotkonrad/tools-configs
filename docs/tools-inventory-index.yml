@@ -7,6 +7,7 @@ editorconfig: root/Users/ko/.editorconfig
 fzf: root/etc/zsh/rc.d/10-tools.zsh
 git: root/Users/ko/.config/git/config
 golang: root/etc/zshenv
+grafana: root/etc/grafana/grafana.ini
 homebrew: root/etc/zshrc
 jaeger: root/etc/jaeger/config.yml
 kitty: root/Users/ko/.config/kitty/kitty.conf

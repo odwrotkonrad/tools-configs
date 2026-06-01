@@ -42,6 +42,9 @@ root/:
                           - .exported
               - LaunchAgents
   - etc:
+      - grafana:
+          - provisioning:
+              - datasources
       - jaeger
       - loki
       - otelcol
