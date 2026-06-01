@@ -21,7 +21,6 @@ extensions:
 exporters:
   prometheus:
     endpoint: localhost:8889
-    namespace: default
 
 
 service:
