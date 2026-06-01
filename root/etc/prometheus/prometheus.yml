@@ -21,7 +21,26 @@ scrape_configs:
           app: "prometheus"
 
   - job_name: "otelcol"
+    scrape_interval: 5s
     static_configs:
       - targets: ["localhost:8889"]
         labels:
           app: "otelcol"
+
+  - job_name: "loki"
+    static_configs:
+      - targets: ["localhost:3100"]
+        labels:
+          app: "loki"
+
+  - job_name: "jaeger"
+    static_configs:
+      - targets: ["localhost:8890"]
+        labels:
+          app: "jaeger"
+
+  - job_name: "grafana"
+    static_configs:
+      - targets: ["localhost:9300"]
+        labels:
+          app: "grafana"

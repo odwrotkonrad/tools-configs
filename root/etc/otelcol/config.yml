@@ -6,6 +6,35 @@ receivers:
       http:
         endpoint: localhost:4318
 
+  hostmetrics:
+    collection_interval: 5s
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      load:
+      memory:
+        metrics:
+          system.memory.utilization:
+            enabled: true
+      disk:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      network:
+      paging:
+      process:
+        mute_process_exe_error: true
+        mute_process_user_error: true
+        mute_process_io_error: true
+        metrics:
+          process.cpu.utilization:
+            enabled: true
+          process.memory.utilization:
+            enabled: true
+
 processors:
   memory_limiter:
     check_interval: 5s
@@ -35,7 +64,7 @@ service:
   extensions: [health_check, zpages]
   pipelines:
     metrics:
-      receivers: [otlp]
+      receivers: [otlp, hostmetrics]
       processors: [memory_limiter]
       exporters: [prometheus]
     logs:
