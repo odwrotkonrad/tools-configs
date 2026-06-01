@@ -9,8 +9,10 @@ git: root/Users/ko/.config/git/config
 golang: root/etc/zshenv
 homebrew: root/etc/zshrc
 kitty: root/Users/ko/.config/kitty/kitty.conf
+loki: root/etc/loki/config.yml
 man: root/etc/man.conf
 nvm: root/Users/ko/.nvmrc
+otelcol: root/etc/otelcol/config.yml
 prettier: root/Users/ko/.config/prettier/.prettierrc.yml
 prometheus: root/etc/prometheus/prometheus.yml
 pyenv: root/etc/zshenv

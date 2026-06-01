@@ -60,3 +60,6 @@ set -o          #[≟] show all shell options with on/off status
 exec zsh     #[≟] reload config by replacing current process (no nested shell); re-runs full startup chain
 
 #[⫶]
+
+#[…] other
+logcli query --quiet --limit=2 '{service_name="claude-code"}'
