@@ -1,0 +1,2 @@
+ko ALL=(root) NOPASSWD: /usr/local/scripts/s_load_configs
+ko ALL=(root) NOPASSWD: /usr/local/scripts/s_load_configs /Users/ko/projects/configs

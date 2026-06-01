@@ -669,10 +669,10 @@
     "command": "github.copilot.git.generateCommitMessage",
     "when": "scmRepository"
   },
-  //[≟] alt+p — sync (pull then push)
+  //[≟] alt+p — push
   {
     "key": "alt+p",
-    "command": "git.sync",
+    "command": "git.push",
     "when": "focusedView == 'workbench.scm' || editorTextFocus"
   },
   //[≟] alt+shift+p — force push (--force-with-lease, no pull)
