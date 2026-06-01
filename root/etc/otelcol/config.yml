@@ -23,6 +23,10 @@ exporters:
     endpoint: localhost:8889
   otlphttp/loki:
     endpoint: http://localhost:3100/otlp
+  otlp/jaeger:
+    endpoint: 127.0.0.1:4327
+    tls:
+      insecure: true
 
 
 service:
@@ -36,3 +40,7 @@ service:
       receivers: [otlp]
       processors: [memory_limiter]
       exporters: [otlphttp/loki]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter]
+      exporters: [otlp/jaeger]

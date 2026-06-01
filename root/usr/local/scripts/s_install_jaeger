@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -e
+
+prefix=/usr/local
+version=2.18.0
+arch=darwin-arm64
+archive=jaeger-${version}-${arch}.tar.gz
+url=https://github.com/jaegertracing/jaeger/releases/download/v${version}/${archive}
+sha256=62778b8d59843a932a595581a0d2d7a2fe0d93c4e970f9a440636c7eb6a7cd24
+
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+#[≟] 1. download release archive
+curl -L -o "$tmpdir/$archive" "$url"
+
+#[≟] 2. extract archive
+tar -xzf "$tmpdir/$archive" -C "$tmpdir"
+
+extracted=$tmpdir/jaeger-${version}-${arch}
+
+#[≟] 3. verify checksum #∵ jaeger ships per-file sums, not an archive sum
+echo "$sha256  $extracted/jaeger" | shasum -a 256 -c -
+
+#[≟] 4. install binary to standard PATH location
+sudo install -m 0755 "$extracted/jaeger" "$prefix/bin/jaeger"

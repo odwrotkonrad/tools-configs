@@ -42,6 +42,7 @@ root/:
                           - .exported
               - LaunchAgents
   - etc:
+      - jaeger
       - loki
       - otelcol
       - prometheus

@@ -65,6 +65,12 @@ tools:
 
   - homebrew:
 
+  - jaeger:
+      files:
+        root/etc/jaeger/config.yml:
+        root/usr/local/scripts/s_install_jaeger:
+        root/Users/ko/Library/LaunchAgents/local.sd.jaeger.plist:
+
   - kitty:
       files:
         root/Users/ko/.config/kitty/:

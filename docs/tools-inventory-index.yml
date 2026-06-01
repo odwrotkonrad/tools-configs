@@ -8,6 +8,7 @@ fzf: root/etc/zsh/rc.d/10-tools.zsh
 git: root/Users/ko/.config/git/config
 golang: root/etc/zshenv
 homebrew: root/etc/zshrc
+jaeger: root/etc/jaeger/config.yml
 kitty: root/Users/ko/.config/kitty/kitty.conf
 loki: root/etc/loki/config.yml
 man: root/etc/man.conf
