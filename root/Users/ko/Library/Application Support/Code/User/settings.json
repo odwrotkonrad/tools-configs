@@ -8,9 +8,9 @@
   "window.restoreWindows": "preserve",
   "window.systemColorTheme": "auto",
   "window.title": "${activeRepositoryName} ${separator} ${activeEditorMedium}",
-  "window.titleSeparator": " ━━ ",
-  "window.zoomLevel": 1,
-  "update.titleBar": false, //[≟] update indicator in the title bar
+  "window.titleSeparator": " ⬩ ",
+  "window.zoomLevel": 0.85,
+  "update.titleBar": false,
   //[⫶]
 
   //[…] workbench
@@ -32,7 +32,7 @@
   "workbench.editor.titleScrollbarVisibility": "hidden",
   "workbench.layoutControl.enabled": false,
   "workbench.navigationControl.enabled": false,
-  "workbench.panel.defaultLocation": "top",
+  "workbench.panel.defaultLocation": "bottom",
   "workbench.preferredDarkColorTheme": "Dark Modern",
   "workbench.preferredLightColorTheme": "Solarized Light",
   "workbench.secondarySideBar.defaultVisibility": "visible",
@@ -124,15 +124,15 @@
   "editor.find.addExtraSpaceOnTop": false,
   "editor.find.autoFindInSelection": "never",
   "editor.find.loop": false,
-  "editor.folding": false, //[∵] more space for contents; toggled on with sticky scroll via alt+p
+  "editor.folding": false,
   "editor.fontFamily": "'JetBrains Mono'",
-  "editor.fontSize": 14,
+  "editor.fontSize": 12,
   "editor.formatOnSave": false,
-  "editor.glyphMargin": false, //[∵] more space for contents
+  "editor.glyphMargin": false,
   "editor.guides.highlightActiveIndentation": false,
   "editor.guides.indentation": false,
   "editor.hideCursorInOverviewRuler": false,
-  "editor.lineNumbers": "off", //[∵] more space for contents
+  "editor.lineNumbers": "off",
   "editor.minimap.enabled": false,
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
@@ -142,7 +142,7 @@
   "editor.scrollbar.verticalScrollbarSize": 2,
   "editor.scrollBeyondLastLine": false,
   "editor.stickyScroll.maxLineCount": 1,
-  "editor.tabSize": 2, //[≟] columns a Tab char occupies; editor.indentSize defaults to "tabSize" so indent width follows
+  "editor.tabSize": 2,
   "editor.suggest.preview": true,
   "editor.suggest.showColors": false,
   "editor.suggest.showStatusBar": true,
@@ -275,7 +275,6 @@
   "terminal.integrated.fastScrollSensitivity": 2,
   "terminal.integrated.fontFamily": "'CaskaydiaCove Nerd Font Mono'",
   "terminal.integrated.fontLigatures.enabled": false,
-  "terminal.integrated.fontSize": 14,
   "terminal.integrated.gpuAcceleration": "on",
   "terminal.integrated.inheritEnv": false,
   "terminal.integrated.initialHintCopilotCli": false,
