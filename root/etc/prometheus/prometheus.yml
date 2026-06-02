@@ -34,6 +34,20 @@ scrape_configs:
         labels:
           app: "otelcol"
 
+  - job_name: "listening-ports"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9101"]
+        labels:
+          app: "port_exporter"
+
+  - job_name: "dir-sizes"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["localhost:9102"]
+        labels:
+          app: "dir_size_exporter"
+
   - job_name: "loki"
     static_configs:
       - targets: ["localhost:3100"]

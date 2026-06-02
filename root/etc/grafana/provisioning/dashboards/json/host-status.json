@@ -20,91 +20,37 @@
   },
   "panels": [
     {
-      "id": 10,
-      "type": "row",
-      "title": "Health",
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "panels": []
-    },
-    {
       "id": 16,
       "type": "table",
-      "title": "Services",
-      "description": "Per-service health. Uptime = time since the current process started (resets on restart), falling back to time-since-last-down for services that expose no process start metric.",
+      "title": "Service Status",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
+        "h": 10,
+        "w": 5,
         "x": 0,
-        "y": 1
+        "y": 0
       },
       "targets": [
         {
-          "refId": "A",
+          "refId": "LIVE",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(min by (app) ((time() - max by (app) (process_start_time_seconds)) or (max by (app) (otelcol_process_uptime)) or (time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s])))) and on (app) (max by (app) (up))",
+          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(max by (app) (up), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\")",
           "instant": true,
           "format": "table"
         },
         {
-          "refId": "B",
+          "refId": "UPTIME",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (app) (up)",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "S0",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(max by (app) (up), \"ui\",\"http://localhost:9090/\",\"app\",\"prometheus\"), \"ui\",\"http://localhost:9300/\",\"app\",\"grafana\"), \"ui\",\"http://localhost:3100/ready\",\"app\",\"loki\"), \"ui\",\"http://localhost:55679/debug/servicez\",\"app\",\"otelcol\"), \"ui\",\"http://localhost:16686/\",\"app\",\"jaeger\")",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "S1",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(max by (app) (up), \"metrics\",\"http://localhost:9090/metrics\",\"app\",\"prometheus\"), \"metrics\",\"http://localhost:9300/metrics\",\"app\",\"grafana\"), \"metrics\",\"http://localhost:3100/metrics\",\"app\",\"loki\"), \"metrics\",\"http://localhost:8889/metrics\",\"app\",\"otelcol\"), \"metrics\",\"http://localhost:8890/metrics\",\"app\",\"jaeger\")",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "S2",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(max by (app) (up), \"health\",\"http://localhost:9090/-/healthy\",\"app\",\"prometheus\"), \"health\",\"http://localhost:9300/api/health\",\"app\",\"grafana\"), \"health\",\"http://localhost:3100/ready\",\"app\",\"loki\"), \"health\",\"http://localhost:13133/\",\"app\",\"otelcol\"), \"health\",\"http://localhost:13134/\",\"app\",\"jaeger\")",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "S3",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "label_replace(label_replace(label_replace(max by (app) (up), \"api\",\"http://localhost:9090/api/v1/query\",\"app\",\"prometheus\"), \"api\",\"http://localhost:3100/loki/api/v1/push\",\"app\",\"loki\"), \"api\",\"http://localhost:16686/search\",\"app\",\"jaeger\")",
+          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(min by (app) ((time() - max by (app) (process_start_time_seconds)) or (max by (app) (otelcol_process_uptime)) or (time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s]))) and on (app) (max by (app) (up) == 1), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\")",
           "instant": true,
           "format": "table"
         }
@@ -121,36 +67,59 @@
           "options": {}
         },
         {
+          "id": "sortBy",
+          "options": {
+            "fields": "",
+            "sort": [
+              {
+                "field": "rank",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {
               "Time": true,
-              "Value #S0": true,
-              "Value #S1": true,
-              "Value #S2": true,
-              "Value #S3": true
+              "rank": true
             },
             "indexByName": {
               "app": 0,
-              "Value #A": 1,
-              "Value #B": 2
+              "Value #UPTIME": 1,
+              "Value #LIVE": 2
             },
             "renameByName": {
               "app": "Service",
-              "Value #A": "Uptime",
-              "Value #B": "UP"
+              "Value #LIVE": "Live",
+              "Value #UPTIME": "Uptime"
             }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "targetField": "Live",
+                "destinationType": "boolean"
+              }
+            ]
           }
         }
       ],
       "options": {
         "showHeader": true,
-        "cellHeight": "sm"
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
       },
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": "auto",
+            "align": "left",
             "filterable": true
           }
         },
@@ -162,29 +131,8 @@
             },
             "properties": [
               {
-                "id": "links",
-                "value": [
-                  {
-                    "title": "UI",
-                    "url": "${__data.fields.ui}",
-                    "targetBlank": true
-                  },
-                  {
-                    "title": "Metrics",
-                    "url": "${__data.fields.metrics}",
-                    "targetBlank": true
-                  },
-                  {
-                    "title": "Health",
-                    "url": "${__data.fields.health}",
-                    "targetBlank": true
-                  },
-                  {
-                    "title": "API",
-                    "url": "${__data.fields.api}",
-                    "targetBlank": true
-                  }
-                ]
+                "id": "custom.width",
+                "value": 130
               }
             ]
           },
@@ -207,28 +155,16 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "UP"
+              "options": "Live"
             },
             "properties": [
               {
-                "id": "mappings",
-                "value": [
-                  {
-                    "type": "value",
-                    "options": {
-                      "0": {
-                        "text": "DOWN",
-                        "color": "red",
-                        "index": 0
-                      },
-                      "1": {
-                        "text": "UP",
-                        "color": "green",
-                        "index": 1
-                      }
-                    }
-                  }
-                ]
+                "id": "custom.width",
+                "value": 50
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
               },
               {
                 "id": "custom.cellOptions",
@@ -238,72 +174,24 @@
                 }
               },
               {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "red",
-                      "value": null
-                    },
-                    {
-                      "color": "green",
-                      "value": 1
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "true": {
+                        "text": "✓",
+                        "color": "#FFFFFF",
+                        "index": 0
+                      },
+                      "false": {
+                        "text": "✗",
+                        "color": "#000000",
+                        "index": 1
+                      }
                     }
-                  ]
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 60
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "ui"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "metrics"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "health"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "api"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
+                  }
+                ]
               }
             ]
           }
@@ -311,19 +199,18 @@
       }
     },
     {
-      "id": 1,
-      "type": "timeseries",
-      "title": "CPU Usage",
-      "description": "Mean CPU utilization across all cores (1 - idle).",
+      "id": 17,
+      "type": "table",
+      "title": "Service Endpoints",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 1
+        "h": 10,
+        "w": 9,
+        "x": 5,
+        "y": 0
       },
       "targets": [
         {
@@ -332,8 +219,158 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "1 - avg(system_cpu_utilization_ratio{state=\"idle\"})",
-          "legendFormat": "CPU busy"
+          "expr": "(label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"otelcol\"}), \"svc\",\"otelcol\",\"app\",\".*\"), \"desc\",\"zpages\",\"app\",\".*\"), \"url\",\"http://localhost:55679/debug/servicez\",\"app\",\".*\"), \"srank\",\"0\",\"app\",\".*\"), \"dtype\",\"2\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"otelcol\"}), \"svc\",\"otelcol\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:8889/metrics\",\"app\",\".*\"), \"srank\",\"0\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"prometheus\"}), \"svc\",\"prometheus\",\"app\",\".*\"), \"desc\",\"UI\",\"app\",\".*\"), \"url\",\"http://localhost:9090/\",\"app\",\".*\"), \"srank\",\"1\",\"app\",\".*\"), \"dtype\",\"0\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"prometheus\"}), \"svc\",\"prometheus\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9090/metrics\",\"app\",\".*\"), \"srank\",\"1\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"grafana\"}), \"svc\",\"grafana\",\"app\",\".*\"), \"desc\",\"UI\",\"app\",\".*\"), \"url\",\"http://localhost:9300/\",\"app\",\".*\"), \"srank\",\"2\",\"app\",\".*\"), \"dtype\",\"0\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"grafana\"}), \"svc\",\"grafana\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9300/metrics\",\"app\",\".*\"), \"srank\",\"2\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"loki\"}), \"svc\",\"loki\",\"app\",\".*\"), \"desc\",\"health\",\"app\",\".*\"), \"url\",\"http://localhost:3100/ready\",\"app\",\".*\"), \"srank\",\"3\",\"app\",\".*\"), \"dtype\",\"2\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"loki\"}), \"svc\",\"loki\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:3100/metrics\",\"app\",\".*\"), \"srank\",\"3\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"jaeger\"}), \"svc\",\"jaeger\",\"app\",\".*\"), \"desc\",\"UI\",\"app\",\".*\"), \"url\",\"http://localhost:16686/\",\"app\",\".*\"), \"srank\",\"4\",\"app\",\".*\"), \"dtype\",\"0\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"jaeger\"}), \"svc\",\"jaeger\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:8890/metrics\",\"app\",\".*\"), \"srank\",\"4\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"port_exporter\"}), \"svc\",\"port_exporter\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9101/\",\"app\",\".*\"), \"srank\",\"5\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"dir_size_exporter\"}), \"svc\",\"dir_size_exporter\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9102/\",\"app\",\".*\"), \"srank\",\"6\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\"))",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Service"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Description"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "URL"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 280
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open",
+                    "url": "${__value.text}",
+                    "targetBlank": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": "",
+            "sort": [
+              {
+                "field": "dtype",
+                "desc": false
+              },
+              {
+                "field": "srank",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "instance": true,
+              "job": true,
+              "__name__": true,
+              "app": true,
+              "srank": true,
+              "dtype": true
+            },
+            "indexByName": {
+              "svc": 0,
+              "desc": 1,
+              "url": 2
+            },
+            "renameByName": {
+              "svc": "Service",
+              "desc": "Description",
+              "url": "URL"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "CPU Usage",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "topk(5, avg_over_time(sum by (process_executable_name) (process_cpu_utilization_ratio)[1m:]))",
+          "legendFormat": "{{process_executable_name}}",
+          "interval": "1m"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "avg_over_time(sum(process_cpu_utilization_ratio)[1m:]) - avg_over_time(sum(topk(5, sum by (process_executable_name) (process_cpu_utilization_ratio)))[1m:])",
+          "legendFormat": "other",
+          "interval": "1m"
         }
       ],
       "options": {
@@ -343,65 +380,62 @@
           "showLegend": false
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
           "min": 0,
-          "max": 1,
           "custom": {
             "drawStyle": "line",
             "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "fillOpacity": 18,
+            "lineWidth": 1,
+            "fillOpacity": 70,
             "showPoints": "never",
-            "thresholdsStyle": {
-              "mode": "dashed"
-            },
-            "gradientMode": "opacity"
+            "gradientMode": "none",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
           },
           "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "other"
+            },
+            "properties": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.7
-              },
-              {
-                "color": "red",
-                "value": 0.9
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4d4d4d"
+                }
               }
             ]
-          },
-          "decimals": 0
-        },
-        "overrides": []
+          }
+        ]
       }
     },
     {
       "id": 2,
       "type": "timeseries",
       "title": "Memory Used",
-      "description": "Used physical memory. Axis max is total RAM (~17 GB).",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 1
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 19
       },
       "targets": [
         {
@@ -410,8 +444,17 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "expr": "topk(5, sum by (process_executable_name) (process_memory_usage_bytes))",
+          "legendFormat": "{{process_executable_name}}"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
           "expr": "system_memory_usage_bytes{state=\"used\"}",
-          "legendFormat": "Used"
+          "legendFormat": "Host used (real)"
         }
       ],
       "options": {
@@ -421,64 +464,77 @@
           "showLegend": false
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "fieldConfig": {
         "defaults": {
           "unit": "decbytes",
           "min": 0,
-          "max": 17179869184,
           "custom": {
             "drawStyle": "line",
             "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "fillOpacity": 18,
+            "lineWidth": 1,
+            "fillOpacity": 70,
             "showPoints": "never",
-            "thresholdsStyle": {
-              "mode": "off"
-            },
-            "gradientMode": "opacity"
+            "gradientMode": "none",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
           },
           "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Host used (real)"
+            },
+            "properties": [
               {
-                "color": "green",
-                "value": null
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FFFFFF"
+                }
               },
               {
-                "color": "yellow",
-                "value": 0.8
+                "id": "custom.stacking",
+                "value": {
+                  "mode": "none"
+                }
               },
               {
-                "color": "red",
-                "value": 0.92
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
               }
             ]
           }
-        },
-        "overrides": []
+        ]
       }
     },
     {
       "id": 15,
       "type": "timeseries",
-      "title": "Disk Usage",
-      "description": "Used space on the root APFS volume over the last month. Axis max is total capacity (~494 GB).",
+      "title": "Disk Usage (12h)",
+      "timeFrom": "12h",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 1
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 28
       },
       "targets": [
         {
@@ -506,15 +562,14 @@
       "fieldConfig": {
         "defaults": {
           "unit": "decbytes",
-          "min": 0,
-          "max": 494384795648,
           "custom": {
             "drawStyle": "line",
             "lineInterpolation": "smooth",
             "lineWidth": 2,
             "fillOpacity": 18,
             "showPoints": "never",
-            "gradientMode": "opacity"
+            "gradientMode": "opacity",
+            "axisCenteredZero": false
           },
           "color": {
             "mode": "fixed",
@@ -525,23 +580,9 @@
       }
     },
     {
-      "id": 40,
-      "type": "row",
-      "title": "Processes",
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
-      "panels": []
-    },
-    {
-      "id": 60,
+      "id": 70,
       "type": "table",
-      "title": "Top Processes by Memory (15m avg)",
-      "description": "Top 10 by mean memory over the last 15 minutes.",
+      "title": "Directory Growth",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -549,8 +590,170 @@
       "gridPos": {
         "h": 9,
         "w": 12,
-        "x": 0,
+        "x": 12,
         "y": 10
+      },
+      "targets": [
+        {
+          "refId": "SIZE",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "dir_size_bytes",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "DELTA",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "dir_size_bytes - (dir_size_bytes offset 31m)",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "__name__": true,
+              "app": true,
+              "instance": true,
+              "job": true,
+              "kind": true,
+              "service": true
+            },
+            "indexByName": {
+              "path": 0,
+              "Value #SIZE": 1,
+              "Value #DELTA": 2
+            },
+            "renameByName": {
+              "path": "Path",
+              "Value #SIZE": "Size",
+              "Value #DELTA": "Δ 30m"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": "",
+            "sort": [
+              {
+                "field": "Δ 30m",
+                "desc": true
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Size"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Δ 30m"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "text",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 60,
+      "type": "table",
+      "title": "Top Processes by Memory (15m avg)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 19
       },
       "targets": [
         {
@@ -559,7 +762,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(10, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[15m:]))",
+          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[15m:]))",
           "instant": true,
           "format": "table"
         },
@@ -569,7 +772,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1)",
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[15m:])))",
           "instant": true,
           "format": "table"
         }
@@ -616,6 +819,24 @@
               {
                 "targetField": "Live",
                 "destinationType": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "all",
+            "filters": [
+              {
+                "fieldName": "Live",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": true
+                  }
+                }
               }
             ]
           }
@@ -767,7 +988,6 @@
       "id": 61,
       "type": "table",
       "title": "Top Processes by CPU (15m avg)",
-      "description": "Top 10 by mean CPU over the last 15 minutes.",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -775,7 +995,7 @@
       "gridPos": {
         "h": 9,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 10
       },
       "targets": [
@@ -785,7 +1005,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(10, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]))",
+          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]) > 0)",
           "instant": true,
           "format": "table"
         },
@@ -795,7 +1015,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1)",
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]) > 0))",
           "instant": true,
           "format": "table"
         }
@@ -842,6 +1062,24 @@
               {
                 "targetField": "Live",
                 "destinationType": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "all",
+            "filters": [
+              {
+                "fieldName": "Live",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": true
+                  }
+                }
               }
             ]
           }
@@ -990,32 +1228,270 @@
       }
     },
     {
-      "id": 50,
-      "type": "row",
-      "title": "Network",
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 19
-      },
-      "panels": []
-    },
-    {
-      "id": 13,
-      "type": "timeseries",
-      "title": "Network Traffic",
-      "description": "Bytes received vs transmitted per time bucket (transmit drawn below zero).",
+      "id": 63,
+      "type": "table",
+      "title": "Open TCP Ports",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 20
+        "h": 10,
+        "w": 10,
+        "x": 14,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max_over_time(listening_port[15m])",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "listening_port",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "__name__": true,
+              "app": true,
+              "instance": true,
+              "job": true,
+              "proto": true,
+              "Value #A": true
+            },
+            "indexByName": {
+              "ppid": 0,
+              "pid": 1,
+              "process": 2,
+              "port": 3,
+              "Value #B": 4
+            },
+            "renameByName": {
+              "port": "Port",
+              "process": "Process",
+              "pid": "PID",
+              "ppid": "PPID",
+              "Value #B": "Live"
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "targetField": "Port",
+                "destinationType": "number"
+              },
+              {
+                "targetField": "PID",
+                "destinationType": "number"
+              },
+              {
+                "targetField": "PPID",
+                "destinationType": "number"
+              },
+              {
+                "targetField": "Live",
+                "destinationType": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "all",
+            "filters": [
+              {
+                "fieldName": "Live",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": true
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": "",
+            "sort": [
+              {
+                "field": "Port",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Port"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PPID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Live"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "true": {
+                        "text": "✓",
+                        "color": "#FFFFFF",
+                        "index": 0
+                      },
+                      "false": {
+                        "text": "✗",
+                        "color": "#000000",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "Network Traffic",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 28
       },
       "targets": [
         {
@@ -1128,5 +1604,5 @@
       }
     }
   ],
-  "description": "Local observability stack \u2014 service health, host resources, network, and endpoint reference."
+  "description": "Local observability stack — service health, host resources, network, and endpoint reference."
 }
