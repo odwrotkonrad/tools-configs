@@ -36,7 +36,7 @@
       "id": 16,
       "type": "table",
       "title": "Services",
-      "description": "Per-service health. Uptime = time since last seen down, or since the service first appeared if never down.",
+      "description": "Per-service health. Uptime = time since the current process started (resets on restart), falling back to time-since-last-down for services that expose no process start metric.",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -54,7 +54,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(min by (app) ((time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s])))) and on (app) (max by (app) (up))",
+          "expr": "(min by (app) ((time() - max by (app) (process_start_time_seconds)) or (max by (app) (otelcol_process_uptime)) or (time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s])))) and on (app) (max by (app) (up))",
           "instant": true,
           "format": "table"
         },
@@ -150,7 +150,8 @@
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": "auto"
+            "align": "auto",
+            "filterable": true
           }
         },
         "overrides": [
@@ -558,7 +559,17 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(10, avg_over_time(max by (process_pid, process_executable_name) (process_memory_usage_bytes)[15m:]))",
+          "expr": "topk(10, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[15m:]))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1)",
           "instant": true,
           "format": "table"
         }
@@ -571,21 +582,42 @@
           }
         },
         {
+          "id": "merge",
+          "options": {}
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true
             },
             "indexByName": {
-              "process_pid": 0,
-              "process_executable_name": 1,
-              "Value": 2
+              "process_parent_pid": 0,
+              "process_pid": 1,
+              "process_executable_name": 2,
+              "Value #A": 3,
+              "Value #B": 4
             },
             "renameByName": {
               "process_pid": "PID",
+              "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value": "Memory"
+              "Value #A": "Memory",
+              "Value #B": "Live"
             }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "targetField": "Live",
+                "destinationType": "boolean"
+              }
+            ]
           }
         },
         {
@@ -611,7 +643,8 @@
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": "auto"
+            "align": "auto",
+            "filterable": true
           }
         },
         "overrides": [
@@ -628,6 +661,73 @@
               {
                 "id": "custom.align",
                 "value": "left"
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PPID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.filterable",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Live"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "true": {
+                        "text": "✓",
+                        "color": "#FFFFFF",
+                        "index": 0
+                      },
+                      "false": {
+                        "text": "✗",
+                        "color": "#000000",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -685,7 +785,17 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(10, avg_over_time(max by (process_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]))",
+          "expr": "topk(10, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1)",
           "instant": true,
           "format": "table"
         }
@@ -698,21 +808,42 @@
           }
         },
         {
+          "id": "merge",
+          "options": {}
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true
             },
             "indexByName": {
-              "process_pid": 0,
-              "process_executable_name": 1,
-              "Value": 2
+              "process_parent_pid": 0,
+              "process_pid": 1,
+              "process_executable_name": 2,
+              "Value #A": 3,
+              "Value #B": 4
             },
             "renameByName": {
               "process_pid": "PID",
+              "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value": "CPU"
+              "Value #A": "CPU",
+              "Value #B": "Live"
             }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "targetField": "Live",
+                "destinationType": "boolean"
+              }
+            ]
           }
         },
         {
@@ -738,7 +869,8 @@
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": "auto"
+            "align": "auto",
+            "filterable": true
           }
         },
         "overrides": [
@@ -755,6 +887,73 @@
               {
                 "id": "custom.align",
                 "value": "left"
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PPID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.filterable",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Live"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "true": {
+                        "text": "✓",
+                        "color": "#FFFFFF",
+                        "index": 0
+                      },
+                      "false": {
+                        "text": "✗",
+                        "color": "#000000",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
               }
             ]
           },

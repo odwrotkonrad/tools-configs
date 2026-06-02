@@ -27,6 +27,13 @@ scrape_configs:
         labels:
           app: "otelcol"
 
+  - job_name: "otelcol-internal"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:8888"]
+        labels:
+          app: "otelcol"
+
   - job_name: "loki"
     static_configs:
       - targets: ["localhost:3100"]
