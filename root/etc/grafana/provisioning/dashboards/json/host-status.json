@@ -181,12 +181,12 @@
                     "options": {
                       "true": {
                         "text": "✓",
-                        "color": "#FFFFFF",
+                        "color": "#7d6fc9",
                         "index": 0
                       },
                       "false": {
                         "text": "✗",
-                        "color": "#000000",
+                        "color": "#2a2150",
                         "index": 1
                       }
                     }
@@ -392,9 +392,10 @@
             "drawStyle": "line",
             "lineInterpolation": "smooth",
             "lineWidth": 1,
-            "fillOpacity": 70,
+            "fillOpacity": 85,
             "showPoints": "never",
             "gradientMode": "none",
+            "axisBorderShow": false,
             "stacking": {
               "mode": "normal",
               "group": "A"
@@ -406,6 +407,36 @@
         },
         "overrides": [
           {
+            "matcher": { "id": "byRegexp", "options": "^[a-cA-C].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#8ab4f8" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[d-gD-G].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#9d7bff" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[h-mH-M].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#5a78c8" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[n-rN-R].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#c4b5fd" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[s-zS-Z0-9].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#6d5fb8" } }
+            ]
+          },
+          {
             "matcher": {
               "id": "byName",
               "options": "other"
@@ -415,7 +446,7 @@
                 "id": "color",
                 "value": {
                   "mode": "fixed",
-                  "fixedColor": "#4d4d4d"
+                  "fixedColor": "#2a2150"
                 }
               }
             ]
@@ -476,9 +507,10 @@
             "drawStyle": "line",
             "lineInterpolation": "smooth",
             "lineWidth": 1,
-            "fillOpacity": 70,
+            "fillOpacity": 85,
             "showPoints": "never",
             "gradientMode": "none",
+            "axisBorderShow": false,
             "stacking": {
               "mode": "normal",
               "group": "A"
@@ -490,6 +522,36 @@
         },
         "overrides": [
           {
+            "matcher": { "id": "byRegexp", "options": "^[a-cA-C].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#8ab4f8" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[d-gD-G].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#9d7bff" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[i-mI-M].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#5a78c8" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[n-rN-R].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#c4b5fd" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byRegexp", "options": "^[s-zS-Z0-9].*" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#6d5fb8" } }
+            ]
+          },
+          {
             "matcher": {
               "id": "byName",
               "options": "Host used (real)"
@@ -499,7 +561,7 @@
                 "id": "color",
                 "value": {
                   "mode": "fixed",
-                  "fixedColor": "#FFFFFF"
+                  "fixedColor": "#b9a7ff"
                 }
               },
               {
@@ -566,14 +628,15 @@
             "drawStyle": "line",
             "lineInterpolation": "smooth",
             "lineWidth": 2,
-            "fillOpacity": 18,
+            "fillOpacity": 25,
             "showPoints": "never",
             "gradientMode": "opacity",
+            "axisBorderShow": false,
             "axisCenteredZero": false
           },
           "color": {
             "mode": "fixed",
-            "fixedColor": "blue"
+            "fixedColor": "#9d7bff"
           }
         },
         "overrides": []
@@ -610,7 +673,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "dir_size_bytes - (dir_size_bytes offset 31m)",
+          "expr": "dir_size_bytes - (dir_size_bytes offset 1h)",
           "instant": true,
           "format": "table"
         }
@@ -648,7 +711,7 @@
             "renameByName": {
               "path": "Path",
               "Value #SIZE": "Size",
-              "Value #DELTA": "Δ 30m"
+              "Value #DELTA": "Δ 1h"
             }
           }
         },
@@ -658,7 +721,7 @@
             "fields": "",
             "sort": [
               {
-                "field": "Δ 30m",
+                "field": "Δ 1h",
                 "desc": true
               }
             ]
@@ -699,7 +762,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Δ 30m"
+              "options": "Δ 1h"
             },
             "properties": [
               {
@@ -709,32 +772,6 @@
               {
                 "id": "custom.width",
                 "value": 110
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "red",
-                      "value": null
-                    },
-                    {
-                      "color": "text",
-                      "value": 0
-                    },
-                    {
-                      "color": "green",
-                      "value": 1
-                    }
-                  ]
-                }
               }
             ]
           }
@@ -819,24 +856,6 @@
               {
                 "targetField": "Live",
                 "destinationType": "boolean"
-              }
-            ]
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "type": "include",
-            "match": "all",
-            "filters": [
-              {
-                "fieldName": "Live",
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": true
-                  }
-                }
               }
             ]
           }
@@ -938,12 +957,12 @@
                     "options": {
                       "true": {
                         "text": "✓",
-                        "color": "#FFFFFF",
+                        "color": "#7d6fc9",
                         "index": 0
                       },
                       "false": {
                         "text": "✗",
-                        "color": "#000000",
+                        "color": "#2a2150",
                         "index": 1
                       }
                     }
@@ -976,7 +995,7 @@
               {
                 "id": "color",
                 "value": {
-                  "mode": "continuous-GrYlRd"
+                  "mode": "continuous-BlPu"
                 }
               }
             ]
@@ -1062,24 +1081,6 @@
               {
                 "targetField": "Live",
                 "destinationType": "boolean"
-              }
-            ]
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "type": "include",
-            "match": "all",
-            "filters": [
-              {
-                "fieldName": "Live",
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": true
-                  }
-                }
               }
             ]
           }
@@ -1181,12 +1182,12 @@
                     "options": {
                       "true": {
                         "text": "✓",
-                        "color": "#FFFFFF",
+                        "color": "#7d6fc9",
                         "index": 0
                       },
                       "false": {
                         "text": "✗",
-                        "color": "#000000",
+                        "color": "#2a2150",
                         "index": 1
                       }
                     }
@@ -1219,7 +1220,7 @@
               {
                 "id": "color",
                 "value": {
-                  "mode": "continuous-GrYlRd"
+                  "mode": "continuous-BlPu"
                 }
               }
             ]
@@ -1323,24 +1324,6 @@
               {
                 "targetField": "Live",
                 "destinationType": "boolean"
-              }
-            ]
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "type": "include",
-            "match": "all",
-            "filters": [
-              {
-                "fieldName": "Live",
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": true
-                  }
-                }
               }
             ]
           }
@@ -1462,12 +1445,12 @@
                     "options": {
                       "true": {
                         "text": "✓",
-                        "color": "#FFFFFF",
+                        "color": "#7d6fc9",
                         "index": 0
                       },
                       "false": {
                         "text": "✗",
-                        "color": "#000000",
+                        "color": "#2a2150",
                         "index": 1
                       }
                     }
@@ -1534,22 +1517,24 @@
           "unit": "decbytes",
           "custom": {
             "drawStyle": "bars",
-            "fillOpacity": 80,
-            "lineWidth": 0,
+            "fillOpacity": 100,
+            "lineWidth": 1,
             "barAlignment": 0,
             "stacking": {
               "mode": "normal",
               "group": "A"
             },
             "axisCenteredZero": false,
-            "gradientMode": "hue",
+            "axisBorderShow": false,
+            "gradientMode": "none",
+            "showPoints": "never",
             "axisSoftMin": 0,
             "barWidthFactor": 0.9,
             "barMaxWidth": 0
           },
           "color": {
             "mode": "fixed",
-            "fixedColor": "text"
+            "fixedColor": "#7d6fc9"
           },
           "min": 0
         },
@@ -1564,16 +1549,8 @@
                 "id": "color",
                 "value": {
                   "mode": "fixed",
-                  "fixedColor": "#8ab4f8"
+                  "fixedColor": "#9d7bff"
                 }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 95
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 0
               }
             ]
           },
@@ -1587,16 +1564,8 @@
                 "id": "color",
                 "value": {
                   "mode": "fixed",
-                  "fixedColor": "#33415c"
+                  "fixedColor": "#4c4789"
                 }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 70
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 2
               }
             ]
           }

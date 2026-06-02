@@ -15,6 +15,7 @@
 
   //[…] workbench
   "workbench.activityBar.autoHide": true,
+  "workbench.activityBar.location": "hidden",
   "workbench.browser.showInTitleBar": false,
   "workbench.colorTheme": "Solarized Light", //[∵] fallback when system theme detection fails
   "workbench.editor.closeOnFileDelete": true,

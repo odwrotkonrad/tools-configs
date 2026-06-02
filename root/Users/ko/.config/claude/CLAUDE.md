@@ -24,6 +24,13 @@ Non project scoped configuration files must be edited in the designated `~/proje
 
 Do not ask questions. Use common sense to fulfill user asks! Read documentation when in doubt.
 
+When using Bash:
+
+<!--[∵] For observability — if a variable is set before the executed command, the command name recorded in the event log is the assignment instead of the actual command -->
+- **Never** prepend a command with variable assignments. Instead, instruct the user to set the variable in their shell.
+- **Never** use a full binary path. If a tool is not on the `PATH`, instruct the user to add it to the `PATH`.
+- **Always** set a command's context through its options and arguments.
+
 Up-to-date documentation is available using:
 
 - Bash(man) e.g. `$ man foo`, `$ man 1 bar`

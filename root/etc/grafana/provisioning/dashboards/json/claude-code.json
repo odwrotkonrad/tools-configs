@@ -1,6 +1,7 @@
 {
   "uid": "claude-code",
   "title": "Claude Code",
+  "version": 1,
   "tags": [
     "claude-code",
     "observability"
@@ -9,9 +10,9 @@
   "schemaVersion": 39,
   "editable": true,
   "graphTooltip": 1,
-  "refresh": false,
+  "refresh": "5s",
   "time": {
-    "from": "now-30d",
+    "from": "now-1h",
     "to": "now"
   },
   "templating": {
@@ -57,69 +58,6 @@
         },
         "regex": "/session_id=\"([^\"]+)\"/",
         "sort": 1
-      },
-      {
-        "name": "model",
-        "label": "Model",
-        "type": "query",
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "query": "label_values(claude_code_token_usage_tokens_total, model)",
-        "refresh": 2,
-        "includeAll": true,
-        "allValue": ".*",
-        "multi": true,
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        }
-      },
-      {
-        "name": "tool_name",
-        "label": "Tool",
-        "type": "custom",
-        "query": "AskUserQuestion,Bash,Edit,Read,Write",
-        "includeAll": true,
-        "allValue": ".+",
-        "multi": true,
-        "options": [
-          {
-            "text": "All",
-            "value": "$__all",
-            "selected": true
-          },
-          {
-            "text": "AskUserQuestion",
-            "value": "AskUserQuestion",
-            "selected": false
-          },
-          {
-            "text": "Bash",
-            "value": "Bash",
-            "selected": false
-          },
-          {
-            "text": "Edit",
-            "value": "Edit",
-            "selected": false
-          },
-          {
-            "text": "Read",
-            "value": "Read",
-            "selected": false
-          },
-          {
-            "text": "Write",
-            "value": "Write",
-            "selected": false
-          }
-        ],
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        }
       }
     ]
   },
@@ -132,26 +70,96 @@
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 24,
         "x": 0,
         "y": 0
       },
       "id": 11,
+      "description": "Per-session token, cache, line-of-code and cost totals for the selected range.",
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": "right"
+            "align": "right",
+            "filterable": false
           },
           "unit": "short"
         },
         "overrides": [
           {
             "matcher": {
-              "id": "byRegexp",
-              "options": "^(Tokens In|Tokens Out|Cache Read|Cache Create|Total)$"
+              "id": "byName",
+              "options": "Lines Added"
             },
             "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lines Removed"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cost (USD)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(InPlusCache|Denom|EffRaw|EffScaled|EffFloored)$"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache Efficiency"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              },
+              {
+                "id": "min",
+                "value": 0.9
+              },
+              {
+                "id": "max",
+                "value": 1
+              },
               {
                 "id": "custom.cellOptions",
                 "value": {
@@ -170,155 +178,12 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Cache Create"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Cache Read"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Tokens Out"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Tokens In"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Lines Added"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-background",
-                  "mode": "gradient"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-GrYlRd"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Lines Removed"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 110
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-background",
-                  "mode": "gradient"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-RdYlGr"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Cost (USD)"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "currencyUSD"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "custom.width",
-                "value": 110
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-background",
-                  "mode": "gradient"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-GrYlRd"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "Project"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 120
+                "value": 90
               },
               {
                 "id": "custom.align",
@@ -335,18 +200,20 @@
               {
                 "id": "custom.align",
                 "value": "left"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Model"
-            },
-            "properties": [
+              },
               {
-                "id": "custom.align",
-                "value": "left"
+                "id": "custom.width",
+                "value": 330
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
               }
             ]
           }
@@ -354,9 +221,10 @@
       },
       "options": {
         "showHeader": true,
+        "cellHeight": "sm",
         "sortBy": [
           {
-            "displayName": "Total",
+            "displayName": "Cost (USD)",
             "desc": true
           }
         ],
@@ -370,7 +238,7 @@
             "Tokens Out",
             "Cache Read",
             "Cache Create",
-            "Total",
+            "Tokens",
             "Lines Added",
             "Lines Removed",
             "Cost (USD)"
@@ -384,7 +252,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"input\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join(sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"input\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -395,7 +263,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"output\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join(sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"output\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -406,7 +274,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"cacheRead\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join(sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"cacheRead\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -417,7 +285,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\", type=\"cacheCreation\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join(sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"cacheCreation\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -428,7 +296,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join(sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -439,7 +307,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join((sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0)) * 0 + on (project, session_id) group_left sum by (project, session_id) (increase(claude_code_lines_of_code_count_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"added\"}[$__range])), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join((sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0)) * 0 + on (project, session_id) group_left sum by (project, session_id) (increase(claude_code_lines_of_code_count_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"added\"}[$__range])), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -450,7 +318,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join((sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0)) * 0 + on (project, session_id) group_left sum by (project, session_id) (increase(claude_code_lines_of_code_count_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"removed\"}[$__range])), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join((sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0)) * 0 + on (project, session_id) group_left sum by (project, session_id) (increase(claude_code_lines_of_code_count_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", type=\"removed\"}[$__range])), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -461,7 +329,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_join(sum by (project, session_id, model) (increase(claude_code_cost_usage_USD_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) and on (project, session_id, model) (sum by (project, session_id, model) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\", model=~\"$model\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\", \"model\")",
+          "expr": "label_join(sum by (project, session_id) (increase(claude_code_cost_usage_USD_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) and on (project, session_id) (sum by (project, session_id) (increase(claude_code_token_usage_tokens_total{project!=\"\", project=~\"$project\", session_id=~\"$session_id\"}[$__range])) > 0), \"pms\", \" / \", \"project\", \"session_id\")",
           "instant": true,
           "format": "table",
           "range": false
@@ -489,31 +357,23 @@
               "Time 7": true,
               "Time 8": true,
               "project 2": true,
-              "session_id 2": true,
-              "model 2": true,
               "project 3": true,
-              "session_id 3": true,
-              "model 3": true,
               "project 4": true,
+              "session_id 2": true,
+              "session_id 3": true,
               "session_id 4": true,
-              "model 4": true,
               "project 5": true,
               "session_id 5": true,
-              "model 5": true,
               "project 6": true,
               "session_id 6": true,
-              "model 6": true,
               "project 7": true,
               "session_id 7": true,
-              "model 7": true,
               "project 8": true,
-              "session_id 8": true,
-              "model 8": true
+              "session_id 8": true
             },
             "indexByName": {
               "project 1": 0,
               "session_id 1": 1,
-              "model 1": 2,
               "Value #in": 3,
               "Value #out": 4,
               "Value #cacheRead": 5,
@@ -526,253 +386,268 @@
             "renameByName": {
               "project 1": "Project",
               "session_id 1": "Session",
-              "model 1": "Model",
               "Value #in": "Tokens In",
               "Value #out": "Tokens Out",
               "Value #cacheRead": "Cache Read",
               "Value #cacheCreate": "Cache Create",
-              "Value #total": "Total",
+              "Value #total": "Tokens",
               "Value #linesAdded": "Lines Added",
               "Value #linesRemoved": "Lines Removed",
               "Value #cost": "Cost (USD)"
             }
           }
-        }
-      ]
-    },
-    {
-      "type": "logs",
-      "title": "Logs",
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "gridPos": {
-        "h": 15,
-        "w": 24,
-        "x": 0,
-        "y": 29
-      },
-      "id": 9,
-      "options": {
-        "showTime": true,
-        "wrapLogMessage": false,
-        "enableLogDetails": true,
-        "dedupStrategy": "none",
-        "sortOrder": "Descending",
-        "prettifyLogMessage": false
-      },
-      "targets": [
+        },
         {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "{service_name=\"claude-code\"} | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\"",
-          "maxLines": 200
-        }
-      ],
-      "links": [
-        {
-          "title": "Open in Explore",
-          "url": "/explore?left=%7B%22datasource%22%3A%20%22loki%22%2C%20%22queries%22%3A%20%5B%7B%22refId%22%3A%20%22A%22%2C%20%22datasource%22%3A%20%7B%22type%22%3A%20%22loki%22%2C%20%22uid%22%3A%20%22loki%22%7D%2C%20%22expr%22%3A%20%22%7Bservice_name%3D%5C%22claude-code%5C%22%7D%20%7C%20project%3D~%5C%22.%2B%5C%22%20%7C%20session_id%3D~%5C%22.%2B%5C%22%22%7D%5D%2C%20%22range%22%3A%20%7B%22from%22%3A%20%22now-30d%22%2C%20%22to%22%3A%20%22now%22%7D%7D",
-          "targetBlank": true
-        }
-      ]
-    },
-    {
-      "type": "table",
-      "title": "Tools",
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 19
-      },
-      "id": 210,
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": "left",
-            "filterable": true
+          "id": "calculateField",
+          "options": {
+            "alias": "InPlusCache",
+            "mode": "binary",
+            "binary": {
+              "left": "Tokens In",
+              "operator": "+",
+              "right": "Cache Read"
+            },
+            "replaceFields": false
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Full Command"
-            },
-            "properties": [
-              {
-                "id": "custom.inspect",
-                "value": true
-              },
-              {
-                "id": "custom.width",
-                "value": 720
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Tool"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 120
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Decision"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 100
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Command"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 320
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          }
-        ]
-      },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "sortBy": [
-          {
-            "displayName": "Time",
-            "desc": true
-          }
-        ]
-      },
-      "targets": [
         {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "{service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=~\"${tool_name:regex}\" | line_format `{{.tool_parameters}}` | json bash_command=\"bash_command\", full_command=\"full_command\" | label_format command=`{{ if .bash_command }}{{.bash_command}}{{ else }}{{ .tool_name }}{{ end }}` | label_format full_command=`{{ if gt (len .full_command) 90 }}{{ substr 0 90 .full_command }}...{{ else }}{{ .full_command }}{{ end }}`",
-          "queryType": "range",
-          "maxLines": 500
-        }
-      ],
-      "transformations": [
-        {
-          "id": "extractFields",
+          "id": "calculateField",
           "options": {
-            "source": "labels"
+            "alias": "Denom",
+            "mode": "binary",
+            "binary": {
+              "left": "InPlusCache",
+              "operator": "+",
+              "right": "Cache Create"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "EffRaw",
+            "mode": "binary",
+            "binary": {
+              "left": "Cache Read",
+              "operator": "/",
+              "right": "Denom"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "EffScaled",
+            "mode": "binary",
+            "binary": {
+              "left": "EffRaw",
+              "operator": "*",
+              "right": "100000"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "EffFloored",
+            "mode": "unary",
+            "unary": {
+              "operator": "floor",
+              "fieldName": "EffScaled"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cache Efficiency",
+            "mode": "binary",
+            "binary": {
+              "left": "EffFloored",
+              "operator": "/",
+              "right": "100000"
+            },
+            "replaceFields": false
           }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {
-              "Line": true,
-              "labels": true,
-              "tsNs": true,
-              "id": true,
-              "bash_command": true,
-              "tool_parameters": true,
-              "app_entrypoint": true,
-              "app_version": true,
-              "cwd": true,
-              "detected_level": true,
-              "event_name": true,
-              "event_sequence": true,
-              "event_timestamp": true,
-              "flags": true,
-              "host_arch": true,
-              "observed_timestamp": true,
-              "organization_id": true,
-              "os_type": true,
-              "os_version": true,
-              "prompt_id": true,
-              "scope_name": true,
-              "scope_version": true,
-              "service_name": true,
-              "service_version": true,
-              "source": true,
-              "span_id": true,
-              "terminal_type": true,
-              "tool_use_id": true,
-              "trace_id": true,
-              "user_account_id": true,
-              "user_account_uuid": true,
-              "user_email": true,
-              "user_id": true,
-              "decision_source": true,
-              "decision_type": true,
-              "decision": true,
-              "labelTypes": true,
-              "trace_id 1": true,
-              "trace_id 2": true,
-              "project": true,
-              "session_id": true
-            },
+            "excludeByName": {},
             "indexByName": {
-              "Time": 0,
-              "tool_name": 1,
-              "command": 2,
-              "full_command": 3
+              "Project": 0,
+              "Session": 1,
+              "Tokens": 2,
+              "Tokens In": 3,
+              "Tokens Out": 4,
+              "Cache Read": 5,
+              "Cache Create": 6,
+              "Lines Added": 7,
+              "Lines Removed": 8,
+              "Cache Efficiency": 9,
+              "Cost (USD)": 10
             },
-            "renameByName": {
-              "tool_name": "Tool",
-              "command": "Command",
-              "full_command": "Full Command"
-            }
+            "renameByName": {}
           }
         }
       ]
     },
     {
-      "type": "table",
-      "title": "Tool Usage Stats",
+      "type": "timeseries",
+      "title": "Shell Command Count",
+      "description": "Bash command invocations over time, stacked by command, in 5-minute buckets.",
       "datasource": {
         "type": "loki",
         "uid": "loki"
       },
       "gridPos": {
         "h": 10,
-        "w": 9,
-        "x": 15,
-        "y": 9
+        "w": 12,
+        "x": 12,
+        "y": 8
       },
-      "id": 211,
+      "id": 213,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#7d6fc9"
+          },
+          "custom": {
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "stacking": {
+              "mode": "normal"
+            },
+            "drawStyle": "bars",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "axisBorderShow": false,
+            "showPoints": "never"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^[a-eA-E0-9].*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#e3e7f5"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^[f-jF-J].*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#a9b4e0"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^[k-oK-O].*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^[p-tP-T].*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4c4789"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^[u-zU-Z].*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#241d4d"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "placement": "bottom",
+          "displayMode": "list"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (command) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=\"Bash\" | line_format `{{.tool_parameters}}` | json command=\"bash_command\" [5m]))",
+          "legendFormat": "{{command}}",
+          "interval": "5m"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Bash Usage Stats",
+      "description": "Invocation count per bash command over the selected range.",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 6,
+        "y": 18
+      },
+      "id": 214,
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -793,7 +668,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 120
+                "value": 100
               },
               {
                 "id": "custom.cellOptions",
@@ -813,24 +688,19 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Tool"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "Command"
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 260
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto",
+                  "wrapText": false
+                }
+              },
+              {
+                "id": "custom.inspect",
+                "value": true
               }
             ]
           }
@@ -862,7 +732,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_name, command) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=~\"${tool_name:regex}\" | line_format `{{.tool_parameters}}` | json bash_command=\"bash_command\" | label_format raw=`{{ if .bash_command }}{{.bash_command}}{{ else }}{{ .tool_name }}{{ end }}` | label_format command=`{{ if gt (len .raw) 30 }}{{ substr 0 30 .raw }}...{{ else }}{{ .raw }}{{ end }}` [$__range]))",
+          "expr": "sum by (command) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=\"Bash\" | line_format `{{.tool_parameters}}` | json command=\"bash_command\" [$__range]))",
           "instant": true,
           "format": "table",
           "range": false
@@ -873,16 +743,13 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true,
-              "raw": true
+              "Time": true
             },
             "indexByName": {
-              "tool_name": 0,
-              "command": 1,
-              "Value #A": 2
+              "command": 0,
+              "Value #A": 1
             },
             "renameByName": {
-              "tool_name": "Tool",
               "command": "Command",
               "Value #A": "Count"
             }
@@ -891,40 +758,228 @@
       ]
     },
     {
-      "type": "timeseries",
-      "title": "Tool invocations over time",
+      "type": "table",
+      "title": "Bash Commands",
+      "description": "Full bash command lines executed, most recent first.",
       "datasource": {
         "type": "loki",
         "uid": "loki"
       },
       "gridPos": {
         "h": 10,
-        "w": 15,
-        "x": 0,
-        "y": 9
+        "w": 12,
+        "x": 12,
+        "y": 18
       },
-      "id": 212,
+      "id": 210,
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
           "custom": {
-            "fillOpacity": 25,
-            "stacking": {
-              "mode": "normal"
-            },
-            "drawStyle": "bars",
-            "lineWidth": 1
+            "align": "left",
+            "filterable": false
           }
-        }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(?!Logs$|Metrics$|Traces$).*"
+            },
+            "properties": [
+              {
+                "id": "custom.filterable",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Command"
+            },
+            "properties": [
+              {
+                "id": "custom.inspect",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "unit",
+                "value": "time:ddd HH:mm:ss"
+              }
+            ]
+          }
+        ]
       },
       "options": {
-        "legend": {
-          "showLegend": true,
-          "placement": "bottom",
-          "displayMode": "list"
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "Time",
+            "desc": true
+          }
+        ]
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "{service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=\"Bash\" | line_format `{{.tool_parameters}}` | json full_command=\"full_command\"",
+          "queryType": "range",
+          "maxLines": 500
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels"
+          }
         },
-        "tooltip": {
-          "mode": "multi"
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "labels": true,
+              "tsNs": true,
+              "id": true,
+              "bash_command": true,
+              "tool_parameters": true,
+              "tool_name": true,
+              "app_entrypoint": true,
+              "app_version": true,
+              "cwd": true,
+              "detected_level": true,
+              "event_name": true,
+              "event_timestamp": true,
+              "flags": true,
+              "host_arch": true,
+              "observed_timestamp": true,
+              "organization_id": true,
+              "os_type": true,
+              "os_version": true,
+              "prompt_id": true,
+              "scope_name": true,
+              "scope_version": true,
+              "service_name": true,
+              "service_version": true,
+              "source": true,
+              "span_id": true,
+              "terminal_type": true,
+              "tool_use_id": true,
+              "user_account_id": true,
+              "user_account_uuid": true,
+              "user_email": true,
+              "user_id": true,
+              "decision_source": true,
+              "decision_type": true,
+              "decision": true,
+              "labelTypes": true,
+              "trace_id": true,
+              "trace_id 1": true,
+              "trace_id 2": true,
+              "event_sequence": true,
+              "session_id": true,
+              "project": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "full_command": 1
+            },
+            "renameByName": {
+              "full_command": "Command"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Tool Usage Stats",
+      "description": "Invocation count per tool over the selected range.",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 0,
+        "y": 18
+      },
+      "id": 211,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "right"
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "Count",
+            "desc": true
+          }
+        ],
+        "footer": {
+          "show": true,
+          "reducer": [
+            "sum"
+          ],
+          "fields": [
+            "Count"
+          ]
         }
       },
       "targets": [
@@ -934,7 +989,179 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" | tool_name=~\"${tool_name:regex}\" [5m]))",
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" [$__range]))",
+          "instant": true,
+          "format": "table",
+          "range": false,
+          "interval": "5m"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "tool_name": 0,
+              "Value #A": 1
+            },
+            "renameByName": {
+              "tool_name": "Tool",
+              "Value #A": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Tool Usage Count Per Type",
+      "description": "Tool invocations over time, stacked by tool, in 5-minute buckets.",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 212,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#7d6fc9"
+          },
+          "custom": {
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "stacking": {
+              "mode": "normal"
+            },
+            "drawStyle": "bars",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "axisBorderShow": false,
+            "showPoints": "never"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ToolSearch"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5a78c8"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "AskUserQuestion"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#e3e7f5"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bash"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#a9b4e0"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Edit"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Read"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4c4789"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Write"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#241d4d"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "placement": "bottom",
+          "displayMode": "list"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | project=~\"${project:regex}\" | session_id=~\"${session_id:regex}\" [5m]))",
           "legendFormat": "{{tool_name}}",
           "interval": "5m"
         }
