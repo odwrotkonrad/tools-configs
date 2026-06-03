@@ -559,8 +559,7 @@
     {
       "id": 15,
       "type": "timeseries",
-      "title": "Disk Usage (12h)",
-      "timeFrom": "12h",
+      "title": "Disk Usage",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -1674,6 +1673,7 @@
         "x": 0,
         "y": 33
       },
+      "maxDataPoints": 90,
       "targets": [
         {
           "refId": "IN",
@@ -1681,9 +1681,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(system_network_io_bytes_total{direction=\"receive\"}[2m]))",
-          "legendFormat": "In",
-          "interval": "2m"
+          "expr": "sum(increase(system_network_io_bytes_total{direction=\"receive\"}[$__interval]))",
+          "legendFormat": "In"
         },
         {
           "refId": "OUT",
@@ -1691,9 +1690,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(system_network_io_bytes_total{direction=\"transmit\"}[2m]))",
-          "legendFormat": "Out",
-          "interval": "2m"
+          "expr": "sum(increase(system_network_io_bytes_total{direction=\"transmit\"}[$__interval]))",
+          "legendFormat": "Out"
         }
       ],
       "options": {
@@ -1719,22 +1717,19 @@
             "lineWidth": 1,
             "barAlignment": 0,
             "stacking": {
-              "mode": "normal",
-              "group": "A"
+              "mode": "none"
             },
-            "axisCenteredZero": false,
+            "axisCenteredZero": true,
             "axisBorderShow": false,
             "gradientMode": "none",
             "showPoints": "never",
-            "axisSoftMin": 0,
-            "barWidthFactor": 0.9,
+            "barWidthFactor": 1,
             "barMaxWidth": 0
           },
           "color": {
             "mode": "fixed",
             "fixedColor": "#7d6fc9"
-          },
-          "min": 0
+          }
         },
         "overrides": [
           {
@@ -1749,6 +1744,10 @@
                   "mode": "fixed",
                   "fixedColor": "#9d7bff"
                 }
+              },
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
               }
             ]
           },
