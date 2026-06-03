@@ -775,7 +775,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)))",
+          "expr": "topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]))",
           "instant": true,
           "format": "table"
         },
@@ -785,7 +785,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:])))",
           "instant": true,
           "format": "table"
         },
@@ -795,7 +795,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(time() - max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)) * 1000 and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "expr": "(time() - max by (process_pid, process_parent_pid, process_executable_name) (max_over_time(process_uptime_seconds[$__range]))) * 1000 and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:])))",
           "instant": true,
           "format": "table"
         },
@@ -805,7 +805,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:])))",
           "instant": true,
           "format": "table"
         }
@@ -866,6 +866,10 @@
           "options": {
             "fields": "",
             "sort": [
+              {
+                "field": "Live",
+                "desc": false
+              },
               {
                 "field": "Memory",
                 "desc": true
@@ -942,6 +946,16 @@
               {
                 "id": "custom.align",
                 "value": "center"
+              },
+              {
+                "id": "custom.filterable",
+                "value": true
+              },
+              {
+                "id": "custom.filterValues",
+                "value": [
+                  "true"
+                ]
               },
               {
                 "id": "custom.cellOptions",
@@ -1086,7 +1100,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)))",
+          "expr": "topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]))",
           "instant": true,
           "format": "table"
         },
@@ -1096,7 +1110,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:])))",
           "instant": true,
           "format": "table"
         },
@@ -1106,7 +1120,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(time() - max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)) * 1000 and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "expr": "(time() - max by (process_pid, process_parent_pid, process_executable_name) (max_over_time(process_uptime_seconds[$__range]))) * 1000 and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:])))",
           "instant": true,
           "format": "table"
         },
@@ -1116,7 +1130,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:])))",
           "instant": true,
           "format": "table"
         }
@@ -1177,6 +1191,10 @@
           "options": {
             "fields": "",
             "sort": [
+              {
+                "field": "Live",
+                "desc": false
+              },
               {
                 "field": "CPU",
                 "desc": true
@@ -1253,6 +1271,16 @@
               {
                 "id": "custom.align",
                 "value": "center"
+              },
+              {
+                "id": "custom.filterable",
+                "value": true
+              },
+              {
+                "id": "custom.filterValues",
+                "value": [
+                  "true"
+                ]
               },
               {
                 "id": "custom.cellOptions",
@@ -1494,6 +1522,10 @@
           "options": {
             "fields": "",
             "sort": [
+              {
+                "field": "Live",
+                "desc": false
+              },
               {
                 "field": "Port",
                 "desc": false
