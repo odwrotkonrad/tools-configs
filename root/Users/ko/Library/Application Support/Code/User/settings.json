@@ -37,7 +37,7 @@
   "workbench.preferredDarkColorTheme": "Dark Modern",
   "workbench.preferredLightColorTheme": "Solarized Light",
   "workbench.secondarySideBar.defaultVisibility": "visible",
-  "workbench.startupEditor": "none",
+  "workbench.startupEditor": "terminal",
   "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.renderIndentGuides": "none",
