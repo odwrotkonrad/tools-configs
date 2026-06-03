@@ -348,8 +348,8 @@
       "gridPos": {
         "h": 9,
         "w": 8,
-        "x": 16,
-        "y": 19
+        "x": 8,
+        "y": 10
       },
       "targets": [
         {
@@ -457,7 +457,7 @@
     {
       "id": 2,
       "type": "timeseries",
-      "title": "Memory Used",
+      "title": "Memory Usage",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -465,8 +465,8 @@
       "gridPos": {
         "h": 9,
         "w": 8,
-        "x": 8,
-        "y": 19
+        "x": 0,
+        "y": 10
       },
       "targets": [
         {
@@ -652,8 +652,8 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 12,
+        "w": 8,
+        "x": 16,
         "y": 10
       },
       "targets": [
@@ -785,14 +785,14 @@
     {
       "id": 60,
       "type": "table",
-      "title": "Top Processes by Memory (15m avg)",
+      "title": "Top Processes by Memory",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
+        "h": 14,
+        "w": 12,
         "x": 0,
         "y": 19
       },
@@ -803,7 +803,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[15m:]))",
+          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)))",
           "instant": true,
           "format": "table"
         },
@@ -813,7 +813,27 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[15m:])))",
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(time() - max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)) * 1000 and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_memory_usage_bytes)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
           "instant": true,
           "format": "table"
         }
@@ -835,21 +855,26 @@
             "excludeByName": {
               "Time": true,
               "Time 1": true,
-              "Time 2": true
+              "Time 2": true,
+              "Time 3": true
             },
             "indexByName": {
               "process_parent_pid": 0,
               "process_pid": 1,
               "process_executable_name": 2,
               "Value #A": 3,
-              "Value #B": 4
+              "Value #E": 4,
+              "Value #C": 5,
+              "Value #B": 6
             },
             "renameByName": {
               "process_pid": "PID",
               "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value #A": "Memory",
-              "Value #B": "Live"
+              "Value #A": "Avg Memory",
+              "Value #B": "Live",
+              "Value #C": "Start",
+              "Value #E": "Memory"
             }
           }
         },
@@ -879,7 +904,7 @@
       ],
       "options": {
         "showHeader": true,
-        "cellHeight": "sm",
+        "cellHeight": "lg",
         "footer": {
           "show": false
         }
@@ -978,6 +1003,61 @@
           {
             "matcher": {
               "id": "byName",
+              "options": "Start"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg Memory"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 2147483648
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic",
+                  "valueDisplayMode": "color"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
               "options": "Memory"
             },
             "properties": [
@@ -990,16 +1070,22 @@
                 "value": 0
               },
               {
+                "id": "max",
+                "value": 2147483648
+              },
+              {
                 "id": "custom.cellOptions",
                 "value": {
                   "type": "gauge",
-                  "mode": "gradient"
+                  "mode": "basic",
+                  "valueDisplayMode": "color"
                 }
               },
               {
                 "id": "color",
                 "value": {
-                  "mode": "continuous-BlPu"
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
                 }
               }
             ]
@@ -1010,16 +1096,16 @@
     {
       "id": 61,
       "type": "table",
-      "title": "Top Processes by CPU (15m avg)",
+      "title": "Top Processes by CPU",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 9,
+        "h": 14,
         "w": 12,
-        "x": 0,
-        "y": 10
+        "x": 12,
+        "y": 19
       },
       "targets": [
         {
@@ -1028,7 +1114,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]) > 0)",
+          "expr": "topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)))",
           "instant": true,
           "format": "table"
         },
@@ -1038,7 +1124,27 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[15m:]) > 0))",
+          "expr": "clamp_max(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) + 1, 1) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(time() - max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds)) * 1000 and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) and on (process_pid, process_parent_pid, process_executable_name) (topk(50, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]) and on (process_pid, process_parent_pid, process_executable_name) (max by (process_pid, process_parent_pid, process_executable_name) (process_uptime_seconds))))",
           "instant": true,
           "format": "table"
         }
@@ -1060,21 +1166,26 @@
             "excludeByName": {
               "Time": true,
               "Time 1": true,
-              "Time 2": true
+              "Time 2": true,
+              "Time 3": true
             },
             "indexByName": {
               "process_parent_pid": 0,
               "process_pid": 1,
               "process_executable_name": 2,
               "Value #A": 3,
-              "Value #B": 4
+              "Value #E": 4,
+              "Value #C": 5,
+              "Value #B": 6
             },
             "renameByName": {
               "process_pid": "PID",
               "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value #A": "CPU",
-              "Value #B": "Live"
+              "Value #A": "Avg CPU",
+              "Value #B": "Live",
+              "Value #C": "Start",
+              "Value #E": "CPU"
             }
           }
         },
@@ -1104,7 +1215,7 @@
       ],
       "options": {
         "showHeader": true,
-        "cellHeight": "sm",
+        "cellHeight": "lg",
         "footer": {
           "show": false
         }
@@ -1203,6 +1314,61 @@
           {
             "matcher": {
               "id": "byName",
+              "options": "Start"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg CPU"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 1
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic",
+                  "valueDisplayMode": "color"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
               "options": "CPU"
             },
             "properties": [
@@ -1215,16 +1381,22 @@
                 "value": 0
               },
               {
+                "id": "max",
+                "value": 1
+              },
+              {
                 "id": "custom.cellOptions",
                 "value": {
                   "type": "gauge",
-                  "mode": "gradient"
+                  "mode": "basic",
+                  "valueDisplayMode": "color"
                 }
               },
               {
                 "id": "color",
                 "value": {
-                  "mode": "continuous-BlPu"
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
                 }
               }
             ]
