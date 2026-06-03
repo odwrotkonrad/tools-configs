@@ -1,0 +1,19 @@
+#!/bin/sh
+#>[≟]
+#   reload running service launchagents
+#   kickstart each loaded local.sd.* in the user gui domain, bootstrap if absent
+#/[≟]
+
+set -e
+
+domain="gui/$(id -u)"
+
+for plist in "$HOME"/Library/LaunchAgents/local.sd.*.plist; do
+	label="$(basename "$plist" .plist)"
+	echo "reloading $label"
+	if launchctl print "$domain/$label" >/dev/null 2>&1; then
+		launchctl kickstart -k "$domain/$label"
+	else
+		launchctl bootstrap "$domain" "$plist"
+	fi
+done

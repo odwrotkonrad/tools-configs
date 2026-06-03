@@ -1,5 +1,5 @@
 #[≟] Project's Makefile
-.PHONY: docs/dirs.yml load_configuration
+.PHONY: docs/dirs.yml load_configuration reload_services
 
 #[≟] regenerate the repo directory tree doc
 docs/dirs.yml:
@@ -8,3 +8,7 @@ docs/dirs.yml:
 #[≟] install configuration onto a host
 load_configuration:
 	sudo /usr/local/scripts/s_load_configs
+
+#[≟] reload running service launchagents
+reload_services:
+	/usr/local/scripts/s_reload_services
