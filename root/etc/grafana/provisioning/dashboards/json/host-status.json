@@ -29,7 +29,7 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 5,
+        "w": 9,
         "x": 0,
         "y": 0
       },
@@ -51,6 +51,26 @@
             "uid": "prometheus"
           },
           "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(min by (app) ((time() - max by (app) (process_start_time_seconds)) or (max by (app) (otelcol_process_uptime)) or (time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s]))) and on (app) (max by (app) (up) == 1), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\")",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "UI",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(label_replace(max by (app)(up{app=\"prometheus\"}), \"ui\",\"http://localhost:9090/\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"grafana\"}), \"ui\",\"http://localhost:9300/\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"jaeger\"}), \"ui\",\"http://localhost:16686/\",\"app\",\".*\"))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "METRICS",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(label_replace(max by (app)(up{app=\"otelcol\"}), \"metrics\",\"http://localhost:8889/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"prometheus\"}), \"metrics\",\"http://localhost:9090/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"grafana\"}), \"metrics\",\"http://localhost:9300/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"loki\"}), \"metrics\",\"http://localhost:3100/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"jaeger\"}), \"metrics\",\"http://localhost:8890/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"port_exporter\"}), \"metrics\",\"http://localhost:9101/\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"dir_size_exporter\"}), \"metrics\",\"http://localhost:9102/\",\"app\",\".*\"))",
           "instant": true,
           "format": "table"
         }
@@ -83,17 +103,23 @@
           "options": {
             "excludeByName": {
               "Time": true,
-              "rank": true
+              "rank": true,
+              "Value #UI": true,
+              "Value #METRICS": true
             },
             "indexByName": {
               "app": 0,
               "Value #UPTIME": 1,
-              "Value #LIVE": 2
+              "Value #LIVE": 2,
+              "ui": 3,
+              "metrics": 4
             },
             "renameByName": {
               "app": "Service",
               "Value #LIVE": "Live",
-              "Value #UPTIME": "Uptime"
+              "Value #UPTIME": "Uptime",
+              "ui": "UI",
+              "metrics": "Metrics"
             }
           }
         },
@@ -120,7 +146,7 @@
         "defaults": {
           "custom": {
             "align": "left",
-            "filterable": true
+            "filterable": false
           }
         },
         "overrides": [
@@ -194,91 +220,87 @@
                 ]
               }
             ]
-          }
-        ]
-      }
-    },
-    {
-      "id": 17,
-      "type": "table",
-      "title": "Service Endpoints",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 9,
-        "x": 5,
-        "y": 0
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "(label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"otelcol\"}), \"svc\",\"otelcol\",\"app\",\".*\"), \"desc\",\"zpages\",\"app\",\".*\"), \"url\",\"http://localhost:55679/debug/servicez\",\"app\",\".*\"), \"srank\",\"0\",\"app\",\".*\"), \"dtype\",\"2\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"otelcol\"}), \"svc\",\"otelcol\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:8889/metrics\",\"app\",\".*\"), \"srank\",\"0\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"prometheus\"}), \"svc\",\"prometheus\",\"app\",\".*\"), \"desc\",\"UI\",\"app\",\".*\"), \"url\",\"http://localhost:9090/\",\"app\",\".*\"), \"srank\",\"1\",\"app\",\".*\"), \"dtype\",\"0\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"prometheus\"}), \"svc\",\"prometheus\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9090/metrics\",\"app\",\".*\"), \"srank\",\"1\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"grafana\"}), \"svc\",\"grafana\",\"app\",\".*\"), \"desc\",\"UI\",\"app\",\".*\"), \"url\",\"http://localhost:9300/\",\"app\",\".*\"), \"srank\",\"2\",\"app\",\".*\"), \"dtype\",\"0\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"grafana\"}), \"svc\",\"grafana\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9300/metrics\",\"app\",\".*\"), \"srank\",\"2\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"loki\"}), \"svc\",\"loki\",\"app\",\".*\"), \"desc\",\"health\",\"app\",\".*\"), \"url\",\"http://localhost:3100/ready\",\"app\",\".*\"), \"srank\",\"3\",\"app\",\".*\"), \"dtype\",\"2\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"loki\"}), \"svc\",\"loki\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:3100/metrics\",\"app\",\".*\"), \"srank\",\"3\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"jaeger\"}), \"svc\",\"jaeger\",\"app\",\".*\"), \"desc\",\"UI\",\"app\",\".*\"), \"url\",\"http://localhost:16686/\",\"app\",\".*\"), \"srank\",\"4\",\"app\",\".*\"), \"dtype\",\"0\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"jaeger\"}), \"svc\",\"jaeger\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:8890/metrics\",\"app\",\".*\"), \"srank\",\"4\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"port_exporter\"}), \"svc\",\"port_exporter\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9101/\",\"app\",\".*\"), \"srank\",\"5\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\")) or (label_replace(label_replace(label_replace(label_replace(label_replace(max by (app)(up{app=\"dir_size_exporter\"}), \"svc\",\"dir_size_exporter\",\"app\",\".*\"), \"desc\",\"metrics\",\"app\",\".*\"), \"url\",\"http://localhost:9102/\",\"app\",\".*\"), \"srank\",\"6\",\"app\",\".*\"), \"dtype\",\"1\",\"app\",\".*\"))",
-          "instant": true,
-          "format": "table"
-        }
-      ],
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false
-        }
-      },
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": "left",
-            "filterable": true
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Service"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 150
-              }
-            ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Description"
+              "options": "UI"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 110
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "URL"
-            },
-            "properties": [
+                "value": 170
+              },
               {
-                "id": "custom.width",
-                "value": 280
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
+                }
               },
               {
                 "id": "links",
                 "value": [
                   {
-                    "title": "Open",
-                    "url": "${__value.text}",
+                    "title": "Open UI",
+                    "url": "${__data.fields.UI}",
+                    "targetBlank": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Metrics"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 220
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#9d7bff"
+                }
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open metrics",
+                    "url": "${__data.fields.Metrics}",
                     "targetBlank": true
                   }
                 ]
@@ -286,56 +308,7 @@
             ]
           }
         ]
-      },
-      "transformations": [
-        {
-          "id": "labelsToFields",
-          "options": {
-            "mode": "columns"
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": "",
-            "sort": [
-              {
-                "field": "dtype",
-                "desc": false
-              },
-              {
-                "field": "srank",
-                "desc": false
-              }
-            ]
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "Value": true,
-              "instance": true,
-              "job": true,
-              "__name__": true,
-              "app": true,
-              "srank": true,
-              "dtype": true
-            },
-            "indexByName": {
-              "svc": 0,
-              "desc": 1,
-              "url": 2
-            },
-            "renameByName": {
-              "svc": "Service",
-              "desc": "Description",
-              "url": "URL"
-            }
-          }
-        }
-      ]
+      }
     },
     {
       "id": 1,
@@ -349,7 +322,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 10
+        "y": 24
       },
       "targets": [
         {
@@ -466,7 +439,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 10
+        "y": 24
       },
       "targets": [
         {
@@ -594,9 +567,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 28
+        "w": 8,
+        "x": 16,
+        "y": 24
       },
       "targets": [
         {
@@ -645,16 +618,16 @@
     {
       "id": 70,
       "type": "table",
-      "title": "Directory Growth",
+      "title": "Directory Delta",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 16,
-        "y": 10
+        "h": 10,
+        "w": 7,
+        "x": 17,
+        "y": 0
       },
       "targets": [
         {
@@ -794,7 +767,7 @@
         "h": 14,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 10
       },
       "targets": [
         {
@@ -1105,7 +1078,7 @@
         "h": 14,
         "w": 12,
         "x": 12,
-        "y": 19
+        "y": 10
       },
       "targets": [
         {
@@ -1414,8 +1387,8 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 10,
-        "x": 14,
+        "w": 8,
+        "x": 9,
         "y": 0
       },
       "targets": [
@@ -1545,6 +1518,18 @@
           }
         },
         "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Process"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
           {
             "matcher": {
               "id": "byName",
@@ -1685,9 +1670,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 28
+        "w": 24,
+        "x": 0,
+        "y": 33
       },
       "targets": [
         {
