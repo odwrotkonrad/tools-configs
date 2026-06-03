@@ -673,13 +673,13 @@
   {
     "key": "alt+p",
     "command": "git.push",
-    "when": "focusedView == 'workbench.scm' || editorTextFocus"
+    "when": "focusedView == 'workbench.scm' || editorTextFocus || terminalFocus"
   },
   //[≟] alt+shift+p — force push (--force-with-lease, no pull)
   {
     "key": "alt+shift+p",
     "command": "git.pushForce",
-    "when": "focusedView == 'workbench.scm' || editorTextFocus"
+    "when": "focusedView == 'workbench.scm' || editorTextFocus || terminalFocus"
   },
   //[≟] down — from last line of SCM message box, focus the changes list
   {

@@ -308,6 +308,8 @@
   },
 
   "terminal.integrated.commandsToSkipShell": [
+    "git.push",
+    "git.pushForce",
     "editor.action.fontZoomIn",
     "editor.action.fontZoomOut",
     "editor.action.fontZoomReset",
