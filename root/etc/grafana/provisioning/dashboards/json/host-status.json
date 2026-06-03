@@ -154,6 +154,17 @@
         "overrides": [
           {
             "matcher": {
+              "id": "byRegexp",
+              "options": ".*"
+            },
+            "properties": [
+              {
+                "id": "filterable"
+              }
+            ]
+          },
+          {
+            "matcher": {
               "id": "byName",
               "options": "Service"
             },
@@ -753,6 +764,17 @@
         "overrides": [
           {
             "matcher": {
+              "id": "byRegexp",
+              "options": ".*"
+            },
+            "properties": [
+              {
+                "id": "filterable"
+              }
+            ]
+          },
+          {
+            "matcher": {
               "id": "byName",
               "options": "Size"
             },
@@ -964,6 +986,17 @@
           }
         },
         "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*"
+            },
+            "properties": [
+              {
+                "id": "filterable"
+              }
+            ]
+          },
           {
             "matcher": {
               "id": "byName",
@@ -1373,6 +1406,17 @@
           }
         },
         "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*"
+            },
+            "properties": [
+              {
+                "id": "filterable"
+              }
+            ]
+          },
           {
             "matcher": {
               "id": "byName",
