@@ -61,7 +61,6 @@
     ],
     "defaultMode": "default"
   },
-  "includeCoAuthoredBy": false,
   "attribution": {
     "commit": "Signed-off-by: konradodwrot odwrotkonrad@gmail.com",
     "pr": ""
