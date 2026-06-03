@@ -1,19 +1,32 @@
 #!/bin/sh
 #>[≟]
-#   reload running service launchagents
-#   kickstart each loaded local.sd.* in the user gui domain, bootstrap if absent
+#   reload running service launchagents and launchdaemons
+#   kickstart each loaded local.sd.* in its domain, bootstrap if absent
+#   agents -> gui/<uid> (user) · daemons -> system (root, via sudo)
 #/[≟]
 
 set -e
 
-domain="gui/$(id -u)"
+reload() {
+	domain="$1"
+	runner="$2"
+	shift 2
+	for plist in "$@"; do
+		[ -e "$plist" ] || continue
+		label="$(basename "$plist" .plist)"
+		echo "reloading $domain/$label"
+		if $runner launchctl print "$domain/$label" >/dev/null 2>&1; then
+			$runner launchctl kickstart -k "$domain/$label"
+		else
+			$runner launchctl bootstrap "$domain" "$plist"
+		fi
+	done
+}
 
-for plist in "$HOME"/Library/LaunchAgents/local.sd.*.plist; do
-	label="$(basename "$plist" .plist)"
-	echo "reloading $label"
-	if launchctl print "$domain/$label" >/dev/null 2>&1; then
-		launchctl kickstart -k "$domain/$label"
-	else
-		launchctl bootstrap "$domain" "$plist"
-	fi
-done
+#[…] user agents
+reload "gui/$(id -u)" "" "$HOME"/Library/LaunchAgents/local.sd.*.plist
+#[⫶]
+
+#[…] root daemons
+reload system sudo /Library/LaunchDaemons/local.sd.*.plist
+#[⫶]

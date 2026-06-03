@@ -6,8 +6,8 @@ files:
   root/etc/:
     zshenv:
     zshrc:
-    zsh/rc.d/10-tools.zsh:
-    zsh/rc.d/20-aliases.zsh:
+    zsh/rc.d/20-tools.zsh:
+    zsh/rc.d/30-aliases.zsh:
     zsh/static_history:
 
 #>[≟] Tool specific files
@@ -142,7 +142,7 @@ tools:
           zprofile:
           zlogin:
           zlogout:
-          zsh/rc.d/00-shell.zsh:
-          zsh/rc.d/30-keybindings.zsh:
+          zsh/rc.d/10-shell.zsh:
+          zsh/rc.d/40-keybindings.zsh:
           zsh/functions/fn_install_misc:
           zsh/functions/fn_install_kitty:

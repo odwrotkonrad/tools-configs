@@ -4,10 +4,6 @@
 <dict>
 	<key>Label</key>
 	<string>local.sd.dir_size_exporter</string>
-	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-	</array>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/scripts/s_export_dir_sizes</string>
@@ -17,9 +13,9 @@
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/.local/state/log/dir_size_exporter.log</string>
+	<string>/var/log/dir_size_exporter/dir_size_exporter.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/.local/state/log/dir_size_exporter.log</string>
+	<string>/var/log/dir_size_exporter/dir_size_exporter.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>

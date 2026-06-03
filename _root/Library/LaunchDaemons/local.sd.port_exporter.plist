@@ -3,26 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.sd.grafana</string>
-	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-	</array>
+	<string>local.sd.port_exporter</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/opt/homebrew/bin/grafana</string>
-		<string>server</string>
-		<string>--homepath=/opt/homebrew/share/grafana</string>
-		<string>--config=/etc/grafana/grafana.ini</string>
+		<string>/usr/local/scripts/s_export_listening_ports</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/.local/state/log/grafana.log</string>
+	<string>/var/log/port_exporter/port_exporter.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/.local/state/log/grafana.log</string>
+	<string>/var/log/port_exporter/port_exporter.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>

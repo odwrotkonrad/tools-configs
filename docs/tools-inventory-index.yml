@@ -4,7 +4,7 @@ claude: root/Users/ko/.config/claude/settings.json
 defaults: root/etc/defaults.yml
 direnv: root/Users/ko/.config/direnv/direnv.toml
 editorconfig: root/Users/ko/.editorconfig
-fzf: root/etc/zsh/rc.d/10-tools.zsh
+fzf: root/etc/zsh/rc.d/20-tools.zsh
 git: root/Users/ko/.config/git/config
 golang: root/etc/zshenv
 grafana: root/etc/grafana/grafana.ini

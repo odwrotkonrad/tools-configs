@@ -4,10 +4,6 @@
 <dict>
 	<key>Label</key>
 	<string>local.sd.loki</string>
-	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-	</array>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/opt/homebrew/opt/loki/bin/loki</string>
@@ -18,9 +14,9 @@
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/.local/state/log/loki.log</string>
+	<string>/var/log/loki/loki.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/.local/state/log/loki.log</string>
+	<string>/var/log/loki/loki.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>

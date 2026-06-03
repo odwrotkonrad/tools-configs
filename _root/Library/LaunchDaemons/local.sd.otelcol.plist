@@ -3,23 +3,20 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.sd.port_exporter</string>
-	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-	</array>
+	<string>local.sd.otelcol</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/scripts/s_export_listening_ports</string>
+		<string>/usr/local/bin/otelcol</string>
+		<string>--config=file:/etc/otelcol/config.yml</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/.local/state/log/port_exporter.log</string>
+	<string>/var/log/otelcol/otelcol.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/.local/state/log/port_exporter.log</string>
+	<string>/var/log/otelcol/otelcol.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>

@@ -37,11 +37,12 @@ paths:
           static_history: # static history items loaded for each shell
           completions/:
           rc.d/:
-            00-shell.zsh:
-            10-tools.zsh:
-            20-aliases.zsh:
-            30-keybindings.zsh:
-            40-hooks.zsh:
+            00-dirs.zsh:
+            10-shell.zsh:
+            20-tools.zsh:
+            30-aliases.zsh:
+            40-keybindings.zsh:
+            50-hooks.zsh:
           functions/:
             rm:
             fn_load_static_history:

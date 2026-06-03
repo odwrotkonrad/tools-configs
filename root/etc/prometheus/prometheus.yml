@@ -5,7 +5,7 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
-  query_log_file: /Users/ko/.local/state/log/prometheus/queries.log
+  query_log_file: /var/log/prometheus/queries.log
 
 alerting:
   alertmanagers:

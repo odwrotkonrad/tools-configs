@@ -3,3 +3,6 @@
 # exported default config / keybindings of vscode
 **/Code/User/.exported/*
 !**/Code/User/.exported/.gitkeep
+
+# scratch space for temporary scripts (claude)
+.claude/tmp/

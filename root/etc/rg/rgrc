@@ -61,7 +61,7 @@
 # --line-buffered
 # --line-regexp
 # --max-columns-preview
-# --max-columns=(terminal width - 5) #[⌖] dynamically set via sf_rg in root/etc/zsh/rc.d/20-aliases.zsh
+# --max-columns=(terminal width - 5) #[⌖] dynamically set via sf_rg in root/etc/zsh/rc.d/30-aliases.zsh
 # --max-count=NUM
 # --no-filename
 # --no-ignore

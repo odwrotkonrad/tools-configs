@@ -4,10 +4,6 @@
 <dict>
 	<key>Label</key>
 	<string>local.sd.jaeger</string>
-	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-	</array>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/bin/jaeger</string>
@@ -18,9 +14,9 @@
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/.local/state/log/jaeger.log</string>
+	<string>/var/log/jaeger/jaeger.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/.local/state/log/jaeger.log</string>
+	<string>/var/log/jaeger/jaeger.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>
