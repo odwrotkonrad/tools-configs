@@ -345,7 +345,7 @@
     {
       "id": 1,
       "type": "timeseries",
-      "title": "CPU Usage",
+      "title": "CPU Usage (All Cores)",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -363,7 +363,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(5, avg_over_time(sum by (process_executable_name) (process_cpu_utilization_ratio)[1m:]))",
+          "expr": "topk(5, avg_over_time(sum by (process_executable_name) (process_cpu_utilization_ratio)[1m:])) / scalar(count(count by (cpu) (system_cpu_utilization_ratio)))",
           "legendFormat": "{{process_executable_name}}",
           "interval": "1m"
         },
@@ -373,7 +373,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg_over_time(sum(process_cpu_utilization_ratio)[1m:]) - avg_over_time(sum(topk(5, sum by (process_executable_name) (process_cpu_utilization_ratio)))[1m:])",
+          "expr": "(avg_over_time(sum(process_cpu_utilization_ratio)[1m:]) - avg_over_time(sum(topk(5, sum by (process_executable_name) (process_cpu_utilization_ratio)))[1m:])) / scalar(count(count by (cpu) (system_cpu_utilization_ratio)))",
           "legendFormat": "other",
           "interval": "1m"
         }
@@ -480,7 +480,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(5, sum by (process_executable_name) (process_memory_usage_bytes))",
+          "expr": "topk(5, sum by (process_executable_name) (process_memory_usage_bytes)) / 1e9",
           "legendFormat": "{{process_executable_name}}"
         },
         {
@@ -489,7 +489,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "system_memory_usage_bytes{state=\"used\"}",
+          "expr": "system_memory_usage_bytes{state=\"used\"} / 1e9",
           "legendFormat": "Host used (real)"
         }
       ],
@@ -506,7 +506,8 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "decbytes",
+          "unit": "none",
+          "decimals": 2,
           "min": 0,
           "custom": {
             "drawStyle": "line",
@@ -516,6 +517,7 @@
             "showPoints": "never",
             "gradientMode": "none",
             "axisBorderShow": false,
+            "axisLabel": "GB",
             "stacking": {
               "mode": "normal",
               "group": "A"
@@ -609,7 +611,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "system_filesystem_usage_bytes{mountpoint=\"/\",state=\"used\"}",
+          "expr": "system_filesystem_usage_bytes{mountpoint=\"/\",state=\"used\"} / 1e9",
           "legendFormat": "Used"
         }
       ],
@@ -627,7 +629,8 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "decbytes",
+          "unit": "none",
+          "decimals": 2,
           "custom": {
             "drawStyle": "line",
             "lineInterpolation": "smooth",
@@ -636,7 +639,8 @@
             "showPoints": "never",
             "gradientMode": "opacity",
             "axisBorderShow": false,
-            "axisCenteredZero": false
+            "axisCenteredZero": false,
+            "axisLabel": "GB"
           },
           "color": {
             "mode": "fixed",
@@ -875,7 +879,7 @@
               "process_pid": "PID",
               "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value #A": "Avg Memory",
+              "Value #A": "Memory (avg)",
               "Value #B": "Live",
               "Value #C": "Start",
               "Value #E": "Memory"
@@ -1041,7 +1045,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Avg Memory"
+              "options": "Memory (avg)"
             },
             "properties": [
               {
@@ -1200,7 +1204,7 @@
               "process_pid": "PID",
               "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value #A": "Avg CPU",
+              "Value #A": "CPU (avg)",
               "Value #B": "Live",
               "Value #C": "Start",
               "Value #E": "CPU"
@@ -1366,7 +1370,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Avg CPU"
+              "options": "CPU (avg)"
             },
             "properties": [
               {
@@ -1745,7 +1749,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(system_network_io_bytes_total{direction=\"receive\"}[$__interval]))",
+          "expr": "sum(increase(system_network_io_bytes_total{direction=\"receive\"}[$__interval])) / 1e6",
           "legendFormat": "In"
         },
         {
@@ -1754,7 +1758,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(system_network_io_bytes_total{direction=\"transmit\"}[$__interval]))",
+          "expr": "sum(increase(system_network_io_bytes_total{direction=\"transmit\"}[$__interval])) / 1e6",
           "legendFormat": "Out"
         }
       ],
@@ -1774,7 +1778,8 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "decbytes",
+          "unit": "none",
+          "decimals": 0,
           "custom": {
             "drawStyle": "bars",
             "fillOpacity": 100,
@@ -1785,6 +1790,7 @@
             },
             "axisCenteredZero": true,
             "axisBorderShow": false,
+            "axisLabel": "MB",
             "gradientMode": "none",
             "showPoints": "never",
             "barWidthFactor": 1,
