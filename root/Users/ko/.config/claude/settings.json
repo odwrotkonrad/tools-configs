@@ -22,6 +22,8 @@
   "permissions": {
     "allow": [
       "Bash(cd ./*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
       "Bash(man *)",
       "Bash(rg *)",
       "Bash(* --help)",
