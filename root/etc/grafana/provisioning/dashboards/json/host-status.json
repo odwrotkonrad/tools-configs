@@ -363,7 +363,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(5, avg_over_time(sum by (process_executable_name) (process_cpu_utilization_ratio)[1m:])) / scalar(count(count by (cpu) (system_cpu_utilization_ratio)))",
+          "expr": "topk(5, avg_over_time(sum by (process_executable_name) (process_cpu_utilization_ratio)[1m:]))",
           "legendFormat": "{{process_executable_name}}",
           "interval": "1m"
         },
@@ -373,7 +373,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(avg_over_time(sum(process_cpu_utilization_ratio)[1m:]) - avg_over_time(sum(topk(5, sum by (process_executable_name) (process_cpu_utilization_ratio)))[1m:])) / scalar(count(count by (cpu) (system_cpu_utilization_ratio)))",
+          "expr": "avg_over_time(sum(process_cpu_utilization_ratio)[1m:]) - avg_over_time(sum(topk(5, sum by (process_executable_name) (process_cpu_utilization_ratio)))[1m:])",
           "legendFormat": "other",
           "interval": "1m"
         }
@@ -1118,7 +1118,7 @@
     {
       "id": 61,
       "type": "table",
-      "title": "Top Processes by CPU",
+      "title": "Top Processes by CPU time",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -1136,7 +1136,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:]))",
+          "expr": "topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:])) * scalar(count(count by (cpu) (system_cpu_utilization_ratio)))",
           "instant": true,
           "format": "table"
         },
@@ -1166,7 +1166,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:])))",
+          "expr": "max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio) * scalar(count(count by (cpu) (system_cpu_utilization_ratio))) and on (process_pid, process_parent_pid, process_executable_name) (topk(500, avg_over_time(max by (process_pid, process_parent_pid, process_executable_name) (process_cpu_utilization_ratio)[$__range:])))",
           "instant": true,
           "format": "table"
         }
@@ -1204,10 +1204,10 @@
               "process_pid": "PID",
               "process_parent_pid": "PPID",
               "process_executable_name": "Name",
-              "Value #A": "CPU (avg)",
+              "Value #A": "CPU time (avg)",
               "Value #B": "Live",
               "Value #C": "Start",
-              "Value #E": "CPU"
+              "Value #E": "CPU time"
             }
           }
         },
@@ -1232,7 +1232,7 @@
                 "desc": false
               },
               {
-                "field": "CPU",
+                "field": "CPU time",
                 "desc": true
               }
             ]
@@ -1370,7 +1370,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "CPU (avg)"
+              "options": "CPU time (avg)"
             },
             "properties": [
               {
@@ -1409,12 +1409,16 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "CPU"
+              "options": "CPU time"
             },
             "properties": [
               {
                 "id": "unit",
                 "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 2
               },
               {
                 "id": "min",
