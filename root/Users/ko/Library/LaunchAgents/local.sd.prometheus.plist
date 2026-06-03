@@ -20,9 +20,9 @@
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/.local/state/log/prometheus.log</string>
+	<string>/Users/ko/.local/state/log/prometheus/prometheus.log</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/.local/state/log/prometheus.log</string>
+	<string>/Users/ko/.local/state/log/prometheus/prometheus.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>
