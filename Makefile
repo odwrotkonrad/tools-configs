@@ -1,5 +1,5 @@
 #[≟] Project's Makefile
-.PHONY: docs/dirs.yml load_configuration reload_services
+.PHONY: docs/dirs.yml load_configuration reload_services clean_broken_links
 
 #[≟] regenerate the repo directory tree doc
 docs/dirs.yml:
@@ -12,3 +12,7 @@ load_configuration:
 #[≟] reload running service launchagents
 reload_services:
 	/usr/local/scripts/s_reload_services
+
+#[≟] remove broken symlinks left in the system by renamed/deleted repo files
+clean_broken_links:
+	sudo /usr/local/scripts/s_clean_broken_links
