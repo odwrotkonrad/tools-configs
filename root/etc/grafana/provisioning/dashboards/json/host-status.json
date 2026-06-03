@@ -1438,6 +1438,16 @@
           "expr": "listening_port",
           "instant": true,
           "format": "table"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "min_over_time(timestamp(listening_port)[$__range:]) * 1000",
+          "instant": true,
+          "format": "table"
         }
       ],
       "transformations": [
@@ -1458,6 +1468,7 @@
               "Time": true,
               "Time 1": true,
               "Time 2": true,
+              "Time 3": true,
               "__name__": true,
               "app": true,
               "instance": true,
@@ -1470,14 +1481,16 @@
               "pid": 1,
               "process": 2,
               "port": 3,
-              "Value #B": 4
+              "Value #C": 4,
+              "Value #B": 5
             },
             "renameByName": {
               "port": "Port",
               "process": "Process",
               "pid": "PID",
               "ppid": "PPID",
-              "Value #B": "Live"
+              "Value #B": "Live",
+              "Value #C": "Start"
             }
           }
         },
@@ -1589,6 +1602,30 @@
               {
                 "id": "unit",
                 "value": "none"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Start"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "noValue",
+                "value": "—"
               }
             ]
           },
