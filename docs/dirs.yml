@@ -4,9 +4,6 @@ _root/:
       - LaunchDaemons
   - etc:
       - sudoers.d
-  - usr:
-      - local:
-          - scripts
 ci/:
   - scripts
 docs/:

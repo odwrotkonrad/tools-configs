@@ -1646,10 +1646,6 @@
                   "mode": "fixed",
                   "fixedColor": "#9d7bff"
                 }
-              },
-              {
-                "id": "custom.transform",
-                "value": "negative-Y"
               }
             ]
           },
@@ -1665,6 +1661,10 @@
                   "mode": "fixed",
                   "fixedColor": "#4c4789"
                 }
+              },
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
               }
             ]
           }
