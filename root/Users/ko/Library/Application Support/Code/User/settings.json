@@ -15,7 +15,6 @@
 
   //[…] workbench
   "workbench.activityBar.autoHide": true,
-  "workbench.activityBar.location": "hidden",
   "workbench.browser.showInTitleBar": false,
   "workbench.colorTheme": "Solarized Light", //[∵] fallback when system theme detection fails
   "workbench.editor.closeOnFileDelete": true,
@@ -521,6 +520,7 @@
   "workbench.browser.enableChatTools": true,
   "workbench.browser.dataStorage": "global",
   "workbench.activityBar.iconClickBehavior": "toggle",
+  "workbench.activityBar.location": "default",
   "workbench.layoutControl.type": "both",
   "workbench.editor.tabSizing": "fit",
   "workbench.editor.showTabs": "multiple",
