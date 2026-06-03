@@ -681,7 +681,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "dir_size_bytes - last_over_time(dir_size_bytes[10m] offset $__range)",
+          "expr": "dir_size_bytes - (last_over_time(dir_size_bytes[10m] offset $__range) or dir_size_bytes)",
           "instant": true,
           "format": "table"
         }
@@ -783,7 +783,7 @@
               },
               {
                 "id": "noValue",
-                "value": "—"
+                "value": "0 B"
               }
             ]
           }
@@ -1378,6 +1378,10 @@
                 "value": "percentunit"
               },
               {
+                "id": "decimals",
+                "value": 2
+              },
+              {
                 "id": "min",
                 "value": 0
               },
@@ -1779,7 +1783,7 @@
       "fieldConfig": {
         "defaults": {
           "unit": "none",
-          "decimals": 0,
+          "decimals": 2,
           "custom": {
             "drawStyle": "bars",
             "fillOpacity": 100,
