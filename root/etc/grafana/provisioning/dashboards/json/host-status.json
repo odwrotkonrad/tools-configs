@@ -673,7 +673,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "dir_size_bytes - (dir_size_bytes offset 1h)",
+          "expr": "dir_size_bytes - last_over_time(dir_size_bytes[10m] offset $__range)",
           "instant": true,
           "format": "table"
         }
@@ -711,7 +711,7 @@
             "renameByName": {
               "path": "Path",
               "Value #SIZE": "Size",
-              "Value #DELTA": "Δ 1h"
+              "Value #DELTA": "Δ"
             }
           }
         },
@@ -721,7 +721,7 @@
             "fields": "",
             "sort": [
               {
-                "field": "Δ 1h",
+                "field": "Δ",
                 "desc": true
               }
             ]
@@ -762,7 +762,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Δ 1h"
+              "options": "Δ"
             },
             "properties": [
               {
@@ -772,6 +772,10 @@
               {
                 "id": "custom.width",
                 "value": 110
+              },
+              {
+                "id": "noValue",
+                "value": "—"
               }
             ]
           }
