@@ -10,3 +10,6 @@
 
 # scratch space for temporary scripts (claude)
 .claude/tmp/
+
+# python bytecode cache (repo-local rule so `tree --gitignore` prunes it from docs/dirs.yml)
+__pycache__/

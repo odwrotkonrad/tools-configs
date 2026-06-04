@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.sd.port_exporter</string>
+	<string>d-rt-port-exporter</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/scripts/s_export_listening_ports</string>
+		<string>/usr/local/scripts/shell/s-rt-export-listening-ports</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.sd.grafana</string>
+	<string>d-rt-grafana</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/opt/homebrew/bin/grafana</string>

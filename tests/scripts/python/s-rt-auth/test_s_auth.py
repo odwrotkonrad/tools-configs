@@ -9,7 +9,7 @@ ERROR_CASES = yaml.safe_load((HERE / "test_error_cases.yml").read_text())
 
 
 def run(s_auth, argv):
-    s_auth.sys.argv = ["s_auth", *argv]
+    s_auth.sys.argv = ["s-rt-auth", *argv]
     s_auth.main()
 
 
@@ -29,7 +29,7 @@ def test_exit_code(s_auth, case):
 def test_no_args_prints_usage(s_auth, capsys):
     with pytest.raises(SystemExit):
         run(s_auth, [])
-    assert "usage: s_auth <service>" in capsys.readouterr().err
+    assert "usage: s-rt-auth <service>" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("flag", ["-h", "--help"])

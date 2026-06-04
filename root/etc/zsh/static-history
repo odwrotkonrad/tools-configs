@@ -29,19 +29,19 @@ kitten themes                   #[≟] interactive theme selection
 
 #[…] launchctl [≟] Interfaces with launchd
 #[≟] -k - if service is running remove it and start again
-launchctl bootstrap gui/$(id -u) /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist  #[≟] load service
-launchctl bootout gui/$(id -u)/local.s.load-defaults-config                                         #[≟] unload service
-launchctl kickstart -k gui/$(id -u)/local.s.load-defaults-config                                    #[≟] run service
+launchctl bootstrap gui/$(id -u) /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist  #[≟] load service
+launchctl bootout gui/$(id -u)/d-ko-load-defaults-config                                         #[≟] unload service
+launchctl kickstart -k gui/$(id -u)/d-ko-load-defaults-config                                    #[≟] run service
 launchctl list                                                                                      #[≟] list all services
-launchctl print gui/$(id -u)/local.s.load-defaults-config                                           #[≟] show details of a service
+launchctl print gui/$(id -u)/d-ko-load-defaults-config                                           #[≟] show details of a service
 #[⫶]
 
 #[…] plutil [≟] property list utility
 #[≟] -p - pretty print
-plutil -p  /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist                        #[≟] print plist
-plutil -lint  /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist                     #[≟] lint plist
-plutil -convert json /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist              #[≟] plist to json
-plutil -convert xml1 /Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist              #[≟] plist to xml (from various formats)
+plutil -p  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                        #[≟] print plist
+plutil -lint  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                     #[≟] lint plist
+plutil -convert json /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to json
+plutil -convert xml1 /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to xml (from various formats)
 #[⫶]
 
 #[…] zsh builtins

@@ -8,8 +8,9 @@ typeset -U path=(
     ${ASDF_DATA_DIR}/shims
     /usr/local/go/bin
     /usr/local/bin
-    /usr/local/scripts
-    /usr/local/scripts_py
+    /usr/local/scripts/shell
+    /usr/local/scripts/installs
+    /usr/local/scripts/python
     /opt/local/bin
     /opt/X11/bin
     /opt/homebrew/share/google-cloud-sdk/bin
@@ -45,5 +46,5 @@ for f in /etc/zsh/functions/**(:t); {
   emulate zsh -LRc "autoload $f"
 }
 
-fn_load_static_history
+fn-rt-load-static-history
 #[⫶]

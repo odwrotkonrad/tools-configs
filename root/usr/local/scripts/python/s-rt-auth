@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3.14
-"""usage: s_auth <service> [container] [field]
+"""usage: s-rt-auth <service> [container] [field]
 
 Read 1Password secrets from the custom registry (service -> container -> field
 -> env var), merged from /etc/custom and ~/.config/custom secrets.yml.
@@ -30,7 +30,7 @@ EX_OP = 1
 
 
 def fail(msg, code=EX_OP):
-    print(f"s_auth: {msg}", file=sys.stderr)
+    print(f"s-rt-auth: {msg}", file=sys.stderr)
     sys.exit(code)
 
 

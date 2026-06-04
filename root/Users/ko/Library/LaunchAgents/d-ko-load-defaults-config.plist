@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.s.load-defaults-config</string>
+	<string>d-ko-load-defaults-config</string>
 	<key>LimitLoadToSessionType</key>
 	<array>
 		<string>Aqua</string>
 	</array>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/scripts/s_load_defaults_config</string>
+		<string>/usr/local/scripts/shell/s-rt-load-defaults-config</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/Users/ko/Library/Logs/s_load_defaults_config.log</string>
+	<string>/Users/ko/Library/Logs/d-ko-load-defaults-config.log</string>
 	<key>StandardInPath</key>
 	<string>/etc/defaults.yml</string>
 	<key>StandardOutPath</key>
-	<string>/Users/ko/Library/Logs/s_load_defaults_config.log</string>
+	<string>/Users/ko/Library/Logs/d-ko-load-defaults-config.log</string>
 	<key>ThrottleInterval</key>
 	<integer>1</integer>
 </dict>

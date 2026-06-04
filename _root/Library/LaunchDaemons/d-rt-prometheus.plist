@@ -3,20 +3,22 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.sd.otelcol</string>
+	<string>d-rt-prometheus</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/bin/otelcol</string>
-		<string>--config=file:/etc/otelcol/config.yml</string>
+		<string>/usr/local/bin/prometheus</string>
+		<string>--config.file=/etc/prometheus/prometheus.yml</string>
+		<string>--storage.tsdb.path=/usr/local/var/prometheus</string>
+		<string>--web.enable-lifecycle</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>KeepAlive</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/var/log/otelcol/otelcol.log</string>
+	<string>/var/log/prometheus/prometheus.log</string>
 	<key>StandardOutPath</key>
-	<string>/var/log/otelcol/otelcol.log</string>
+	<string>/var/log/prometheus/prometheus.log</string>
 	<key>ThrottleInterval</key>
 	<integer>5</integer>
 </dict>

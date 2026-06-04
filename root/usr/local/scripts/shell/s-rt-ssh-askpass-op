@@ -1,0 +1,4 @@
+#!/bin/bash
+
+name=$(echo "$1" | rg -o '/(\w+)\W*$' -r '$1')
+/usr/local/scripts/python/s-rt-auth ssh "ssh_$name" password

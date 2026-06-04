@@ -34,7 +34,7 @@ typeset -A env_vars=(
     RIPGREP_CONFIG_PATH "/etc/rg/rgrc"
 
     #[≟] 1Password ssh passphrase helper
-    SSH_ASKPASS         "/usr/local/scripts/s_ssh_askpass_op"
+    SSH_ASKPASS         "/usr/local/scripts/shell/s-rt-ssh-askpass-op"
     SSH_ASKPASS_REQUIRE "force"
 
     #[∵] defining man env vars allows overriding, man.conf values cannot be overridden

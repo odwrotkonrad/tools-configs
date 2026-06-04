@@ -1,9 +1,9 @@
 #[…] git [≟] the stupid content tracker
-alias sa_git_interactive_rebase="git rebase --interactive HEAD~10"
-alias sa_git_log_pretty="git log --pretty=format:'%h %ar %s' --decorate -n 10"
-alias sa_git_remotes_all_list="git remote --verbose"
-alias sa_git_stash_all="git stash --include-untracked"
-alias sa_git_status_all="git stash --show-stash"
+alias a-rt-git-interactive-rebase="git rebase --interactive HEAD~10"
+alias a-rt-git-log-pretty="git log --pretty=format:'%h %ar %s' --decorate -n 10"
+alias a-rt-git-remotes-all-list="git remote --verbose"
+alias a-rt-git-stash-all="git stash --include-untracked"
+alias a-rt-git-status-all="git stash --show-stash"
 #[⫶]
 
 #[…] files
@@ -18,8 +18,8 @@ alias sa_git_status_all="git stash --show-stash"
 # -O show file flags (chflags)
 # -@ show extended attributes (xattr)
 #/[≟]
-alias sa_list_directory='ls -lhAFGSW'
-alias sa_list_directory_attr="sa_list_directory -O@%"
+alias a-rt-list-directory='ls -lhAFGSW'
+alias a-rt-list-directory-attr="a-rt-list-directory -O@%"
 
 #[……] rg
 #>[≟] rg - recursively search the current directory for lines matching a pattern
@@ -30,15 +30,15 @@ alias sa_list_directory_attr="sa_list_directory -O@%"
 
 #[≟] rg wrapper limiting column width to terminal size
 #[∵] to set --max-columns dynamically based on current terminal width
-function sf_rg { command rg --max-columns=$(( COLUMNS - 5 )) "$@" }
-alias sa_search_file_show_context+='sf_rg -A1 -B3 '
-alias sa_search_files_glob_include_all+='sf_rg -g '
-alias sa_search_files_no='sf_rg --files' #[≟] instead of searching list files that would be searched
-alias sa_search_files_output_json+='sf_rg --json '
-alias sa_search_files_output_line_count+='sf_rg --count --no-multiline --no-multiline-dotall '
-alias sa_search_files_output_match_count+='sf_rg --count-matches '
-alias sa_search_files_output_no_context+='sf_rg --only-matching --column '
-alias sa_search_files_output_sort_lex+='sf_rg --sort=path '
+function fn-rt-rg { command rg --max-columns=$(( COLUMNS - 5 )) "$@" }
+alias a-rt-search-file-show-context+='fn-rt-rg -A1 -B3 '
+alias a-rt-search-files-glob-include-all+='fn-rt-rg -g '
+alias a-rt-search-files-no='fn-rt-rg --files' #[≟] instead of searching list files that would be searched
+alias a-rt-search-files-output-json+='fn-rt-rg --json '
+alias a-rt-search-files-output-line-count+='fn-rt-rg --count --no-multiline --no-multiline-dotall '
+alias a-rt-search-files-output-match-count+='fn-rt-rg --count-matches '
+alias a-rt-search-files-output-no-context+='fn-rt-rg --only-matching --column '
+alias a-rt-search-files-output-sort-lex+='fn-rt-rg --sort=path '
 #[⫶⫶]
 #[⫶]
 
@@ -49,9 +49,9 @@ alias sa_search_files_output_sort_lex+='sf_rg --sort=path '
 # -a - display all, not just the first match
 # -w - display location of a manual page, not manual itself
 #/[≟]
-alias sa_manpage_list_pages-='man -f -o'
-alias sa_manpage_list_files='man -a -w'
-alias sa_manpage_show_manpath='manpath'
+alias a-rt-manpage-list-pages='man -f -o'
+alias a-rt-manpage-list-files='man -a -w'
+alias a-rt-manpage-show-manpath='manpath'
 #[⫶]
 
 #[…] processes
@@ -59,16 +59,16 @@ alias sa_manpage_show_manpath='manpath'
 # -o specify output columns
 # -ww wide output (do not truncate cmd)
 #/[≟]
-alias sa_process_list_tty_current='ps -o ppid,pid,uid,tty,start,command'
-alias sa_process_list_tty_current_verbose='ps -ww -o ppid,pid,uid,tty,start,command'
+alias a-rt-process-list-tty-current='ps -o ppid,pid,uid,tty,start,command'
+alias a-rt-process-list-tty-current-verbose='ps -ww -o ppid,pid,uid,tty,start,command'
 
 #>[≟] pstree – list processes as a tree
 # -g specify graphics (2 = VT100)
 # -p specify process id
 # -s match string
 #/[≟]
-alias sa_process_list_tree+='pstree -g 2 -p '
-alias sa_process_list_tree_search+='pstree -g 2 -s '
+alias a-rt-process-list-tree+='pstree -g 2 -p '
+alias a-rt-process-list-tree-search+='pstree -g 2 -s '
 #[⫶]
 
 #[…] claude >[≟] agentic coding tool
@@ -77,7 +77,7 @@ alias sa_process_list_tree_search+='pstree -g 2 -s '
 #/[≟]
 
 #[∵] it happens claude tries to ask questions in dontAsk mode
-alias sa_claude_no_ask='claude --permission-mode dontAsk --append-system-prompt "IMPORTANT! Never ask user any questions! User your best judgement when in doubt!"'
+alias a-rt-claude-no-ask='claude --permission-mode dontAsk --append-system-prompt "IMPORTANT! Never ask user any questions! User your best judgement when in doubt!"'
 #[⫶]
 
 #[…] other
@@ -86,12 +86,12 @@ alias sa_claude_no_ask='claude --permission-mode dontAsk --append-system-prompt 
 #  -l - list to stdout
 #  -n - do not show event numbers
 #/[≟]
-alias sa_history_file_contents_show="fc -ln 1"   #[≟] starting from event no 1
+alias a-rt-history-file-contents-show="fc -ln 1"   #[≟] starting from event no 1
 
-alias sa_keystrokes_listen_output_raw-="kitten show-key -m kitty" #[≟] start listening for keystrokes to output raw sequences, useful for building keybidnings
+alias a-rt-keystrokes-listen-output-raw="kitten show-key -m kitty" #[≟] start listening for keystrokes to output raw sequences, useful for building keybidnings
 
 #[≟] ssh - OpenSSH remote login client, -G print configuration
-alias sa_ssh_show_config="ssh -G localhost"
+alias a-rt-ssh-show-config="ssh -G localhost"
 
 #>[≟] prometheus - monitoring system & time series database
 # --config.file       - path to prometheus configuration
