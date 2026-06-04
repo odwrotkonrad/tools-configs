@@ -1,4 +1,4 @@
-ko ALL=(root) NOPASSWD: /usr/local/scripts/s_load_configs
-ko ALL=(root) NOPASSWD: /usr/local/scripts/s_load_configs /Users/ko/projects/configs
-ko ALL=(root) NOPASSWD: /usr/local/scripts/s_clean_broken_links
-ko ALL=(root) NOPASSWD: /usr/local/scripts/s_clean_broken_links /Users/ko/projects/configs
+ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-load-configs
+ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-load-configs /Users/ko/projects/configs
+ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-clean-broken-links
+ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-clean-broken-links /Users/ko/projects/configs

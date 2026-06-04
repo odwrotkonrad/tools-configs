@@ -8,7 +8,7 @@ files:
     zshrc:
     zsh/rc.d/20-tools.zsh:
     zsh/rc.d/30-aliases.zsh:
-    zsh/static_history:
+    zsh/static-history:
 
 #>[≟] Tool specific files
 tools:
@@ -35,8 +35,8 @@ tools:
       files:
         root/:
           etc/defaults.yml:
-          usr/local/scripts/s_load_defaults_config:
-          Users/ko/Library/LaunchAgents/local.s.load-defaults-config.plist:
+          usr/local/scripts/shell/s-rt-load-defaults-config:
+          Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist:
 
   - direnv:
       files:
@@ -54,12 +54,7 @@ tools:
           config:
           ignore:
           commit-template:
-          hooks/:
-            commit-msg:
-            pre-commit:
-            pre-commit.rc.d/:
-              validate-yml:
-        root/etc/zsh/functions/fn_ssh_test_git_connection:
+        root/etc/zsh/functions/fn-rt-ssh-test-git-connection:
 
   - golang:
 
@@ -68,8 +63,8 @@ tools:
   - jaeger:
       files:
         root/etc/jaeger/config.yml:
-        root/usr/local/scripts/s_install_jaeger:
-        root/Users/ko/Library/LaunchAgents/local.sd.jaeger.plist:
+        root/usr/local/scripts/installs/s-rt-install-jaeger:
+        _root/Library/LaunchDaemons/d-rt-jaeger.plist:
 
   - kitty:
       files:
@@ -94,8 +89,8 @@ tools:
   - prometheus:
       files:
         root/etc/prometheus/prometheus.yml:
-        root/etc/zsh/functions/fn_install_prometheus:
-        root/Users/ko/Library/LaunchAgents/local.sd.prometheus.plist:
+        root/usr/local/scripts/installs/s-rt-install-prometheus:
+        _root/Library/LaunchDaemons/d-rt-prometheus.plist:
 
   - pyenv:
 
@@ -104,7 +99,7 @@ tools:
         root/etc/rg/:
           rgrc:
           rgignore:
-        root/etc/zsh/functions/fn_load_static_history:
+        root/etc/zsh/functions/fn-rt-load-static-history:
 
   - ruff:
       files:
@@ -114,8 +109,8 @@ tools:
       files:
         root/Users/ko/.ssh/config:
         root/etc/zsh/functions/:
-          fn_ssh_generate_keys:
-          fn_ssh_test_git_connection:
+          fn-rt-ssh-generate-keys:
+          fn-rt-ssh-test-git-connection:
 
   - tmux:
       files:
@@ -144,5 +139,5 @@ tools:
           zlogout:
           zsh/rc.d/10-shell.zsh:
           zsh/rc.d/40-keybindings.zsh:
-          zsh/functions/fn_install_misc:
-          zsh/functions/fn_install_kitty:
+          zsh/functions/rm:
+          zsh/functions/fn-rt-auth:

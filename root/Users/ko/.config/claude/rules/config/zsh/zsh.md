@@ -34,7 +34,7 @@ paths:
         zlogin:
         zlogout:
         zsh/:
-          static_history: # static history items loaded for each shell
+          static-history: # static history items loaded for each shell
           completions/:
           rc.d/:
             00-dirs.zsh:
@@ -45,16 +45,19 @@ paths:
             50-hooks.zsh:
           functions/:
             rm:
-            fn_load_static_history:
-            fn_ssh_generate_keys:
-            fn_ssh_test_git_connection:
+            fn-rt-auth:
+            fn-rt-load-static-history:
+            fn-rt-ssh-generate-keys:
+            fn-rt-ssh-test-git-connection:
       root/usr/local/scripts/:
-        s_install_asdf:
-        s_install_kitty:
-        s_install_misc:
-        s_install_prometheus:
-        s_load_configs:
-        s_load_defaults_config:
+        installs/:
+          s-rt-install-asdf:
+          s-rt-install-kitty:
+          s-rt-install-misc:
+          s-rt-install-prometheus:
+        shell/:
+          s-rt-load-configs:
+          s-rt-load-defaults-config:
 ```
 
 ### Startup Order

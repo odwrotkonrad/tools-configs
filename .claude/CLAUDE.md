@@ -1,5 +1,7 @@
 @memory/comments.md
 
+@memory/naming.md
+
 @../README.md
 
 @../docs/dirs.yml

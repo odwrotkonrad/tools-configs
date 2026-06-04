@@ -1,0 +1,19 @@
+#[≟] export a service's secrets into the shell via s-rt-auth
+
+emulate -LR zsh
+
+if [[ -z $1 ]]; then
+  print -u2 "fn-rt-auth: usage: fn-rt-auth <service> [container] [field]"
+  return 2
+fi
+
+local out
+out=$(${AUTH_SCRIPT:-/usr/local/scripts/python/s-rt-auth} "$@") || return $?
+
+local line
+for line in ${(f)out}; do
+  if [[ $line == *=* ]]; then
+    export $line
+    print "fn-rt-auth: exported ${line%%=*}"
+  fi
+done

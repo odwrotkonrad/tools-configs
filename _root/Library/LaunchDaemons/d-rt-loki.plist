@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>local.sd.loki</string>
+	<string>d-rt-loki</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/opt/homebrew/opt/loki/bin/loki</string>
