@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+configs=${1:-/Users/ko/projects/configs}
+
+#[≟] scan only ./root-ln/**
+for top in "$configs"/root-ln/*/; do
+  find "/${top#"$configs"/root-ln/}" -type l -lname "$configs/*" ! -exec test -e {} \; -print -delete 2>/dev/null || true
+done

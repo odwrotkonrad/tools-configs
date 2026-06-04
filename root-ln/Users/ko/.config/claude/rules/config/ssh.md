@@ -11,7 +11,7 @@ paths:
 ### Files
 
 ```yml
-root_ln/Users/ko/.ssh/:
+root-ln/Users/ko/.ssh/:
   config:  # client config
 ```
 

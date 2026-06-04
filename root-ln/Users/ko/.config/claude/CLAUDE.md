@@ -16,7 +16,7 @@ Attempting to use any other tools is forbidden.
 
 ## System Wide Tools Configuration
 
-Non project scoped configuration files must be edited in the designated `~/projects/configs` project. The project's `root_ln/` dir (symlinked) and `root_cp/` dir (copied) mirror the live files in the system, so never edit config files at their system paths directly — edit their counterparts under `~/projects/configs` project's `root_ln`/`root_cp`.
+Non project scoped configuration files must be edited in the designated `~/projects/configs` project. The project's `root-ln/` dir (symlinked) and `root-cp/` dir (copied) mirror the live files in the system, so never edit config files at their system paths directly — edit their counterparts under `~/projects/configs` project's `root-ln`/`root-cp`.
 
 ## IMPORTANT!
 

@@ -1,4 +1,4 @@
-!root_ln/**/.*
+!root-ln/**/.*
 
 # project-local vscode workspace settings
 !.vscode/

@@ -13,7 +13,7 @@ paths:
 ### Files
 
 ```yml
-root_ln/Users/ko/.config/claude/:
+root-ln/Users/ko/.config/claude/:
   CLAUDE.md: # global instructions, all projects
   settings.json:
   agents/:

@@ -9,7 +9,7 @@ paths:
 ### Files
 
 ```yml
-root_ln/Users/ko/.config/git/:
+root-ln/Users/ko/.config/git/:
   config:
   ignore:
   commit-template:  # commit.template; type(scope): subject

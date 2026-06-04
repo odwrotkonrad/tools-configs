@@ -1,6 +1,6 @@
 #>[⌖]
-# root_ln/Users/ko/.config/kitty/kitty.conf                                #[≟] keystroke producer
-# root_ln/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
+# root-ln/Users/ko/.config/kitty/kitty.conf                                #[≟] keystroke producer
+# root-ln/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
 #/[⌖]
 
 #[…] zshzle

@@ -6,8 +6,8 @@ ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-clean-broken-links /Users/
 #[⫶]
 
 #[…] make targets, invoked via $(CURDIR) absolute repo path
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root_ln/usr/local/scripts/shell/s-rt-load-configs
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root_ln/usr/local/scripts/shell/s-rt-load-configs /Users/ko/projects/configs
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root_ln/usr/local/scripts/shell/s-rt-clean-broken-links
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root_ln/usr/local/scripts/shell/s-rt-clean-broken-links /Users/ko/projects/configs
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root-ln/usr/local/scripts/shell/s-rt-load-configs
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root-ln/usr/local/scripts/shell/s-rt-load-configs /Users/ko/projects/configs
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root-ln/usr/local/scripts/shell/s-rt-clean-broken-links
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/root-ln/usr/local/scripts/shell/s-rt-clean-broken-links /Users/ko/projects/configs
 #[⫶]

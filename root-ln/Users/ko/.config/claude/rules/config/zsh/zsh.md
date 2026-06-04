@@ -15,7 +15,7 @@ paths:
 ```yml
 - zsh:
     files:
-      root_ln/Users/ko/.config/zsh/:
+      root-ln/Users/ko/.config/zsh/:
         .zshenv:
         .zprofile:
         .zshrc:
@@ -27,7 +27,7 @@ paths:
         rc.d/:
           00-dirs.zsh:
           10-tools.zsh:
-      root_ln/etc/:
+      root-ln/etc/:
         zshenv:
         zprofile:
         zshrc:
@@ -49,7 +49,7 @@ paths:
             fn-rt-load-static-history:
             fn-rt-ssh-generate-keys:
             fn-rt-ssh-test-git-connection:
-      root_ln/usr/local/scripts/:
+      root-ln/usr/local/scripts/:
         installs/:
           s-rt-install-asdf:
           s-rt-install-kitty:
