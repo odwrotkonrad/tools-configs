@@ -9,7 +9,7 @@ pre-commit:
   parallel: false
   jobs:
     - name: ssh-authenticate
-      run: ~/.config/lefthook/scripts/ssh_authenticate
+      run: /usr/local/scripts/shell/s-rt-ssh-authenticate
 
     - name: validate-yml
       glob: "*.{yml,yaml}"
@@ -18,4 +18,4 @@ pre-commit:
 commit-msg:
   jobs:
     - name: conventional-prefix
-      run: ~/.config/lefthook/scripts/conventional_prefix {1}
+      run: /usr/local/scripts/shell/s-rt-conventional-prefix {1}

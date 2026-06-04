@@ -4,7 +4,12 @@ extends:
 pre-commit:
   jobs:
     - name: generate-dirs
-      run: ./root_ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > docs/dirs.yml && git add docs/dirs.yml
+      run: make docs && git add docs/dirs.yml
+
+post-commit:
+  jobs:
+    - name: reload-config
+      run: make on_change
 
 pre-push:
   jobs:

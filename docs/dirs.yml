@@ -29,8 +29,7 @@ root_ln/:
               - git
               - homebrew
               - kitty
-              - lefthook:
-                  - scripts
+              - lefthook
               - prettier
               - ruff
               - tmux
