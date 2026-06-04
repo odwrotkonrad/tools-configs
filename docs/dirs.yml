@@ -28,11 +28,11 @@ root/:
                   - themes
               - custom
               - direnv
-              - git:
-                  - hooks:
-                      - pre-commit.rc.d
+              - git
               - homebrew
               - kitty
+              - lefthook:
+                  - scripts
               - prettier
               - ruff
               - tmux

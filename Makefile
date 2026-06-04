@@ -1,5 +1,5 @@
 #[≟] Project's Makefile
-.PHONY: docs/dirs.yml load_configuration reload_services clean_broken_links test
+.PHONY: docs/dirs.yml load_configuration install_git_hooks reload_services clean_broken_links test
 
 #[≟] run the test suite under the same interpreter as the script shebangs
 test:
@@ -12,6 +12,10 @@ docs/dirs.yml:
 #[≟] install configuration onto a host
 load_configuration:
 	sudo /usr/local/scripts/s_load_configs
+
+#[≟] install git hooks from merged lefthook config (user scope ~/.config/lefthook + repo scope ./lefthook.yml)
+install_git_hooks:
+	lefthook install --force
 
 #[≟] reload running service launchagents
 reload_services:

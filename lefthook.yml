@@ -1,0 +1,7 @@
+extends:
+  - /Users/ko/.config/lefthook/lefthook.yml
+
+pre-push:
+  jobs:
+    - name: pytest
+      run: make test

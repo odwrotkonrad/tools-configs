@@ -11,6 +11,7 @@ grafana: root/etc/grafana/grafana.ini
 homebrew: root/etc/zshrc
 jaeger: root/etc/jaeger/config.yml
 kitty: root/Users/ko/.config/kitty/kitty.conf
+lefthook: root/Users/ko/.config/lefthook/lefthook.yml
 loki: root/etc/loki/config.yml
 man: root/etc/man.conf
 nvm: root/Users/ko/.nvmrc
