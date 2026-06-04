@@ -26,6 +26,7 @@ root/:
                           - zsh
                   - skills
                   - themes
+              - custom
               - direnv
               - git:
                   - hooks:
@@ -48,6 +49,7 @@ root/:
                           - .exported
               - LaunchAgents
   - etc:
+      - custom
       - grafana:
           - provisioning:
               - dashboards:
@@ -57,6 +59,7 @@ root/:
       - loki
       - otelcol
       - prometheus
+      - python
       - rg
       - zsh:
           - completions
@@ -65,3 +68,7 @@ root/:
   - usr:
       - local:
           - scripts
+tests/:
+  - scripts:
+      - s_auth:
+          - mock

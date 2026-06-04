@@ -1,5 +1,9 @@
 #[≟] Project's Makefile
-.PHONY: docs/dirs.yml load_configuration reload_services clean_broken_links
+.PHONY: docs/dirs.yml load_configuration reload_services clean_broken_links test
+
+#[≟] run the test suite under the same interpreter as the script shebangs
+test:
+	/usr/local/bin/python3.14 -m pytest tests/
 
 #[≟] regenerate the repo directory tree doc
 docs/dirs.yml:
