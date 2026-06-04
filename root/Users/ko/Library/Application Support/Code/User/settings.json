@@ -619,7 +619,7 @@
   "git.branchWhitespaceChar": "-",
   "git.branchValidationRegex": "",
   "git.branchRandomName.enable": false,
-  "git.branchProtectionPrompt": "alwaysPrompt",
+  "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
   "git.branchProtection": [],
   "git.branchPrefix": "",
   "git.blame.statusBarItem.template": "${authorName} (${authorDateAgo})",
