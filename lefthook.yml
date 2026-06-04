@@ -1,6 +1,16 @@
 extends:
   - /Users/ko/.config/lefthook/lefthook.yml
 
+pre-commit:
+  jobs:
+    - name: generate-dirs
+      run: make docs && git add docs/dirs.yml
+
+post-commit:
+  jobs:
+    - name: reload-config
+      run: make on_change
+
 pre-push:
   jobs:
     - name: pytest

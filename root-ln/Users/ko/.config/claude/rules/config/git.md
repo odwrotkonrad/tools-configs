@@ -1,0 +1,39 @@
+---
+paths:
+  - "**/git/**"
+  - "**/.git/**"
+---
+
+## Git Config
+
+### Files
+
+```yml
+root-ln/Users/ko/.config/git/:
+  config:
+  ignore:
+  commit-template:  # commit.template; type(scope): subject
+  hooks/:
+    commit-msg:
+    pre-commit: # sources pre-commit.rc.d/*
+    pre-commit.rc.d/:
+      validate-yml:
+```
+
+### Documentation
+
+`$ man`:
+
+- `git`
+- `git-config` — config keys, files, scopes, includes, color, alias
+- `gitignore` — pattern format, precedence, negation, excludesfile
+- `githooks` — hook names, args, exit codes, ordering, env
+- `git-commit` — message, template, sign-off, gpgsign, scissors
+- `gitattributes` — path attrs, diff, merge, filter, eol, export
+- `git-log` — pretty formats, decorate, ranges, placeholders (`%h %ar %s`)
+- `gitrevisions` — revision/range syntax (`A..B`, `@{u}`, `^`, `:/`)
+- `git-push` — refspecs, default, autoSetupRemote, force-with-lease
+- `gitmailmap` — map author/committer names and emails (mailmap.file)
+- `gitcredentials` — credential.helper, url patterns, helper protocol
+- `gitcli` — option parsing, `--`, conventions, exit codes
+

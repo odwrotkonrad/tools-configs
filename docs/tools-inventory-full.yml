@@ -2,8 +2,8 @@
 
 #[≟] Shared files referenced by many tools.
 files:
-  root/Users/ko/.config/zsh/rc.d/10-tools.zsh:
-  root/etc/:
+  root-ln/Users/ko/.config/zsh/rc.d/10-tools.zsh:
+  root-ln/etc/:
     zshenv:
     zshrc:
     zsh/rc.d/20-tools.zsh:
@@ -14,14 +14,14 @@ files:
 tools:
   - asdf:
       files:
-        root/Users/ko/:
+        root-ln/Users/ko/:
           .config/asdf/.asdfrc:
           .tool-versions:
-        root/etc/zsh/functions/fn_asdf_install:
+        root-ln/etc/zsh/functions/fn_asdf_install:
 
   - claude:
       files:
-        root/Users/ko/.config/claude/:
+        root-ln/Users/ko/.config/claude/:
           CLAUDE.md:
           settings.json:
           agents/:
@@ -33,28 +33,28 @@ tools:
 
   - defaults:
       files:
-        root/:
+        root-ln/:
           etc/defaults.yml:
           usr/local/scripts/shell/s-rt-load-defaults-config:
           Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist:
 
   - direnv:
       files:
-        root/Users/ko/.config/direnv/direnv.toml:
+        root-ln/Users/ko/.config/direnv/direnv.toml:
 
   - editorconfig:
       files:
-        root/Users/ko/.editorconfig:
+        root-ln/Users/ko/.editorconfig:
 
   - fzf:
 
   - git:
       files:
-        root/Users/ko/.config/git/:
+        root-ln/Users/ko/.config/git/:
           config:
           ignore:
           commit-template:
-        root/etc/zsh/functions/fn-rt-ssh-test-git-connection:
+        root-ln/etc/zsh/functions/fn-rt-ssh-test-git-connection:
 
   - golang:
 
@@ -62,13 +62,13 @@ tools:
 
   - jaeger:
       files:
-        root/etc/jaeger/config.yml:
-        root/usr/local/scripts/installs/s-rt-install-jaeger:
-        _root/Library/LaunchDaemons/d-rt-jaeger.plist:
+        root-ln/etc/jaeger/config.yml:
+        root-ln/usr/local/scripts/installs/s-rt-install-jaeger:
+        root-cp/Library/LaunchDaemons/d-rt-jaeger.plist:
 
   - kitty:
       files:
-        root/Users/ko/.config/kitty/:
+        root-ln/Users/ko/.config/kitty/:
           kitty.conf:
           dark-theme.auto.conf:
           light-theme.auto.conf:
@@ -76,64 +76,64 @@ tools:
 
   - man:
       files:
-        root/etc/man.conf:
+        root-ln/etc/man.conf:
 
   - nvm:
       files:
-        root/Users/ko/.nvmrc:
+        root-ln/Users/ko/.nvmrc:
 
   - prettier:
       files:
-        root/Users/ko/.config/prettier/.prettierrc.yml:
+        root-ln/Users/ko/.config/prettier/.prettierrc.yml:
 
   - prometheus:
       files:
-        root/etc/prometheus/prometheus.yml:
-        root/usr/local/scripts/installs/s-rt-install-prometheus:
-        _root/Library/LaunchDaemons/d-rt-prometheus.plist:
+        root-ln/etc/prometheus/prometheus.yml:
+        root-ln/usr/local/scripts/installs/s-rt-install-prometheus:
+        root-cp/Library/LaunchDaemons/d-rt-prometheus.plist:
 
   - pyenv:
 
   - rg:
       files:
-        root/etc/rg/:
+        root-ln/etc/rg/:
           rgrc:
           rgignore:
-        root/etc/zsh/functions/fn-rt-load-static-history:
+        root-ln/etc/zsh/functions/fn-rt-load-static-history:
 
   - ruff:
       files:
-        root/Users/ko/.config/ruff/ruff.toml:
+        root-ln/Users/ko/.config/ruff/ruff.toml:
 
   - ssh:
       files:
-        root/Users/ko/.ssh/config:
-        root/etc/zsh/functions/:
+        root-ln/Users/ko/.ssh/config:
+        root-ln/etc/zsh/functions/:
           fn-rt-ssh-generate-keys:
           fn-rt-ssh-test-git-connection:
 
   - tmux:
       files:
-        root/Users/ko/.config/tmux/tmux.conf:
+        root-ln/Users/ko/.config/tmux/tmux.conf:
 
   - vim:
       files:
-        root/Users/ko/.config/vim/vimrc:
+        root-ln/Users/ko/.config/vim/vimrc:
 
   - vscode:
       files:
-        root/Users/ko/Library/Application Support/Code/User/settings.json:
+        root-ln/Users/ko/Library/Application Support/Code/User/settings.json:
 
   - zsh:
       files:
-        root/Users/ko/.config/zsh/:
+        root-ln/Users/ko/.config/zsh/:
           .zshenv:
           .zprofile:
           .zshrc:
           .zlogin:
           .zlogout:
           rc.d/00-dirs.zsh:
-        root/etc/:
+        root-ln/etc/:
           zprofile:
           zlogin:
           zlogout:

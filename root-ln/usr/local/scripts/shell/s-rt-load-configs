@@ -1,0 +1,26 @@
+#!/bin/zsh
+#>[≟]
+#   Load <configs> into the system root, mirroring directory structure.
+#   <configs>/root-ln files are symlinked (live, follow the repo).
+#   <configs>/root-cp files are copied as root
+#/[≟]
+
+set -e
+
+configs=${1:-/Users/ko/projects/configs}
+
+#[…] symlinked tree
+pushd "$configs/root-ln"
+find * -type d -exec mkdir -p /{} \;
+find * -type f -exec ln -fvws "$PWD"/{} /{} \;
+popd
+#[⫶]
+
+#[…] copied tree
+pushd "$configs/root-cp"
+find * -type d -exec mkdir -p /{} \;
+find * -type f | while read -r f; do
+  sudo install -v -o root -g wheel -m "$(stat -f %Lp "$f")" "$f" "/$f"
+done
+popd
+#[⫶]

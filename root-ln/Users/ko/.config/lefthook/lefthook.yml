@@ -1,0 +1,21 @@
+min_version: 2.1.9
+
+output:
+  - summary
+  - failure
+  - execution_info
+
+pre-commit:
+  parallel: false
+  jobs:
+    - name: ssh-authenticate
+      run: /usr/local/scripts/shell/s-rt-ssh-authenticate
+
+    - name: validate-yml
+      glob: "*.{yml,yaml}"
+      run: yq e '.' {staged_files}
+
+commit-msg:
+  jobs:
+    - name: conventional-prefix
+      run: /usr/local/scripts/shell/s-rt-conventional-prefix {1}
