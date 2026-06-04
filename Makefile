@@ -7,11 +7,11 @@ test:
 
 #[≟] regenerate the repo directory tree doc
 docs:
-	./ci/scripts/s-rt-generate-yaml-dir-tree > docs/dirs.yml
+	./root_ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > docs/dirs.yml
 
 #[≟] install configuration onto a host
 load_configuration:
-	sudo /usr/local/scripts/shell/s-rt-load-configs
+	sudo $(CURDIR)/root_ln/usr/local/scripts/shell/s-rt-load-configs
 
 #[≟] install git hooks from merged lefthook config (user scope ~/.config/lefthook + repo scope ./lefthook.yml)
 install_git_hooks:
@@ -19,11 +19,11 @@ install_git_hooks:
 
 #[≟] reload running service launchagents
 reload_services:
-	/usr/local/scripts/shell/s-rt-reload-services
+	./root_ln/usr/local/scripts/shell/s-rt-reload-services
 
 #[≟] remove broken symlinks left in the system by renamed/deleted repo files
 clean_broken_links:
-	sudo /usr/local/scripts/shell/s-rt-clean-broken-links
+	sudo $(CURDIR)/root_ln/usr/local/scripts/shell/s-rt-clean-broken-links
 
 #[…] wrappers
 
