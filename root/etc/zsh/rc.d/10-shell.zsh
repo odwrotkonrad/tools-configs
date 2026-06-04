@@ -204,7 +204,7 @@ for opt in ${opts_disabled}; unsetopt ${opt}
 typeset -A zsh_params=(
   HISTFILE    "${XDG_STATE_HOME}/zsh/history"
   HISTSIZE    15_000
-  PS1         ''                                #[≟] no prompt at all
+  PS1         '%1~ %# '                         #[≟] cwd-basename prompt-sigil (%#: # root, %% user)
   PS2         '> '                              #[≟] prompt when shell waits for input
   PS4         '+ '                              #[≟] prompt when debugging prompt with XTRACE is set
   SAVEHIST    10_000
