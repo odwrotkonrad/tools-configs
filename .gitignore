@@ -1,5 +1,9 @@
 !root/**/.*
 
+# project-local vscode workspace settings
+!.vscode/
+!.vscode/settings.json
+
 # exported default config / keybindings of vscode
 **/Code/User/.exported/*
 !**/Code/User/.exported/.gitkeep
