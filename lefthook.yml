@@ -1,6 +1,11 @@
 extends:
   - /Users/ko/.config/lefthook/lefthook.yml
 
+pre-commit:
+  jobs:
+    - name: generate-dirs
+      run: ./root_ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > docs/dirs.yml && git add docs/dirs.yml
+
 pre-push:
   jobs:
     - name: pytest
