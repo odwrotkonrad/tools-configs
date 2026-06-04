@@ -68,7 +68,8 @@ root/:
   - usr:
       - local:
           - scripts
+          - scripts_py
 tests/:
-  - scripts:
+  - scripts_py:
       - s_auth:
           - mock

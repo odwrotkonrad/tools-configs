@@ -8,7 +8,7 @@ if [[ -z $1 ]]; then
 fi
 
 local out
-out=$(${AUTH_SCRIPT:-/usr/local/scripts/s_auth} "$@") || return $?
+out=$(${AUTH_SCRIPT:-/usr/local/scripts_py/s_auth} "$@") || return $?
 
 local line
 for line in ${(f)out}; do

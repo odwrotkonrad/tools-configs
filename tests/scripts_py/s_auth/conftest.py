@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 HERE = Path(__file__).resolve().parent
-SCRIPT = HERE.parents[2] / "root/usr/local/scripts/s_auth"
+SCRIPT = HERE.parents[2] / "root/usr/local/scripts_py/s_auth"
 MOCK = HERE / "mock"
 
 

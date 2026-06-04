@@ -1,4 +1,4 @@
 #!/bin/bash
 
 name=$(echo "$1" | rg -o '/(\w+)\W*$' -r '$1')
-/usr/local/scripts/s_auth ssh "ssh_$name" password
+/usr/local/scripts_py/s_auth ssh "ssh_$name" password
