@@ -4,8 +4,8 @@ import pytest
 import yaml
 
 HERE = Path(__file__).parent
-OUTPUT_CASES = yaml.safe_load((HERE / "cases.yml").read_text())
-ERROR_CASES = yaml.safe_load((HERE / "errors.yml").read_text())
+OUTPUT_CASES = yaml.safe_load((HERE / "test_main_cases.yml").read_text())
+ERROR_CASES = yaml.safe_load((HERE / "test_error_cases.yml").read_text())
 
 
 def run(s_auth, argv):
