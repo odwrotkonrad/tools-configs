@@ -1,0 +1,102 @@
+#!/usr/local/bin/python3.14
+"""usage: s-rt-gen-term-open-files-with <any|vscode|kitty>
+
+Print `<ext>=<opener>` lines for the terminal. Example:
+
+    s-rt-gen-term-open-files-with vscode | while IFS== read -r ext opener; do
+      alias -s -- "$ext"="$opener"
+    done
+
+exit: 2 args · 10 no config · 11 bad config · 12 linguist fetch failed
+"""
+
+from collections import defaultdict
+import os
+from pathlib import Path
+import sys
+
+import requests
+import yaml
+
+DEFAULT_CONFIG = os.environ.get(
+    "OPEN_FILES_WITH_TERM_CONFIG",
+    "/etc/custom/term-open-files-with.yml",
+)
+CACHE_DIR = Path(
+    os.environ.get("LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-gen-term-open-files-with")
+)
+LANGUAGES_URL = (
+    "https://raw.githubusercontent.com/github-linguist/linguist"
+    "/master/lib/linguist/languages.yml"
+)
+
+TERMINALS = ("any", "vscode", "kitty")
+
+ERR_ARGS = 2
+ERR_CONFIG_NOT_FOUND = 10
+ERR_CONFIG = 11
+ERR_NETWORK = 12
+
+
+def fetch_languages():
+    """Return linguist's languages.yml, downloading to the shared cache if absent."""
+    cached = CACHE_DIR / "languages.yml"
+    if not cached.is_file():
+        try:
+            res = requests.get(LANGUAGES_URL, timeout=30)
+            res.raise_for_status()
+        except requests.RequestException:
+            sys.exit(ERR_NETWORK)
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        cached.write_text(res.text)
+        cached.chmod(0o644)
+    return cached.read_text()
+
+
+def type_extensions():
+    """Return the {linguist-type: [ext, ...]} map, computed from cached languages.yml."""
+    by_type = defaultdict(set)
+    for lang in (yaml.safe_load(fetch_languages()) or {}).values():
+        kind = (lang or {}).get("type")
+        if kind:
+            by_type[kind].update(e.lower().lstrip(".") for e in lang.get("extensions") or [])
+    return {kind: sorted(exts) for kind, exts in by_type.items()}
+
+
+def get_extensions_for_terminal(cfg, by_type, name):
+    """Return {ext: opener} for one config section; a later entry wins on collision."""
+    aliases = {}
+    for entry in cfg.get(name) or []:
+        opener = (entry or {}).get("opener")
+        for kind in (entry.get("types") or []) if opener else []:
+            for ext in by_type.get(kind) or []:
+                aliases[ext] = opener
+    return aliases
+
+
+def main():
+    """Print `<ext>=<opener>` lines for the terminal named in argv[1]."""
+    args = sys.argv[1:]
+    if len(args) != 1 or args[0] not in TERMINALS:
+        sys.exit(ERR_ARGS)
+    terminal = args[0]
+    path = Path(DEFAULT_CONFIG)
+
+    if not path.is_file():
+        sys.exit(ERR_CONFIG_NOT_FOUND)
+    try:
+        cfg = yaml.safe_load(path.read_text()) or {}
+    except yaml.YAMLError:
+        sys.exit(ERR_CONFIG)
+
+    by_type = type_extensions()
+    aliases = {
+        **get_extensions_for_terminal(cfg, by_type, "any"),
+        **get_extensions_for_terminal(cfg, by_type, terminal),
+    }
+    for ext, opener in aliases.items():
+        print(f"{ext}={opener}")
+
+
+if __name__ == "__main__":
+    main()

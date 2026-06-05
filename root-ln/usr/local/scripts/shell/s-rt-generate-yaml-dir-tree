@@ -8,12 +8,15 @@
 set -e
 
 JQ_FILTER='
+def sortkey:
+  if type == "object" then (keys[0]) else . end;
+
 def convert:
-  if .contents then { (.name): [.contents[] | convert] }
+  if .contents then { (.name): [.contents[] | convert] | sort_by(sortkey) }
   else .name
   end;
 
-[.[] | convert] | add
+[.[] | convert] | sort_by(sortkey) | add
 '
 
 #>[≟] tree options

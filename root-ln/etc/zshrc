@@ -11,6 +11,7 @@ typeset -U path=(
     /usr/local/scripts/shell
     /usr/local/scripts/installs
     /usr/local/scripts/python
+    /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Support
     /opt/local/bin
     /opt/X11/bin
     /opt/homebrew/share/google-cloud-sdk/bin

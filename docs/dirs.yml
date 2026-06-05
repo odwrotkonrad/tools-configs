@@ -73,3 +73,6 @@ tests/:
       - python:
           - s-rt-auth:
               - mock
+          - s-rt-gen-os-open-files-with
+          - s-rt-gen-term-open-files-with:
+              - mock

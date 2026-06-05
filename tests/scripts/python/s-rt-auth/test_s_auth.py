@@ -26,10 +26,10 @@ def test_exit_code(s_auth, case):
     assert exc.value.code == case["exit"]
 
 
-def test_no_args_prints_usage(s_auth, capsys):
-    with pytest.raises(SystemExit):
+def test_no_args_exits(s_auth):
+    with pytest.raises(SystemExit) as exc:
         run(s_auth, [])
-    assert "usage: s-rt-auth <service>" in capsys.readouterr().err
+    assert exc.value.code == s_auth.ERR_ARGS
 
 
 @pytest.mark.parametrize("flag", ["-h", "--help"])
@@ -54,4 +54,4 @@ def test_op_failure_exits(s_auth, monkeypatch):
 def test_no_config_file_exits(s_auth_no_config):
     with pytest.raises(SystemExit) as exc:
         run(s_auth_no_config, ["bar"])
-    assert exc.value.code == s_auth_no_config.EX_NO_CONFIG
+    assert exc.value.code == s_auth_no_config.ERR_CONFIG_NOT_FOUND

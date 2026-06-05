@@ -1,0 +1,44 @@
+com.microsoft.VSCode:
+  all:
+    - public.python-script
+    - com.netscape.javascript-source
+    - com.microsoft.typescript
+    - public.ruby-script
+    - public.c-source
+    - public.c-header
+    - public.c-plus-plus-source
+    - com.sun.java-source
+    - public.swift-source
+    - public.php-script
+    - public.shell-script
+    - public.bash-script
+    - public.zsh-script
+    - org.iso.sql
+    - public.protobuf-source
+    - public.html
+    - public.css
+    - public.json
+    - public.yaml
+    - public.toml
+    - com.microsoft.ini
+    - public.xml
+    - net.daringfireball.markdown
+    - public.plain-text
+    - com.apple.log
+    - public.comma-separated-values-text
+    - public.tab-separated-values-text
+
+com.google.Chrome:
+  all:
+    - com.adobe.pdf
+
+com.apple.iWork.Numbers:
+  all:
+    - com.microsoft.excel.xls
+    - org.openxmlformats.spreadsheetml.sheet
+    - org.openxmlformats.spreadsheetml.sheet.macroenabled
+
+com.apple.iWork.Pages:
+  all:
+    - com.microsoft.word.doc
+    - org.openxmlformats.wordprocessingml.document

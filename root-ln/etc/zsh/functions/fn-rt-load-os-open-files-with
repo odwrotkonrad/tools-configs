@@ -1,0 +1,7 @@
+emulate -LR zsh
+
+(( $+commands[duti] )) || { print -u2 "fn-rt-load-os-open-files-with: duti not found"; return 1 }
+
+s-rt-gen-os-open-files-with | while read -r bundle uti role; do
+  duti -s "$bundle" "$uti" "$role"
+done
