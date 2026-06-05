@@ -23,8 +23,8 @@ DEFAULT_CONFIG = os.environ.get(
     "/etc/custom/term-open-files-with.yml",
 )
 CACHE_DIR = Path(
-    os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")
-) / "linguist"
+    os.environ.get("LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-gen-term-open-files-with")
+)
 LANGUAGES_URL = (
     "https://raw.githubusercontent.com/github-linguist/linguist"
     "/master/lib/linguist/languages.yml"
@@ -39,7 +39,7 @@ ERR_NETWORK = 12
 
 
 def fetch_languages():
-    """Return linguist's languages.yml, downloading to the cache if absent."""
+    """Return linguist's languages.yml, downloading to the shared cache if absent."""
     cached = CACHE_DIR / "languages.yml"
     if not cached.is_file():
         try:
@@ -49,6 +49,7 @@ def fetch_languages():
             sys.exit(ERR_NETWORK)
         cached.parent.mkdir(parents=True, exist_ok=True)
         cached.write_text(res.text)
+        cached.chmod(0o644)
     return cached.read_text()
 
 

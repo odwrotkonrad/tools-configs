@@ -17,14 +17,9 @@ import yaml
 
 DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"
 
-EX_ARGS = 2
-EX_NO_CONFIG = 10
-EX_BAD_CONFIG = 11
-
-
-def fail(msg, code):
-    print(f"s-rt-gen-os-open-files-with: {msg}", file=sys.stderr)
-    sys.exit(code)
+ERR_ARGS = 2
+ERR_CONFIG_NOT_FOUND = 10
+ERR_CONFIG = 11
 
 
 def handler_lines(cfg):
@@ -41,15 +36,15 @@ def main():
         print(__doc__, end="")
         sys.exit(0)
     if len(args) > 1:
-        fail(__doc__.splitlines()[0], EX_ARGS)
+        sys.exit(ERR_ARGS)
     path = Path(args[0]) if args else Path(DEFAULT_CONFIG)
 
     if not path.is_file():
-        fail(f"no readable config at {path}", EX_NO_CONFIG)
+        sys.exit(ERR_CONFIG_NOT_FOUND)
     try:
         cfg = yaml.safe_load(path.read_text()) or {}
-    except yaml.YAMLError as exc:
-        fail(f"invalid yaml in {path}: {exc}", EX_BAD_CONFIG)
+    except yaml.YAMLError:
+        sys.exit(ERR_CONFIG)
 
     for line in handler_lines(cfg):
         print(line)

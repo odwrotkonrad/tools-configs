@@ -20,18 +20,12 @@ import yaml
 XDG = os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")
 CONFIGS = [os.environ.get("AUTH_ETC_CONFIG", "/etc/custom/secrets.yml"), f"{XDG}/custom/secrets.yml"]
 
-#[≟] exit codes: 2 args · 10 config · 11 service · 12 container · 13 field · 1 op read
-EX_ARGS = 2
-EX_NO_CONFIG = 10
-EX_NO_SERVICE = 11
-EX_NO_CONTAINER = 12
-EX_NO_FIELD = 13
-EX_OP = 1
-
-
-def fail(msg, code=EX_OP):
-    print(f"s-rt-auth: {msg}", file=sys.stderr)
-    sys.exit(code)
+ERR_ARGS = 2
+ERR_CONFIG_NOT_FOUND = 10
+ERR_NO_SERVICE = 11
+ERR_NO_CONTAINER = 12
+ERR_NO_FIELD = 13
+ERR_OP = 1
 
 
 def merge(base, over):
@@ -45,7 +39,7 @@ def merge(base, over):
 
 def op_read(ref):
     res = subprocess.run(["op", "read", ref], capture_output=True, text=True)
-    return res.stdout.strip() if not res.returncode else fail(f"op read: {res.stderr.strip()}")
+    return res.stdout.strip() if not res.returncode else sys.exit(ERR_OP)
 
 
 def main():
@@ -53,22 +47,22 @@ def main():
     if args[:1] in (["-h"], ["--help"]):
         print(__doc__, end="")
         sys.exit(0)
-    service, *rest = args or fail(__doc__.splitlines()[0], EX_ARGS)
+    service, *rest = args or sys.exit(ERR_ARGS)
     want_container, want_field = (rest + [None, None])[:2]
 
     if not (paths := [p for p in CONFIGS if Path(p).is_file()]):
-        fail("no readable config in /etc/custom or ~/.config/custom", EX_NO_CONFIG)
+        sys.exit(ERR_CONFIG_NOT_FOUND)
     cfg = {}
     for path in paths:
         merge(cfg, yaml.safe_load(Path(path).read_text()) or {})
 
     vault = cfg.get("defaults", {}).get("vault", "Personal")
     if (containers := (cfg.get("services") or {}).get(service)) is None:
-        fail(f"unknown service '{service}'", EX_NO_SERVICE)
+        sys.exit(ERR_NO_SERVICE)
     if want_container and want_container not in containers:
-        fail(f"unknown container '{want_container}' for service '{service}'", EX_NO_CONTAINER)
+        sys.exit(ERR_NO_CONTAINER)
     if want_field and want_field not in (containers.get(want_container) or {}):
-        fail(f"unknown field '{want_field}' in container '{want_container}'", EX_NO_FIELD)
+        sys.exit(ERR_NO_FIELD)
 
     for container, fields in containers.items():
         if want_container and container != want_container:
