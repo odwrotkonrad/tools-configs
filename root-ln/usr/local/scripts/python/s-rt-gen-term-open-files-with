@@ -7,7 +7,7 @@ Print `<ext>=<opener>` lines for the terminal. Example:
       alias -s -- "$ext"="$opener"
     done
 
-exit: 2 args · 10 no config · 11 bad config · 12 linguist fetch failed
+exit: 2 args · 10 no config · 11 bad config · 13 linguist fetch failed
 """
 
 from collections import defaultdict
@@ -15,15 +15,22 @@ import os
 from pathlib import Path
 import sys
 
+from lib.config import load_yaml
+from lib.errors import ERR_ARGS
+from pydantic import BaseModel
+from pydantic import RootModel
 import requests
 import yaml
 
+# […] constants
 DEFAULT_CONFIG = os.environ.get(
     "OPEN_FILES_WITH_TERM_CONFIG",
     "/etc/custom/term-open-files-with.yml",
 )
 CACHE_DIR = Path(
-    os.environ.get("LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-gen-term-open-files-with")
+    os.environ.get(
+        "LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-gen-term-open-files-with"
+    )
 )
 LANGUAGES_URL = (
     "https://raw.githubusercontent.com/github-linguist/linguist"
@@ -32,10 +39,25 @@ LANGUAGES_URL = (
 
 TERMINALS = ("any", "vscode", "kitty")
 
-ERR_ARGS = 2
-ERR_CONFIG_NOT_FOUND = 10
-ERR_CONFIG = 11
-ERR_NETWORK = 12
+ERR_NETWORK = 13
+# [⫶]
+
+
+# […] schema
+type LinguistType = str
+type FileExtension = str
+
+
+class OpenerRule(BaseModel):
+    opener: str | None = None
+    types: list[LinguistType] = []
+
+
+class Config(RootModel[dict[str, list[OpenerRule]]]):
+    pass
+
+
+# [⫶]
 
 
 def fetch_languages():
@@ -53,42 +75,39 @@ def fetch_languages():
     return cached.read_text()
 
 
-def type_extensions():
+def type_extensions() -> dict[LinguistType, list[FileExtension]]:
     """Return the {linguist-type: [ext, ...]} map, computed from cached languages.yml."""
     by_type = defaultdict(set)
     for lang in (yaml.safe_load(fetch_languages()) or {}).values():
         kind = (lang or {}).get("type")
         if kind:
-            by_type[kind].update(e.lower().lstrip(".") for e in lang.get("extensions") or [])
+            by_type[kind].update(
+                e.lower().lstrip(".") for e in lang.get("extensions") or []
+            )
     return {kind: sorted(exts) for kind, exts in by_type.items()}
 
 
-def get_extensions_for_terminal(cfg, by_type, name):
+def get_extensions_for_terminal(cfg, by_type, name) -> dict[FileExtension, str]:
     """Return {ext: opener} for one config section; a later entry wins on collision."""
     aliases = {}
-    for entry in cfg.get(name) or []:
-        opener = (entry or {}).get("opener")
-        for kind in (entry.get("types") or []) if opener else []:
+    for rule in cfg.root.get(name) or []:
+        for kind in rule.types if rule.opener else []:
             for ext in by_type.get(kind) or []:
-                aliases[ext] = opener
+                aliases[ext] = rule.opener
     return aliases
 
 
 def main():
     """Print `<ext>=<opener>` lines for the terminal named in argv[1]."""
     args = sys.argv[1:]
+    if args[:1] in (["-h"], ["--help"]):
+        print(__doc__, end="")
+        sys.exit(0)
     if len(args) != 1 or args[0] not in TERMINALS:
         sys.exit(ERR_ARGS)
     terminal = args[0]
-    path = Path(DEFAULT_CONFIG)
 
-    if not path.is_file():
-        sys.exit(ERR_CONFIG_NOT_FOUND)
-    try:
-        cfg = yaml.safe_load(path.read_text()) or {}
-    except yaml.YAMLError:
-        sys.exit(ERR_CONFIG)
-
+    cfg = load_yaml(Path(DEFAULT_CONFIG), Config)
     by_type = type_extensions()
     aliases = {
         **get_extensions_for_terminal(cfg, by_type, "any"),

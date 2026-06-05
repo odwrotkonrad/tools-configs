@@ -6,6 +6,10 @@ pre-commit:
     - name: generate-dirs
       run: make docs && git add docs/dirs.yml
 
+    - name: ruff-scripts
+      glob: "**/scripts/python/s-*"
+      run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
+
 post-commit:
   jobs:
     - name: reload-config

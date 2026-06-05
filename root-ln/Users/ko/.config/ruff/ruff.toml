@@ -1,6 +1,9 @@
 line-length = 80
 indent-width = 4
 
+[lint]
+extend-select = ["I"]
+
 [lint.isort]
 force-single-line = true
 force-sort-within-sections = true

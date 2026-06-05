@@ -66,13 +66,16 @@ root-ln/:
       - local:
           - scripts:
               - installs
-              - python
+              - python:
+                  - lib
               - shell
 tests/:
   - scripts:
       - python:
-          - s-rt-auth:
-              - mock
+          - fixture:
+              - src
           - s-rt-gen-os-open-files-with
           - s-rt-gen-term-open-files-with:
+              - mock
+          - s-rt-secrets-fetch:
               - mock

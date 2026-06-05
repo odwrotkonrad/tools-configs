@@ -15,6 +15,10 @@ pre-commit:
       glob: "*.{yml,yaml}"
       run: yq e '.' {staged_files}
 
+    - name: ruff
+      glob: "*.py"
+      run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
+
 commit-msg:
   jobs:
     - name: conventional-prefix

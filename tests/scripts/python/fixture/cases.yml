@@ -1,0 +1,6 @@
+- name: ok_short_flag
+  args: [-h]
+  exit: 0
+- name: ok_long_flag
+  args: [--help]
+  exit: 0
