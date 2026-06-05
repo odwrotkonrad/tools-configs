@@ -1,3 +1,4 @@
 #[≟] python3.14 deps for /usr/local/scripts + tests
 PyYAML==6.0.3
 pytest==9.0.3
+requests==2.34.2

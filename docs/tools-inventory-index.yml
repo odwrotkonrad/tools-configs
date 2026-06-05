@@ -3,6 +3,7 @@ asdf: root-ln/Users/ko/.config/asdf/.asdfrc
 claude: root-ln/Users/ko/.config/claude/settings.json
 defaults: root-ln/etc/defaults.yml
 direnv: root-ln/Users/ko/.config/direnv/direnv.toml
+duti: root-ln/etc/custom/os-open-files-with.yml
 editorconfig: root-ln/Users/ko/.editorconfig
 fzf: root-ln/etc/zsh/rc.d/20-tools.zsh
 git: root-ln/Users/ko/.config/git/config

@@ -1,0 +1,7 @@
+- name: help_short
+  args: [-h]
+  contains: "usage: s-rt-gen-os-open-files-with"
+
+- name: help_long
+  args: [--help]
+  contains: "usage: s-rt-gen-os-open-files-with"

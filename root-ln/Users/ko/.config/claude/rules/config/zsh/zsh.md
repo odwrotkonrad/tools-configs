@@ -40,12 +40,13 @@ paths:
             00-dirs.zsh:
             10-shell.zsh:
             20-tools.zsh:
-            30-aliases.zsh:
-            40-keybindings.zsh:
-            50-hooks.zsh:
+            30-functions.zsh:
+            40-aliases.zsh:
+            50-keybindings.zsh:
           functions/:
             rm:
             fn-rt-auth:
+            fn-rt-load-os-open-files-with:
             fn-rt-load-static-history:
             fn-rt-ssh-generate-keys:
             fn-rt-ssh-test-git-connection:

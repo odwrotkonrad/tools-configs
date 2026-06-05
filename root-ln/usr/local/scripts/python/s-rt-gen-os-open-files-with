@@ -1,0 +1,59 @@
+#!/usr/local/bin/python3.14
+"""usage: s-rt-gen-os-open-files-with [config]
+
+Print `<bundle> <uti> <role>` lines for duti. Example:
+
+    s-rt-gen-os-open-files-with | while read -r bundle uti role; do
+      duti -s "$bundle" "$uti" "$role"
+    done
+
+exit: 2 args · 10 no config · 11 bad config
+"""
+
+import sys
+from pathlib import Path
+
+import yaml
+
+DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"
+
+EX_ARGS = 2
+EX_NO_CONFIG = 10
+EX_BAD_CONFIG = 11
+
+
+def fail(msg, code):
+    print(f"s-rt-gen-os-open-files-with: {msg}", file=sys.stderr)
+    sys.exit(code)
+
+
+def handler_lines(cfg):
+    """Yield `<bundle> <uti> <role>` for each uti under each app's role keys."""
+    for bundle, roles in cfg.items():
+        for role, utis in (roles or {}).items():
+            for uti in utis or []:
+                yield f"{bundle} {uti} {role}"
+
+
+def main():
+    args = sys.argv[1:]
+    if args[:1] in (["-h"], ["--help"]):
+        print(__doc__, end="")
+        sys.exit(0)
+    if len(args) > 1:
+        fail(__doc__.splitlines()[0], EX_ARGS)
+    path = Path(args[0]) if args else Path(DEFAULT_CONFIG)
+
+    if not path.is_file():
+        fail(f"no readable config at {path}", EX_NO_CONFIG)
+    try:
+        cfg = yaml.safe_load(path.read_text()) or {}
+    except yaml.YAMLError as exc:
+        fail(f"invalid yaml in {path}: {exc}", EX_BAD_CONFIG)
+
+    for line in handler_lines(cfg):
+        print(line)
+
+
+if __name__ == "__main__":
+    main()

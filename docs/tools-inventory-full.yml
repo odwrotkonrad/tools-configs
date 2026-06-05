@@ -7,7 +7,7 @@ files:
     zshenv:
     zshrc:
     zsh/rc.d/20-tools.zsh:
-    zsh/rc.d/30-aliases.zsh:
+    zsh/rc.d/40-aliases.zsh:
     zsh/static-history:
 
 #>[≟] Tool specific files
@@ -138,6 +138,6 @@ tools:
           zlogin:
           zlogout:
           zsh/rc.d/10-shell.zsh:
-          zsh/rc.d/40-keybindings.zsh:
+          zsh/rc.d/50-keybindings.zsh:
           zsh/functions/rm:
           zsh/functions/fn-rt-auth:

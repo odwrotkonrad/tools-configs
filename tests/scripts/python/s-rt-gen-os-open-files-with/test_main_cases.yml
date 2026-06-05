@@ -1,0 +1,45 @@
+- name: single_app_single_role
+  config:
+    com.example.Editor:
+      all:
+        - public.python-script
+        - public.json
+  out:
+    - com.example.Editor public.python-script all
+    - com.example.Editor public.json all
+
+- name: one_app_multiple_roles
+  config:
+    com.example.Viewer:
+      all:
+        - com.adobe.pdf
+      viewer:
+        - com.microsoft.word.doc
+  out:
+    - com.example.Viewer com.adobe.pdf all
+    - com.example.Viewer com.microsoft.word.doc viewer
+
+- name: multiple_apps
+  config:
+    com.a.One:
+      all: [public.json]
+    com.b.Two:
+      editor: [public.yaml]
+  out:
+    - com.a.One public.json all
+    - com.b.Two public.yaml editor
+
+- name: empty_config
+  config: {}
+  out: []
+
+- name: app_with_empty_role_list
+  config:
+    com.example.Editor:
+      all: []
+  out: []
+
+- name: app_with_null_roles
+  config:
+    com.example.Editor: null
+  out: []

@@ -3,11 +3,28 @@ docs/:
   - images
   - recordings
 root-cp/:
-  - Library:
-      - LaunchDaemons
   - etc:
       - sudoers.d
+  - Library:
+      - LaunchDaemons
 root-ln/:
+  - etc:
+      - custom
+      - grafana:
+          - provisioning:
+              - dashboards:
+                  - json
+              - datasources
+      - jaeger
+      - loki
+      - otelcol
+      - prometheus
+      - python
+      - rg
+      - zsh:
+          - completions
+          - functions
+          - rc.d
   - Users:
       - ko:
           - .config:
@@ -45,23 +62,6 @@ root-ln/:
                       - User:
                           - .exported
               - LaunchAgents
-  - etc:
-      - custom
-      - grafana:
-          - provisioning:
-              - dashboards:
-                  - json
-              - datasources
-      - jaeger
-      - loki
-      - otelcol
-      - prometheus
-      - python
-      - rg
-      - zsh:
-          - completions
-          - functions
-          - rc.d
   - usr:
       - local:
           - scripts:
@@ -72,4 +72,7 @@ tests/:
   - scripts:
       - python:
           - s-rt-auth:
+              - mock
+          - s-rt-gen-os-open-files-with
+          - s-rt-gen-term-open-files-with:
               - mock

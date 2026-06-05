@@ -1,0 +1,41 @@
+- name: any_uses_base_opener
+  args: [any]
+  out:
+    - go=vim
+    - py=vim
+    - rb=vim
+    - css=vim
+    - html=vim
+    - json=vim
+    - yaml=vim
+    - yml=vim
+    - rst=vim
+    - txt=vim
+
+- name: vscode_overrides_any_keeps_prose
+  args: [vscode]
+  out:
+    - go=code -r
+    - py=code -r
+    - rb=code -r
+    - css=code -r
+    - html=code -r
+    - json=code -r
+    - yaml=code -r
+    - yml=code -r
+    - rst=vim
+    - txt=vim
+
+- name: kitty_partial_override
+  args: [kitty]
+  out:
+    - go=vim
+    - py=vim
+    - rb=vim
+    - css=vim
+    - html=vim
+    - json=bat
+    - yaml=bat
+    - yml=bat
+    - rst=nvim
+    - txt=nvim
