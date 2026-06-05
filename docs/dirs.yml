@@ -72,8 +72,8 @@ root-ln/:
 tests/:
   - scripts:
       - python:
-          - _harness:
-              - lib
+          - fixture:
+              - src
           - s-rt-gen-os-open-files-with
           - s-rt-gen-term-open-files-with:
               - mock

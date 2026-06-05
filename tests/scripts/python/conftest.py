@@ -1,6 +1,6 @@
 import importlib.util
-import sys
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -20,7 +20,9 @@ def load_script():
     def loader(name, alias=None):
         script = SCRIPTS_DIR / name
         modname = alias or name.replace("-", "_")
-        spec = importlib.util.spec_from_loader(modname, loader=None, origin=str(script))
+        spec = importlib.util.spec_from_loader(
+            modname, loader=None, origin=str(script)
+        )
         module = importlib.util.module_from_spec(spec)
         sys.modules[modname] = module
         exec(compile(script.read_text(), str(script), "exec"), module.__dict__)

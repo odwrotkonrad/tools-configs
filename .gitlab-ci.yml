@@ -19,6 +19,7 @@ test-scripts:
   stage: test
   image: python:3.14-slim
   before_script:
+    - apt-get update && apt-get install -y --no-install-recommends make
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
   script:
-    - python -m pytest tests/
+    - make test

@@ -1,6 +1,7 @@
-from _harness.lib.cases import cases, load_cases
-from _harness.lib.run import run_case
-from _harness.lib.test_help import test_help  # noqa: F401
+from fixture.src.cases import cases
+from fixture.src.cases import load_cases
+from fixture.src.run import run_case
+from fixture.src.test_help import test_help  # noqa: F401
 
 CASES = load_cases(__file__, "cases.yml")
 

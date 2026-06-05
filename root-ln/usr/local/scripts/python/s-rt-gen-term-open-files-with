@@ -15,19 +15,22 @@ import os
 from pathlib import Path
 import sys
 
-import requests
-import yaml
-from pydantic import BaseModel, RootModel
-
 from lib.config import load_yaml
 from lib.errors import ERR_ARGS
+from pydantic import BaseModel
+from pydantic import RootModel
+import requests
+import yaml
 
+# […] constants
 DEFAULT_CONFIG = os.environ.get(
     "OPEN_FILES_WITH_TERM_CONFIG",
     "/etc/custom/term-open-files-with.yml",
 )
 CACHE_DIR = Path(
-    os.environ.get("LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-gen-term-open-files-with")
+    os.environ.get(
+        "LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-gen-term-open-files-with"
+    )
 )
 LANGUAGES_URL = (
     "https://raw.githubusercontent.com/github-linguist/linguist"
@@ -37,8 +40,10 @@ LANGUAGES_URL = (
 TERMINALS = ("any", "vscode", "kitty")
 
 ERR_NETWORK = 13
+# [⫶]
 
 
+# […] schema
 type LinguistType = str
 type FileExtension = str
 
@@ -50,6 +55,9 @@ class OpenerRule(BaseModel):
 
 class Config(RootModel[dict[str, list[OpenerRule]]]):
     pass
+
+
+# [⫶]
 
 
 def fetch_languages():
@@ -73,7 +81,9 @@ def type_extensions() -> dict[LinguistType, list[FileExtension]]:
     for lang in (yaml.safe_load(fetch_languages()) or {}).values():
         kind = (lang or {}).get("type")
         if kind:
-            by_type[kind].update(e.lower().lstrip(".") for e in lang.get("extensions") or [])
+            by_type[kind].update(
+                e.lower().lstrip(".") for e in lang.get("extensions") or []
+            )
     return {kind: sorted(exts) for kind, exts in by_type.items()}
 
 

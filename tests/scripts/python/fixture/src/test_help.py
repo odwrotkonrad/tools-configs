@@ -1,7 +1,8 @@
 import pytest
 
-from _harness.lib.cases import cases, load_cases
-from _harness.lib.run import run
+from fixture.src.cases import cases
+from fixture.src.cases import load_cases
+from fixture.src.run import run
 
 HELP = load_cases(__file__, "../cases.yml")
 

@@ -1,10 +1,11 @@
-import sys
 from pathlib import Path
+import sys
 
-import yaml
 from pydantic import ValidationError
+import yaml
 
-from lib.errors import ERR_CONFIG, ERR_CONFIG_NOT_FOUND
+from lib.errors import ERR_CONFIG
+from lib.errors import ERR_CONFIG_NOT_FOUND
 
 
 def merge(base, over):

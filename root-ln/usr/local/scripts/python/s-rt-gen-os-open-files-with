@@ -10,16 +10,19 @@ Print `<bundle> <uti> <role>` lines for duti. Example:
 exit: 2 args · 10 no config · 11 bad config
 """
 
-import sys
 from pathlib import Path
-
-from pydantic import RootModel
+import sys
 
 from lib.config import load_yaml
 from lib.errors import ERR_ARGS
+from pydantic import RootModel
 
+# […] constants
 DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"
+# [⫶]
 
+
+# […] schema
 type Uti = str
 type Role = str
 type Application = str
@@ -28,6 +31,9 @@ type Roles = dict[Role, list[Uti]]
 
 class Config(RootModel[dict[Application, Roles]]):
     pass
+
+
+# [⫶]
 
 
 def handler_lines(cfg):
