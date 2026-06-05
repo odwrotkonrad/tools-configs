@@ -1,46 +1,33 @@
-import importlib.util
-from pathlib import Path
 from types import SimpleNamespace
+from pathlib import Path
 
 import pytest
 
-HERE = Path(__file__).resolve().parent
-SCRIPT = (
-    HERE.parents[3]
-    / "root-ln/usr/local/scripts/python/s-rt-gen-term-open-files-with"
-)
-MOCK = HERE / "mock"
+MOCK = Path(__file__).resolve().parent / "mock"
 MOCK_LANGUAGES = (MOCK / "languages.yml").read_text()
 
 
-def _load():
-    spec = importlib.util.spec_from_loader("gen_term", loader=None, origin=str(SCRIPT))
-    module = importlib.util.module_from_spec(spec)
-    exec(compile(SCRIPT.read_text(), str(SCRIPT), "exec"), module.__dict__)
+def fake_response(url, timeout=None):  # noqa: ARG001
+    return SimpleNamespace(text=MOCK_LANGUAGES, raise_for_status=lambda: None)
+
+
+@pytest.fixture
+def term_script(load_script, mocker, tmp_path):
+    """term_script module with a tmp cache and the mock terminal config."""
+    module = load_script("s-rt-gen-term-open-files-with", alias="term_script")
+    cache = tmp_path / "linguist"
+    mocker.patch.object(module, "CACHE_DIR", cache)
+    mocker.patch.object(module, "DEFAULT_CONFIG", str(MOCK / "term.yml"))
+    module.cache_dir = cache
     return module
 
 
 @pytest.fixture
-def gen_term(monkeypatch, tmp_path):
-    """gen_term module with a tmp cache and the mock terminal config.
+def script(term_script):
+    return term_script
 
-    `requests.get` is mocked to return the trimmed mock/languages.yml fixture
-    instead of hitting the network. `module.fetches` records each requested url.
-    """
-    module = _load()
 
-    cache = tmp_path / "linguist"
-    monkeypatch.setattr(module, "CACHE_DIR", cache)
-    monkeypatch.setattr(module, "DEFAULT_CONFIG", str(MOCK / "term.yml"))
-
-    fetches = []
-
-    def fake_get(url, timeout=None):  # noqa: ARG001
-        fetches.append(url)
-        return SimpleNamespace(text=MOCK_LANGUAGES, raise_for_status=lambda: None)
-
-    monkeypatch.setattr(module.requests, "get", fake_get)
-
-    module.cache_dir = cache
-    module.fetches = fetches
-    return module
+@pytest.fixture(autouse=True)
+def mock_fetch(mocker):
+    """Patch linguist fetch for every test; fetch-specific tests re-patch to override."""
+    return mocker.patch("requests.get", side_effect=fake_response)

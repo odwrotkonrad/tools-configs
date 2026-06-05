@@ -13,20 +13,28 @@ exit: 2 args · 10 no config · 11 bad config
 import sys
 from pathlib import Path
 
-import yaml
+from pydantic import RootModel
+
+from lib.config import load_yaml
+from lib.errors import ERR_ARGS
 
 DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"
 
-ERR_ARGS = 2
-ERR_CONFIG_NOT_FOUND = 10
-ERR_CONFIG = 11
+type Uti = str
+type Role = str
+type Application = str
+type Roles = dict[Role, list[Uti]]
+
+
+class Config(RootModel[dict[Application, Roles]]):
+    pass
 
 
 def handler_lines(cfg):
     """Yield `<bundle> <uti> <role>` for each uti under each app's role keys."""
-    for bundle, roles in cfg.items():
-        for role, utis in (roles or {}).items():
-            for uti in utis or []:
+    for bundle, roles in cfg.root.items():
+        for role, utis in roles.items():
+            for uti in utis:
                 yield f"{bundle} {uti} {role}"
 
 
@@ -39,14 +47,7 @@ def main():
         sys.exit(ERR_ARGS)
     path = Path(args[0]) if args else Path(DEFAULT_CONFIG)
 
-    if not path.is_file():
-        sys.exit(ERR_CONFIG_NOT_FOUND)
-    try:
-        cfg = yaml.safe_load(path.read_text()) or {}
-    except yaml.YAMLError:
-        sys.exit(ERR_CONFIG)
-
-    for line in handler_lines(cfg):
+    for line in handler_lines(load_yaml(path, Config)):
         print(line)
 
 

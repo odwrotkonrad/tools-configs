@@ -3,7 +3,7 @@
 
 #[≟] run the test suite under the same interpreter as the script shebangs
 test:
-	/usr/local/bin/python3.14 -m pytest tests/
+	/usr/local/bin/python3.14 -m pytest tests/scripts/python
 
 #[≟] regenerate the repo directory tree doc
 docs:

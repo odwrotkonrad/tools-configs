@@ -1,6 +1,6 @@
-- name: any_uses_base_opener
+- name: ok_any_uses_base_opener
   args: [any]
-  out:
+  output:
     - go=vim
     - py=vim
     - rb=vim
@@ -12,9 +12,9 @@
     - rst=vim
     - txt=vim
 
-- name: vscode_overrides_any_keeps_prose
+- name: ok_vscode_overrides_any_keeps_prose
   args: [vscode]
-  out:
+  output:
     - go=code -r
     - py=code -r
     - rb=code -r
@@ -26,9 +26,9 @@
     - rst=vim
     - txt=vim
 
-- name: kitty_partial_override
+- name: ok_kitty_partial_override
   args: [kitty]
-  out:
+  output:
     - go=vim
     - py=vim
     - rb=vim
@@ -39,3 +39,27 @@
     - yml=bat
     - rst=nvim
     - txt=nvim
+
+- name: err_no_args
+  args: []
+  exit: 2
+
+- name: err_two_args
+  args: [any, vscode]
+  exit: 2
+
+- name: err_three_args
+  args: [any, vscode, kitty]
+  exit: 2
+
+- name: err_unknown_terminal
+  args: [emacs]
+  exit: 2
+
+- name: err_another_unknown
+  args: [vim]
+  exit: 2
+
+- name: err_case_sensitive
+  args: [Any]
+  exit: 2
