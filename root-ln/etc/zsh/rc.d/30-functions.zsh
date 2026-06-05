@@ -12,7 +12,7 @@ function fn_auth_glab {
   local cfg=${XDG_CONFIG_HOME:-$HOME/.config}/glab-cli/config.yml
   [[ -s $cfg ]] || glab --help >/dev/null 2>&1  #[∵] any glab run, even --help, generates config.yml
   yq -e '(.hosts."gitlab.com".token // "") != ""' $cfg >/dev/null 2>&1 && return 0
-  local token=${"$(/usr/local/scripts/python/s-rt-auth gitlab)"#GITLAB_TOKEN=}
+  local token=${"$(/usr/local/scripts/python/s-rt-op-get gitlab)"#GITLAB_TOKEN=}
   [[ -n $token ]] && yq -i ".hosts.\"gitlab.com\".token = \"$token\"" $cfg
 }
 

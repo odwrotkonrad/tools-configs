@@ -1,4 +1,4 @@
-#[≟] export a service's secrets into the shell via s-rt-auth
+#[≟] export a service's secrets into the shell via s-rt-op-get
 
 emulate -LR zsh
 
@@ -8,7 +8,7 @@ if [[ -z $1 ]]; then
 fi
 
 local out
-out=$(${AUTH_SCRIPT:-/usr/local/scripts/python/s-rt-auth} "$@") || return $?
+out=$(${AUTH_SCRIPT:-/usr/local/scripts/python/s-rt-op-get} "$@") || return $?
 
 local line
 for line in ${(f)out}; do

@@ -9,7 +9,7 @@ ERROR_CASES = yaml.safe_load((HERE / "test_error_cases.yml").read_text())
 
 
 def run(s_auth, argv):
-    s_auth.sys.argv = ["s-rt-auth", *argv]
+    s_auth.sys.argv = ["s-rt-op-get", *argv]
     s_auth.main()
 
 

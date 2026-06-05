@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3.14
-"""usage: s-rt-auth <service> [container] [field]
+"""usage: s-rt-op-get <service> [container] [field]
 
 Read 1Password secrets from the custom registry (service -> container -> field
 -> env var), merged from /etc/custom and ~/.config/custom secrets.yml.

@@ -71,8 +71,8 @@ root-ln/:
 tests/:
   - scripts:
       - python:
-          - s-rt-auth:
-              - mock
           - s-rt-gen-os-open-files-with
           - s-rt-gen-term-open-files-with:
+              - mock
+          - s-rt-op-get:
               - mock
