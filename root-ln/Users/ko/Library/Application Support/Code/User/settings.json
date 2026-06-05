@@ -165,7 +165,7 @@
   //[…] search
   "search.actionsPosition": "auto",
   "search.collapseResults": "alwaysCollapse",
-  "search.experimental.useIgnoreFilesInFindFiles": true,
+  "search.experimental.useIgnoreFilesInFindFiles": false,
   "search.globalFindClipboard": true,
   "search.maxResults": null,
   "search.quickOpen.includeHistory": false,
@@ -177,8 +177,8 @@
   "search.showLineNumbers": false,
   "search.smartCase": true,
   "search.sortOrder": "modified",
-  "search.useGlobalIgnoreFiles": true,
-  "search.useParentIgnoreFiles": true,
+  "search.useGlobalIgnoreFiles": false,
+  "search.useParentIgnoreFiles": false,
   //[⫶]
 
   //[…] source control
@@ -576,7 +576,7 @@
   "search.searchOnTypeDebouncePeriod": 300,
   "search.searchView.keywordSuggestions": false,
   "search.searchView.semanticSearchBehavior": "manual",
-  "search.useIgnoreFiles": true,
+  "search.useIgnoreFiles": false,
   "search.useReplacePreview": true,
   //[⫶⫶]
 
@@ -969,7 +969,8 @@
   "github.branchProtection": true,
   "github.gitAuthentication": true,
   "github.gitProtocol": "https",
-  "github.showAvatar": true
+  "github.showAvatar": true,
+  "terminal.integrated.fontSize": 14
   //[⫶⫶]
   //[⫶] defaults
 }
