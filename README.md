@@ -52,3 +52,21 @@ vim: root-ln/Users/ko/.config/vim/vimrc
 ```
 
 - [docs/tools-inventory-full.yml](docs/tools-inventory-full.yml) — Full file lists per tool.
+
+## Observability
+
+### Claude Code
+
+Dashboard for Claude Code usage, cost and token metrics.
+
+![Claude Code dashboard](docs/readme/images/grafana-claude-code-dashboard-pt-1.png)
+
+[recording](docs/readme/recordings/grafana-cc-dashboard.gif) · [more](docs/readme/images/grafana-claude-code-dashboard-pt-2.png)
+
+### Host System
+
+Dashboard for host CPU, memory, disk and network metrics.
+
+![Host system dashboard](docs/readme/images/grafana-host-dashboard-pt-1.png)
+
+[recording](docs/readme/recordings/grafana-host-dashboard.gif) · [more](docs/readme/images/grafana-host-dashboard-pt-2.png)
