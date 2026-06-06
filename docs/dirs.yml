@@ -3,6 +3,7 @@ docs/:
   - images
   - readme
   - recordings
+  - templates
 root-cp/:
   - Library:
       - LaunchDaemons

@@ -11,7 +11,7 @@ docs: readme
 
 #[≟] render README.md from its markdown template
 readme:
-	PYTHONPATH=root-ln/usr/local/scripts/python ./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/README.template.md > README.md
+	PYTHONPATH=root-ln/usr/local/scripts/python ./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/templates/README.tmpl.md > README.md
 
 #[≟] install configuration onto a host
 load_configuration:
