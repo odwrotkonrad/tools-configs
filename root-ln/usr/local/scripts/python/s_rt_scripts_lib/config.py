@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import sys
 
@@ -32,15 +33,27 @@ def parse(path):
 
 def load_yaml(path, model):
     if not path.is_file():
-        sys.exit(err.ERR_CONFIG_NOT_FOUND)
+        sys.exit(err.ERR_FILE_NOT_FOUND)
     return validate(parse(path), model)
 
 
 def load_merged(paths, model):
     existing = [Path(p) for p in paths if Path(p).is_file()]
     if not existing:
-        sys.exit(err.ERR_CONFIG_NOT_FOUND)
+        sys.exit(err.ERR_FILE_NOT_FOUND)
     raw = {}
     for path in existing:
         merge(raw, parse(path))
     return validate(raw, model)
+
+
+def get_config(name, model):
+    """[≟] Load /etc/custom/<name> then $XDG/custom/<name>, user overriding.
+
+    Interfaces with:
+      - /etc/custom, $XDG_CONFIG_HOME/custom — YAML config files
+    """
+    xdg = os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")
+    return load_merged(
+        [Path("/etc/custom") / name, Path(xdg) / "custom" / name], model
+    )

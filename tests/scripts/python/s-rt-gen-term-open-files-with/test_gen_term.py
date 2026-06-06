@@ -14,7 +14,7 @@ LANGUAGES_URL = (
     "/master/lib/linguist/languages.yml"
 )
 
-ERR_NETWORK = 13
+ERR_NETWORK = 21
 
 
 @cases(CASES)
@@ -32,7 +32,7 @@ def test_missing_config(term_script, mocker):
     mocker.patch.object(
         term_script, "DEFAULT_CONFIG", "/nonexistent/term-open-files-with.yml"
     )
-    assert_exit(term_script, ["any"], err.ERR_CONFIG_NOT_FOUND)
+    assert_exit(term_script, ["any"], err.ERR_FILE_NOT_FOUND)
 
 
 def test_invalid_config(term_script, mocker, tmp_path):

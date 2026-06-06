@@ -7,7 +7,7 @@ Print `<bundle> <uti> <role>` lines for duti. Example:
       duti -s "$bundle" "$uti" "$role"
     done
 
-exit: 2 args · 10 no config · 11 bad config
+exit: 11 args · 13 no config · 12 bad config
 """
 
 from pathlib import Path

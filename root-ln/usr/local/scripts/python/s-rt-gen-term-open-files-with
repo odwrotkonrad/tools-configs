@@ -7,7 +7,7 @@ Print `<ext>=<opener>` lines for the terminal. Example:
       alias -s -- "$ext"="$opener"
     done
 
-exit: 2 args · 10 no config · 11 bad config · 13 linguist fetch failed
+exit: 11 args · 13 no config · 12 bad config · 21 linguist fetch failed
 """
 
 from collections import defaultdict
@@ -39,7 +39,7 @@ LANGUAGES_URL = (
 
 TERMINALS = ("any", "vscode", "kitty")
 
-ERR_NETWORK = 13
+ERR_NETWORK = 21
 # [⫶]
 
 

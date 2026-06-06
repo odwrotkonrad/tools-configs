@@ -145,4 +145,3 @@ tools:
           zsh/rc.d/10-shell.zsh:
           zsh/rc.d/50-keybindings.zsh:
           zsh/functions/rm:
-          zsh/functions/fn-rt-auth:

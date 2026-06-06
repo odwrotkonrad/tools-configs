@@ -1,8 +1,9 @@
 from pathlib import Path
 
+import pytest
 from s_rt_scripts_test_lib.cases import cases
 from s_rt_scripts_test_lib.cases import load_cases
-from s_rt_scripts_test_lib.run import assert_exit
+from s_rt_scripts_test_lib.run import match_line
 from s_rt_scripts_test_lib.run import run
 from s_rt_scripts_test_lib.test_help import test_help  # noqa: F401
 
@@ -28,7 +29,11 @@ def test_case(markdown_script, capsys, case, tmp_path):
     args = build_args(case["input"], tmp_path)
     code = case["exit"]
     if code:
-        assert_exit(markdown_script, args, code)
+        with pytest.raises(SystemExit) as exc:
+            run(markdown_script, args)
+        assert exc.value.code == code
+        if "stderr" in case:
+            assert match_line(capsys.readouterr().err.strip(), case["stderr"])
         return
     run(markdown_script, args)
     assert capsys.readouterr().out == (FIXTURE / case["stdout"]).read_text()

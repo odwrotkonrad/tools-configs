@@ -24,10 +24,10 @@ root-ln/:
                       - marketplaces
                   - rules:
                       - config:
+                          - python
                           - zsh
                   - skills
                   - themes
-              - custom
               - direnv
               - git
               - homebrew
@@ -70,8 +70,7 @@ root-ln/:
           - scripts:
               - installs
               - python:
-                  - s_rt_scripts_lib:
-                      - src
+                  - s_rt_scripts_lib
               - shell
 tests/:
   - scripts:
@@ -81,7 +80,4 @@ tests/:
           - s-rt-gen-os-open-files-with
           - s-rt-gen-term-open-files-with:
               - mock
-          - s-rt-secrets-fetch:
-              - mock
-          - s_rt_scripts_test_lib:
-              - src
+          - s_rt_scripts_test_lib
