@@ -2,6 +2,7 @@
 WRAPPERS := run-sync run-repo-gen-files
 COMMANDS := run-repo-tests run-host-upsert-configs run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links
 FILES := docs/data/dirs.yml README.md
+SCRIPTS := root-ln/usr/local/scripts
 .PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
 
 #[…] wrappers
@@ -13,10 +14,10 @@ run-repo-gen-files: $(FILES)
 
 #[…] commands
 run-host-upsert-configs:
-	sudo $(CURDIR)/root-ln/usr/local/scripts/shell/s-rt-load-configs
+	sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-load-configs
 
 run-host-delete-broken-links:
-	sudo $(CURDIR)/root-ln/usr/local/scripts/shell/s-rt-clean-broken-links
+	sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-clean-broken-links
 
 run-repo-tests:
 	/usr/local/bin/python3.14 -m pytest tests/scripts/python
@@ -26,15 +27,15 @@ run-repo-upsert-git-hooks:
 
 #[≟] reload running service launchagents
 run-host-restart-services:
-	./root-ln/usr/local/scripts/shell/s-rt-reload-services
+	./$(SCRIPTS)/shell/s-rt-reload-services
 
 #[⫶]
 
 #[…] files
 docs/data/dirs.yml:
-	./root-ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > $@
+	./$(SCRIPTS)/shell/s-rt-generate-yaml-dir-tree > $@
 
 README.md:
-	./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
+	./$(SCRIPTS)/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
 
 #[⫶]
