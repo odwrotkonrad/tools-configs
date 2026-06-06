@@ -2,7 +2,7 @@
 
 @memory/naming.md
 
-@../README.md
+@../docs/readme/philosophy.md
 
 @../docs/dirs.yml
 

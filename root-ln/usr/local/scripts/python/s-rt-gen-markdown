@@ -1,0 +1,93 @@
+#!/usr/local/bin/python3.14
+"""usage: s-rt-gen-markdown <template>
+
+Render a Jinja markdown template to stdout.
+
+exit: 2 args · 10 no template · 11 bad template
+"""
+
+from pathlib import Path
+import re
+import sys
+
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
+from jinja2 import TemplateError
+from jinja2 import select_autoescape
+from lib.errors import ERR_ARGS
+from lib.errors import ERR_CONFIG
+from lib.errors import ERR_CONFIG_NOT_FOUND
+import yaml
+
+# […] constants
+ERR_TEMPLATE_NOT_FOUND = ERR_CONFIG_NOT_FOUND
+ERR_RENDER = ERR_CONFIG
+FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.DOTALL)
+# [⫶]
+
+
+class Attrs(dict):
+    """Dict with attribute access; nested mappings wrap recursively."""
+
+    def __getattr__(self, name):
+        try:
+            value = self[name]
+        except KeyError as exc:
+            raise AttributeError(name) from exc
+        return Attrs(value) if isinstance(value, dict) else value
+
+
+class Document:
+    def __init__(self, frontmatter, content):
+        self.frontmatter = Attrs(frontmatter or {})
+        self.content = content
+
+
+def split_frontmatter(text):
+    match = FRONTMATTER.match(text)
+    if not match:
+        return {}, text
+    return yaml.safe_load(match.group(1)) or {}, match.group(2)
+
+
+def loader(root):
+    def load(rel):
+        return Document(*split_frontmatter((root / rel).read_text()))
+
+    return load
+
+
+def render(template_path):
+    root = template_path.parent
+    env = Environment(
+        loader=FileSystemLoader(root),
+        autoescape=select_autoescape(default=False),
+        keep_trailing_newline=True,
+        trim_blocks=True,
+        lstrip_blocks=True,
+    )
+    env.globals["load"] = loader(root)
+    try:
+        return env.get_template(template_path.name).render()
+    except (TemplateError, OSError, yaml.YAMLError):
+        sys.exit(ERR_RENDER)
+
+
+def main():
+    args = sys.argv[1:]
+    if args[:1] in (["-h"], ["--help"]):
+        print(__doc__, end="")
+        sys.exit(0)
+
+    if len(args) != 1:
+        sys.exit(ERR_ARGS)
+
+    template_path = Path(args[0])
+    if not template_path.is_file():
+        sys.exit(ERR_TEMPLATE_NOT_FOUND)
+
+    print(render(template_path), end="")
+
+
+if __name__ == "__main__":
+    main()
