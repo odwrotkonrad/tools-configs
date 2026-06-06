@@ -51,7 +51,7 @@ vim: root-ln/Users/ko/.config/vim/vimrc
 #[⫶]
 ```
 
-- [docs/tools-inventory-full.yml](docs/tools-inventory-full.yml) — Full file lists per tool.
+- [docs/data/tools-inventory-full.yml](docs/data/tools-inventory-full.yml) — Full file lists per tool.
 
 ## Observability
 

@@ -2,7 +2,7 @@
 title: Tools Inventory Index
 description: Tool -> primary config file.
 references:
-  docs/tools-inventory-full.yml: Full file lists per tool.
+  docs/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 #[…] primary
 claude: root-ln/Users/ko/.config/claude/settings.json

@@ -2,7 +2,7 @@
 title: Tools Inventory
 description: Inventory of tools and their config files.
 references:
-  docs/tools-inventory-index.yml: Primary config file per tool.
+  docs/data/tools-inventory-index.yml: Primary config file per tool.
 ---
 
 #[≟] Shared files referenced by many tools.

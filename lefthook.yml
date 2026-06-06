@@ -4,7 +4,7 @@ extends:
 pre-commit:
   jobs:
     - name: generate-dirs
-      run: make docs && git add docs/dirs.yml
+      run: make docs && git add docs/data/dirs.yml
 
     - name: ruff-scripts
       glob: "root-ln/usr/local/scripts/python/s-*"

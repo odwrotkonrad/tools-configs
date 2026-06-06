@@ -1,7 +1,7 @@
 ## **Config**uration file**s**
 
 {{ load('../readme/purpose.md').content }}
-{% set f = load('../tools-inventory-index.yml') %}
+{% set f = load('../data/tools-inventory-index.yml') %}
 ## {{ f.frontmatter.title }}
 
 {{ f.frontmatter.description }}

@@ -7,7 +7,7 @@ test:
 
 #[≟] regenerate the repo directory tree doc and the README
 docs: readme
-	./root-ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > docs/dirs.yml
+	./root-ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > docs/data/dirs.yml
 
 #[≟] render README.md from its markdown template
 readme:
