@@ -37,20 +37,20 @@
 
 - name: err_too_many_args
   args: [one, two]
-  exit: 2
+  exit: 11
 
 - name: err_three_args
   args: [one, two, three]
-  exit: 2
+  exit: 11
 
 - name: err_missing_config
   args: [/nonexistent/path/to/config.yml]
-  exit: 10
+  exit: 13
 
 - name: err_invalid_config_syntax
   config_raw: "handlers: [unclosed\n"
-  exit: 11
+  exit: 12
 
 - name: err_invalid_config_null_roles
   config_raw: "com.example.Editor: null\n"
-  exit: 11
+  exit: 12

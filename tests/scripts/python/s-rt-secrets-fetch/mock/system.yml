@@ -1,9 +1,0 @@
-defaults:
-  vault: foo_vault
-
-services:
-  foo:
-    foo_one:
-      password: null
-    foo_two:
-      password: null

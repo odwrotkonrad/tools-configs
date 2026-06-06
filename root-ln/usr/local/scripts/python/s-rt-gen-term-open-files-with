@@ -7,7 +7,7 @@ Print `<ext>=<opener>` lines for the terminal. Example:
       alias -s -- "$ext"="$opener"
     done
 
-exit: 2 args · 10 no config · 11 bad config · 13 linguist fetch failed
+exit: 11 args · 13 no config · 12 bad config · 21 linguist fetch failed
 """
 
 from collections import defaultdict
@@ -15,11 +15,11 @@ import os
 from pathlib import Path
 import sys
 
-from lib.config import load_yaml
-from lib.errors import ERR_ARGS
 from pydantic import BaseModel
 from pydantic import RootModel
 import requests
+from s_rt_scripts_lib import errors as err
+from s_rt_scripts_lib.config import load_yaml
 import yaml
 
 # […] constants
@@ -39,7 +39,7 @@ LANGUAGES_URL = (
 
 TERMINALS = ("any", "vscode", "kitty")
 
-ERR_NETWORK = 13
+ERR_NETWORK = 21
 # [⫶]
 
 
@@ -104,7 +104,7 @@ def main():
         print(__doc__, end="")
         sys.exit(0)
     if len(args) != 1 or args[0] not in TERMINALS:
-        sys.exit(ERR_ARGS)
+        sys.exit(err.ERR_ARGS)
     terminal = args[0]
 
     cfg = load_yaml(Path(DEFAULT_CONFIG), Config)

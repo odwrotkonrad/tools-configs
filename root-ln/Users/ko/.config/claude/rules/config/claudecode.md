@@ -26,6 +26,9 @@ root-ln/Users/ko/.config/claude/:
     config/:
       claudecode.md: # this file
       git.md:
+      python/:
+        python.md:
+        scripts.md:
       ssh.md:
       vscode.md:
       zsh/:

@@ -2,6 +2,9 @@ stages:
   - validate
   - test
 
+variables:
+  PYTHONPATH: root-ln/usr/local/scripts/python
+
 validate-docsgen:
   stage: validate
   image: python:3.14-slim

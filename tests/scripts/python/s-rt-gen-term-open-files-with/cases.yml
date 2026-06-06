@@ -42,24 +42,24 @@
 
 - name: err_no_args
   args: []
-  exit: 2
+  exit: 11
 
 - name: err_two_args
   args: [any, vscode]
-  exit: 2
+  exit: 11
 
 - name: err_three_args
   args: [any, vscode, kitty]
-  exit: 2
+  exit: 11
 
 - name: err_unknown_terminal
   args: [emacs]
-  exit: 2
+  exit: 11
 
 - name: err_another_unknown
   args: [vim]
-  exit: 2
+  exit: 11
 
 - name: err_case_sensitive
   args: [Any]
-  exit: 2
+  exit: 11

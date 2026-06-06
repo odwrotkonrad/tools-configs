@@ -7,15 +7,15 @@ Print `<bundle> <uti> <role>` lines for duti. Example:
       duti -s "$bundle" "$uti" "$role"
     done
 
-exit: 2 args · 10 no config · 11 bad config
+exit: 11 args · 13 no config · 12 bad config
 """
 
 from pathlib import Path
 import sys
 
-from lib.config import load_yaml
-from lib.errors import ERR_ARGS
 from pydantic import RootModel
+from s_rt_scripts_lib import errors as err
+from s_rt_scripts_lib.config import load_yaml
 
 # […] constants
 DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"
@@ -50,7 +50,7 @@ def main():
         print(__doc__, end="")
         sys.exit(0)
     if len(args) > 1:
-        sys.exit(ERR_ARGS)
+        sys.exit(err.ERR_ARGS)
     path = Path(args[0]) if args else Path(DEFAULT_CONFIG)
 
     for line in handler_lines(load_yaml(path, Config)):

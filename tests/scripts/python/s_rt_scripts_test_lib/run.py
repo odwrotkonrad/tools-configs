@@ -1,3 +1,4 @@
+import inspect
 import re
 
 import pytest
@@ -6,7 +7,15 @@ import yaml
 
 def run(module, argv):
     module.sys.argv = [module.__name__, *argv]
-    module.main()
+    if inspect.signature(module.main).parameters:
+        try:
+            action, _, params = module.parse_input(module.Parameters, argv)
+            module.main(action, params)
+        except module.err.ExitError as e:
+            print(e.message, file=module.sys.stderr)
+            module.sys.exit(e.code)
+    else:
+        module.main()
 
 
 def assert_exit(module, argv, code):

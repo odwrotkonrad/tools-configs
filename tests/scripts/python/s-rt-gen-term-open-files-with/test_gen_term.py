@@ -1,12 +1,11 @@
-from fixture.src.cases import cases
-from fixture.src.cases import load_cases
-from fixture.src.run import assert_exit
-from fixture.src.run import run
-from fixture.src.run import run_case
-from fixture.src.test_help import test_help  # noqa: F401
-from lib.errors import ERR_CONFIG
-from lib.errors import ERR_CONFIG_NOT_FOUND
 import pytest
+from s_rt_scripts_lib import errors as err
+from s_rt_scripts_test_lib.cases import cases
+from s_rt_scripts_test_lib.cases import load_cases
+from s_rt_scripts_test_lib.run import assert_exit
+from s_rt_scripts_test_lib.run import run
+from s_rt_scripts_test_lib.run import run_case
+from s_rt_scripts_test_lib.test_help import test_help  # noqa: F401
 
 CASES = load_cases(__file__, "cases.yml")
 
@@ -15,7 +14,7 @@ LANGUAGES_URL = (
     "/master/lib/linguist/languages.yml"
 )
 
-ERR_NETWORK = 13
+ERR_NETWORK = 21
 
 
 @cases(CASES)
@@ -33,14 +32,14 @@ def test_missing_config(term_script, mocker):
     mocker.patch.object(
         term_script, "DEFAULT_CONFIG", "/nonexistent/term-open-files-with.yml"
     )
-    assert_exit(term_script, ["any"], ERR_CONFIG_NOT_FOUND)
+    assert_exit(term_script, ["any"], err.ERR_FILE_NOT_FOUND)
 
 
 def test_invalid_config(term_script, mocker, tmp_path):
     bad = tmp_path / "bad.yml"
     bad.write_text("any: [unclosed\n")
     mocker.patch.object(term_script, "DEFAULT_CONFIG", str(bad))
-    assert_exit(term_script, ["any"], ERR_CONFIG)
+    assert_exit(term_script, ["any"], err.ERR_CONFIG)
 
 
 def test_network_failure(term_script, mocker):

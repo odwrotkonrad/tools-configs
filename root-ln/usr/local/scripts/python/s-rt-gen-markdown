@@ -1,35 +1,112 @@
 #!/usr/local/bin/python3.14
 """usage: s-rt-gen-markdown <template>
 
-Render a Jinja markdown template to stdout.
+Render a Jinja markdown template to stdout:
 
-exit: 2 args · 10 no template · 11 bad template
+1. read the template at <template>
+2. render it injecting included files
+3. print the result to stdout
+
+Interfaces with:
+- files: template, additional files loaded in the template
+
+Exit Codes:
+- 21 render error
+- 11 invalid arguments
+- 13 template not found
 """
 
+from enum import StrEnum
 from pathlib import Path
 import re
 import sys
+from typing import ClassVar
+from typing import TypedDict
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import TemplateError
 from jinja2 import select_autoescape
-from lib.errors import ERR_ARGS
-from lib.errors import ERR_CONFIG
-from lib.errors import ERR_CONFIG_NOT_FOUND
+from pydantic import BaseModel
+from pydantic import field_validator
+from s_rt_scripts_lib import errors as err
+from s_rt_scripts_lib.cli import BASE_SCRIPT_SYNOPSIS
+from s_rt_scripts_lib.cli import Pattern
+from s_rt_scripts_lib.cli import ScriptBaseOptions
+from s_rt_scripts_lib.cli import Synopsis
+from s_rt_scripts_lib.cli import parse_input
+from s_rt_scripts_lib.cli import schema
+from s_rt_scripts_lib.cli import usage
 import yaml
 
-# […] constants
-ERR_TEMPLATE_NOT_FOUND = ERR_CONFIG_NOT_FOUND
-ERR_RENDER = ERR_CONFIG
-FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.DOTALL)
+# […] errors
+ERR_RENDER = 21
+err.ERRORS = {ERR_RENDER: "render failed: {path}: {reason}"} | err.ERRORS
 # [⫶]
 
 
+# […] types
+type TemplatePathStr = str
+type RelativeIncludePathStr = str
+type RenderedTemplateStr = str
+type Body = str
+"""file content after the frontmatter header."""
+type ReferenceNoteStr = str
+
+
+class Frontmatter(TypedDict, total=False):
+    """YAML mapping parsed from a file's `---` header."""
+
+    title: str
+    description: str
+    references: dict[RelativeIncludePathStr, ReferenceNoteStr]
+
+
+# [⫶]
+
+
+# […] contract
+class Action(StrEnum):
+    """The actions the script supports."""
+
+    USAGE = "usage"
+    SCHEMA = "schema"
+    RENDER = "render"
+
+
+class Arguments(BaseModel):
+    """The validated positional arguments."""
+
+    template: TemplatePathStr
+
+    @field_validator("template")
+    @classmethod
+    def template_is_file(cls, value: TemplatePathStr) -> TemplatePathStr:
+        """Reject a template path that is not an existing file."""
+        if not Path(value).is_file():
+            raise err.ExitError(err.ERR_FILE_NOT_FOUND, path=value)
+        return value
+
+
+class Parameters(BaseModel):
+    """The validated invocation: arguments, options, and the input->action grammar."""
+
+    arguments: Arguments
+    options: ScriptBaseOptions = ScriptBaseOptions()
+    SYNOPSIS: ClassVar[Synopsis] = BASE_SCRIPT_SYNOPSIS | Synopsis(
+        [Pattern(options=set(), args=(1, 1), action=Action.RENDER)]
+    )
+
+
+# [⫶]
+
+
+# […] implementation
 class Attrs(dict):
     """Dict with attribute access; nested mappings wrap recursively."""
 
-    def __getattr__(self, name):
+    def __getattr__(self, name) -> object:
+        """Return the item `name`, wrapping a nested mapping as Attrs."""
         try:
             value = self[name]
         except KeyError as exc:
@@ -38,56 +115,78 @@ class Attrs(dict):
 
 
 class Document:
-    def __init__(self, frontmatter, content):
+    """A parsed template: its frontmatter as Attrs and its body content."""
+
+    def __init__(self, frontmatter: Frontmatter, content: Body) -> None:
+        """Wrap the parsed frontmatter for attribute access; keep the body."""
         self.frontmatter = Attrs(frontmatter or {})
         self.content = content
 
 
-def split_frontmatter(text):
-    match = FRONTMATTER.match(text)
+def split_frontmatter(text: Body) -> tuple[Frontmatter, Body]:
+    """Split a leading `---`-delimited YAML header from the body content."""
+    match = re.match(r"\A---\n(.*?)\n---\n?(.*)\Z", text, re.DOTALL)
     if not match:
         return {}, text
     return yaml.safe_load(match.group(1)) or {}, match.group(2)
 
 
-def loader(root):
-    def load(rel):
+def loader(root: Path):
+    """Return a `load(rel)` template global reading files relative to `root`."""
+
+    def load(rel: RelativeIncludePathStr) -> Document:
+        """Read `rel` under `root` and parse it into a Document.
+
+        Interfaces with:
+          - files: template, additional files loaded in the template
+        """
         return Document(*split_frontmatter((root / rel).read_text()))
 
     return load
 
 
-def render(template_path):
-    root = template_path.parent
+def render(template: TemplatePathStr) -> RenderedTemplateStr:
+    """Render the Jinja template at `template`, raising ERR_RENDER on failure.
+
+    Interfaces with:
+      - files: template, additional files loaded in the template
+    """
+    path = Path(template)
     env = Environment(
-        loader=FileSystemLoader(root),
+        loader=FileSystemLoader(path.parent),
         autoescape=select_autoescape(default=False),
         keep_trailing_newline=True,
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    env.globals["load"] = loader(root)
+    env.globals |= {"load": loader(path.parent)}
     try:
-        return env.get_template(template_path.name).render()
-    except (TemplateError, OSError, yaml.YAMLError):
-        sys.exit(ERR_RENDER)
+        return env.get_template(path.name).render()
+    except (TemplateError, OSError, yaml.YAMLError) as exc:
+        raise err.ExitError(ERR_RENDER, path=template, reason=exc) from None
 
 
-def main():
-    args = sys.argv[1:]
-    if args[:1] in (["-h"], ["--help"]):
-        print(__doc__, end="")
-        sys.exit(0)
+# [⫶]
 
-    if len(args) != 1:
-        sys.exit(ERR_ARGS)
 
-    template_path = Path(args[0])
-    if not template_path.is_file():
-        sys.exit(ERR_TEMPLATE_NOT_FOUND)
-
-    print(render(template_path), end="")
+# […] main
+def main(action: Action, params: Parameters) -> None:
+    """Dispatch the resolved action to its handler."""
+    match action:
+        case Action.USAGE:
+            out = usage(__doc__)
+        case Action.SCHEMA:
+            out = schema(Parameters)
+        case Action.RENDER:
+            out = render(params.arguments.template)
+    print(out, end="")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        action, _, params = parse_input(Parameters, sys.argv[1:])
+        main(action, params)
+    except err.ExitError as e:
+        print(e.message, file=sys.stderr)
+        sys.exit(e.code)
+# [⫶]

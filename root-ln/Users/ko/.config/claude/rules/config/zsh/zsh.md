@@ -45,7 +45,6 @@ paths:
             50-keybindings.zsh:
           functions/:
             rm:
-            fn-rt-auth:
             fn-rt-load-os-open-files-with:
             fn-rt-load-static-history:
             fn-rt-ssh-generate-keys:
