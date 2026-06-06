@@ -4,8 +4,8 @@ import sys
 from pydantic import ValidationError
 import yaml
 
-from lib.errors import ERR_CONFIG
-from lib.errors import ERR_CONFIG_NOT_FOUND
+from s_rt_scripts_lib.errors import ERR_CONFIG
+from s_rt_scripts_lib.errors import ERR_CONFIG_NOT_FOUND
 
 
 def merge(base, over):

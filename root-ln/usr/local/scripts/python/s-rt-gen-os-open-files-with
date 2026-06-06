@@ -13,9 +13,9 @@ exit: 2 args · 10 no config · 11 bad config
 from pathlib import Path
 import sys
 
-from lib.config import load_yaml
-from lib.errors import ERR_ARGS
 from pydantic import RootModel
+from s_rt_scripts_lib.config import load_yaml
+from s_rt_scripts_lib.errors import ERR_ARGS
 
 # […] constants
 DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"

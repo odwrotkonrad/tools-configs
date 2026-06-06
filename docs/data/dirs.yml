@@ -70,7 +70,7 @@ root-ln/:
           - scripts:
               - installs
               - python:
-                  - lib
+                  - s_rt_scripts_lib
               - shell
 tests/:
   - scripts:

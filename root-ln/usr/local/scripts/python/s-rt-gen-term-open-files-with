@@ -15,11 +15,11 @@ import os
 from pathlib import Path
 import sys
 
-from lib.config import load_yaml
-from lib.errors import ERR_ARGS
 from pydantic import BaseModel
 from pydantic import RootModel
 import requests
+from s_rt_scripts_lib.config import load_yaml
+from s_rt_scripts_lib.errors import ERR_ARGS
 import yaml
 
 # […] constants

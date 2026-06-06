@@ -2,6 +2,10 @@
 eval "$(pyenv init - zsh)"
 #[⫶]
 
+#[…] python
+export PYTHONPATH=/usr/local/scripts/python${PYTHONPATH:+:${PYTHONPATH}}
+#[⫶]
+
 #[…] fzf
 #>[⌖]
 # https://github.com/junegunn/fzf#setting-up-shell-integration

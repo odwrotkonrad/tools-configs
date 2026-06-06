@@ -35,6 +35,6 @@ docs/data/dirs.yml:
 	./root-ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > $@
 
 README.md:
-	PYTHONPATH=root-ln/usr/local/scripts/python ./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
+	./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
 
 #[⫶]

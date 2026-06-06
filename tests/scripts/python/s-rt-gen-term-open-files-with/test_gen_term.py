@@ -4,9 +4,9 @@ from fixture.src.run import assert_exit
 from fixture.src.run import run
 from fixture.src.run import run_case
 from fixture.src.test_help import test_help  # noqa: F401
-from lib.errors import ERR_CONFIG
-from lib.errors import ERR_CONFIG_NOT_FOUND
 import pytest
+from s_rt_scripts_lib.errors import ERR_CONFIG
+from s_rt_scripts_lib.errors import ERR_CONFIG_NOT_FOUND
 
 CASES = load_cases(__file__, "cases.yml")
 
