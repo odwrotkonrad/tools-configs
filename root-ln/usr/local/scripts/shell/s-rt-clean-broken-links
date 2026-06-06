@@ -1,10 +1,25 @@
 #!/bin/bash
+#>[≟]
+#   collect root-ln/ paths from the last 10 commits and the working tree
+#   (staged + unstaged, including rename sources), then prune top-level
+#   broken links in each mapped system dir
+#/[≟]
 
 set -e
 
 configs=${1:-/Users/ko/projects/configs}
 
-#[≟] scan only ./root-ln/**
-for top in "$configs"/root-ln/*/; do
-  find "/${top#"$configs"/root-ln/}" -type l -lname "$configs/*" ! -exec test -e {} \; -print -delete 2>/dev/null || true
-done
+{
+  git -C "$configs" -c core.quotePath=false log -10 --name-only --pretty=format: --diff-filter=ACDR
+  git -C "$configs" status --porcelain -z | tr '\0' '\n'
+} \
+  | grep -oE 'root-ln/.*' \
+  | grep '/' \
+  | sed 's|/[^/]*$||' \
+  | sort -u \
+  | while IFS= read -r dir; do
+      sysdir="/${dir#root-ln/}"
+      #[≟] only top-level broken links targeting this repo
+      find "$sysdir" -maxdepth 1 -type l -lname "$configs/*" \
+        ! -exec test -e {} \; -print -delete 2>/dev/null || true
+    done

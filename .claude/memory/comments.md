@@ -6,4 +6,4 @@ Label prefix `[symbol]`.
 - `…` section start (named) · `⫶` section end · repeat symbol to nest
 - inline `#[≟] ...` · block `#>[∵]` … `#/[∵]` · unlabeled = ignore
 
-Full spec & examples: [Commenting Convention](../../docs/commenting-convention.md)
+Full spec & examples: [Commenting Convention](../../docs/readme/commenting-convention.md)

@@ -1,0 +1,31 @@
+#[…] positive
+- name: ok_md_simple
+  input: simple.tpl.md
+  exit: 0
+  stdout: simple.out.md
+
+- name: ok_md_with_yml_frontmatter
+  input: frontmatter.tpl.md
+  exit: 0
+  stdout: frontmatter.out.md
+  _supporting_files:
+    - frontmatter.data.yml
+#[⫶]
+
+#[…] error
+- name: err_missing_template
+  input: nonexistent.tpl.md
+  exit: 10
+
+- name: err_bad_template
+  input: broken.tpl.md
+  exit: 11
+
+- name: err_too_few_args
+  input: []
+  exit: 2
+
+- name: err_too_many_args
+  input: [one, two]
+  exit: 2
+#[⫶]

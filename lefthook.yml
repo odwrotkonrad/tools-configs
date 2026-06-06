@@ -3,19 +3,19 @@ extends:
 
 pre-commit:
   jobs:
-    - name: generate-dirs
-      run: make docs && git add docs/dirs.yml
+    - name: docsgen
+      run: make run-repo-gen-files && git add docs/data/dirs.yml README.md
 
     - name: ruff-scripts
-      glob: "**/scripts/python/s-*"
+      glob: "root-ln/usr/local/scripts/python/s-*"
       run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
 
 post-commit:
   jobs:
     - name: reload-config
-      run: make on_change
+      run: make run-sync
 
 pre-push:
   jobs:
     - name: pytest
-      run: make test
+      run: make run-repo-tests

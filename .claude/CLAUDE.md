@@ -2,11 +2,11 @@
 
 @memory/naming.md
 
-@../README.md
+@../docs/readme/purpose.md
 
-@../docs/dirs.yml
+@../docs/data/dirs.yml
 
-@../docs/tools-inventory-index.yml
+@../docs/data/tools-inventory-index.yml
 
 @../Makefile
 
