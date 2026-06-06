@@ -4,7 +4,14 @@ set -e
 
 configs=${1:-/Users/ko/projects/configs}
 
-#[≟] scan only ./root-ln/**
-for top in "$configs"/root-ln/*/; do
-  find "/${top#"$configs"/root-ln/}" -type l -lname "$configs/*" ! -exec test -e {} \; -print -delete 2>/dev/null || true
-done
+#[≟] parent dirs of root-ln/ files changed in the last 10 commits, mapped to system
+git -C "$configs" log -10 --name-only --pretty=format: --diff-filter=ACDR \
+  | grep '^root-ln/.*/' \
+  | sed 's|/[^/]*$||' \
+  | sort -u \
+  | while IFS= read -r dir; do
+      sysdir="/${dir#root-ln/}"
+      #[≟] only top-level broken links targeting this repo
+      find "$sysdir" -maxdepth 1 -type l -lname "$configs/*" \
+        ! -exec test -e {} \; -print -delete 2>/dev/null || true
+    done

@@ -13,7 +13,7 @@ pre-commit:
 post-commit:
   jobs:
     - name: reload-config
-      run: make load_configuration
+      run: make on_change
 
 pre-push:
   jobs:
