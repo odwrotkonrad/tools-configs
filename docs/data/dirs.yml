@@ -70,13 +70,12 @@ root-ln/:
           - scripts:
               - installs
               - python:
-                  - s_rt_scripts_lib
+                  - s_rt_scripts_lib:
+                      - src
               - shell
 tests/:
   - scripts:
       - python:
-          - fixture:
-              - src
           - s-rt-gen-markdown:
               - fixture
           - s-rt-gen-os-open-files-with
@@ -84,3 +83,5 @@ tests/:
               - mock
           - s-rt-secrets-fetch:
               - mock
+          - s_rt_scripts_test_lib:
+              - src

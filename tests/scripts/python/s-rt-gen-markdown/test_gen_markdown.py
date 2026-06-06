@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from fixture.src.cases import cases
-from fixture.src.cases import load_cases
-from fixture.src.run import assert_exit
-from fixture.src.run import run
-from fixture.src.test_help import test_help  # noqa: F401
+from s_rt_scripts_test_lib.cases import cases
+from s_rt_scripts_test_lib.cases import load_cases
+from s_rt_scripts_test_lib.run import assert_exit
+from s_rt_scripts_test_lib.run import run
+from s_rt_scripts_test_lib.test_help import test_help  # noqa: F401
 
 FIXTURE = Path(__file__).parent / "fixture"
 CASES = load_cases(__file__, "cases.yml")

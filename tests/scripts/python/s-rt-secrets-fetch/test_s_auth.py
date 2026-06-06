@@ -1,9 +1,9 @@
-from fixture.src.cases import cases
-from fixture.src.cases import load_cases
-from fixture.src.run import assert_exit
-from fixture.src.run import run_case
-from fixture.src.test_help import test_help  # noqa: F401
 from s_rt_scripts_lib import errors as err
+from s_rt_scripts_test_lib.cases import cases
+from s_rt_scripts_test_lib.cases import load_cases
+from s_rt_scripts_test_lib.run import assert_exit
+from s_rt_scripts_test_lib.run import run_case
+from s_rt_scripts_test_lib.test_help import test_help  # noqa: F401
 
 CASES = load_cases(__file__, "cases.yml")
 

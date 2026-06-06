@@ -1,8 +1,8 @@
 import pytest
 
-from fixture.src.cases import cases
-from fixture.src.cases import load_cases
-from fixture.src.run import run
+from s_rt_scripts_test_lib.cases import cases
+from s_rt_scripts_test_lib.cases import load_cases
+from s_rt_scripts_test_lib.run import run
 
 HELP = load_cases(__file__, "../cases.yml")
 
