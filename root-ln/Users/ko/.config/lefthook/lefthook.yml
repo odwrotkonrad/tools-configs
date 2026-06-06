@@ -19,6 +19,10 @@ pre-commit:
       glob: "*.py"
       run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
 
+    - name: gen-files-fresh
+      glob: "{docs/data/dirs.yml,README.md}"
+      run: make run-repo-gen-files && git diff --exit-code {staged_files}
+
 commit-msg:
   jobs:
     - name: conventional-prefix
