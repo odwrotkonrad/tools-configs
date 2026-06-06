@@ -10,7 +10,7 @@ validate-docsgen:
     - curl -fsSL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
   script:
-    - make docs
+    - make run-repo-gen-files
     - git diff --exit-code
 
 test-scripts:
@@ -20,4 +20,4 @@ test-scripts:
     - apt-get update && apt-get install -y --no-install-recommends make
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
   script:
-    - make test
+    - make run-repo-tests

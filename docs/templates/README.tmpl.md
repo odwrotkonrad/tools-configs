@@ -30,3 +30,9 @@ Dashboard for host CPU, memory, disk and network metrics.
 ![Host system dashboard](docs/readme/images/grafana-host-dashboard-pt-1.png)
 
 [recording](docs/readme/recordings/grafana-host-dashboard.gif) · [more](docs/readme/images/grafana-host-dashboard-pt-2.png)
+
+## ☢️ Danger Zone - Loading Configs ☢️
+
+Loading configuration directly modifies the OS, including system, non-user files. If you find anything of interest, prefer copying these pieces into your own config.
+
+[Loading Configs](docs/readme/loading-configuration.md)

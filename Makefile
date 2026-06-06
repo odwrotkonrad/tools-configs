@@ -1,44 +1,40 @@
 #[≟] Project's Makefile
-.PHONY: docs load_configuration install_git_hooks reload_services clean_broken_links test once on_change FORCE
+WRAPPERS := run-sync run-repo-gen-files
+COMMANDS := run-repo-tests run-host-upsert-configs run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links
+FILES := docs/data/dirs.yml README.md
+.PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
 
-#[≟] run the test suite under the same interpreter as the script shebangs
-test:
-	/usr/local/bin/python3.14 -m pytest tests/scripts/python
+#[…] wrappers
+run-sync: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
 
-#[≟] generate every documentation file
-docs: docs/data/dirs.yml README.md
+run-repo-gen-files: $(FILES)
 
-#[≟] repo directory tree doc
-docs/data/dirs.yml: FORCE
-	./root-ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > $@
+#[⫶]
 
-#[≟] README rendered from its markdown template
-README.md: FORCE
-	PYTHONPATH=root-ln/usr/local/scripts/python ./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
-
-FORCE:
-
-#[≟] install configuration onto a host
-load_configuration:
+#[…] commands
+run-host-upsert-configs:
 	sudo $(CURDIR)/root-ln/usr/local/scripts/shell/s-rt-load-configs
 
-#[≟] install git hooks from merged lefthook config (user scope ~/.config/lefthook + repo scope ./lefthook.yml)
-install_git_hooks:
+run-host-delete-broken-links:
+	sudo $(CURDIR)/root-ln/usr/local/scripts/shell/s-rt-clean-broken-links
+
+run-repo-tests:
+	/usr/local/bin/python3.14 -m pytest tests/scripts/python
+
+run-repo-upsert-git-hooks:
 	lefthook install --force
 
 #[≟] reload running service launchagents
-reload_services:
+run-host-restart-services:
 	./root-ln/usr/local/scripts/shell/s-rt-reload-services
 
-#[≟] remove broken symlinks left in the system by renamed/deleted repo files
-clean_broken_links:
-	sudo $(CURDIR)/root-ln/usr/local/scripts/shell/s-rt-clean-broken-links
+#[⫶]
 
-#[…] wrappers
+#[…] files
+docs/data/dirs.yml:
+	./root-ln/usr/local/scripts/shell/s-rt-generate-yaml-dir-tree > $@
 
-#[≟] one-time host setup: load configuration and install git hooks
-once: load_configuration install_git_hooks
+README.md:
+	PYTHONPATH=root-ln/usr/local/scripts/python ./root-ln/usr/local/scripts/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
 
-#[≟] re-sync configs into the system and prune symlinks left dangling by renames
-on_change: load_configuration clean_broken_links
 #[⫶]

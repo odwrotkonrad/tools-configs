@@ -4,7 +4,7 @@ extends:
 pre-commit:
   jobs:
     - name: docsgen
-      run: make docs && git add docs/data/dirs.yml README.md
+      run: make run-repo-gen-files && git add docs/data/dirs.yml README.md
 
     - name: ruff-scripts
       glob: "root-ln/usr/local/scripts/python/s-*"
@@ -13,9 +13,9 @@ pre-commit:
 post-commit:
   jobs:
     - name: reload-config
-      run: make on_change
+      run: make run-sync
 
 pre-push:
   jobs:
     - name: pytest
-      run: make test
+      run: make run-repo-tests
