@@ -10,7 +10,7 @@
 {{ f.content }}```
 
 {% for uri, desc in f.frontmatter.references.items() %}
-- [{{ uri }}]({{ uri }}) — {{ desc }}
+- [{{ uri }}]({{ uri }}) - {{ desc }}
 {% endfor %}
 
 ## Observability
