@@ -3,8 +3,8 @@ extends:
 
 pre-commit:
   jobs:
-    - name: generate-dirs
-      run: make docs && git add docs/data/dirs.yml
+    - name: docsgen
+      run: make docs && git add docs/data/dirs.yml README.md
 
     - name: ruff-scripts
       glob: "root-ln/usr/local/scripts/python/s-*"
