@@ -1,4 +1,4 @@
-## **Config**uration file**s**
+## Purpose
 
 To maintain a stateful configuration of a system and tools.
 

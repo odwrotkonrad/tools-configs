@@ -1,4 +1,6 @@
-{{ load('../readme/philosophy.md').content }}
+## **Config**uration file**s**
+
+{{ load('../readme/purpose.md').content }}
 {% set f = load('../tools-inventory-index.yml') %}
 ## {{ f.frontmatter.title }}
 

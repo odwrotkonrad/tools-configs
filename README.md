@@ -1,5 +1,7 @@
 ## **Config**uration file**s**
 
+## Purpose
+
 To maintain a stateful configuration of a system and tools.
 
 Optimized for a reader, future reference and not frequent, regular software updates to facilitate config options review:
