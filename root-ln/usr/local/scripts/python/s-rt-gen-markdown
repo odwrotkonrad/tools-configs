@@ -14,14 +14,12 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import TemplateError
 from jinja2 import select_autoescape
-from s_rt_scripts_lib.errors import ERR_ARGS
-from s_rt_scripts_lib.errors import ERR_CONFIG
-from s_rt_scripts_lib.errors import ERR_CONFIG_NOT_FOUND
+from s_rt_scripts_lib import errors as err
 import yaml
 
 # […] constants
-ERR_TEMPLATE_NOT_FOUND = ERR_CONFIG_NOT_FOUND
-ERR_RENDER = ERR_CONFIG
+ERR_TEMPLATE_NOT_FOUND = err.ERR_CONFIG_NOT_FOUND
+ERR_RENDER = err.ERR_CONFIG
 FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.DOTALL)
 # [⫶]
 
@@ -80,7 +78,7 @@ def main():
         sys.exit(0)
 
     if len(args) != 1:
-        sys.exit(ERR_ARGS)
+        sys.exit(err.ERR_ARGS)
 
     template_path = Path(args[0])
     if not template_path.is_file():

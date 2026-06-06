@@ -18,8 +18,8 @@ import sys
 from pydantic import BaseModel
 from pydantic import RootModel
 import requests
+from s_rt_scripts_lib import errors as err
 from s_rt_scripts_lib.config import load_yaml
-from s_rt_scripts_lib.errors import ERR_ARGS
 import yaml
 
 # […] constants
@@ -104,7 +104,7 @@ def main():
         print(__doc__, end="")
         sys.exit(0)
     if len(args) != 1 or args[0] not in TERMINALS:
-        sys.exit(ERR_ARGS)
+        sys.exit(err.ERR_ARGS)
     terminal = args[0]
 
     cfg = load_yaml(Path(DEFAULT_CONFIG), Config)
