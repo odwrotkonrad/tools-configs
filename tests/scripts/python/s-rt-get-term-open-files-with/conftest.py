@@ -14,10 +14,14 @@ def fake_response(url, timeout=None):  # noqa: ARG001
 @pytest.fixture
 def term_script(load_script, mocker, tmp_path):
     """term_script module with a tmp cache and the mock terminal config."""
-    module = load_script("s-rt-gen-term-open-files-with", alias="term_script")
+    module = load_script("s-rt-get-term-open-files-with", alias="term_script")
     cache = tmp_path / "linguist"
     mocker.patch.object(module, "CACHE_DIR", cache)
-    mocker.patch.object(module, "DEFAULT_CONFIG", str(MOCK / "term.yml"))
+    mocker.patch.object(
+        module.Config,
+        "custom_paths",
+        classmethod(lambda cls: [MOCK / "term.yml"]),
+    )
     module.cache_dir = cache
     return module
 

@@ -47,7 +47,7 @@ alias a-rt-search-files-output-sort-lex+='fn-rt-rg --sort=path '
   local terminal=any ext opener
   [[ $TERM_PROGRAM == vscode ]] && terminal=vscode
   [[ $TERM == xterm-kitty ]] && terminal=kitty
-  s-rt-gen-term-open-files-with $terminal | while IFS== read -r ext opener; do
+  s-rt-get-term-open-files-with $terminal | while IFS== read -r ext opener; do
     alias -s -- "$ext"="$opener"
   done
 }

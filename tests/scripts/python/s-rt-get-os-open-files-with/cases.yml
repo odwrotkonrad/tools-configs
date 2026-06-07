@@ -44,7 +44,7 @@
   exit: 11
 
 - name: err_missing_config
-  args: [/nonexistent/path/to/config.yml]
+  no_config: true
   exit: 13
 
 - name: err_invalid_config_syntax

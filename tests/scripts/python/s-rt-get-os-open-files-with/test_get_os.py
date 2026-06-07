@@ -7,5 +7,5 @@ CASES = load_cases(__file__, "cases.yml")
 
 
 @cases(CASES)
-def test_case(os_script, capsys, case, tmp_path):
-    run_case(os_script, capsys, case, tmp_path)
+def test_case(os_script, capsys, case, tmp_path, mocker):
+    run_case(os_script, capsys, case, tmp_path, mocker)

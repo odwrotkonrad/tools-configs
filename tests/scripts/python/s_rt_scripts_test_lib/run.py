@@ -5,14 +5,17 @@ import pytest
 import yaml
 
 
+# […] 🤖🤖
 def run(module, argv):
     module.sys.argv = [module.__name__, *argv]
     if inspect.signature(module.main).parameters:
-        out, error = module.main(
-            *module.lib_ipt.validate_input(module.Parameters, argv)
-        )
+        input, error = module.Input.validate_input(argv)
+        out = None
+        if not error:
+            out, error = module.main(input)
         if error:
-            print(module.Errors.message(error), file=module.sys.stderr)
+            errors = getattr(module, "Errors", module.lib_err.Errors)
+            print(errors.message(error), file=module.sys.stderr)
             module.sys.exit(error.code)
         else:
             print(out, end="")
@@ -45,17 +48,31 @@ def assert_output(actual_lines, expected_lines):
         assert match_line(actual, expected), (actual, expected)
 
 
-def run_case(script, capsys, case, tmp_path):
-    args = list(case.get("args", []))
-    if "config" in case or "config_raw" in case:
-        cfg = tmp_path / "config.yml"
-        cfg.write_text(
-            case["config_raw"]
-            if "config_raw" in case
-            else yaml.safe_dump(case["config"])
-        )
-        args = [str(cfg), *args]
+def stage_config(script, mocker, tmp_path, case):
+    """Point the script's custom_paths at a tmp file holding the case config."""
+    custom = tmp_path / "custom"
+    custom.mkdir(parents=True, exist_ok=True)
+    cfg = custom / script.Config.NAME
+    cfg.write_text(
+        case["config_raw"]
+        if "config_raw" in case
+        else yaml.safe_dump(case["config"])
+    )
+    mocker.patch.object(
+        script.Config, "custom_paths", classmethod(lambda cls: [cfg])
+    )
 
+
+def run_case(script, capsys, case, tmp_path, mocker):
+    if "config" in case or "config_raw" in case:
+        stage_config(script, mocker, tmp_path, case)
+    elif case.get("no_config"):
+        missing = tmp_path / "custom" / script.Config.NAME
+        mocker.patch.object(
+            script.Config, "custom_paths", classmethod(lambda cls: [missing])
+        )
+
+    args = list(case.get("args", []))
     code = case.get("exit", 0)
     if code == 0:
         run(script, args)
@@ -66,3 +83,6 @@ def run_case(script, capsys, case, tmp_path):
         with pytest.raises(SystemExit) as exc:
             run(script, args)
         assert exc.value.code == code
+
+
+# [⫶] 🤖🤖

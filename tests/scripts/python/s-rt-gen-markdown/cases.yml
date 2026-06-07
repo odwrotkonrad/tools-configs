@@ -10,11 +10,6 @@
   stdout: frontmatter.out.md
   _supporting_files:
     - frontmatter.data.yml
-
-- name: ok_schema
-  input: [--json-schema]
-  exit: 0
-  stdout: schema.out.json
 #[⫶] positive
 
 #[…] error

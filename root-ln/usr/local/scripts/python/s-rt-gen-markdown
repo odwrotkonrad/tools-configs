@@ -7,8 +7,16 @@ Render a Jinja markdown template to stdout:
 2. render it injecting included files
 3. print the result to stdout
 
-Interfaces with:
-- files: template, additional files loaded in the template
+Examples:
+
+    $ s-rt-gen-markdown README.tmpl.md
+    $ s-rt-gen-markdown --help
+
+Upstream Interfaces with:
+- `> <file>` — intended consumer of the rendered output (e.g. README.md)
+
+Downstream Interfaces with:
+- files: template, additional files referenced within the template
 
 Exit Codes:
 - 21 render error
@@ -16,6 +24,7 @@ Exit Codes:
 - 13 template not found
 """
 
+from collections.abc import Callable
 from pathlib import Path
 import re
 import sys
@@ -29,7 +38,8 @@ from jinja2 import select_autoescape
 from pydantic import BaseModel
 from pydantic import field_validator
 from s_rt_scripts_lib import errors as lib_err
-from s_rt_scripts_lib import input as lib_ipt
+from s_rt_scripts_lib import input as lib_input
+from s_rt_scripts_lib import parameters as lib_param
 import yaml
 
 
@@ -49,11 +59,19 @@ class Errors(lib_err.Errors):
 
 # […] types
 type TemplatePathStr = str
+"""a path to a Jinja template file (e.g. `README.tmpl.md`)."""
+
 type RelativeIncludePathStr = str
+"""a path loaded from within a template, relative to its dir."""
+
+type BodyStr = str
+"""a file's content after the frontmatter header."""
+
 type RenderedTemplateStr = str
-type Body = str
-"""file content after the frontmatter header."""
+"""the markdown produced by rendering a template."""
+
 type ReferenceNoteStr = str
+"""a note describing a referenced include path."""
 
 
 class Frontmatter(TypedDict, total=False):
@@ -68,15 +86,11 @@ class Frontmatter(TypedDict, total=False):
 
 
 # […] contract
-class Action(lib_ipt.BaseAction):
-    """The actions the script supports: the base actions plus RENDER."""
-
+class Action(lib_param.BaseAction):
     RENDER = "render"
 
 
 class Arguments(BaseModel):
-    """The validated positional arguments."""
-
     template: TemplatePathStr
 
     @field_validator("template")
@@ -84,30 +98,34 @@ class Arguments(BaseModel):
     def template_is_file(cls, value: TemplatePathStr) -> TemplatePathStr:
         """Reject a template path that is not an existing file."""
         if not Path(value).is_file():
-            raise ValueError(lib_err.Error(Errors.FILE_NOT_FOUND, path=value))
+            raise lib_err.Error(Errors.FILE_NOT_FOUND, path=value)
         return value
 
 
-class Parameters(lib_ipt.BaseParameters):
-    """The validated invocation: arguments plus the base options and grammar."""
+class Parameters(lib_param.BaseParameters):
+    arguments: Arguments | None = None
+    ARGUMENTS: ClassVar[type[Arguments]] = Arguments
+    SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
+        *lib_param.BaseParameters.SYNOPSIS,
+        lib_param.Pattern(options=set(), args=(1, 1), action=Action.RENDER),
+    ]
 
-    arguments: Arguments
-    SYNOPSIS: ClassVar[lib_ipt.Synopsis] = (
-        lib_ipt.BASE_SCRIPT_SYNOPSIS
-        | lib_ipt.Synopsis(
-            [lib_ipt.Pattern(options=set(), args=(1, 1), action=Action.RENDER)]
-        )
-    )
+
+class Input(lib_input.BaseInput):
+    PARAMS: ClassVar[type[Parameters]] = Parameters
+
+    params: Parameters
+    config: None = None
 
 
 # [⫶] contract
 
 
-# […] implementation
+# […] 🤖🤖 implementation
 class Attrs(dict):
     """Dict with attribute access; nested mappings wrap recursively."""
 
-    def __getattr__(self, name) -> object:
+    def __getattr__(self, name: str) -> object:
         """Return the item `name`, wrapping a nested mapping as Attrs."""
         try:
             value = self[name]
@@ -119,13 +137,13 @@ class Attrs(dict):
 class Document:
     """A parsed template: its frontmatter as Attrs and its body content."""
 
-    def __init__(self, frontmatter: Frontmatter, content: Body) -> None:
+    def __init__(self, frontmatter: Frontmatter, content: BodyStr) -> None:
         """Wrap the parsed frontmatter for attribute access; keep the body."""
         self.frontmatter = Attrs(frontmatter or {})
         self.content = content
 
 
-def split_frontmatter(text: Body) -> tuple[Frontmatter, Body]:
+def split_frontmatter(text: BodyStr) -> tuple[Frontmatter, BodyStr]:
     """Split a leading `---`-delimited YAML header from the body content."""
     match = re.match(r"\A---\n(.*?)\n---\n?(.*)\Z", text, re.DOTALL)
     if not match:
@@ -133,7 +151,7 @@ def split_frontmatter(text: Body) -> tuple[Frontmatter, Body]:
     return yaml.safe_load(match.group(1)) or {}, match.group(2)
 
 
-def loader(root: Path):
+def loader(root: Path) -> Callable[[RelativeIncludePathStr], Document]:
     """Return a `load(rel)` template global reading files relative to `root`."""
 
     def load(rel: RelativeIncludePathStr) -> Document:
@@ -170,27 +188,25 @@ def render(
         return None, lib_err.Error(Errors.RENDER, path=template, reason=exc)
 
 
-# [⫶] implementation
+# [⫶] 🤖🤖 implementation
 
 
 # […] main
 def main(
-    action: Action, config: None, params: Parameters
+    input: Input,
 ) -> tuple[str | None, lib_err.Error | None]:
     """[≟] Dispatch the resolved action to its handler."""
-    match action:
+    match input.params.action:
         case Action.USAGE:
-            return lib_ipt.usage(__doc__), None
-        case Action.SCHEMA:
-            return lib_ipt.schema(Parameters), None
-        case Action.ABORT:
-            return None, params
+            return lib_input.usage(__doc__), None
         case Action.RENDER:
-            return render(params.arguments.template)
+            return render(input.params.arguments.template)
 
 
 if __name__ == "__main__":
-    out, error = main(*lib_ipt.validate_input(Parameters, sys.argv[1:]))
+    input, error = Input.validate_input(sys.argv[1:])
+    if not error:
+        out, error = main(input)
     if error:
         print(Errors.message(error), file=sys.stderr)
         sys.exit(error.code)
