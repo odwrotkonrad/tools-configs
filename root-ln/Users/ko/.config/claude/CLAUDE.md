@@ -24,7 +24,7 @@ Non project scoped configuration files must be edited in the designated `~/proje
 
 Do not ask questions. Use common sense to fulfill user asks! Read documentation when in doubt.
 
-> **ALWAYS** prefer writing temporary scripts as files over multiline shell commands. **NEVER** inline a multiline script into a Bash command. Store every throwaway verification, migration, or scratch script as a file in `~/projects/configs/.claude/tmp/` (gitignored), then run it. **NEVER** remove these scripts after running them — leave them in place.
+> **ALWAYS** prefer writing temporary scripts as files over multiline shell commands. **NEVER** inline a multiline script into a Bash command. Store every throwaway verification, migration, or scratch script as a file in the project root's `.user/claude/scripts/` (create one if it does not exist), then run it. **NEVER** remove these scripts after running them — leave them in place.
 
 When using Bash:
 
