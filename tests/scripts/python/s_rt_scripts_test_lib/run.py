@@ -8,12 +8,14 @@ import yaml
 def run(module, argv):
     module.sys.argv = [module.__name__, *argv]
     if inspect.signature(module.main).parameters:
-        try:
-            action, _, params = module.parse_input(module.Parameters, argv)
-            module.main(action, params)
-        except module.err.ExitError as e:
-            print(e.message, file=module.sys.stderr)
-            module.sys.exit(e.code)
+        out, error = module.main(
+            *module.lib_ipt.validate_input(module.Parameters, argv)
+        )
+        if error:
+            print(module.Errors.message(error), file=module.sys.stderr)
+            module.sys.exit(error.code)
+        else:
+            print(out, end="")
     else:
         module.main()
 

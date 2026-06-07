@@ -16,7 +16,6 @@ Exit Codes:
 - 13 template not found
 """
 
-from enum import StrEnum
 from pathlib import Path
 import re
 import sys
@@ -29,19 +28,22 @@ from jinja2 import TemplateError
 from jinja2 import select_autoescape
 from pydantic import BaseModel
 from pydantic import field_validator
-from s_rt_scripts_lib import errors as err
-from s_rt_scripts_lib.cli import BASE_SCRIPT_SYNOPSIS
-from s_rt_scripts_lib.cli import Pattern
-from s_rt_scripts_lib.cli import ScriptBaseOptions
-from s_rt_scripts_lib.cli import Synopsis
-from s_rt_scripts_lib.cli import parse_input
-from s_rt_scripts_lib.cli import schema
-from s_rt_scripts_lib.cli import usage
+from s_rt_scripts_lib import errors as lib_err
+from s_rt_scripts_lib import input as lib_ipt
 import yaml
 
+
+# […] 🤖
 # […] errors
-ERR_RENDER = 21
-err.ERRORS = {ERR_RENDER: "render failed: {path}: {reason}"} | err.ERRORS
+class Errors(lib_err.Errors):
+    """The script's exit-code contract: the `1x` band plus the `2x` domain."""
+
+    RENDER = 21
+    MESSAGES = lib_err.Errors.MESSAGES | {
+        RENDER: "render failed: {path}: {reason}"
+    }
+
+
 # [⫶] errors
 
 
@@ -66,11 +68,9 @@ class Frontmatter(TypedDict, total=False):
 
 
 # […] contract
-class Action(StrEnum):
-    """The actions the script supports."""
+class Action(lib_ipt.BaseAction):
+    """The actions the script supports: the base actions plus RENDER."""
 
-    USAGE = "usage"
-    SCHEMA = "schema"
     RENDER = "render"
 
 
@@ -84,17 +84,19 @@ class Arguments(BaseModel):
     def template_is_file(cls, value: TemplatePathStr) -> TemplatePathStr:
         """Reject a template path that is not an existing file."""
         if not Path(value).is_file():
-            raise err.ExitError(err.ERR_FILE_NOT_FOUND, path=value)
+            raise ValueError(lib_err.Error(Errors.FILE_NOT_FOUND, path=value))
         return value
 
 
-class Parameters(BaseModel):
-    """The validated invocation: arguments, options, and the input->action grammar."""
+class Parameters(lib_ipt.BaseParameters):
+    """The validated invocation: arguments plus the base options and grammar."""
 
     arguments: Arguments
-    options: ScriptBaseOptions = ScriptBaseOptions()
-    SYNOPSIS: ClassVar[Synopsis] = BASE_SCRIPT_SYNOPSIS | Synopsis(
-        [Pattern(options=set(), args=(1, 1), action=Action.RENDER)]
+    SYNOPSIS: ClassVar[lib_ipt.Synopsis] = (
+        lib_ipt.BASE_SCRIPT_SYNOPSIS
+        | lib_ipt.Synopsis(
+            [lib_ipt.Pattern(options=set(), args=(1, 1), action=Action.RENDER)]
+        )
     )
 
 
@@ -145,8 +147,10 @@ def loader(root: Path):
     return load
 
 
-def render(template: TemplatePathStr) -> RenderedTemplateStr:
-    """Render the Jinja template at `template`, raising ERR_RENDER on failure.
+def render(
+    template: TemplatePathStr,
+) -> tuple[RenderedTemplateStr | None, lib_err.Error | None]:
+    """Render the Jinja template at `template`, returning ERR_RENDER on failure.
 
     Interfaces with:
       - files: template, additional files loaded in the template
@@ -161,32 +165,35 @@ def render(template: TemplatePathStr) -> RenderedTemplateStr:
     )
     env.globals |= {"load": loader(path.parent)}
     try:
-        return env.get_template(path.name).render()
+        return env.get_template(path.name).render(), None
     except (TemplateError, OSError, yaml.YAMLError) as exc:
-        raise err.ExitError(ERR_RENDER, path=template, reason=exc) from None
+        return None, lib_err.Error(Errors.RENDER, path=template, reason=exc)
 
 
 # [⫶] implementation
 
 
 # […] main
-def main(action: Action, params: Parameters) -> None:
-    """Dispatch the resolved action to its handler."""
+def main(
+    action: Action, config: None, params: Parameters
+) -> tuple[str | None, lib_err.Error | None]:
+    """[≟] Dispatch the resolved action to its handler."""
     match action:
         case Action.USAGE:
-            out = usage(__doc__)
+            return lib_ipt.usage(__doc__), None
         case Action.SCHEMA:
-            out = schema(Parameters)
+            return lib_ipt.schema(Parameters), None
+        case Action.ABORT:
+            return None, params
         case Action.RENDER:
-            out = render(params.arguments.template)
-    print(out, end="")
+            return render(params.arguments.template)
 
 
 if __name__ == "__main__":
-    try:
-        action, _, params = parse_input(Parameters, sys.argv[1:])
-        main(action, params)
-    except err.ExitError as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(e.code)
+    out, error = main(*lib_ipt.validate_input(Parameters, sys.argv[1:]))
+    if error:
+        print(Errors.message(error), file=sys.stderr)
+        sys.exit(error.code)
+    print(out, end="")
 # [⫶] main
+# [⫶] 🤖

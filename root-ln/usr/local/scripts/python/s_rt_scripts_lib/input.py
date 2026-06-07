@@ -1,22 +1,28 @@
-from enum import StrEnum
 import json
 import re
-import sys
+from typing import ClassVar
 
 from pydantic import BaseModel
 from pydantic import RootModel
 from pydantic import ValidationError
 
 from s_rt_scripts_lib import errors as err
+from s_rt_scripts_lib.config import get_config as get_config
 
 OPT = re.compile(r"^-(\w)$|^--([\w-]+)$")
 
 
-class BaseAction(StrEnum):
-    """Actions every script carries: --help/-h and --json-schema."""
+# […] 🤖🤖
+class BaseAction:
+    """Actions every script carries: --help/-h, --json-schema, and abort.
+
+    Scripts subclass to add their domain actions; `validate_input` returns
+    ABORT on a rejected invocation.
+    """
 
     USAGE = "usage"
     SCHEMA = "schema"
+    ABORT = "abort"
 
 
 class ScriptBaseOptions(BaseModel):
@@ -67,6 +73,17 @@ BASE_SCRIPT_SYNOPSIS = Synopsis(
 )
 
 
+class BaseParameters(BaseModel):
+    """The invocation shape every script carries; scripts subclass.
+
+    Provides the base options and the base input->action grammar; a subclass
+    adds its `arguments` and merges its own patterns into `SYNOPSIS`.
+    """
+
+    options: ScriptBaseOptions = ScriptBaseOptions()
+    SYNOPSIS: ClassVar[Synopsis] = BASE_SCRIPT_SYNOPSIS
+
+
 def split_argv(argv):
     """Bucket argv into an options set and a positional argument list."""
     options, args = set(), []
@@ -79,24 +96,30 @@ def split_argv(argv):
 
 
 def resolve(synopsis, argv):
-    """Resolve argv against the synopsis to (action, options, args).
+    """Resolve argv against the synopsis to (action, options, args, error).
 
-    Raises err.ExitError(ERR_ARGS, args=argv) when no pattern matches.
+    Returns err.Error(ERR_ARGS, args=argv) as the fourth element when no
+    pattern matches; the action is then BaseAction.ABORT.
     """
     options, args = split_argv(argv)
     action = synopsis.action(frozenset(options), len(args))
     if action is None:
-        raise err.ExitError(err.ERR_ARGS, args=argv)
-    return action, options, args
+        return (
+            BaseAction.ABORT,
+            options,
+            args,
+            err.Error(err.Errors.ARGS, args=argv),
+        )
+    return action, options, args, None
 
 
 def build_params(model, options, args):
     """Construct a Parameters model from the resolved invocation.
 
     Maps positional `args` onto the `arguments` submodel's fields in order, and
-    `options` flags onto the `options` submodel when the model declares one. A
-    shape mismatch raises err.ExitError(ERR_ARGS); a field validator's
-    err.ExitError propagates with its carried code and context.
+    `options` flags onto the `options` submodel when the model declares one.
+    Returns (params, None); a ValidationError from a field validator is raised
+    here and caught by validate_input.
     """
     fields = model.model_fields
     arg_names = list(fields["arguments"].annotation.model_fields)
@@ -104,25 +127,43 @@ def build_params(model, options, args):
     if "options" in fields:
         opt_names = set(fields["options"].annotation.model_fields)
         kwargs["options"] = {n: True for n in options if n in opt_names}
-    try:
-        return model(**kwargs)
-    except ValidationError:
-        raise err.ExitError(err.ERR_ARGS, args=args) from None
+    return model(**kwargs)
 
 
-def parse_input(model, argv, config=None):
+def from_validation_error(exc, args):
+    """Recover the domain err.Error a validator carried, else ERR_ARGS.
+
+    A field validator signals a domain failure by raising
+    ValueError(err.Error(...)); pydantic wraps it, and its payload surfaces
+    here. When no such payload is present, fall back to ERR_ARGS.
+    """
+    for detail in exc.errors():
+        cause = (detail.get("ctx") or {}).get("error")
+        payload = getattr(cause, "args", (None,))[0] if cause else None
+        if isinstance(payload, err.Error):
+            return payload
+    return err.Error(err.Errors.ARGS, args=args)
+
+
+def validate_input(model, argv, config=None):
     """Resolve argv to (action, config, params) via model.SYNOPSIS.
 
-    `config` is an optional zero-arg builder for the Config instance (loads files
-    / env); when omitted the config slot stays None. `model` is the Parameters
-    class carrying SYNOPSIS. Raises err.ExitError on a bad invocation or a failed
-    argument validation.
+    `config` is an optional zero-arg builder for the Config instance; when
+    omitted the config slot stays None. On a bad invocation or a failed field
+    validation the action is BaseAction.ABORT and the params slot carries the
+    resolved err.Error, so main's ABORT arm surfaces it.
     """
-    action, options, args = resolve(model.SYNOPSIS, argv)
+    action, options, args, error = resolve(model.SYNOPSIS, argv)
+    if error is not None:
+        return BaseAction.ABORT, None, error
     if not args:
         return action, None, None
     cfg = config() if config is not None else None
-    return action, cfg, build_params(model, options, args)
+    try:
+        params = build_params(model, options, args)
+    except ValidationError as exc:
+        return BaseAction.ABORT, None, from_validation_error(exc, args)
+    return action, cfg, params
 
 
 def usage(doc):
@@ -137,15 +178,4 @@ def schema(*models):
     )
 
 
-def dispatch_meta(action, doc, *models):
-    """Handle the generic actions: print usage/schema and exit, else return.
-
-    Prints to stdout and exits 0 for the generic USAGE/SCHEMA actions; for any
-    other action it returns so the caller dispatches its own actions.
-    """
-    if action == BaseAction.USAGE:
-        print(usage(doc))
-        sys.exit(0)
-    if action == BaseAction.SCHEMA:
-        print(schema(*models))
-        sys.exit(0)
+# [⫶] 🤖🤖

@@ -35,8 +35,8 @@ paths:
 **Do:**
 
 - **Do** validate input before invoking the `main` function.
-- **Do** validate input with pydantic models defined above the code: `Parameters` (holding `Arguments`, the `SYNOPSIS` grammar, and, when the script takes flags, `Options`) and `Config` (when the script uses a config file).
-- **Do** declare an `Action` enum carrying the standard `USAGE` (`--help`/`-h`) and `SCHEMA` (`--json-schema`, prints the JSON Schema of the contract models) alongside its own actions.
+- **Do** validate input with pydantic models defined above the code: a `Parameters(lib_ipt.BaseParameters)` subclass (the base carries the standard `options` and the base `SYNOPSIS`; the subclass adds `arguments`, merges its own patterns via `lib_ipt.BASE_SCRIPT_SYNOPSIS | ...`, and, when the script takes flags, its own `Options`) and `Config` (when the script uses a config file).
+- **Do** declare an `Action(lib_ipt.BaseAction)` subclass adding its own actions; the base carries `USAGE` (`--help`/`-h`), `SCHEMA` (`--json-schema`, prints the JSON Schema of the contract models), and `ABORT` (returned by `validate_input` on a rejected invocation).
 - **Do** declare a `Config` model for the validated config file, when the script uses a config file.
 - **Do** store config in a system location and a user location, merging the two with the user config overriding, when the script uses a config file.
 - **Do** use pydantic's validators (e.g. `field_validator`, `model_validator`) to validate and prepare models; a validator rejecting a value raises (pydantic's contract) and `validate_input` translates it into an `Error` (e.g. `ERR_FILE_NOT_FOUND` instead of the generic `ERR_ARGS`), so the rest of the script stays exception-free.
@@ -51,11 +51,11 @@ paths:
 **Do:**
 
 - **Do** treat exit codes as the script's error contract, banded by origin.
-- **Do** reuse the common codes from the lib — `usr/local/scripts/python/s_rt_scripts_lib/errors.py` in the `1x` band (`ERR_ARGS`, `ERR_CONFIG`, `ERR_FILE_NOT_FOUND`).
+- **Do** reuse the common codes from the lib `Errors` class — `usr/local/scripts/python/s_rt_scripts_lib/errors.py` in the `1x` band (`Errors.ARGS`, `Errors.CONFIG`, `Errors.FILE_NOT_FOUND`).
 - **Do** define a script's own domain errors in the `2x` band, numbering each script from `21`.
 - **Do** list every code under `Exit Codes:` in the module docstring.
-- **Do** build the script's `ERRORS` map as a new dict from `lib_err.ERRORS | {domain codes}` (the script's own entries taking precedence); never reassign or mutate `lib_err.ERRORS`.
-- **Do** return an `Error` (carrying the exit code and the context, e.g. `{path}`) from where the failure is detected (a handler, a helper), alongside the output; the gate resolves its message against the script's `ERRORS` map.
+- **Do** declare the script's contract as a local `Errors(lib_err.Errors)` subclass: add the `2x` domain codes and extend `MESSAGES` as a new dict from `lib_err.Errors.MESSAGES | {domain codes}` (the script's own entries taking precedence); never reassign or mutate `lib_err.Errors.MESSAGES`.
+- **Do** return an `Error` (carrying the exit code and the context, e.g. `{path}`) from where the failure is detected (a handler, a helper), alongside the output; the gate resolves its message via the script's `Errors.message(error)`.
 
 **Don't:**
 
@@ -109,8 +109,9 @@ from s_rt_scripts_lib import errors as lib_err
 from s_rt_scripts_lib import input as lib_ipt
 
 # […] errors
-ERR_NO_ENTRY = 21
-ERRORS = lib_err.ERRORS | {ERR_NO_ENTRY: "entry not found: {entry}"}
+class Errors(lib_err.Errors):
+    NO_ENTRY = 21
+    MESSAGES = lib_err.Errors.MESSAGES | {NO_ENTRY: "entry not found: {entry}"}
 # [⫶] errors
 
 
@@ -122,9 +123,7 @@ type EntryStr = str
 
 
 # […] contract
-class Action(StrEnum):
-    USAGE = "usage"
-    SCHEMA = "schema"
+class Action(lib_ipt.BaseAction):
     GET = "get"
 
 
@@ -140,16 +139,13 @@ class Arguments(BaseModel):
     @classmethod
     def entry_named(cls, value: EntryNameStr) -> EntryNameStr:
         if not value:
-            raise lib_err.Error(lib_err.ERR_ARGS, arg="entry")   # validate_input -> (_, error)
+            raise ValueError(lib_err.Error(Errors.ARGS, arg="entry"))
         return value
 
 
-class Parameters(BaseModel):
+class Parameters(lib_ipt.BaseParameters):
     arguments: Arguments
-    SYNOPSIS: ClassVar[lib_ipt.Synopsis] = lib_ipt.Synopsis([
-        lib_ipt.Pattern(options={"h"}, args=(0, 0), action=Action.USAGE),
-        lib_ipt.Pattern(options={"help"}, args=(0, 0), action=Action.USAGE),
-        lib_ipt.Pattern(options={"json-schema"}, args=(0, 0), action=Action.SCHEMA),
+    SYNOPSIS: ClassVar[lib_ipt.Synopsis] = lib_ipt.BASE_SCRIPT_SYNOPSIS | lib_ipt.Synopsis([
         lib_ipt.Pattern(options=set(), args=(2, 2), action=Action.GET),
     ])
 # [⫶] contract
@@ -161,7 +157,7 @@ def get(
 ) -> tuple[EntryStr | None, lib_err.Error | None]:
     """ Look up one entry by name."""
     if entry not in entries:
-        return None, lib_err.Error(ERR_NO_ENTRY, entry=entry)
+        return None, lib_err.Error(Errors.NO_ENTRY, entry=entry)
     return entries[entry], None
 # [⫶] implementation
 
@@ -176,6 +172,8 @@ def main(
             return lib_ipt.usage(__doc__), None
         case Action.SCHEMA:
             return lib_ipt.schema(Config, Parameters), None
+        case Action.ABORT:
+            return None, params
         case Action.GET:
             return get(params.arguments.entry, config.entries)
 
@@ -184,7 +182,7 @@ if __name__ == "__main__":
     config = lambda: lib_ipt.get_config("entries.yml", Config)
     out, error = main(*lib_ipt.validate_input(Parameters, sys.argv[1:], config))
     if error:
-        print(error.message(ERRORS), file=sys.stderr)
+        print(Errors.message(error), file=sys.stderr)
         sys.exit(error.code)
     print(out)
 # [⫶] main

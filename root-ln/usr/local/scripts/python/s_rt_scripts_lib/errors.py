@@ -1,32 +1,35 @@
-ERR_ARGS = 11
-ERR_CONFIG = 12
-ERR_FILE_NOT_FOUND = 13
-
-# […] default messages
-ERRORS = {
-    ERR_ARGS: "invalid arguments: {args}",
-    ERR_CONFIG: "invalid config: {path}: {reason}",
-    ERR_FILE_NOT_FOUND: "file not found: {path}",
-}
-# [⫶] default messages
-
-
-class ExitError(Exception):
-    """[≟] A failure carrying its exit code and context for a templated message.
-
-    `message` formats ERRORS[code] with the context, falling back to the bare
-    message (or the code) when a placeholder is missing.
-    """
+# […] 🤖🤖
+class Error:
+    """A returned error carrying its exit code and context."""
 
     def __init__(self, code: int, **context: object) -> None:
-        super().__init__(code)
         self.code = code
         self.context = context
 
-    @property
-    def message(self) -> str:
-        f_msg = ERRORS.get(self.code, str(self.code))
+
+class Errors:
+    """The exit-code contract: codes and their templated messages."""
+
+    ARGS = 11
+    CONFIG = 12
+    FILE_NOT_FOUND = 13
+
+    MESSAGES = {
+        ARGS: "invalid arguments: {args}",
+        CONFIG: "invalid config: {path}: {reason}",
+        FILE_NOT_FOUND: "file not found: {path}",
+    }
+
+    @classmethod
+    def message(cls, error: Error) -> str:
+        f_msg = cls.MESSAGES.get(error.code, str(error.code))
         try:
-            return f_msg.format(**self.context)
+            return f_msg.format(**error.context)
         except (KeyError, IndexError):
             return f_msg
+
+
+ERR_ARGS = Errors.ARGS
+ERR_CONFIG = Errors.CONFIG
+ERR_FILE_NOT_FOUND = Errors.FILE_NOT_FOUND
+# [⫶] 🤖🤖

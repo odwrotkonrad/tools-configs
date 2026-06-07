@@ -34,17 +34,17 @@
       "type": "string"
     }
   },
-  "description": "The validated invocation: arguments, options, and the input->action grammar.",
+  "description": "The validated invocation: arguments plus the base options and grammar.",
   "properties": {
-    "arguments": {
-      "$ref": "#/$defs/Arguments"
-    },
     "options": {
       "$ref": "#/$defs/ScriptBaseOptions",
       "default": {
         "help": false,
         "json_schema": false
       }
+    },
+    "arguments": {
+      "$ref": "#/$defs/Arguments"
     }
   },
   "required": [
