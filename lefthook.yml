@@ -4,11 +4,15 @@ extends:
 pre-commit:
   jobs:
     - name: docsgen
-      run: make run-repo-gen-files && git add docs/data/dirs.yml README.md
+      run: make run-repo-gen-files && git add docs/data/dirs.gen.md README.md
 
     - name: ruff-scripts
       glob: "root-ln/usr/local/scripts/python/s-*"
       run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
+
+    - name: mypy
+      glob: "root-ln/usr/local/scripts/python/**"
+      run: make run-repo-typecheck
 
 post-commit:
   jobs:
