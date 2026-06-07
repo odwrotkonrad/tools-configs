@@ -32,8 +32,4 @@ class Errors:
             return f_msg
 
 
-ERR_ARGS = Errors.ARGS
-ERR_CONFIG = Errors.CONFIG
-ERR_FILE_NOT_FOUND = Errors.FILE_NOT_FOUND
-ERR_NETWORK = Errors.NETWORK
 # [⫶] 🤖🤖

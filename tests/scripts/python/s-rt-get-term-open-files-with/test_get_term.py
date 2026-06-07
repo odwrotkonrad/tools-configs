@@ -16,8 +16,6 @@ LANGUAGES_URL = (
     "/master/lib/linguist/languages.yml"
 )
 
-ERR_NETWORK = err.ERR_NETWORK
-
 
 @cases(CASES)
 def test_case(term_script, capsys, case, tmp_path, mocker):
@@ -35,7 +33,7 @@ def test_missing_config(term_script, mocker):
     mocker.patch.object(
         term_script.Config, "custom_paths", classmethod(lambda cls: [missing])
     )
-    assert_exit(term_script, ["any"], err.ERR_FILE_NOT_FOUND)
+    assert_exit(term_script, ["any"], err.Errors.FILE_NOT_FOUND)
 
 
 def test_invalid_config(term_script, mocker, tmp_path):
@@ -44,7 +42,7 @@ def test_invalid_config(term_script, mocker, tmp_path):
     mocker.patch.object(
         term_script.Config, "custom_paths", classmethod(lambda cls: [bad])
     )
-    assert_exit(term_script, ["any"], err.ERR_CONFIG)
+    assert_exit(term_script, ["any"], err.Errors.CONFIG)
 
 
 def test_network_failure(term_script, mocker):
@@ -52,7 +50,7 @@ def test_network_failure(term_script, mocker):
         raise term_script.requests.RequestException("no host")
 
     mocker.patch("requests.get", side_effect=boom)
-    assert_exit(term_script, ["any"], ERR_NETWORK)
+    assert_exit(term_script, ["any"], err.Errors.NETWORK)
 
 
 BY_TYPE = {
