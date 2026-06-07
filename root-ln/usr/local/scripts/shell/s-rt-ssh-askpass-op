@@ -1,4 +1,4 @@
 #!/bin/bash
 
 name=$(echo "$1" | rg -o '/(\w+)\W*$' -r '$1')
-op read "op://Personal/ssh_$name/password"
+op read "op://ProgrammaticAccess/ssh_$name/password"

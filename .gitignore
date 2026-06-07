@@ -14,3 +14,5 @@
 # python bytecode cache (repo-local rule so `tree --gitignore` prunes it from docs/data/dirs.yml)
 __pycache__/
 .pytest_cache/
+
+/root-ln/etc/**/*local*

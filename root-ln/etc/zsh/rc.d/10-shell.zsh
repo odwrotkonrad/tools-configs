@@ -8,6 +8,7 @@ typeset -a opts_enabled=(
   cshnullglob
   extendedglob
   extendedhistory
+  histignorespace
   histlexwords
   histverify
   incappendhistorytime
@@ -80,7 +81,6 @@ typeset -a opts_disabled=(
   histfindnodups
   histignorealldups
   histignoredups
-  histignorespace
   histnofunctions
   histnostore
   histreduceblanks
