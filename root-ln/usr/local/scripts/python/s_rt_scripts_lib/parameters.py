@@ -7,16 +7,12 @@ from pydantic import model_validator
 from s_rt_scripts_lib import errors as err
 from s_rt_scripts_lib.options import ScriptBaseOptions
 
-OPT = re.compile(r"^-(\w)$|^--([\w-]+)$")
-
 
 # […] 🤖🤖
 class BaseAction:
-    """The base actions; subclasses add their own. NO_CONFIG never reads config."""
+    """The base actions; subclasses add their own."""
 
     USAGE = "usage"
-    ABORT = "abort"
-    NO_CONFIG = frozenset({USAGE})
 
 
 class Pattern(BaseModel):
@@ -34,7 +30,7 @@ class Pattern(BaseModel):
 class BaseParameters(BaseModel):
     """The invocation validated from argv; subclasses add `arguments`/`SYNOPSIS`."""
 
-    action: str = BaseAction.ABORT
+    action: str = BaseAction.USAGE
     options: ScriptBaseOptions = ScriptBaseOptions()
     ARGUMENTS: ClassVar[type[BaseModel] | None] = None
     SYNOPSIS: ClassVar[list[Pattern]] = [
@@ -58,7 +54,7 @@ class BaseParameters(BaseModel):
         options: set[str] = set()
         args: list[str] = []
         for tok in argv:
-            if m := OPT.match(tok):
+            if m := re.match(r"^-(\w)$|^--([\w-]+)$", tok):
                 options.add(m.group(1) or m.group(2))
             else:
                 args.append(tok)

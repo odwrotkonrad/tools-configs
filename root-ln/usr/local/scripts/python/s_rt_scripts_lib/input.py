@@ -28,7 +28,7 @@ class BaseInput(BaseModel):
             return data
         params = cls.PARAMS.model_validate(data)
         needs_config = (
-            cls.CONFIG is not None and params.action not in BaseAction.NO_CONFIG
+            cls.CONFIG is not None and params.action != BaseAction.USAGE
         )
         return {
             "params": params,
