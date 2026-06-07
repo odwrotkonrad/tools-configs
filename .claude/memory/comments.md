@@ -5,6 +5,6 @@ Label prefix `[symbol]`.
 - `⌖` where · `≟` what · `∵` why
 - `…` section start (named) · `⫶` section end (named) · repeat symbol to nest
 - inline `#[≟] ...` · block `#>[∵]` … `#/[∵]` · unlabeled = ignore
-- AI-generated: section named `🤖` (🤖🤖🤖 little human attention · 🤖🤖 moderate · 🤖 lots)
+- AI-generated: section named `🤖`, more 🤖 = wants more human review despite being AI-generated (🤖🤖🤖 a lot more · 🤖🤖 some more · 🤖 a little more); no mark = reviewed/trusted; default 🤖🤖, creator corrects
 
 Full spec & examples: [Commenting Convention](../../docs/readme/commenting-convention.md)

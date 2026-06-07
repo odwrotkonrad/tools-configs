@@ -14,7 +14,7 @@ Unlabeled comments are temporary or do not target readers and can be ignored.
 
 ### AI-Generated Content
 
-AI-generated content is wrapped in a section whose name is one or more 🤖, encoding the level of human attention: 🤖🤖🤖 little, 🤖🤖 moderate, 🤖 lots. Fewer robots mean more human review.
+AI-generated content is wrapped in a section whose name is one or more 🤖, encoding how much **more** human attention the human wants to give it despite being AI-generated: 🤖🤖🤖 a lot more, 🤖🤖 some more, 🤖 a little more.
 
 ### Structural Grouping
 

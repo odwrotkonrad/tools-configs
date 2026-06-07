@@ -14,13 +14,17 @@
 >   **everything**.
 > - **Do** wrap the code you generate in a comment section so a reader can tell
 >   at a glance which parts are AI-generated.
-> - **Do** encode the level of human attention in the **number of 🤖 emojis**:
->   - 🤖🤖🤖 — **little** human attention: you asked no questions and just did
->     the work.
->   - 🤖🤖 — **moderate** human attention: a few passes of communication with
->     the user.
->   - 🤖 — **lots** of human attention: many passes of communication with the
->     user, but still should be reviewed.
+> - **Do** treat the mark as a request for **how much more human attention** the
+>   creator should give this code, despite it being AI-generated. The count is
+>   the creator's signal, not a record of what already happened: fully
+>   AI-generated code that was reviewed carefully may carry **no mark at all**.
+> - **Do** encode the requested attention in the **number of 🤖 emojis**, more
+>   🤖 meaning more review wanted:
+>   - 🤖🤖🤖 — wants **a lot more** review.
+>   - 🤖🤖 — wants **some more** review.
+>   - 🤖 — wants **a little more** review.
+> - **Do** default to **🤖🤖** when marking; the count is ambiguous and the
+>   creator will correct it (raising, lowering, or removing the mark).
 > - **Do** prefer **more** 🤖 when your confidence in the solution is lower.
 > - **Do** check before writing or editing ANY file: *have I marked the
 >   AI-generated code with a comment section?* If not — add the section.
@@ -33,15 +37,15 @@
 > - **Don't** skip the section because the surrounding file is unmarked.
 > - **Don't** skip it because terseness seems more helpful — helpfulness is not
 >   an exception.
-> - **Don't** use a 🤖 count that misrepresents the human attention given.
+> - **Don't** use a 🤖 count that misrepresents the attention the code wants.
 >
-> **Example** (no human attention — three robots):
+> **Example** (default mark — two robots):
 >
 > ```sh
-> #[…] 🤖🤖🤖
+> #[…] 🤖🤖
 > foo_a=1
 > foo_b=2
-> #[⫶] 🤖🤖🤖
+> #[⫶] 🤖🤖
 > ```
 >
 > **This is a HARD STOP. When in doubt: MARK IT.**
