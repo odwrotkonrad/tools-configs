@@ -23,12 +23,14 @@ root-ln/Users/ko/.config/claude/:
   skills/:
   themes/:
   rules/:
-    config/:
-      claudecode.md: # this file
-      git.md:
+    code/:
+      code.md:
       python/:
         python.md:
         scripts.md:
+    config/:
+      claudecode.md: # this file
+      git.md:
       ssh.md:
       vscode.md:
       zsh/:

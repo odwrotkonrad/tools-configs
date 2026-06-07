@@ -11,7 +11,7 @@ typeset -a dirs=(
 )
 mkdir -p ${(v)xdg_default_locations} ${dirs}             #[≟] create dirs if non existing
 unset dirs
-#[⫶]
+#[⫶] create dirs
 
 #[…] named dirs
 #>[≟]
@@ -30,4 +30,4 @@ hash -d u_configs="$HOME/projects/configs" \
         u_projects="$HOME/projects"
         u_desktop="$HOME/Desktop" \
         u_capture="$HOME/ScreenCapture"
-#[⫶]
+#[⫶] named dirs

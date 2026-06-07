@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.14
+#!/usr/bin/env python3.14
 """usage: s-rt-gen-markdown <template>
 
 Render a Jinja markdown template to stdout:
@@ -7,8 +7,16 @@ Render a Jinja markdown template to stdout:
 2. render it injecting included files
 3. print the result to stdout
 
-Interfaces with:
-- files: template, additional files loaded in the template
+Examples:
+
+    $ s-rt-gen-markdown README.tmpl.md
+    $ s-rt-gen-markdown --help
+
+Upstream Interfaces with:
+- `> <file>` — intended consumer of the rendered output (e.g. README.md)
+
+Downstream Interfaces with:
+- files: template, additional files referenced within the template
 
 Exit Codes:
 - 21 render error
@@ -16,7 +24,7 @@ Exit Codes:
 - 13 template not found
 """
 
-from enum import StrEnum
+from collections.abc import Callable
 from pathlib import Path
 import re
 import sys
@@ -29,29 +37,41 @@ from jinja2 import TemplateError
 from jinja2 import select_autoescape
 from pydantic import BaseModel
 from pydantic import field_validator
-from s_rt_scripts_lib import errors as err
-from s_rt_scripts_lib.cli import BASE_SCRIPT_SYNOPSIS
-from s_rt_scripts_lib.cli import Pattern
-from s_rt_scripts_lib.cli import ScriptBaseOptions
-from s_rt_scripts_lib.cli import Synopsis
-from s_rt_scripts_lib.cli import parse_input
-from s_rt_scripts_lib.cli import schema
-from s_rt_scripts_lib.cli import usage
+from s_rt_scripts_lib import errors as lib_err
+from s_rt_scripts_lib import input as lib_input
+from s_rt_scripts_lib import parameters as lib_param
 import yaml
 
+
+# […] 🤖
 # […] errors
-ERR_RENDER = 21
-err.ERRORS = {ERR_RENDER: "render failed: {path}: {reason}"} | err.ERRORS
-# [⫶]
+class Errors(lib_err.Errors):
+    """The script's exit-code contract: the `1x` band plus the `2x` domain."""
+
+    RENDER = 21
+    MESSAGES = lib_err.Errors.MESSAGES | {
+        RENDER: "render failed: {path}: {reason}"
+    }
+
+
+# [⫶] errors
 
 
 # […] types
 type TemplatePathStr = str
+"""a path to a Jinja template file (e.g. `README.tmpl.md`)."""
+
 type RelativeIncludePathStr = str
+"""a path loaded from within a template, relative to its dir."""
+
+type BodyStr = str
+"""a file's content after the frontmatter header."""
+
 type RenderedTemplateStr = str
-type Body = str
-"""file content after the frontmatter header."""
+"""the markdown produced by rendering a template."""
+
 type ReferenceNoteStr = str
+"""a note describing a referenced include path."""
 
 
 class Frontmatter(TypedDict, total=False):
@@ -62,21 +82,15 @@ class Frontmatter(TypedDict, total=False):
     references: dict[RelativeIncludePathStr, ReferenceNoteStr]
 
 
-# [⫶]
+# [⫶] types
 
 
 # […] contract
-class Action(StrEnum):
-    """The actions the script supports."""
-
-    USAGE = "usage"
-    SCHEMA = "schema"
+class Action(lib_param.BaseAction):
     RENDER = "render"
 
 
 class Arguments(BaseModel):
-    """The validated positional arguments."""
-
     template: TemplatePathStr
 
     @field_validator("template")
@@ -84,28 +98,34 @@ class Arguments(BaseModel):
     def template_is_file(cls, value: TemplatePathStr) -> TemplatePathStr:
         """Reject a template path that is not an existing file."""
         if not Path(value).is_file():
-            raise err.ExitError(err.ERR_FILE_NOT_FOUND, path=value)
+            raise lib_err.Error(Errors.FILE_NOT_FOUND, path=value)
         return value
 
 
-class Parameters(BaseModel):
-    """The validated invocation: arguments, options, and the input->action grammar."""
-
-    arguments: Arguments
-    options: ScriptBaseOptions = ScriptBaseOptions()
-    SYNOPSIS: ClassVar[Synopsis] = BASE_SCRIPT_SYNOPSIS | Synopsis(
-        [Pattern(options=set(), args=(1, 1), action=Action.RENDER)]
-    )
-
-
-# [⫶]
+class Parameters(lib_param.BaseParameters):
+    arguments: Arguments | None = None
+    ARGUMENTS: ClassVar[type[Arguments]] = Arguments
+    SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
+        *lib_param.BaseParameters.SYNOPSIS,
+        lib_param.Pattern(options=set(), args=(1, 1), action=Action.RENDER),
+    ]
 
 
-# […] implementation
+class Input(lib_input.BaseInput):
+    PARAMS: ClassVar[type[Parameters]] = Parameters
+
+    params: Parameters
+    config: None = None
+
+
+# [⫶] contract
+
+
+# […] 🤖🤖 implementation
 class Attrs(dict):
     """Dict with attribute access; nested mappings wrap recursively."""
 
-    def __getattr__(self, name) -> object:
+    def __getattr__(self, name: str) -> object:
         """Return the item `name`, wrapping a nested mapping as Attrs."""
         try:
             value = self[name]
@@ -117,13 +137,13 @@ class Attrs(dict):
 class Document:
     """A parsed template: its frontmatter as Attrs and its body content."""
 
-    def __init__(self, frontmatter: Frontmatter, content: Body) -> None:
+    def __init__(self, frontmatter: Frontmatter, content: BodyStr) -> None:
         """Wrap the parsed frontmatter for attribute access; keep the body."""
         self.frontmatter = Attrs(frontmatter or {})
         self.content = content
 
 
-def split_frontmatter(text: Body) -> tuple[Frontmatter, Body]:
+def split_frontmatter(text: BodyStr) -> tuple[Frontmatter, BodyStr]:
     """Split a leading `---`-delimited YAML header from the body content."""
     match = re.match(r"\A---\n(.*?)\n---\n?(.*)\Z", text, re.DOTALL)
     if not match:
@@ -131,7 +151,7 @@ def split_frontmatter(text: Body) -> tuple[Frontmatter, Body]:
     return yaml.safe_load(match.group(1)) or {}, match.group(2)
 
 
-def loader(root: Path):
+def loader(root: Path) -> Callable[[RelativeIncludePathStr], Document]:
     """Return a `load(rel)` template global reading files relative to `root`."""
 
     def load(rel: RelativeIncludePathStr) -> Document:
@@ -145,8 +165,10 @@ def loader(root: Path):
     return load
 
 
-def render(template: TemplatePathStr) -> RenderedTemplateStr:
-    """Render the Jinja template at `template`, raising ERR_RENDER on failure.
+def render(
+    template: TemplatePathStr,
+) -> tuple[RenderedTemplateStr | None, lib_err.Error | None]:
+    """Render the Jinja template at `template`, returning ERR_RENDER on failure.
 
     Interfaces with:
       - files: template, additional files loaded in the template
@@ -161,32 +183,33 @@ def render(template: TemplatePathStr) -> RenderedTemplateStr:
     )
     env.globals |= {"load": loader(path.parent)}
     try:
-        return env.get_template(path.name).render()
+        return env.get_template(path.name).render(), None
     except (TemplateError, OSError, yaml.YAMLError) as exc:
-        raise err.ExitError(ERR_RENDER, path=template, reason=exc) from None
+        return None, lib_err.Error(Errors.RENDER, path=template, reason=exc)
 
 
-# [⫶]
+# [⫶] 🤖🤖 implementation
 
 
 # […] main
-def main(action: Action, params: Parameters) -> None:
-    """Dispatch the resolved action to its handler."""
-    match action:
+def main(
+    input: Input,
+) -> tuple[str | None, lib_err.Error | None]:
+    """[≟] Dispatch the resolved action to its handler."""
+    match input.params.action:
         case Action.USAGE:
-            out = usage(__doc__)
-        case Action.SCHEMA:
-            out = schema(Parameters)
+            return lib_input.usage(__doc__), None
         case Action.RENDER:
-            out = render(params.arguments.template)
-    print(out, end="")
+            return render(input.params.arguments.template)
 
 
 if __name__ == "__main__":
-    try:
-        action, _, params = parse_input(Parameters, sys.argv[1:])
-        main(action, params)
-    except err.ExitError as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(e.code)
-# [⫶]
+    input, error = Input.validate_input(sys.argv[1:])
+    if not error:
+        out, error = main(input)
+    if error:
+        print(Errors.message(error), file=sys.stderr)
+        sys.exit(error.code)
+    print(out, end="")
+# [⫶] main
+# [⫶] 🤖

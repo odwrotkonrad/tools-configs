@@ -8,9 +8,6 @@
 **/Code/User/.exported/*
 !**/Code/User/.exported/.gitkeep
 
-# scratch space for temporary scripts (claude)
-.claude/tmp/
-
 # python bytecode cache (repo-local rule so `tree --gitignore` prunes it from docs/data/dirs.yml)
 __pycache__/
 .pytest_cache/

@@ -3,7 +3,8 @@
 Label prefix `[symbol]`.
 
 - `⌖` where · `≟` what · `∵` why
-- `…` section start (named) · `⫶` section end · repeat symbol to nest
+- `…` section start (named) · `⫶` section end (named) · repeat symbol to nest
 - inline `#[≟] ...` · block `#>[∵]` … `#/[∵]` · unlabeled = ignore
+- AI-generated: section named `🤖` (🤖🤖🤖 little human attention · 🤖🤖 moderate · 🤖 lots)
 
 Full spec & examples: [Commenting Convention](../../docs/readme/commenting-convention.md)

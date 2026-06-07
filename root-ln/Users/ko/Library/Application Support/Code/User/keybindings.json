@@ -56,7 +56,7 @@
     },
     "when": "textInputFocus"
   },
-  //[⫶]
+  //[⫶] cursor / selection
   //[…] editor
   //[≟] alt+esc | alt+q — close editor then focus first group (avoids landing in terminal group)
   {
@@ -278,7 +278,7 @@
     "command": "git.commitMessageDiscard",
     "when": "editorTextFocus && editorLangId == 'git-commit'"
   },
-  //[⫶]
+  //[⫶] editor
   //[…] search
   //[≟] alt+w — toggle quick text search
   {
@@ -469,7 +469,7 @@
     "command": "workbench.action.focusFirstEditorGroup",
     "when": "editorTextFocus && editorLangId != 'git-commit' && !textCompareEditorActive && !view.workbench.view.search.visible && !sideBarVisible && !suggestWidgetVisible && !findWidgetVisible && !inSnippetMode && !renameInputVisible && !parameterHintsVisible"
   },
-  //[⫶]
+  //[⫶] search
   //[…] terminal
   //>[≟] alt+t
   //  no terminal: create in last editor group
@@ -545,7 +545,7 @@
     "key": "alt+shift+t",
     "command": "workbench.action.terminal.openNativeConsole"
   },
-  //[⫶]
+  //[⫶] terminal
   //[…] file explorer
   //[≟] alt+a — toggle explorer
   {
@@ -610,7 +610,7 @@
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "filesExplorerFocus && !inputFocus"
   },
-  //[⫶]
+  //[⫶] file explorer
   //[…] output
   //[≟] alt+esc | alt+q | esc — output focused: close panel
   {
@@ -628,7 +628,7 @@
     "command": "workbench.action.closePanel",
     "when": "focusedView == 'workbench.panel.output'"
   },
-  //[⫶]
+  //[⫶] output
   //[…] source control
   //[≟] alt+c — toggle SCM aux bar
   {
@@ -718,7 +718,7 @@
     },
     "when": "auxiliaryBarFocus && !scmRepository && focusedView != 'workbench.scm'"
   },
-  //[⫶]
+  //[⫶] source control
   //[…] font zoom — terminal in terminal focus, editor elsewhere
   {
     "key": "alt+.",
@@ -754,7 +754,7 @@
     "key": "cmd+0",
     "command": "workbench.action.zoomReset"
   },
-  //[⫶]
+  //[⫶] font zoom — terminal in terminal focus, editor elsewhere
   //[…] default unbinds
   {
     "key": "cmd+w",
@@ -783,7 +783,7 @@
     "key": "cmd+q",
     "command": "-workbench.action.quit"
   },
-  //[⫶]
+  //[⫶] default unbinds
   //[…] sequences sent to integrated terminal
   {
     "args": {
@@ -946,5 +946,5 @@
     "key": "shift+enter",
     "when": "terminalFocus"
   },
-  //[⫶]
+  //[⫶] sequences sent to integrated terminal
 ]

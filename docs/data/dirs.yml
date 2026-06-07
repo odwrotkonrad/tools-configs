@@ -23,8 +23,9 @@ root-ln/:
                   - plugins:
                       - marketplaces
                   - rules:
-                      - config:
+                      - code:
                           - python
+                      - config:
                           - zsh
                   - skills
                   - themes
@@ -77,7 +78,7 @@ tests/:
       - python:
           - s-rt-gen-markdown:
               - fixture
-          - s-rt-gen-os-open-files-with
-          - s-rt-gen-term-open-files-with:
+          - s-rt-get-os-open-files-with
+          - s-rt-get-term-open-files-with:
               - mock
           - s_rt_scripts_test_lib

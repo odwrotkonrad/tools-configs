@@ -4,7 +4,7 @@ alias a-rt-git-log-pretty="git log --pretty=format:'%h %ar %s' --decorate -n 10"
 alias a-rt-git-remotes-all-list="git remote --verbose"
 alias a-rt-git-stash-all="git stash --include-untracked"
 alias a-rt-git-status-all="git stash --show-stash"
-#[⫶]
+#[⫶] git
 
 #[…] files
 #>[≟] ls - list directory contents
@@ -39,19 +39,19 @@ alias a-rt-search-files-output-line-count+='fn-rt-rg --count --no-multiline --no
 alias a-rt-search-files-output-match-count+='fn-rt-rg --count-matches '
 alias a-rt-search-files-output-no-context+='fn-rt-rg --only-matching --column '
 alias a-rt-search-files-output-sort-lex+='fn-rt-rg --sort=path '
-#[⫶⫶]
-#[⫶]
+#[⫶⫶] rg
+#[⫶] files
 
 #[…] suffix aliases >[≟] $ man zshbuiltins (alias -s)
 () {
   local terminal=any ext opener
   [[ $TERM_PROGRAM == vscode ]] && terminal=vscode
   [[ $TERM == xterm-kitty ]] && terminal=kitty
-  s-rt-gen-term-open-files-with $terminal | while IFS== read -r ext opener; do
+  s-rt-get-term-open-files-with $terminal | while IFS== read -r ext opener; do
     alias -s -- "$ext"="$opener"
   done
 }
-#[⫶]
+#[⫶] suffix aliases
 
 #[…] manual pages
 #>[≟] man - display online manual documentation pages
@@ -63,7 +63,7 @@ alias a-rt-search-files-output-sort-lex+='fn-rt-rg --sort=path '
 alias a-rt-manpage-list-pages='man -f -o'
 alias a-rt-manpage-list-files='man -a -w'
 alias a-rt-manpage-show-manpath='manpath'
-#[⫶]
+#[⫶] manual pages
 
 #[…] processes
 #>[≟] ps – process status
@@ -80,7 +80,7 @@ alias a-rt-process-list-tty-current-verbose='ps -ww -o ppid,pid,uid,tty,start,co
 #/[≟]
 alias a-rt-process-list-tree+='pstree -g 2 -p '
 alias a-rt-process-list-tree-search+='pstree -g 2 -s '
-#[⫶]
+#[⫶] processes
 
 #[…] claude >[≟] agentic coding tool
 # --permission-mode dontAsk - skip permission prompts for the session, deny if not explicity granted permission
@@ -89,7 +89,7 @@ alias a-rt-process-list-tree-search+='pstree -g 2 -s '
 
 #[∵] it happens claude tries to ask questions in dontAsk mode
 alias a-rt-claude-no-ask='claude --permission-mode dontAsk --append-system-prompt "IMPORTANT! Never ask user any questions! User your best judgement when in doubt!"'
-#[⫶]
+#[⫶] claude
 
 #[…] other
 
@@ -109,4 +109,4 @@ alias a-rt-ssh-show-config="ssh -G localhost"
 # --storage.tsdb.path - on-disk location for the time series database
 #/[≟]
 alias prometheus="prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=${XDG_STATE_HOME:-$HOME/.local/state}/prometheus"
-#[⫶]
+#[⫶] other

@@ -2,7 +2,7 @@
 brew list       #[≟] list all packages installed
 brew update     #[≟] update remotes
 brew upgrade    #[≟] install upgrades
-#[⫶]
+#[⫶] brew
 
 #[…] defaults [≟] access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
@@ -10,7 +10,7 @@ defaults read com.apple.dock
 defaults read | rg --only-matching  'com.apple[.\w]+' - | sort | uniq
 defaults find com.apple.dock
 defaults write com.apple.dock "autohide" -bool "false"
-#[⫶]
+#[⫶] defaults
 
 #[…] git [≟] the stupid content tracker
 git stash                       #[≟] stash tracked files
@@ -21,11 +21,11 @@ git push --force-with-lease
 git status
 git stash pop
 git stash show
-#[⫶]
+#[⫶] git
 
 #[…] kitten [≟] kitty's CLI utility
 kitten themes                   #[≟] interactive theme selection
-#[⫶]
+#[⫶] kitten
 
 #[…] launchctl [≟] Interfaces with launchd
 #[≟] -k - if service is running remove it and start again
@@ -34,7 +34,7 @@ launchctl bootout gui/$(id -u)/d-ko-load-defaults-config                        
 launchctl kickstart -k gui/$(id -u)/d-ko-load-defaults-config                                    #[≟] run service
 launchctl list                                                                                      #[≟] list all services
 launchctl print gui/$(id -u)/d-ko-load-defaults-config                                           #[≟] show details of a service
-#[⫶]
+#[⫶] launchctl
 
 #[…] plutil [≟] property list utility
 #[≟] -p - pretty print
@@ -42,24 +42,25 @@ plutil -p  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist       
 plutil -lint  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                     #[≟] lint plist
 plutil -convert json /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to json
 plutil -convert xml1 /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to xml (from various formats)
-#[⫶]
+#[⫶] plutil
 
 #[…] zsh builtins
 
 #[……] emulate
 emulate -R zsh  #[≟] reset shell opts to defaults for current shell
 emulate -L zsh  #[≟] set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
-#[⫶⫶]
+#[⫶⫶] emulate
 
 #[……] setopt
 setopt          #[≟] show all enabled shell options
 unsetopt        #[≟] show all disabled shell options
 set -o          #[≟] show all shell options with on/off status
-#[⫶⫶]
+#[⫶⫶] setopt
 
 exec zsh     #[≟] reload config by replacing current process (no nested shell); re-runs full startup chain
 
-#[⫶]
+#[⫶] zsh builtins
 
 #[…] other
 logcli query --quiet --limit=2 '{service_name="claude-code"}'
+python -m pip install -r /etc/python/requirements.txt

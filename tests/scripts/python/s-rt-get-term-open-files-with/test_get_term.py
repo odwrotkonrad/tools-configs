@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from s_rt_scripts_lib import errors as err
 from s_rt_scripts_test_lib.cases import cases
@@ -5,7 +7,7 @@ from s_rt_scripts_test_lib.cases import load_cases
 from s_rt_scripts_test_lib.run import assert_exit
 from s_rt_scripts_test_lib.run import run
 from s_rt_scripts_test_lib.run import run_case
-from s_rt_scripts_test_lib.test_help import test_help  # noqa: F401
+from s_rt_scripts_test_lib.test_show_usage import test_show_usage  # noqa: F401
 
 CASES = load_cases(__file__, "cases.yml")
 
@@ -14,12 +16,10 @@ LANGUAGES_URL = (
     "/master/lib/linguist/languages.yml"
 )
 
-ERR_NETWORK = 21
-
 
 @cases(CASES)
-def test_case(term_script, capsys, case, tmp_path):
-    run_case(term_script, capsys, case, tmp_path)
+def test_case(term_script, capsys, case, tmp_path, mocker):
+    run_case(term_script, capsys, case, tmp_path, mocker)
 
 
 def out_map(capsys):
@@ -29,17 +29,20 @@ def out_map(capsys):
 
 
 def test_missing_config(term_script, mocker):
+    missing = Path("/nonexistent/term-open-files-with.yml")
     mocker.patch.object(
-        term_script, "DEFAULT_CONFIG", "/nonexistent/term-open-files-with.yml"
+        term_script.Config, "custom_paths", classmethod(lambda cls: [missing])
     )
-    assert_exit(term_script, ["any"], err.ERR_FILE_NOT_FOUND)
+    assert_exit(term_script, ["any"], err.Errors.FILE_NOT_FOUND)
 
 
 def test_invalid_config(term_script, mocker, tmp_path):
     bad = tmp_path / "bad.yml"
     bad.write_text("any: [unclosed\n")
-    mocker.patch.object(term_script, "DEFAULT_CONFIG", str(bad))
-    assert_exit(term_script, ["any"], err.ERR_CONFIG)
+    mocker.patch.object(
+        term_script.Config, "custom_paths", classmethod(lambda cls: [bad])
+    )
+    assert_exit(term_script, ["any"], err.Errors.CONFIG)
 
 
 def test_network_failure(term_script, mocker):
@@ -47,7 +50,7 @@ def test_network_failure(term_script, mocker):
         raise term_script.requests.RequestException("no host")
 
     mocker.patch("requests.get", side_effect=boom)
-    assert_exit(term_script, ["any"], ERR_NETWORK)
+    assert_exit(term_script, ["any"], err.Errors.NETWORK)
 
 
 BY_TYPE = {
@@ -70,11 +73,18 @@ CFG = {
 }
 
 
-def merge(term_script, cfg, terminal, by_type=BY_TYPE):
-    cfg = term_script.Config.model_validate(cfg)
+def sections(term_script, cfg):
     return {
-        **term_script.get_extensions_for_terminal(cfg, by_type, "any"),
-        **term_script.get_extensions_for_terminal(cfg, by_type, terminal),
+        name: [term_script.OpenerRule(**rule) for rule in rules]
+        for name, rules in cfg.items()
+    }
+
+
+def merge(term_script, cfg, terminal, by_type=BY_TYPE):
+    secs = sections(term_script, cfg)
+    return {
+        **term_script.get_extensions_for_terminal(secs, by_type, "any"),
+        **term_script.get_extensions_for_terminal(secs, by_type, terminal),
     }
 
 
@@ -97,16 +107,17 @@ def test_partial_override_merges_per_type(term_script):
 
 
 def test_last_opener_wins_on_collision(term_script):
-    cfg = term_script.Config.model_validate(
+    secs = sections(
+        term_script,
         {
             "vscode": [
                 {"opener": "code -r", "types": ["data"]},
                 {"opener": "code -w", "types": ["data"]},
             ]
-        }
+        },
     )
     assert (
-        term_script.get_extensions_for_terminal(cfg, BY_TYPE, "vscode")["json"]
+        term_script.get_extensions_for_terminal(secs, BY_TYPE, "vscode")["json"]
         == "code -w"
     )
 
