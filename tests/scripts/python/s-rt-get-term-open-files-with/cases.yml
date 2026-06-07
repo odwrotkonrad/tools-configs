@@ -63,3 +63,26 @@
 - name: err_case_sensitive
   args: [Any]
   exit: 11
+
+- name: ok_last_opener_wins
+  config:
+    vscode:
+      - opener: code -r
+        types: [data]
+      - opener: code -w
+        types: [data]
+  args: [vscode]
+  output:
+    - json=code -w
+    - yaml=code -w
+    - yml=code -w
+
+- name: err_missing_config
+  no_config: true
+  args: [any]
+  exit: 13
+
+- name: err_invalid_config
+  config_raw: "any: [unclosed\n"
+  args: [any]
+  exit: 12
