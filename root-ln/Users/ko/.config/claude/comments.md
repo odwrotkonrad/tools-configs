@@ -14,6 +14,14 @@
 >   **everything**.
 > - **Do** wrap the code you generate in a comment section so a reader can tell
 >   at a glance which parts are AI-generated.
+> - **Do** encode the level of human attention in the **number of 🤖 emojis**:
+>   - 🤖🤖🤖 — **no** human attention: you asked no questions and just did the
+>     work.
+>   - 🤖🤖 — **moderate** human attention: a few passes of communication with
+>     the user.
+>   - 🤖 — **lots** of human attention: many passes of communication with the
+>     user, but still should be reviewed.
+> - **Do** prefer **more** 🤖 when your confidence in the solution is lower.
 > - **Do** check before writing or editing ANY file: *have I marked the
 >   AI-generated code with a comment section?* If not — add the section.
 > - **Do** mark generated code immediately, without being asked, if you catch
@@ -25,14 +33,15 @@
 > - **Don't** skip the section because the surrounding file is unmarked.
 > - **Don't** skip it because terseness seems more helpful — helpfulness is not
 >   an exception.
+> - **Don't** use a 🤖 count that misrepresents the human attention given.
 >
-> **Example:**
+> **Example** (no human attention — three robots):
 >
 > ```sh
-> #[…] 🤖
+> #[…] 🤖🤖🤖
 > foo_a=1
 > foo_b=2
-> #[⫶] 🤖
+> #[⫶] 🤖🤖🤖
 > ```
 >
 > **This is a HARD STOP. When in doubt: MARK IT.**
