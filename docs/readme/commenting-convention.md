@@ -12,6 +12,10 @@ Comments advertise themselves to a reader with a label prefix, to facilitate rea
 
 Unlabeled comments are temporary or do not target readers and can be ignored.
 
+### AI-Generated Content
+
+AI-generated content is wrapped in a section whose name is one or more 🤖, encoding the level of human attention: 🤖🤖🤖 little, 🤖🤖 moderate, 🤖 lots. Fewer robots mean more human review.
+
 ### Structural Grouping
 
 Contents of a file might be divided into sections and subsections. Both the introducer and the terminator carry the section name. Nesting is expressed by repeating the symbol.

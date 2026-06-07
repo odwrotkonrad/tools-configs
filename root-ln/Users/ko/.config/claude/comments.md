@@ -15,8 +15,8 @@
 > - **Do** wrap the code you generate in a comment section so a reader can tell
 >   at a glance which parts are AI-generated.
 > - **Do** encode the level of human attention in the **number of 🤖 emojis**:
->   - 🤖🤖🤖 — **no** human attention: you asked no questions and just did the
->     work.
+>   - 🤖🤖🤖 — **little** human attention: you asked no questions and just did
+>     the work.
 >   - 🤖🤖 — **moderate** human attention: a few passes of communication with
 >     the user.
 >   - 🤖 — **lots** of human attention: many passes of communication with the
