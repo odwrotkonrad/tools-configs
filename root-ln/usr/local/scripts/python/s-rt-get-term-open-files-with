@@ -42,7 +42,7 @@ from s_rt_scripts_lib import input as lib_input
 from s_rt_scripts_lib import parameters as lib_param
 import yaml
 
-# […] 🤖🤖
+# [……] 🤖🤖
 CACHE_DIR = Path(
     os.environ.get(
         "LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-get-term-open-files-with"
@@ -231,4 +231,4 @@ if __name__ == "__main__":
         sys.exit(error.code)
     print(out)
 # [⫶] main
-# [⫶] 🤖🤖
+# [⫶⫶] 🤖🤖
