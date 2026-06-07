@@ -1,7 +1,7 @@
 #[≟] Project's Makefile
 WRAPPERS := run-sync run-repo-gen-files
 COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links
-FILES := docs/data/dirs.yml README.md
+FILES := docs/data/dirs.gen.md README.md
 SCRIPTS := root-ln/usr/local/scripts
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 .PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
@@ -38,8 +38,8 @@ run-host-restart-services:
 .env: .env.example
 	cp $< $@
 
-docs/data/dirs.yml:
-	./$(SCRIPTS)/shell/s-rt-generate-yaml-dir-tree > $@
+docs/data/dirs.gen.md:
+	./$(SCRIPTS)/python/s-rt-generate-tree > $@
 
 README.md:
 	./$(SCRIPTS)/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@

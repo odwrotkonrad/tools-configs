@@ -11,8 +11,7 @@ validate-docsgen:
   needs: []
   image: python:3.14-slim
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make tree jq curl git
-    - curl -fsSL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+    - apt-get update && apt-get install -y --no-install-recommends make git
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
   script:
     - make run-repo-gen-files
