@@ -44,22 +44,20 @@ plutil -convert json /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.pl
 plutil -convert xml1 /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to xml (from various formats)
 #[⫶] plutil
 
-#[…] zsh builtins
-
-#[……] emulate
+#[……] zsh builtins
+#[…] emulate
 emulate -R zsh  #[≟] reset shell opts to defaults for current shell
 emulate -L zsh  #[≟] set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
-#[⫶⫶] emulate
+#[⫶] emulate
 
-#[……] setopt
+#[…] setopt
 setopt          #[≟] show all enabled shell options
 unsetopt        #[≟] show all disabled shell options
 set -o          #[≟] show all shell options with on/off status
-#[⫶⫶] setopt
+#[⫶] setopt
 
 exec zsh     #[≟] reload config by replacing current process (no nested shell); re-runs full startup chain
-
-#[⫶] zsh builtins
+#[⫶⫶] zsh builtins
 
 #[…] other
 logcli query --quiet --limit=2 '{service_name="claude-code"}'

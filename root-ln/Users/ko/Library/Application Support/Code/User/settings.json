@@ -149,11 +149,9 @@
   "editor.wordBasedSuggestions": "off",
   "editor.fontLigatures": true,
   "editor.wordWrap": "on",
-
   //[⫶] editor
 
   //[…] explorer
-
   "explorer.autoOpenDroppedFile": false,
   "explorer.confirmDelete": false,
   "explorer.confirmPasteNative": false,
@@ -181,9 +179,8 @@
   "search.useParentIgnoreFiles": false,
   //[⫶] search
 
-  //[…] source control
-
-  //[……] git
+  //[……] source control
+  //[…] git
   "git.allowForcePush": true,
   "git.alwaysShowStagedChangesResourceGroup": true,
   "git.alwaysSignOff": true,
@@ -234,9 +231,9 @@
     "publish": false,
     "sync": false
   },
-  //[⫶⫶] git
+  //[⫶] git
 
-  //[……] scm
+  //[…] scm
   "scm.alwaysShowRepositories": false,
   "scm.autoReveal": false,
   "scm.compactFolders": true,
@@ -259,9 +256,8 @@
     "added": false,
     "modified": true
   },
-  //[⫶⫶] scm
-
-  //[⫶] source control
+  //[⫶] scm
+  //[⫶⫶] source control
 
 
   //[…] terminal
@@ -469,9 +465,8 @@
   //[⫶] per-language settings
 
 
-  //[…] defaults
-
-  //[……] window
+  //[………] defaults
+  //[…] window
   "window.titleBarStyle": "custom",
   "window.customTitleBarVisibility": "auto",
   "window.commandCenter": true,
@@ -489,9 +484,9 @@
   "window.openWithoutArgumentsInNewWindow": "off",
   "window.restoreFullscreen": false,
   "window.zoomPerWindow": true,
-  //[⫶⫶] window
+  //[⫶] window
 
-  //[……] workbench
+  //[…] workbench
   "workbench.sideBar.location": "left",
   "workbench.secondarySideBar.forceMaximized": false,
   "workbench.editor.decorations.colors": true,
@@ -533,9 +528,9 @@
   "workbench.localHistory.maxFileSize": 256,
   "workbench.localHistory.mergeWindow": 10,
   "workbench.settings.useSplitJSON": false,
-  //[⫶⫶] workbench
+  //[⫶] workbench
 
-  //[……] editor
+  //[…] editor
   "editor.find.seedSearchStringFromSelection": "always",
   "editor.suggestLineHeight": 0,
   "editor.suggest.showInlineDetails": true,
@@ -546,9 +541,9 @@
   "editor.multiCursorModifier": "alt",
   "editor.suggest.insertMode": "insert",
   "editor.detectIndentation": true,
-  //[⫶⫶] editor
+  //[⫶] editor
 
-  //[……] explorer
+  //[…] explorer
   "explorer.autoReveal": true,
   "explorer.compactFolders": true,
   "explorer.excludeGitIgnore": false,
@@ -557,9 +552,9 @@
   "explorer.enableUndo": true,
   "explorer.fileNesting.enabled": false,
   "explorer.fileNesting.expand": true,
-  //[⫶⫶] explorer
+  //[⫶] explorer
 
-  //[……] search
+  //[…] search
   "search.decorations.badges": true,
   "search.decorations.colors": true,
   "search.defaultViewMode": "list",
@@ -577,10 +572,10 @@
   "search.searchView.semanticSearchBehavior": "manual",
   "search.useIgnoreFiles": false,
   "search.useReplacePreview": true,
-  //[⫶⫶] search
+  //[⫶] search
 
   //[……] source control
-  //[………] git
+  //[…] git
   "git.worktreeIncludeFiles": [],
   "git.verboseCommit": false,
   "git.terminalAuthentication": true,
@@ -651,9 +646,9 @@
     "*": "error"
   },
   "git.enableSmartCommit": false,
-  //[⫶⫶⫶] git
+  //[⫶] git
 
-  //[………] scm
+  //[…] scm
   "scm.workingSets.enabled": false,
   "scm.defaultViewMode": "list",
   "scm.workingSets.default": "current",
@@ -666,12 +661,11 @@
   "scm.alwaysShowActions": false,
   "scm.diffDecorationsGutterVisibility": "always",
   "scm.repositories.visible": 10,
-  //[⫶⫶⫶] scm
-
+  //[⫶] scm
   //[⫶⫶] source control
 
 
-  //[……] terminal
+  //[…] terminal
   "terminal.explorerKind": "integrated",
   "terminal.external.linuxExec": "xterm",
   "terminal.external.windowsExec": "C:\\Windows\\System32\\cmd.exe",
@@ -902,17 +896,17 @@
   "terminal.integrated.windowsUseConptyDll": true,
   "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’“”|",
   "terminal.sourceControlRepositoriesKind": "integrated",
-  //[⫶⫶] terminal
+  //[⫶] terminal
 
-  //[……] Claude Code
+  //[…] Claude Code
   "claudeCode.claudeProcessWrapper": "",
   "claudeCode.disableLoginPrompt": false,
   "claudeCode.environmentVariables": [],
   "claudeCode.allowDangerouslySkipPermissions": false,
   "claudeCode.preferredLocation": "panel",
-  //[⫶⫶] Claude Code
+  //[⫶] Claude Code
 
-  //[……] Files
+  //[…] Files
   "files.candidateGuessEncodings": [],
   "files.refactoring.autoSave": true,
   "files.saveConflictResolution": "askUser",
@@ -927,9 +921,9 @@
   "files.associations": {},
   "files.enableTrash": true,
   "files.autoSaveDelay": 1000,
-  //[⫶⫶] Files
+  //[⫶] Files
 
-  //[……] Outline
+  //[…] Outline
   "outline.problems.enabled": false,
   "outline.showArrays": true,
   "outline.showClasses": true,
@@ -952,9 +946,9 @@
   "outline.showStrings": true,
   "outline.showStructs": true,
   "outline.showTypeParameters": true,
-  //[⫶⫶] Outline
+  //[⫶] Outline
 
-  //[……] diff editor
+  //[…] diff editor
   "diffEditor.useInlineViewWhenSpaceIsLimited": true,
   "diffEditor.renderSideBySideInlineBreakpoint": 900,
   "diffEditor.maxFileSize": 50,
@@ -962,14 +956,14 @@
   "diffEditor.diffAlgorithm": "advanced",
   "diffEditor.codeLens": true,
   "diffEditor.wordWrap": "inherit",
-  //[⫶⫶] diff editor
+  //[⫶] diff editor
 
-  //[……] other
+  //[…] other
   "github.branchProtection": true,
   "github.gitAuthentication": true,
   "github.gitProtocol": "https",
   "github.showAvatar": true,
   "terminal.integrated.fontSize": 14
-  //[⫶⫶] other
-  //[⫶] defaults
+  //[⫶] other
+  //[⫶⫶⫶] defaults
 }

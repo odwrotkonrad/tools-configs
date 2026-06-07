@@ -4,9 +4,11 @@ stages:
 
 variables:
   PYTHONPATH: root-ln/usr/local/scripts/python
+  MYPYPATH: root-ln/usr/local/scripts/python
 
 validate-docsgen:
   stage: validate
+  needs: []
   image: python:3.14-slim
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends make tree jq curl git
@@ -16,8 +18,19 @@ validate-docsgen:
     - make run-repo-gen-files
     - git diff --exit-code
 
+validate-typecheck:
+  stage: validate
+  needs: []
+  image: python:3.14-slim
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends make
+    - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
+  script:
+    - make run-repo-typecheck
+
 test-scripts:
   stage: test
+  needs: []
   image: python:3.14-slim
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends make

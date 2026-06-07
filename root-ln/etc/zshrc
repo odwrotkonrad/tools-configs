@@ -36,7 +36,6 @@ typeset -U fpath=(
 #[⫶] set params
 
 #[…] plug-in files
-
 #[≟] source all files from zsh/rc.d in ascending by name order
 for rc in /etc/zsh/rc.d/*.zsh(on); {
   . $rc

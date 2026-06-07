@@ -6,7 +6,6 @@ paths:
 ---
 
 <!--[…] 🤖 -->
-
 ## Python
 
 ### General
@@ -91,5 +90,4 @@ def f(arg: InT, opt: OptT = default) -> OutT:
 - **Don't** introduce side effects when the work can be done purely.
 - **Don't** read global variables in a function body; instead pass what the function needs as arguments.
 - **Don't** pass redundant data to a function (e.g. a whole dict); extract and pass exactly what it needs.
-
 <!--[⫶] 🤖 -->

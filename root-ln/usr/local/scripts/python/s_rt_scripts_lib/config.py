@@ -52,10 +52,12 @@ class BaseConfig(BaseModel):
         existing = [p for p in paths if p.is_file()]
         if not existing:
             raise err.Error(err.Errors.FILE_NOT_FOUND, path=str(paths[0]))
-        raw = {}
+        raw: RawConfigDict = {}
         for path in existing:
             self._merge(raw, self._parse(path))
-        adapter = TypeAdapter(type(self).model_fields["data"].annotation)
+        adapter: TypeAdapter[object] = TypeAdapter(
+            type(self).model_fields["data"].annotation
+        )
         try:
             object.__setattr__(self, "data", adapter.validate_python(raw))
         except ValidationError as exc:

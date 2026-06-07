@@ -89,7 +89,6 @@ bindkey -A key_map main
 #[⫶] zshzle
 
 #[…] stty [⌖] man stty [≟] set the options for a terminal device interface
-
 #[⌖] stty -a # source of cchars
 typeset -a disabled_cchars=(
     start

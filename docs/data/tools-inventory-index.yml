@@ -30,6 +30,7 @@ golang: root-ln/etc/zshenv
 homebrew: root-ln/etc/zshrc
 loki: root-ln/etc/loki/config.yml
 man: root-ln/etc/man.conf
+mypy: root-ln/Users/ko/.config/mypy/config
 nvm: root-ln/Users/ko/.nvmrc
 prettier: root-ln/Users/ko/.config/prettier/.prettierrc.yml
 pyenv: root-ln/etc/zshenv

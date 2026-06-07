@@ -40,6 +40,19 @@
     - rst=nvim
     - txt=nvim
 
+- name: ok_last_opener_wins
+  config:
+    vscode:
+      - opener: code -r
+        types: [data]
+      - opener: code -w
+        types: [data]
+  args: [vscode]
+  output:
+    - json=code -w
+    - yaml=code -w
+    - yml=code -w
+
 - name: err_no_args
   args: []
   exit: 11
@@ -53,13 +66,19 @@
   exit: 11
 
 - name: err_unknown_terminal
-  args: [emacs]
-  exit: 11
-
-- name: err_another_unknown
-  args: [vim]
+  args: [alacritty]
   exit: 11
 
 - name: err_case_sensitive
   args: [Any]
   exit: 11
+
+- name: err_missing_config
+  no_config: true
+  args: [any]
+  exit: 13
+
+- name: err_invalid_config
+  config_raw: "any: [unclosed\n"
+  args: [any]
+  exit: 12

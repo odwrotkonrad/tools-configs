@@ -49,6 +49,7 @@ type AppsDict = dict[ApplicationStr, RolesDict]
 
 # […] contract
 class Action(lib_param.BaseAction):
+    USAGE = lib_param.USAGE
     GET_OPEN_FILES_WITH = "get-open-files-with"
 
 
@@ -60,10 +61,11 @@ class Config(lib_cfg.BaseConfig):
 
 
 class Parameters(lib_param.BaseParameters):
+    action: Action
     SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
         *lib_param.BaseParameters.SYNOPSIS,
         lib_param.Pattern(
-            options=set(), args=(0, 0), action=Action.GET_OPEN_FILES_WITH
+            options=frozenset(), args=(0, 0), action=Action.GET_OPEN_FILES_WITH
         ),
     ]
 
@@ -73,7 +75,7 @@ class Input(lib_input.BaseInput):
     CONFIG: ClassVar[type[Config]] = Config
 
     params: Parameters
-    config: Config | None = None
+    config: Config = Config.model_construct()
 
 
 # [⫶] contract
@@ -109,11 +111,14 @@ def main(
 
 
 if __name__ == "__main__":
-    input, error = Input.validate_input(sys.argv[1:])
-    if not error:
-        out, error = main(input)
-    if error:
-        print(lib_err.Errors.message(error), file=sys.stderr)
-        sys.exit(error.code)
-    print(out)
+    match Input.validate_input(sys.argv[1:]):
+        case (None, error):
+            print(lib_err.Errors.message(error), file=sys.stderr)
+            sys.exit(error.code)
+        case (input, None):
+            out, err = main(input)
+            if err is not None:
+                print(lib_err.Errors.message(err), file=sys.stderr)
+                sys.exit(err.code)
+            print(out)
 # [⫶] main

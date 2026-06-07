@@ -8,7 +8,6 @@ paths:
 ---
 
 <!--[…] 🤖 -->
-
 ## Code
 
 Generic coding guidelines.
@@ -28,5 +27,4 @@ Generic coding guidelines.
 **Do:**
 
 - **Do** write shell commands with a `$` prompt prefix, e.g. `` `$ git status` ``.
-
 <!--[⫶] 🤖 -->

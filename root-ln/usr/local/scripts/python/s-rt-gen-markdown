@@ -43,7 +43,7 @@ from s_rt_scripts_lib import parameters as lib_param
 import yaml
 
 
-# […] 🤖
+# [……] 🤖
 # […] errors
 class Errors(lib_err.Errors):
     """The script's exit-code contract: the `1x` band plus the `2x` domain."""
@@ -87,6 +87,7 @@ class Frontmatter(TypedDict, total=False):
 
 # […] contract
 class Action(lib_param.BaseAction):
+    USAGE = lib_param.USAGE
     RENDER = "render"
 
 
@@ -103,11 +104,14 @@ class Arguments(BaseModel):
 
 
 class Parameters(lib_param.BaseParameters):
-    arguments: Arguments | None = None
+    action: Action
+    arguments: Arguments = Arguments.model_construct()
     ARGUMENTS: ClassVar[type[Arguments]] = Arguments
     SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
         *lib_param.BaseParameters.SYNOPSIS,
-        lib_param.Pattern(options=set(), args=(1, 1), action=Action.RENDER),
+        lib_param.Pattern(
+            options=frozenset(), args=(1, 1), action=Action.RENDER
+        ),
     ]
 
 
@@ -148,7 +152,8 @@ def split_frontmatter(text: BodyStr) -> tuple[Frontmatter, BodyStr]:
     match = re.match(r"\A---\n(.*?)\n---\n?(.*)\Z", text, re.DOTALL)
     if not match:
         return {}, text
-    return yaml.safe_load(match.group(1)) or {}, match.group(2)
+    parsed: Frontmatter | None = yaml.safe_load(match.group(1))
+    return parsed or {}, match.group(2)
 
 
 def loader(root: Path) -> Callable[[RelativeIncludePathStr], Document]:
@@ -204,12 +209,15 @@ def main(
 
 
 if __name__ == "__main__":
-    input, error = Input.validate_input(sys.argv[1:])
-    if not error:
-        out, error = main(input)
-    if error:
-        print(Errors.message(error), file=sys.stderr)
-        sys.exit(error.code)
-    print(out, end="")
+    match Input.validate_input(sys.argv[1:]):
+        case (None, error):
+            print(Errors.message(error), file=sys.stderr)
+            sys.exit(error.code)
+        case (input, None):
+            out, err = main(input)
+            if err is not None:
+                print(Errors.message(err), file=sys.stderr)
+                sys.exit(err.code)
+            print(out, end="")
 # [⫶] main
-# [⫶] 🤖
+# [⫶⫶] 🤖

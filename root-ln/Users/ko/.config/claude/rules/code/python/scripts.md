@@ -5,7 +5,6 @@ paths:
 ---
 
 <!--[…] 🤖🤖 -->
-
 ## Python Scripts
 
 **Do:**
@@ -231,5 +230,4 @@ if __name__ == "__main__":
 **Don't:**
 
 - **Don't** hardcode cases in the test body; keep them in `cases.yml`.
-
 <!--[⫶] 🤖🤖 -->

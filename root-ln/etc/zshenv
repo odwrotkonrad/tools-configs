@@ -2,9 +2,8 @@
 
 disable log #[∵] this builtin would shadow /usr/bin/log binary
 
-#[…] env
-
-#[……] xdg defaults
+#[……] env
+#[…] xdg defaults
 typeset -A xdg_default_locations=(
     XDG_BIN_HOME        "${HOME}/.local/bin"                #[≟] xdg - bin recommendation
     XDG_CACHE_HOME      "${HOME}/.cache"                    #[≟] user-specific non-esseintial data
@@ -14,7 +13,7 @@ typeset -A xdg_default_locations=(
     XDG_STATE_HOME      "${HOME}/.local/state"              #[≟] user-specific state data
 )
 for k v in "${(@kv)xdg_default_locations}"; export "$k=$v"
-#[⫶⫶] xdg defaults
+#[⫶] xdg defaults
 
 typeset -A env_vars=(
     EDITOR              "vim"
@@ -44,5 +43,5 @@ typeset -A env_vars=(
 for k v in "${(@kv)env_vars}"; export "$k=$v"
 
 unset env_vars
-#[⫶] env
+#[⫶⫶] env
 
