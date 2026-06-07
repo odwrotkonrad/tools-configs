@@ -63,3 +63,4 @@ exec zsh     #[≟] reload config by replacing current process (no nested shell)
 
 #[…] other
 logcli query --quiet --limit=2 '{service_name="claude-code"}'
+python -m pip install -r /etc/python/requirements.txt

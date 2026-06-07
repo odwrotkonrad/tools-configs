@@ -30,6 +30,7 @@ typeset -A env_vars=(
     ASDF_CONFIG_FILE    "${XDG_CONFIG_HOME}/asdf/.asdfrc"
     PKG_CONFIG_PATH     "/opt/homebrew/opt/ruby/lib/pkgconfig"
     PYENV_ROOT          "${HOME}/.pyenv"
+    PIP_DISABLE_PIP_VERSION_CHECK "1"
     RIPGREP_CONFIG_PATH "/etc/rg/rgrc"
 
     #[≟] 1Password ssh passphrase helper

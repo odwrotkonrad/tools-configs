@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.14
+#!/usr/bin/env python3.14
 """usage: s-rt-gen-os-open-files-with [config]
 
 Print `<bundle> <uti> <role>` lines for duti. Example:

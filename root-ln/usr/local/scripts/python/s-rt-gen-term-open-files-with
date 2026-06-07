@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.14
+#!/usr/bin/env python3.14
 """usage: s-rt-gen-term-open-files-with <any|vscode|kitty>
 
 Print `<ext>=<opener>` lines for the terminal. Example:
