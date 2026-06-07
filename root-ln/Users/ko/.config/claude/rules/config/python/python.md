@@ -5,11 +5,37 @@ paths:
   - "/usr/local/scripts/python/**"
 ---
 
+<!--[…] 🤖 -->
+
 ## Python
+
+### General
+
+**Do:**
+
+- **Do** use modern Python 3.14 features when possible.
+- **Do** use operators when possible: if an operator does what a function does, use the operator.
+
+```python
+merged: dict[str, int] = a | b
+a |= b
+
+combined: list[int] = xs + ys
+xs += ys
+```
 
 ### Typing
 
-Convey meaning via types: fully type every function — args and return — with defined types. Declare semantic types with `type X = base`, named after their basic type (e.g. `SecretStr`); explain one with a `""" ..."""` after it (IntelliSense-visible, unlike `#`).
+**Do:**
+
+- **Do** fully type every function (both args and return) with defined types.
+- **Do** declare semantic types with `type X = base`, named after their basic type (e.g. `SecretStr`).
+- **Do** explain a semantic type with a `"""..."""` after it (IntelliSense-visible, unlike `#`).
+
+**Don't:**
+
+- **Don't** leave any function arg or return untyped.
+- **Don't** explain a semantic type with a `#` comment when a `"""..."""` is available.
 
 ```python
 type SecretStr = str
@@ -21,18 +47,49 @@ type OPRequestTimeoutInt = int
 
 ### Docstrings
 
-Docstring `"""..."""` holds the *what*; a `#[∵]` *why* goes above the function when it's not obvious, not in the docstring. Briefly describe the path from input to output, noting only non-obvious external interfaces (`op read`, a URL, …), do not consider stdio as external interface.
+**Do:**
+
+- **Do** put the *what* in the docstring `"""..."""`.
+- **Do** put a *why* `#[∵]` above the function when it is not obvious and user explicitly asked for explanation comment.
+- **Do** describe the path from input to output, as a numbered list.
+- **Do** note non-obvious external interfaces (`op read`, a URL, …) under `Interfaces with:`.
+
+**Don't:**
+
+- **Don't** put the *why* in the docstring.
+- **Don't** note `stdio` as an external interface.
+
+**Example:**
 
 ```python
 #[∵] why it exists?
-def fetch(name: SecretStr, timeout: OPRequestTimeoutInt = 30) -> SecretDecryptedStr:
-    """Fetch a secret from 1Password.
+def f(arg: InT, opt: OptT = default) -> OutT:
+    """<what it does>.
+
+    1. <step from input>.
+    2. <transform>.
+    3. <return output>.
 
     Interfaces with:
-      - `op read` — 1Password CLI
+      - `$ <cmd>` — <external interface>
+      - <url> — <external interface>
     """
 ```
 
 ### Functions
 
-Prefer pure functions with no - or minimal - side effects: output depends only on input. Treat inputs as immutable - avoid mutating arguments in place; construct and return a new value instead. When an external interface (filesystem, network, a CLI like `op read`) must be used and makes the function impure, document it under `Interfaces with:` in the docstring (see [Docstrings](#docstrings)). Keep impurity at the edges; the rest stays pure.
+**Do:**
+
+- **Do** prefer pure functions with no (or minimal) side effects: output depends only on input.
+- **Do** treat inputs as immutable: construct and return a new value instead of mutating arguments.
+- **Do** keep impurity at the edges; the rest stays pure.
+- **Do** document an unavoidable external interface (filesystem, network, a CLI like `op read`) under `Interfaces with:` in the docstring (see [Docstrings](#docstrings)).
+
+**Don't:**
+
+- **Don't** mutate arguments in place.
+- **Don't** introduce side effects when the work can be done purely.
+- **Don't** read global variables in a function body; instead pass what the function needs as arguments.
+- **Don't** pass redundant data to a function (e.g. a whole dict); extract and pass exactly what it needs.
+
+<!--[⫶] 🤖 -->
