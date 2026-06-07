@@ -9,7 +9,6 @@ SCRIPTS := root-ln/usr/local/scripts
 run-sync: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
 
 run-repo-gen-files: $(FILES)
-
 #[⫶] wrappers
 
 #[…] commands
@@ -28,7 +27,6 @@ run-repo-upsert-git-hooks:
 #[≟] reload running service launchagents
 run-host-restart-services:
 	./$(SCRIPTS)/shell/s-rt-reload-services
-
 #[⫶] commands
 
 #[…] files
@@ -37,5 +35,4 @@ docs/data/dirs.yml:
 
 README.md:
 	./$(SCRIPTS)/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
-
 #[⫶] files

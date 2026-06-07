@@ -6,7 +6,6 @@ description: Assist Writing Code
 ## Communication
 
 <!--[…] 🤖 -->
-
 **Do:**
 
 - **Do** be as concise as possible: the fewest words that fully answer.
@@ -22,6 +21,5 @@ description: Assist Writing Code
 - **Don't** add comments to code unprompted.
 - **Don't** use an em dash (—) in prose.
 - **Don't** use a semicolon (;) in prose.
-
 <!--[⫶] 🤖 -->
 

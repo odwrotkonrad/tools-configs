@@ -1,5 +1,4 @@
 <!--[…] 🤖 -->
-
 ## Comments
 
 ### Mark AI-Generated Code
@@ -85,5 +84,4 @@
 >   IT.**
 >
 > **This is a HARD STOP. When in doubt: NO COMMENTS.**
-
 <!--[⫶] 🤖 -->

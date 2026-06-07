@@ -6,7 +6,7 @@ alias a-rt-git-stash-all="git stash --include-untracked"
 alias a-rt-git-status-all="git stash --show-stash"
 #[⫶] git
 
-#[…] files
+#[……] files
 #>[≟] ls - list directory contents
 # -A include hidden files
 # -F denote inode type by symbol
@@ -21,7 +21,7 @@ alias a-rt-git-status-all="git stash --show-stash"
 alias a-rt-list-directory='ls -lhAFGSW'
 alias a-rt-list-directory-attr="a-rt-list-directory -O@%"
 
-#[……] rg
+#[…] rg
 #>[≟] rg - recursively search the current directory for lines matching a pattern
 # -A<num> - show <num> context lines after a match
 # -B<num> - show <num> context lines before a match
@@ -39,8 +39,8 @@ alias a-rt-search-files-output-line-count+='fn-rt-rg --count --no-multiline --no
 alias a-rt-search-files-output-match-count+='fn-rt-rg --count-matches '
 alias a-rt-search-files-output-no-context+='fn-rt-rg --only-matching --column '
 alias a-rt-search-files-output-sort-lex+='fn-rt-rg --sort=path '
-#[⫶⫶] rg
-#[⫶] files
+#[⫶] rg
+#[⫶⫶] files
 
 #[…] suffix aliases >[≟] $ man zshbuiltins (alias -s)
 () {
@@ -92,7 +92,6 @@ alias a-rt-claude-no-ask='claude --permission-mode dontAsk --append-system-promp
 #[⫶] claude
 
 #[…] other
-
 #>[≟] fc - zsh builtin, controls the interactive history mechanism
 #  -l - list to stdout
 #  -n - do not show event numbers
