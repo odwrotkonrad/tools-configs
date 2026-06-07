@@ -5,7 +5,7 @@ from s_rt_scripts_test_lib.cases import cases
 from s_rt_scripts_test_lib.cases import load_cases
 from s_rt_scripts_test_lib.run import match_line
 from s_rt_scripts_test_lib.run import run
-from s_rt_scripts_test_lib.test_help import test_help  # noqa: F401
+from s_rt_scripts_test_lib.test_show_usage import test_show_usage  # noqa: F401
 
 FIXTURE = Path(__file__).parent / "fixture"
 CASES = load_cases(__file__, "cases.yml")

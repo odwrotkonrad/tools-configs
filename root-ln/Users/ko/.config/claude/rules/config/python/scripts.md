@@ -4,7 +4,7 @@ paths:
   - "/usr/local/scripts/python/**"
 ---
 
-<!--[…] 🤖 -->
+<!--[…] 🤖🤖 -->
 
 ## Python Scripts
 
@@ -85,7 +85,7 @@ paths:
 - **Don't** nest functions; define them at module level so the pipeline stays flat and readable.
 - **Don't** raise exceptions or call `sys.exit` from handlers/helpers; return an `Error` and exit only from the gate.
 
-## Example
+## Example - Script
 
 ```python
 """usage: s-rt-get <group> <entry>
@@ -105,11 +105,6 @@ Exit Codes:
 """
 
 import sys
-from enum import StrEnum
-from pathlib import Path
-from typing import ClassVar
-
-from pydantic import BaseModel, field_validator
 from s_rt_scripts_lib import errors as lib_err
 from s_rt_scripts_lib import input as lib_ipt
 
@@ -194,4 +189,22 @@ if __name__ == "__main__":
     print(out)
 # [⫶]
 ```
-<!--[⫶] 🤖 -->
+
+## Testing
+
+**Do:**
+
+- **Do** test every script under `tests/scripts/python/<script-name>/`.
+- **Do** declare test cases as data in a `cases.yml` next to the test, one entry per case with a `name`, the `input`/`args`, the expected `exit`, and the expected `stdout` (a fixture filename) or `stderr`.
+- **Do** group cases into `#[…] positive` / `#[…] error` labeled sections.
+- **Do** load the cases with `load_cases` and drive a single parametrized `test_case` with the `@cases(...)` decorator (ids come from each case's `name`).
+- **Do** reuse `s_rt_scripts_test_lib` (`load_cases`/`cases`, `run`, `match_line`).
+- **Do** reuse the shared `test_show_usage` to assert `--help`/`-h` prints the module docstring and exits `0`, and the shared `test_schema` to assert `--json-schema` prints the contract's JSON Schema and exits `0`.
+- **Do** wrap an expected `stderr`/`stdout` line in `/.../ ` to match it as a regex (via `match_line`); a bare string matches exactly.
+- **Do** prefer fixture files under `fixture/` (staged into `tmp_path` per case) for templates and JSON Schema output.
+
+**Don't:**
+
+- **Don't** hardcode cases in the test body; keep them in `cases.yml`.
+
+<!--[⫶] 🤖🤖 -->

@@ -6,7 +6,7 @@ HELP = load_cases(__file__, "cases.yml")
 
 
 @cases(HELP)
-def test_help(script, capsys, case):
+def test_show_usage(script, capsys, case):
     try:
         run(script, case["args"])
     except SystemExit as exc:
