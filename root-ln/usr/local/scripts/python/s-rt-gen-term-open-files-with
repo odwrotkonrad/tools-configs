@@ -40,7 +40,7 @@ LANGUAGES_URL = (
 TERMINALS = ("any", "vscode", "kitty")
 
 ERR_NETWORK = 21
-# [⫶]
+# [⫶] constants
 
 
 # […] schema
@@ -57,7 +57,7 @@ class Config(RootModel[dict[str, list[OpenerRule]]]):
     pass
 
 
-# [⫶]
+# [⫶] schema
 
 
 def fetch_languages():

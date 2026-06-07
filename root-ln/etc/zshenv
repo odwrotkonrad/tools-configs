@@ -14,7 +14,7 @@ typeset -A xdg_default_locations=(
     XDG_STATE_HOME      "${HOME}/.local/state"              #[≟] user-specific state data
 )
 for k v in "${(@kv)xdg_default_locations}"; export "$k=$v"
-#[⫶⫶]
+#[⫶⫶] xdg defaults
 
 typeset -A env_vars=(
     EDITOR              "vim"
@@ -44,5 +44,5 @@ typeset -A env_vars=(
 for k v in "${(@kv)env_vars}"; export "$k=$v"
 
 unset env_vars
-#[⫶]
+#[⫶] env
 

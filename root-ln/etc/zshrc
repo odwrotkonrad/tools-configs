@@ -33,7 +33,7 @@ typeset -U fpath=(
     /opt/homebrew/share/zsh/site-functions
     ${fpath}
 )
-#[⫶]
+#[⫶] set params
 
 #[…] plug-in files
 
@@ -48,4 +48,4 @@ for f in /etc/zsh/functions/**(:t); {
 }
 
 fn-rt-load-static-history
-#[⫶]
+#[⫶] plug-in files

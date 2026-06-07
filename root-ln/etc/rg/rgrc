@@ -36,7 +36,7 @@
 --max-filesize=4G
 --no-mmap
 --regex-size-limit=1G
-#[⫶]
+#[⫶] modified
 
 #[…] defaults
 # --color=auto
@@ -46,7 +46,7 @@
 # --path-separator=/
 # --threads=0
 # --with-filename
-#[⫶]
+#[⫶] defaults
 
 #[…] unset
 # --block-buffered
@@ -84,10 +84,10 @@
 # --unrestricted
 # --vimgrep
 # --word-regexp
-#[⫶]
+#[⫶] unset
 
 #[…] deprecated
 # --auto-hybrid-regex
 # --no-pcre2-unicode
 # --sort-files
-#[⫶]
+#[⫶] deprecated

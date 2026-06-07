@@ -14,7 +14,7 @@ pushd "$configs/root-ln"
 find * -type d -exec mkdir -p /{} \;
 find * -type f -exec ln -fvws "$PWD"/{} /{} \;
 popd
-#[⫶]
+#[⫶] symlinked tree
 
 #[…] copied tree
 pushd "$configs/root-cp"
@@ -23,4 +23,4 @@ find * -type f | while read -r f; do
   sudo install -v -o root -g wheel -m "$(stat -f %Lp "$f")" "$f" "/$f"
 done
 popd
-#[⫶]
+#[⫶] copied tree

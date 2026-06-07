@@ -42,7 +42,7 @@ import yaml
 # […] errors
 ERR_RENDER = 21
 err.ERRORS = {ERR_RENDER: "render failed: {path}: {reason}"} | err.ERRORS
-# [⫶]
+# [⫶] errors
 
 
 # […] types
@@ -62,7 +62,7 @@ class Frontmatter(TypedDict, total=False):
     references: dict[RelativeIncludePathStr, ReferenceNoteStr]
 
 
-# [⫶]
+# [⫶] types
 
 
 # […] contract
@@ -98,7 +98,7 @@ class Parameters(BaseModel):
     )
 
 
-# [⫶]
+# [⫶] contract
 
 
 # […] implementation
@@ -166,7 +166,7 @@ def render(template: TemplatePathStr) -> RenderedTemplateStr:
         raise err.ExitError(ERR_RENDER, path=template, reason=exc) from None
 
 
-# [⫶]
+# [⫶] implementation
 
 
 # […] main
@@ -189,4 +189,4 @@ if __name__ == "__main__":
     except err.ExitError as e:
         print(e.message, file=sys.stderr)
         sys.exit(e.code)
-# [⫶]
+# [⫶] main

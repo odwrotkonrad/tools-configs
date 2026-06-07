@@ -31,7 +31,7 @@ typeset -a opts_enabled=(
   # zle
 )
 for opt in ${opts_enabled}; setopt ${opt}
-#[⫶]
+#[⫶] enabled options
 
 #[…] disabled options
 typeset -a opts_disabled=(
@@ -198,7 +198,7 @@ typeset -a opts_disabled=(
   xtrace
 )
 for opt in ${opts_disabled}; unsetopt ${opt}
-#[⫶]
+#[⫶] disabled options
 
 #[…] parameters
 typeset -A zsh_params=(
@@ -210,4 +210,4 @@ typeset -A zsh_params=(
   SAVEHIST    10_000
 )
 for k v in "${(@kv)zsh_params}"; typeset "$k=$v"
-#[⫶]
+#[⫶] parameters

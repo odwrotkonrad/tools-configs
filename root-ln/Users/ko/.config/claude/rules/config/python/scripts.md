@@ -111,14 +111,14 @@ from s_rt_scripts_lib import input as lib_ipt
 # […] errors
 ERR_NO_ENTRY = 21
 ERRORS = lib_err.ERRORS | {ERR_NO_ENTRY: "entry not found: {entry}"}
-# [⫶]
+# [⫶] errors
 
 
 # […] types
 type GroupNameStr = str
 type EntryNameStr = str
 type EntryStr = str
-# [⫶]
+# [⫶] types
 
 
 # […] contract
@@ -152,7 +152,7 @@ class Parameters(BaseModel):
         lib_ipt.Pattern(options={"json-schema"}, args=(0, 0), action=Action.SCHEMA),
         lib_ipt.Pattern(options=set(), args=(2, 2), action=Action.GET),
     ])
-# [⫶]
+# [⫶] contract
 
 
 # […] implementation
@@ -163,7 +163,7 @@ def get(
     if entry not in entries:
         return None, lib_err.Error(ERR_NO_ENTRY, entry=entry)
     return entries[entry], None
-# [⫶]
+# [⫶] implementation
 
 
 # […] main
@@ -187,7 +187,7 @@ if __name__ == "__main__":
         print(error.message(ERRORS), file=sys.stderr)
         sys.exit(error.code)
     print(out)
-# [⫶]
+# [⫶] main
 ```
 
 ## Testing

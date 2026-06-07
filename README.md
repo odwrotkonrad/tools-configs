@@ -31,7 +31,7 @@ rg: root-ln/etc/rg/rgrc
 ssh: root-ln/Users/ko/.ssh/config
 vscode: root-ln/Users/ko/Library/Application Support/Code/User/settings.json
 zsh: root-ln/etc/zshrc
-#[⫶]
+#[⫶] primary
 
 #[…] other
 asdf: root-ln/Users/ko/.config/asdf/.asdfrc
@@ -48,7 +48,7 @@ pyenv: root-ln/etc/zshenv
 ruff: root-ln/Users/ko/.config/ruff/ruff.toml
 tmux: root-ln/Users/ko/.config/tmux/tmux.conf
 vim: root-ln/Users/ko/.config/vim/vimrc
-#[⫶]
+#[⫶] other
 ```
 
 - [docs/data/tools-inventory-full.yml](docs/data/tools-inventory-full.yml) - Full file lists per tool.

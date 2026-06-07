@@ -19,7 +19,7 @@ from s_rt_scripts_lib.config import load_yaml
 
 # […] constants
 DEFAULT_CONFIG = "/etc/custom/os-open-files-with.yml"
-# [⫶]
+# [⫶] constants
 
 
 # […] schema
@@ -33,7 +33,7 @@ class Config(RootModel[dict[Application, Roles]]):
     pass
 
 
-# [⫶]
+# [⫶] schema
 
 
 def handler_lines(cfg):

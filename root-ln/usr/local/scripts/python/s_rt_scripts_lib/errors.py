@@ -8,7 +8,7 @@ ERRORS = {
     ERR_CONFIG: "invalid config: {path}: {reason}",
     ERR_FILE_NOT_FOUND: "file not found: {path}",
 }
-# [⫶]
+# [⫶] default messages
 
 
 class ExitError(Exception):

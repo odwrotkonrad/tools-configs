@@ -86,7 +86,7 @@ typeset -A keystrokes_widgets=(
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
-#[⫶]
+#[⫶] zshzle
 
 #[…] stty [⌖] man stty [≟] set the options for a terminal device interface
 
@@ -105,7 +105,7 @@ typeset -A cchars=(
 )
 
 for action char in ${(kv)cchars}; stty ${action} ${char}
-#[⫶]
+#[⫶] stty
 
 # [≟] SIGINT (^C) signal handler, clear the screen and reset prompt input, only when zle is active
 TRAPINT() {
