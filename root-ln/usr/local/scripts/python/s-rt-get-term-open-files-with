@@ -91,6 +91,7 @@ type SectionsDict = dict[SectionNameStr, list[OpenerRule]]
 
 # […] contract
 class Action(lib_param.BaseAction):
+    USAGE = lib_param.USAGE
     GET_OPEN_FILES_WITH = "get-open-files-with"
 
 
@@ -115,12 +116,13 @@ class Arguments(BaseModel):
 
 
 class Parameters(lib_param.BaseParameters):
-    arguments: Arguments | None = None
+    action: Action
+    arguments: Arguments = Arguments.model_construct()
     ARGUMENTS: ClassVar[type[Arguments]] = Arguments
     SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
         *lib_param.BaseParameters.SYNOPSIS,
         lib_param.Pattern(
-            options=set(), args=(1, 1), action=Action.GET_OPEN_FILES_WITH
+            options=frozenset(), args=(1, 1), action=Action.GET_OPEN_FILES_WITH
         ),
     ]
 
@@ -130,7 +132,7 @@ class Input(lib_input.BaseInput):
     CONFIG: ClassVar[type[Config]] = Config
 
     params: Parameters
-    config: Config | None = None
+    config: Config = Config.model_construct()
 
 
 # [⫶] contract
@@ -164,7 +166,9 @@ def type_extensions() -> tuple[ByTypeDict | None, lib_err.Error | None]:
     text, error = fetch_languages()
     if error is not None:
         return None, error
-    by_type = defaultdict(set)
+    by_type: defaultdict[LanguageCategoryStr, set[FileExtensionStr]] = (
+        defaultdict(set)
+    )
     for lang in (yaml.safe_load(text) or {}).values():
         kind = (lang or {}).get("type")
         if kind:
@@ -180,7 +184,9 @@ def get_extensions_for_terminal(
     """Return {ext: opener} for one config section; a later entry wins on collision."""
     aliases: AliasesDict = {}
     for rule in sections.get(name) or []:
-        for kind in rule.types if rule.opener else []:
+        if rule.opener is None:
+            continue
+        for kind in rule.types:
             for ext in by_type.get(kind) or []:
                 aliases[ext] = rule.opener
     return aliases
@@ -196,7 +202,7 @@ def get_open_files_with(
       - https://raw.githubusercontent.com/github-linguist/linguist
     """
     by_type, error = type_extensions()
-    if error is not None:
+    if by_type is None:
         return None, error
     aliases = {
         **get_extensions_for_terminal(sections, by_type, "any"),
@@ -223,12 +229,15 @@ def main(
 
 
 if __name__ == "__main__":
-    input, error = Input.validate_input(sys.argv[1:])
-    if not error:
-        out, error = main(input)
-    if error:
-        print(lib_err.Errors.message(error), file=sys.stderr)
-        sys.exit(error.code)
-    print(out)
+    match Input.validate_input(sys.argv[1:]):
+        case (None, error):
+            print(lib_err.Errors.message(error), file=sys.stderr)
+            sys.exit(error.code)
+        case (input, None):
+            out, err = main(input)
+            if err is not None:
+                print(lib_err.Errors.message(err), file=sys.stderr)
+                sys.exit(err.code)
+            print(out)
 # [⫶] main
 # [⫶⫶] 🤖🤖

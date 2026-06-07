@@ -1,3 +1,4 @@
+from enum import StrEnum
 import re
 from typing import ClassVar
 
@@ -7,12 +8,13 @@ from pydantic import model_validator
 from s_rt_scripts_lib import errors as err
 from s_rt_scripts_lib.options import ScriptBaseOptions
 
+USAGE = "usage"
+"""the base usage action value, shared by every script's Action."""
+
 
 # […] 🤖🤖
-class BaseAction:
-    """The base actions; subclasses add their own."""
-
-    USAGE = "usage"
+class BaseAction(StrEnum):
+    """The action base; each script's Action extends it with its own members."""
 
 
 class Pattern(BaseModel):
@@ -30,14 +32,12 @@ class Pattern(BaseModel):
 class BaseParameters(BaseModel):
     """The invocation validated from argv; subclasses add `arguments`/`SYNOPSIS`."""
 
-    action: str = BaseAction.USAGE
+    action: BaseAction
     options: ScriptBaseOptions = ScriptBaseOptions()
     ARGUMENTS: ClassVar[type[BaseModel] | None] = None
     SYNOPSIS: ClassVar[list[Pattern]] = [
-        Pattern(options=frozenset({"h"}), args=(0, 0), action=BaseAction.USAGE),
-        Pattern(
-            options=frozenset({"help"}), args=(0, 0), action=BaseAction.USAGE
-        ),
+        Pattern(options=frozenset({"h"}), args=(0, 0), action=USAGE),
+        Pattern(options=frozenset({"help"}), args=(0, 0), action=USAGE),
     ]
 
     @classmethod
@@ -70,7 +70,10 @@ class BaseParameters(BaseModel):
         action = cls.action_for(frozenset(options), len(args))
         if action is None:
             raise err.Error(err.Errors.ARGS, args=data)
-        opt_names = set(cls.model_fields["options"].annotation.model_fields)
+        options_model = cls.model_fields["options"].annotation
+        opt_names = set(
+            options_model.model_fields if options_model is not None else {}
+        )
         shaped = {
             "action": action,
             "options": dict.fromkeys(options & opt_names, True),

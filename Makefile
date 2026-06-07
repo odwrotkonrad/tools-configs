@@ -1,12 +1,13 @@
 #[≟] Project's Makefile
 WRAPPERS := run-sync run-repo-gen-files
-COMMANDS := run-repo-tests run-host-upsert-configs run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links
+COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links
 FILES := docs/data/dirs.yml README.md
 SCRIPTS := root-ln/usr/local/scripts
+MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 .PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
 
 #[…] wrappers
-run-sync: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
+run-sync: .env run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
 
 run-repo-gen-files: $(FILES)
 #[⫶] wrappers
@@ -19,7 +20,11 @@ run-host-delete-broken-links:
 	sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-clean-broken-links
 
 run-repo-tests:
-	/usr/local/bin/python3.14 -m pytest tests/scripts/python
+	pytest tests/scripts/python
+
+run-repo-typecheck:
+	$(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-rt-*
+	$(MYPY) $(SCRIPTS)/python/s_rt_scripts_lib
 
 run-repo-upsert-git-hooks:
 	lefthook install --force
@@ -30,6 +35,9 @@ run-host-restart-services:
 #[⫶] commands
 
 #[…] files
+.env: .env.example
+	cp $< $@
+
 docs/data/dirs.yml:
 	./$(SCRIPTS)/shell/s-rt-generate-yaml-dir-tree > $@
 

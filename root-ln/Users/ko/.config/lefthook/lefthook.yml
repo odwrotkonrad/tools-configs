@@ -17,7 +17,11 @@ pre-commit:
 
     - name: ruff
       glob: "*.py"
-      run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
+      run: ruff check --select I --fix {staged_files} && ruff format {staged_files} && git add {staged_files}
+
+    - name: mypy
+      glob: "root-ln/usr/local/scripts/python/**"
+      run: make run-repo-typecheck
 
     - name: gen-files-fresh
       glob: "{docs/data/dirs.yml,README.md}"

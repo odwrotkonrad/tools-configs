@@ -8,8 +8,9 @@
 **/Code/User/.exported/*
 !**/Code/User/.exported/.gitkeep
 
-# python bytecode cache (repo-local rule so `tree --gitignore` prunes it from docs/data/dirs.yml)
+# python caches (repo-local rule so `tree --gitignore` prunes them from docs/data/dirs.yml)
 __pycache__/
 .pytest_cache/
+**/.mypy_cache/
 
 /root-ln/etc/**/*local*
