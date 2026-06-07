@@ -18,7 +18,7 @@ AI-generated content is wrapped in a section whose name is one or more 🤖, enc
 
 ### Structural Grouping
 
-Contents of a file might be divided into sections and subsections. Both the introducer and the terminator carry the section name. Nesting is expressed by repeating the symbol, with the **top level carrying the most** symbols and each deeper level one fewer, down to a single symbol at the innermost level (so the symbol count equals the section's depth from the innermost outward). A section hugs its own content: no blank line directly after its introducer or directly before its terminator. Blank lines between sibling sections are allowed.
+Contents of a file might be divided into sections and subsections. Both the introducer and the terminator carry the section name. Nesting is expressed by repeating the symbol, with the **top level carrying the most** symbols and each deeper level one fewer, down to a single symbol at the innermost level (so the symbol count equals the section's depth from the innermost outward).
 
 | Description         | Symbol | Name                           | Code Point |
 | ------------------- | ------ | ------------------------------ | ---------- |
