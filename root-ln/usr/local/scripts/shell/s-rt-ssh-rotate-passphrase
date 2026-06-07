@@ -8,7 +8,7 @@ if [ ! -f "$keyfile" ]; then
 	exit 1
 fi
 
-vault="Personal"
+vault="ProgrammaticAccess"
 item="ssh_$name"
 
 old=$(op read "op://$vault/$item/password")
