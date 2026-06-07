@@ -23,8 +23,9 @@ root-ln/:
                   - plugins:
                       - marketplaces
                   - rules:
-                      - config:
+                      - code:
                           - python
+                      - config:
                           - zsh
                   - skills
                   - themes
