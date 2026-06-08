@@ -819,18 +819,18 @@
   },
   {
     "args": {
-      "text": "\u0017"
+      "text": "\u0008"
     },
     "command": "workbench.action.terminal.sendSequence",
-    "key": "alt+backspace",
+    "key": "backspace",
     "when": "terminalFocus"
   },
   {
     "args": {
-      "text": "\u0008"
+      "text": "\u0017"
     },
     "command": "workbench.action.terminal.sendSequence",
-    "key": "ctrl+backspace",
+    "key": "alt+backspace",
     "when": "terminalFocus"
   },
   {

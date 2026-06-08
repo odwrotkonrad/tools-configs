@@ -3,17 +3,6 @@
 # root-ln/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
 #/[⌖]
 
-#[…] zshzle
-#[⌖] man zshzle > bindkey [≟] zsh doc on bindings
-
-#[≟] non-alnum chars counted as word; empty = strict word boundaries #>[⌖] $ man zshparam
-WORDCHARS=""
-
-
-bindkey -N key_map
-bindkey -M key_map -R "^@"-"~" self-insert
-
-
 #[⌖] https://en.wikipedia.org/wiki/ANSI_escape_code
 ESC=$'\u001B'         #[≟] introducer for escape sequences
 CSI=$'\u001B['        #[≟] Control Sequence Introducer
@@ -34,14 +23,15 @@ typeset -A keystrokes=(
     altLeft            "${ESC}b"
     altRight           "${ESC}f"
 
-    backspace          $'\x7f'
+    backspace          "^H"
     altBackspace       $'\x17'
     cmdBackspace       $'\x15'
-    ctrlBackspace      $'\x08'
 
     delete             "${CSI}3~"
     altDelete          "${ESC}d"
     cmdDelete          "${DCS}K"
+
+    cmdSemicolon       "${CSI}59;9u"
 
     cmdZ               "${DCS}z"
     cmdShiftZ          "${DCS}Z"
@@ -49,7 +39,54 @@ typeset -A keystrokes=(
 
     cr                 $'\r'
     tab                $'\t'
+
+    ctrlV              "^V"
+    ctrlX              "^X"
+    ctrlZ              "^Z"
+    ctrlC              "^C"
+    ctrlT              "^T"
+    ctrlBackslash      "^\\"
 )
+
+
+#[…] stty [⌖] man stty [≟] set the options for a terminal device interface
+#[⌖] stty -a # source of cchars
+typeset -a disabled_cchars=(
+    start
+    stop
+)
+for cchar in ${disabled_cchars}; stty ${cchar} undef
+
+typeset -A cchars=(
+    susp    "$keystrokes[ctrlZ]"            #[≟] Process Suspend (SIGTSTP)
+    quit    "$keystrokes[ctrlBackslash]"    #[≟] Process Quit + core dump (SIGQUIT)
+    intr    "$keystrokes[ctrlC]"            #[≟] Process Interrupt (SIGINT)
+    status  "$keystrokes[ctrlT]"            #[≟] Process Status (SIGINFO)
+    lnext   "$keystrokes[ctrlV]"            #[≟] Literal Next, listen next key sequence verbatim
+    kill    "$keystrokes[ctrlX]"            #[≟] cut the whole input line
+    erase   "$keystrokes[backspace]"        #[≟] backspace, remove last char
+    werase  "$keystrokes[altBackspace]"     #[≟] alt+backspace, remove last word
+)
+
+for action char in ${(kv)cchars}; stty ${action} ${char}
+#[⫶] stty
+
+# [≟] 🤖🤖 SIGINT (^C) signal handler - cancel editing, scroll prompt to the top without clearing the screen, retaining history and the canceled buffer
+TRAPINT() {
+    [[ -o zle ]] && { print -n ${(pl:$LINES::\n:)}; print -n "${CSI}H"; zle send-break }
+}
+
+
+#[…] zshzle
+#[⌖] man zshzle > bindkey [≟] zsh doc on bindings
+
+#[≟] non-alnum chars counted as word; empty = strict word boundaries #>[⌖] $ man zshparam
+WORDCHARS=""
+
+
+bindkey -N key_map
+bindkey -M key_map -R "^@"-"~" self-insert
+
 
 typeset -A keystrokes_widgets=(
     "$keystrokes[bracketedPaste]"   bracketed-paste
@@ -70,11 +107,12 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[backspace]"        backward-delete-char
     "$keystrokes[altBackspace]"     backward-delete-word
     "$keystrokes[cmdBackspace]"     backward-kill-line
-    "$keystrokes[ctrlBackspace]"    backward-kill-line
 
     "$keystrokes[delete]"           delete-char
     "$keystrokes[altDelete]"        delete-word
     "$keystrokes[cmdDelete]"        kill-line
+
+    "$keystrokes[cmdSemicolon]"     execute-named-cmd
 
     "$keystrokes[cmdZ]"             undo
     "$keystrokes[cmdShiftZ]"        redo
@@ -82,35 +120,13 @@ typeset -A keystrokes_widgets=(
 
     "$keystrokes[cr]"               accept-line
     "$keystrokes[tab]"              expand-or-complete
+
+    "$keystrokes[ctrlV]"            quoted-insert
 )
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
 #[⫶] zshzle
-
-#[…] stty [⌖] man stty [≟] set the options for a terminal device interface
-#[⌖] stty -a # source of cchars
-typeset -a disabled_cchars=(
-    start
-    stop
-)
-for cchar in ${disabled_cchars}; stty ${cchar} undef
-
-typeset -A cchars=(
-    susp    '^Z'        #[≟] Process Suspend (SIGTSTP)
-    quit    '^\\'       #[≟] Process Quit + core dump (SIGQUIT)
-    intr    '^C'        #[≟] Process Interrupt (SIGINT)
-    status  '^T'        #[≟] Process Status (SIGINFO)
-)
-
-for action char in ${(kv)cchars}; stty ${action} ${char}
-#[⫶] stty
-
-# [≟] SIGINT (^C) signal handler, clear the screen and reset prompt input, only when zle is active
-TRAPINT() {
-    [[ -o zle ]] && clear
-    return $(( 128 + $1 ))
-}
 
 
 

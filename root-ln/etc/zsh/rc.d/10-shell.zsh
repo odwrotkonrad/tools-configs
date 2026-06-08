@@ -11,6 +11,7 @@ typeset -a opts_enabled=(
   histignorespace
   histlexwords
   histverify
+  ignoreeof
   incappendhistorytime
   interactivecomments
   localoptions
@@ -88,7 +89,6 @@ typeset -a opts_disabled=(
   histsubstpattern
   ignorebraces
   ignoreclosebraces
-  ignoreeof
   incappendhistory
   ksharrays
   kshautoload
