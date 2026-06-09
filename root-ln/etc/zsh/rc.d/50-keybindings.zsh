@@ -99,37 +99,37 @@ bindkey -M key_map -R "^@"-"~" self-insert
 
 
 typeset -A keystrokes_widgets=(
-    "$keystrokes[bracketedPaste]"   bracketed-paste
+    "$keystrokes[bracketedPaste]"   .bracketed-paste
 
-    "$keystrokes[up]"               up-line-or-history
-    "$keystrokes[down]"             down-line-or-history
-    "$keystrokes[right]"            forward-char
-    "$keystrokes[left]"             backward-char
+    "$keystrokes[up]"               .up-line-or-history
+    "$keystrokes[down]"             .down-line-or-history
+    "$keystrokes[right]"            .forward-char
+    "$keystrokes[left]"             .backward-char
 
-    "$keystrokes[cmdUp]"            beginning-of-buffer-or-history
-    "$keystrokes[cmdDown]"          end-of-buffer-or-history
-    "$keystrokes[cmdRight]"         vi-end-of-line
-    "$keystrokes[cmdLeft]"          vi-beginning-of-line
+    "$keystrokes[cmdUp]"            .beginning-of-buffer-or-history
+    "$keystrokes[cmdDown]"          .end-of-buffer-or-history
+    "$keystrokes[cmdRight]"         .vi-end-of-line
+    "$keystrokes[cmdLeft]"          .vi-beginning-of-line
 
-    "$keystrokes[altLeft]"          vi-backward-word
-    "$keystrokes[altRight]"         vi-forward-word
+    "$keystrokes[altLeft]"          .vi-backward-word
+    "$keystrokes[altRight]"         .vi-forward-word
 
-    "$keystrokes[backspace]"        backward-delete-char
-    "$keystrokes[altBackspace]"     backward-delete-word
-    "$keystrokes[cmdBackspace]"     backward-kill-line
+    "$keystrokes[backspace]"        .backward-delete-char
+    "$keystrokes[altBackspace]"     .backward-delete-word
+    "$keystrokes[cmdBackspace]"     .backward-kill-line
 
-    "$keystrokes[delete]"           delete-char
-    "$keystrokes[altDelete]"        delete-word
-    "$keystrokes[cmdDelete]"        kill-line
+    "$keystrokes[delete]"           .delete-char
+    "$keystrokes[altDelete]"        .delete-word
+    "$keystrokes[cmdDelete]"        .kill-line
 
-    "$keystrokes[cmdSemicolon]"     execute-named-cmd
+    "$keystrokes[cmdSemicolon]"     .execute-named-cmd
 
-    "$keystrokes[cmdZ]"             undo
-    "$keystrokes[cmdShiftZ]"        redo
-    "$keystrokes[cmdX]"             kill-buffer
+    "$keystrokes[cmdZ]"             .undo
+    "$keystrokes[cmdShiftZ]"        .redo
+    "$keystrokes[cmdX]"             .kill-buffer
 
-    "$keystrokes[cr]"               accept-line
-    "$keystrokes[tab]"              expand-or-complete
+    "$keystrokes[cr]"               .accept-line
+    "$keystrokes[tab]"              .expand-or-complete
 
     "$keystrokes[ctrlV]"            fn-rt-keystrokes-listen
 )
