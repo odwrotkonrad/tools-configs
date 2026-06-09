@@ -84,6 +84,16 @@ TRAPINT() {
 WORDCHARS=""
 
 
+#[…] 🤖🤖 ctrlV [≟] listen for raw key sequences via kitten show-key
+fn-rt-keystrokes-listen() {
+    print
+    kitten show-key -m kitty
+    zle reset-prompt
+}
+zle -N fn-rt-keystrokes-listen
+#[⫶] ctrlV
+
+
 bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
 
@@ -121,7 +131,7 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[cr]"               accept-line
     "$keystrokes[tab]"              expand-or-complete
 
-    "$keystrokes[ctrlV]"            quoted-insert
+    "$keystrokes[ctrlV]"            fn-rt-keystrokes-listen
 )
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
