@@ -32,6 +32,7 @@ typeset -A keystrokes=(
     cmdDelete          "${DCS}K"
 
     cmdSemicolon       "${CSI}59;9u"
+    ctrlShiftZ         "${DCS}F"
 
     cmdZ               "${DCS}z"
     cmdShiftZ          "${DCS}Z"
@@ -98,6 +99,14 @@ zle -N fn-rt-keystrokes-listen
 #[⫶] ctrlV
 
 
+#[…] 🤖🤖 ctrlShiftZ [≟] resume the most recent background job (mirror of ^Z suspend)
+fn-rt-job-foreground() {
+    [[ -z ${BUFFER} && -n ${jobstates} ]] && { BUFFER="fg"; zle accept-line }
+}
+zle -N fn-rt-job-foreground
+#[⫶] ctrlShiftZ
+
+
 bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
 
@@ -127,6 +136,7 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[cmdDelete]"        .kill-line
 
     "$keystrokes[cmdSemicolon]"     .execute-named-cmd
+    "$keystrokes[ctrlShiftZ]"       fn-rt-job-foreground
 
     "$keystrokes[cmdZ]"             .undo
     "$keystrokes[cmdShiftZ]"        .redo

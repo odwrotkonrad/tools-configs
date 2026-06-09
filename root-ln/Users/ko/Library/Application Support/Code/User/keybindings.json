@@ -803,6 +803,14 @@
   },
   {
     "args": {
+      "text": "\u0090F"
+    },
+    "command": "workbench.action.terminal.sendSequence",
+    "key": "ctrl+shift+z",
+    "when": "terminalFocus"
+  },
+  {
+    "args": {
       "text": "\u0090x"
     },
     "command": "workbench.action.terminal.sendSequence",
