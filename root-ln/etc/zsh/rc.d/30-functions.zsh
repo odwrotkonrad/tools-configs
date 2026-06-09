@@ -2,10 +2,21 @@
 
 autoload -Uz add-zsh-hook
 
-#[…] 🤖 predicates
-is-term-kitty() { [[ ${TERM} == xterm-kitty ]] }
-is-os-mac()     { [[ ${OSTYPE} == darwin* ]] }
-is-os-linux()   { [[ ${OSTYPE} == linux* ]] }
+#[…] 🤖🤖 predicates
+is-terminal() {
+  case ${1} in
+    kitty)  [[ ${TERM} == xterm-kitty ]] ;;
+    vscode) [[ ${TERM_PROGRAM} == vscode ]] ;;
+    *) return 2 ;;
+  esac
+}
+is-os() {
+  case ${1} in
+    mac)   [[ ${OSTYPE} == darwin* ]] ;;
+    linux) [[ ${OSTYPE} == linux* ]] ;;
+    *) return 2 ;;
+  esac
+}
 #[⫶] predicates
 
 function fn_otel_resource_cwd {
