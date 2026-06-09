@@ -2,6 +2,12 @@
 
 autoload -Uz add-zsh-hook
 
+#[…] 🤖 predicates
+is-term-kitty() { [[ ${TERM} == xterm-kitty ]] }
+is-os-mac()     { [[ ${OSTYPE} == darwin* ]] }
+is-os-linux()   { [[ ${OSTYPE} == linux* ]] }
+#[⫶] predicates
+
 function fn_otel_resource_cwd {
   export OTEL_RESOURCE_ATTRIBUTES="cwd=${PWD},project=${PWD:t}"
 }

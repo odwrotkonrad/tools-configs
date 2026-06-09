@@ -93,7 +93,7 @@ WORDCHARS=""
 fn-rt-keystrokes-listen() {
     print
     kitten show-key -m kitty
-    [[ ${TERM} == xterm-kitty ]] && print -n "${CSI}<u"
+    is-term-kitty && print -n "${CSI}<u"
     zle reset-prompt
 }
 zle -N fn-rt-keystrokes-listen
