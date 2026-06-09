@@ -71,9 +71,12 @@ typeset -A cchars=(
 for action char in ${(kv)cchars}; stty ${action} ${char}
 #[⫶] stty
 
-# [≟] 🤖🤖 SIGINT (^C) signal handler - cancel editing, scroll prompt to the top without clearing the screen, retaining history and the canceled buffer
+# [≟] 🤖🤖 SIGINT (^C) signal handler - cancel editing and scroll the prompt to the top without clearing the screen, retaining the terminal contents (including the canceled buffer) and the canceled buffer in history as a comment
 TRAPINT() {
-    [[ -o zle ]] && { print -n ${(pl:$LINES::\n:)}; print -n "${CSI}H"; zle send-break }
+    [[ -o zle ]] && {
+        [[ -n ${BUFFER} ]] && print -s -- "# ${BUFFER}"
+        print -n ${(pl:$LINES::\n:)}; print -n "${CSI}H"; zle send-break
+    }
 }
 
 
