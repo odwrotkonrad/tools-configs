@@ -101,7 +101,9 @@ zle -N fn-rt-keystrokes-listen
 
 #[…] 🤖🤖 ctrlShiftZ [≟] resume the most recent background job (mirror of ^Z suspend)
 fn-rt-job-foreground() {
-    [[ -z ${BUFFER} && -n ${jobstates} ]] && { BUFFER="fg"; zle accept-line }
+    [[ -n ${jobstates} ]] || return
+    [[ -n ${BUFFER} ]] && zle .push-input
+    BUFFER="fg"; zle .accept-line
 }
 zle -N fn-rt-job-foreground
 #[⫶] ctrlShiftZ
