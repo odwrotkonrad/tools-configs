@@ -19,6 +19,7 @@ typeset -a opts_enabled=(
   noappendhistory
   nobeep
   noclobber
+  noflowcontrol
   nohistbeep
   nohup
   promptsubst
@@ -124,7 +125,6 @@ typeset -a opts_disabled=(
   noequals
   noevallineno
   noexec
-  noflowcontrol
   nofunctionargzero
   noglob
   noglobalexport
