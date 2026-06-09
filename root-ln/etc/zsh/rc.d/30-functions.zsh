@@ -12,8 +12,8 @@ is-terminal() {
 }
 is-os() {
   case ${1} in
-    mac)   [[ ${OSTYPE} == darwin* ]] ;;
-    linux) [[ ${OSTYPE} == linux* ]] ;;
+    mac)   [[ $(uname -s) == Darwin ]] ;;
+    linux) [[ $(uname -s) == Linux ]] ;;
     *) return 2 ;;
   esac
 }
