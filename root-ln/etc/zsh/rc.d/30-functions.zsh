@@ -41,6 +41,13 @@ function fn_preexec_dispatch {
 }
 add-zsh-hook preexec fn_preexec_dispatch
 
+#[…] 🤖🤖 do not add cmds starting (after 0+ whitespace) with a histchars char to history
+function zshaddhistory {
+  emulate -L zsh
+  [[ $1 != [[:space:]]#[${histchars}]* ]]
+}
+#[⫶]
+
 function command_not_found_handler {
   if [[ -e $1 && -o interactive && -t 0 ]]; then
     local reply

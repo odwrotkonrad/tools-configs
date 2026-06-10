@@ -3,6 +3,7 @@
 #[…] enabled options
 typeset -a opts_enabled=(
   autopushd
+  braceccl #[≟] print 1{abw-z}2 -> 1a2 1b2 1w2 1x2 1y2 1z2
   cdsilent
   combiningchars
   cshnullglob
@@ -24,6 +25,7 @@ typeset -a opts_enabled=(
   nohup
   promptsubst
   pushdsilent
+  rcexpandparam #[≟] array=(one two); print X${array}Y -> XoneY XtwoY
 
   #[≟] auto enabled by shell
   # interactive
@@ -48,7 +50,6 @@ typeset -a opts_disabled=(
   autoresume
   bashautolist
   bashrematch
-  braceccl
   bsdecho
   casepaths
   cbases
@@ -169,7 +170,6 @@ typeset -a opts_disabled=(
   pushdignoredups
   pushdminus
   pushdtohome
-  rcexpandparam
   rcquotes
   recexact
   rematchpcre
@@ -202,10 +202,11 @@ for opt in ${opts_disabled}; unsetopt ${opt}
 
 #[…] parameters
 typeset -A zsh_params=(
+  histchars       '!^#'                         #[≟] histexpand-char quicksubst-char comment-char (defaults)
   HISTFILE    "${XDG_STATE_HOME}/zsh/history"
   HISTSIZE    15_000
   PS1         '%1~ %# '                         #[≟] cwd-basename prompt-sigil (%#: # root, %% user)
-  PS2         '> '                              #[≟] prompt when shell waits for input
+  PS2         '${(pl.${#${(%):-%1~ }}.. .)}> '  #[≟] 🤖 '>' aligned under PS1 prompt sigil for continuation lines
   PS4         '+ '                              #[≟] prompt when debugging prompt with XTRACE is set
   SAVEHIST    10_000
 )
