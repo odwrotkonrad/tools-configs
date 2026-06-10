@@ -32,6 +32,7 @@ typeset -A keystrokes=(
     cmdDelete          "${DCS}K"
 
     cmdSemicolon       "${CSI}59;9u"
+    ctrlShiftZ         "${DCS}F"
 
     cmdZ               "${DCS}z"
     cmdShiftZ          "${DCS}Z"
@@ -71,9 +72,13 @@ typeset -A cchars=(
 for action char in ${(kv)cchars}; stty ${action} ${char}
 #[⫶] stty
 
-# [≟] 🤖🤖 SIGINT (^C) signal handler - cancel editing, scroll prompt to the top without clearing the screen, retaining history and the canceled buffer
+# [≟] 🤖🤖 SIGINT (^C) signal handler - cancel editing and scroll the prompt to the top without clearing the screen, retaining the terminal contents (including the canceled buffer) and the canceled buffer in history as a comment
 TRAPINT() {
-    [[ -o zle ]] && { print -n ${(pl:$LINES::\n:)}; print -n "${CSI}H"; zle send-break }
+    [[ -o zle ]] && {
+        [[ -n ${BUFFER} ]] && print -s -- "# ${BUFFER}"
+        [[ -n ${BUFFER} ]] && { print -n "${CSI}1G# ${BUFFER}"; zle kill-whole-line }
+        print -n ${(pl:$LINES::\n:)}; print -n "${CSI}H"; zle send-break
+    }
 }
 
 
@@ -84,44 +89,66 @@ TRAPINT() {
 WORDCHARS=""
 
 
+#[…] 🤖🤖🤖 ctrlV [≟] listen for raw key sequences via kitten show-key
+fn-rt-keystrokes-listen() {
+    print
+    kitten show-key -m kitty
+    is-terminal kitty && print -n "${CSI}<u"
+    zle reset-prompt
+}
+zle -N fn-rt-keystrokes-listen
+#[⫶] ctrlV
+
+
+#[…] 🤖🤖 ctrlShiftZ [≟] resume the most recent background job (mirror of ^Z suspend)
+fn-rt-job-foreground() {
+    [[ -n ${jobstates} ]] || return
+    [[ -n ${BUFFER} ]] && zle .push-input
+    BUFFER="fg"; zle .accept-line
+}
+zle -N fn-rt-job-foreground
+#[⫶] ctrlShiftZ
+
+
 bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
 
 
 typeset -A keystrokes_widgets=(
-    "$keystrokes[bracketedPaste]"   bracketed-paste
+    "$keystrokes[bracketedPaste]"   .bracketed-paste
 
-    "$keystrokes[up]"               up-line-or-history
-    "$keystrokes[down]"             down-line-or-history
-    "$keystrokes[right]"            forward-char
-    "$keystrokes[left]"             backward-char
+    "$keystrokes[up]"               .up-line-or-history
+    "$keystrokes[down]"             .down-line-or-history
+    "$keystrokes[right]"            .forward-char
+    "$keystrokes[left]"             .backward-char
 
-    "$keystrokes[cmdUp]"            beginning-of-buffer-or-history
-    "$keystrokes[cmdDown]"          end-of-buffer-or-history
-    "$keystrokes[cmdRight]"         vi-end-of-line
-    "$keystrokes[cmdLeft]"          vi-beginning-of-line
+    "$keystrokes[cmdUp]"            .beginning-of-buffer-or-history
+    "$keystrokes[cmdDown]"          .end-of-buffer-or-history
+    "$keystrokes[cmdRight]"         .vi-end-of-line
+    "$keystrokes[cmdLeft]"          .vi-beginning-of-line
 
-    "$keystrokes[altLeft]"          vi-backward-word
-    "$keystrokes[altRight]"         vi-forward-word
+    "$keystrokes[altLeft]"          .vi-backward-word
+    "$keystrokes[altRight]"         .vi-forward-word
 
-    "$keystrokes[backspace]"        backward-delete-char
-    "$keystrokes[altBackspace]"     backward-delete-word
-    "$keystrokes[cmdBackspace]"     backward-kill-line
+    "$keystrokes[backspace]"        .backward-delete-char
+    "$keystrokes[altBackspace]"     .backward-delete-word
+    "$keystrokes[cmdBackspace]"     .backward-kill-line
 
-    "$keystrokes[delete]"           delete-char
-    "$keystrokes[altDelete]"        delete-word
-    "$keystrokes[cmdDelete]"        kill-line
+    "$keystrokes[delete]"           .delete-char
+    "$keystrokes[altDelete]"        .delete-word
+    "$keystrokes[cmdDelete]"        .kill-line
 
-    "$keystrokes[cmdSemicolon]"     execute-named-cmd
+    "$keystrokes[cmdSemicolon]"     .execute-named-cmd
+    "$keystrokes[ctrlShiftZ]"       fn-rt-job-foreground
 
-    "$keystrokes[cmdZ]"             undo
-    "$keystrokes[cmdShiftZ]"        redo
-    "$keystrokes[cmdX]"             kill-buffer
+    "$keystrokes[cmdZ]"             .undo
+    "$keystrokes[cmdShiftZ]"        .redo
+    "$keystrokes[cmdX]"             .kill-buffer
 
-    "$keystrokes[cr]"               accept-line
-    "$keystrokes[tab]"              expand-or-complete
+    "$keystrokes[cr]"               .accept-line
+    "$keystrokes[tab]"              .expand-or-complete
 
-    "$keystrokes[ctrlV]"            quoted-insert
+    "$keystrokes[ctrlV]"            fn-rt-keystrokes-listen
 )
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
