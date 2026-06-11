@@ -29,6 +29,6 @@ print -r -- "$instructions
 $subjects
 
 [additional-runtime-instructions]
-$additional_runtime_instructions" | claude -p --model claude-haiku-4-5 --system-prompt '' \
+$additional_runtime_instructions" | claude -p --model opus --system-prompt '' \
   --output-format json --json-schema "$schema" | jq '.structured_output'
 #[⫶] 🤖🤖
