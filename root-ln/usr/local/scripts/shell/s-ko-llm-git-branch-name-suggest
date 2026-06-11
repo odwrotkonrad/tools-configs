@@ -2,10 +2,13 @@
 #>[≟]
 #   Suggest a conventional branch name for the commits in <range> via claude -p.
 #   Upstream: the git-commit and git-mr skills, to verify or rename the branch.
-#   Downstream: git log subjects in <range> (default main..HEAD).
+#   Downstream: git log subjects in <range> (default main..HEAD), plus the
+#   staged and unstaged change summaries so an in-progress branch (few or no
+#   commits) still gets a name derived from the work in flight.
 #
 #   Runs claude headless in its own context (no session history), so the name
-#   derives only from the committed subjects, never the conversation.
+#   derives only from the committed subjects and working changes, never the
+#   conversation.
 #   Craft guide: ~/.config/claude/prompts/s-ko-llm-git-branch-name-suggest.md
 #   Output: JSON object { "name": ... }.
 #/[≟]
@@ -21,12 +24,20 @@ instructions=$(cat "$HOME/.config/claude/prompts/s-ko-llm-git-branch-name-sugges
 schema='{"type":"object","properties":{"name":{"type":"string"}},"required":["name"],"additionalProperties":false}'
 
 subjects=$(git log --reverse --format='%s' "$range")
-[[ -n $subjects ]] || { jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'; exit 0 }
+staged=$(git diff --cached --stat)
+unstaged=$(git diff --stat)
+[[ -n $subjects || -n $staged || -n $unstaged ]] || { jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'; exit 0 }
 
 print -r -- "$instructions
 
 [commit-subjects ($range)]
 $subjects
+
+[staged-changes]
+$staged
+
+[unstaged-changes]
+$unstaged
 
 [additional-runtime-instructions]
 $additional_runtime_instructions" | claude -p --model opus --system-prompt '' \

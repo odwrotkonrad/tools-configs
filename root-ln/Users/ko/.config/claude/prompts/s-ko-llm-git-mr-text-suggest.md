@@ -4,18 +4,23 @@
 
 # Task
 
-Write an MR/PR title and description from the commits. Fill `title` and `description`.
-Terse, specific, exhaustive: every change appears; trim words, never changes.
+Write an MR/PR title and description from the net diff against main. Fill `title` and `description`.
+The net diff is the source of truth: describe only what it changes, not what the commits say.
+Terse, specific, exhaustive: every change in the diff appears; trim words, never changes.
 
 # Craft
 
+- derive everything from the net diff; commits are secondary context for intent and ordering only
+- a change committed then reverted within the range is absent from the net diff → it MUST NOT appear
+- when a commit subject and the diff disagree, the diff wins
+
 `title` — `<type>(<scope>): <summary>`:
-- summary names what the branch changes as a whole; imperative, concise
+- summary names what the diff changes as a whole; imperative, concise
 - one area → `(area)`; 2+ areas → `(area,area,...)`
 
 `description` — markdown grouped by area:
-- `## <scope>` heading per area, first-appearance order
-- one `- ` bullet per change, `type(scope): ` prefix stripped, reviewer-facing
+- `## <scope>` heading per area, first-appearance order in the diff
+- one `- ` bullet per change, reviewer-facing
 - flag breaking changes or migrations
 
 # Examples

@@ -4,12 +4,14 @@
 
 # Task
 
-Suggest a branch name from the commit subjects. Fill `name`. Terse, specific.
+Suggest a branch name from the commit subjects and the in-flight changes
+(staged + unstaged). Fill `name`. Terse, specific.
 
 # Craft
 
-- no commits in range → `tmp/scratch-<datetime>` (nothing to derive a type/scope from)
-- read `type(scope)` from each subject; `<type>` = first commit's type
+- prefer commit subjects; fall back to the staged/unstaged change summaries when there are few or no commits
+- nothing to derive a type/scope from (no commits, no staged, no unstaged) → `tmp/scratch-<datetime>`
+- read `type(scope)` from each subject; `<type>` = first commit's type, else infer from the changed paths
 - one scope: `<type>/<scope>-<desc>`, `<desc>` = 2-4 hyphenated words
 - many scopes: `<type>/<scope>-<scope>-...`, first-appearance order, no desc
 - lowercase, hyphenated, no spaces
