@@ -39,6 +39,7 @@ typeset -A keystrokes=(
     cmdX               "${DCS}x"
 
     cr                 $'\r'
+    altCr              "${ESC}"$'\n'
     tab                $'\t'
 
     ctrlV              "^V"
@@ -109,6 +110,20 @@ zle -N fn-rt-job-foreground
 #[⫶] ctrlShiftZ
 
 
+#[≟] wrap .accept-line: on a trailing `\` suffix, add a newline instead of accepting
+#[∵] so zle keeps the input as one multiline buffer rather than multiple separate single lines (which what happens when PS2 is used with native behavior)
+wd-rt-accept-line() {
+    local trail=${(M)BUFFER%'\'}
+    if [[ $trail ]] {
+      LBUFFER+=$'\n'
+      return
+    }
+
+    zle .accept-line
+}
+zle -N wd-rt-accept-line
+
+
 bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
 
@@ -144,7 +159,8 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[cmdShiftZ]"        .redo
     "$keystrokes[cmdX]"             .kill-buffer
 
-    "$keystrokes[cr]"               .accept-line
+    "$keystrokes[cr]"               wd-rt-accept-line
+    "$keystrokes[altCr]"            .self-insert-unmeta
     "$keystrokes[tab]"              .expand-or-complete
 
     "$keystrokes[ctrlV]"            fn-rt-keystrokes-listen

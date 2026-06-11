@@ -206,7 +206,7 @@ typeset -A zsh_params=(
   HISTFILE    "${XDG_STATE_HOME}/zsh/history"
   HISTSIZE    15_000
   PS1         '%1~ %# '                         #[≟] cwd-basename prompt-sigil (%#: # root, %% user)
-  PS2         '${(pl.${#${(%):-%1~ }}.. .)}> '  #[≟] 🤖 '>' aligned under PS1 prompt sigil for continuation lines
+  PS2         '> '                              #[≟] continuation-line prompt
   PS4         '+ '                              #[≟] prompt when debugging prompt with XTRACE is set
   SAVEHIST    10_000
 )
