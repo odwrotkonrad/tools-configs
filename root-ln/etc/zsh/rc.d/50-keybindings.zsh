@@ -106,17 +106,17 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[cmdDelete]"        .kill-line
 
     "$keystrokes[ctrlSemicolon]"    execute-named-cmd
-    "$keystrokes[ctrlShiftZ]"       wd-rt-job-foreground
+    "$keystrokes[ctrlShiftZ]"       wd-fn-rt-job-foreground
 
     "$keystrokes[cmdZ]"             .undo
     "$keystrokes[cmdShiftZ]"        .redo
     "$keystrokes[cmdX]"             .kill-buffer
 
-    "$keystrokes[cr]"               wd-rt-accept-line
+    "$keystrokes[cr]"               wd-fn-rt-accept-line
     "$keystrokes[altCr]"            .self-insert-unmeta
     "$keystrokes[tab]"              .expand-or-complete
 
-    "$keystrokes[ctrlV]"            wd-rt-keystrokes-listen
+    "$keystrokes[ctrlV]"            wd-fn-rt-keystrokes-listen
 )
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
@@ -126,7 +126,7 @@ bindkey -A key_map main
 
 # [≟] SIGINT (^C) signal handler — delegate to the clear-scrollable widget when zle is active
 TRAPINT() {
-    [[ -o zle ]] && zle wd-rt-clear-scrollable
+    [[ -o zle ]] && zle wd-fn-rt-clear-scrollable
 }
 
 
