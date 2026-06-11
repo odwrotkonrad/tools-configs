@@ -1,3 +1,5 @@
+<!--[…] 🤖🤖 -->
+
 ## Git Workflow
 
 `ko`-namespaced skills, text-only via `claude -p`. Don't push unasked. Each calls a script (links below); conventions live in the script's prompt md file.
@@ -20,3 +22,5 @@ Used by `/ko-git-commit` and `/ko-git-mr-upsert` for their branch step.
 - in → out: commits → `{title, description}`; then create/update via the provider CLI
 - [script](../../../../usr/local/scripts/shell/s-ko-llm-git-mr-text-suggest) · [craft](prompts/s-ko-llm-git-mr-text-suggest.md)
 - CLI from `git remote get-url origin`: gitlab.com → `glab mr create`/edit, github.com → `gh pr create`/`gh pr edit`
+
+<!--[⫶] 🤖🤖 -->

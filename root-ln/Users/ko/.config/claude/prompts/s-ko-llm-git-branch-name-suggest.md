@@ -1,5 +1,7 @@
 <!-- used by the script s-ko-llm-git-branch-name-suggest -->
 
+<!--[…] 🤖🤖 -->
+
 # Task
 
 Suggest a branch name from the commit subjects. Fill `name`. Terse, specific.
@@ -17,3 +19,5 @@ Suggest a branch name from the commit subjects. Fill `name`. Terse, specific.
 - none: `tmp/scratch-20260611-153012`
 - one: `config/zsh-multiline-buffer`
 - many: `config/zsh-direnv-keybindings`
+
+<!--[⫶] 🤖🤖 -->

@@ -1,5 +1,7 @@
 <!-- used by the script s-ko-llm-git-mr-text-suggest -->
 
+<!--[…] 🤖🤖 -->
+
 # Task
 
 Write an MR/PR title and description from the commits. Fill `title` and `description`.
@@ -40,3 +42,5 @@ one area — title `config(zsh): restructure zle widgets and naming`:
 - rename widget functions to the wd-fn-rt-* namespace
 - rename keystroke sequences from s_seq to rt_seq
 ```
+
+<!--[⫶] 🤖🤖 -->

@@ -1,5 +1,7 @@
 <!-- used by the script s-ko-llm-git-commit-msg-suggest -->
 
+<!--[…] 🤖🤖 -->
+
 # Task
 
 Write a commit message from the staged diff. Fill `subject` and `description`.
@@ -37,3 +39,5 @@ map ctrl+shift+z to send the escape the widget reads
 vscode:
 add the keybinding so the integrated terminal matches
 ```
+
+<!--[⫶] 🤖🤖 -->
