@@ -6,7 +6,7 @@ wd-fn-rt-clear-scrollable() {
 
     # 1. print current input as a comment
     if [[ ${BUFFER} ]] {
-      print -rn -- "$s_seq[goto-col-1]${(%)PS1}# $BUFFER"
+      print -rn -- "$rt_seq[goto-col-1]${(%)PS1}# $BUFFER"
     }
     # 2. reset input
     zle reset-prompt
@@ -16,7 +16,7 @@ wd-fn-rt-clear-scrollable() {
     print -n ${(pl:$LINES::\n:)}
 
     # 4. move empty prompt line to first terminal row
-    print -n $s_seq[goto-row-1]
+    print -n $rt_seq[goto-row-1]
 }
 
 wd-fn-rt-accept-line() {

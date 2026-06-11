@@ -48,7 +48,7 @@ unset env_vars
 
 #[……] ANSI escape sequences
 #[⌖] https://ecma-international.org/wp-content/uploads/ECMA-48_5th_edition_june_1991.pdf
-typeset -A s_seq=(
+typeset -A rt_seq=(
     esc         $'\u001B'    #[≟] ANSI -> ESC: introducer for escape sequences
     csi         $'\u001B['   #[≟] ANSI -> CSI: Control Sequence Introducer
     dcs         $'\u0090'    #[≟] ANSI -> DCS: Device Control String

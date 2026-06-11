@@ -4,38 +4,38 @@
 #/[⌖]
 
 typeset -A keystrokes=(
-    bracketedPaste     "${s_seq[csi]}200~"
+    bracketedPaste     "${rt_seq[csi]}200~"
 
-    up                 "${s_seq[csi]}A"
-    down               "${s_seq[csi]}B"
-    right              "${s_seq[csi]}C"
-    left               "${s_seq[csi]}D"
+    up                 "${rt_seq[csi]}A"
+    down               "${rt_seq[csi]}B"
+    right              "${rt_seq[csi]}C"
+    left               "${rt_seq[csi]}D"
 
-    cmdUp              "${s_seq[dcs]}U"
-    cmdDown            "${s_seq[dcs]}D"
+    cmdUp              "${rt_seq[dcs]}U"
+    cmdDown            "${rt_seq[dcs]}D"
     cmdRight           $'\x05'
     cmdLeft            $'\x01'
 
-    altLeft            "${s_seq[esc]}b"
-    altRight           "${s_seq[esc]}f"
+    altLeft            "${rt_seq[esc]}b"
+    altRight           "${rt_seq[esc]}f"
 
     backspace          "^H"
     altBackspace       $'\x17'
     cmdBackspace       $'\x15'
 
-    delete             "${s_seq[csi]}3~"
-    altDelete          "${s_seq[esc]}d"
-    cmdDelete          "${s_seq[dcs]}K"
+    delete             "${rt_seq[csi]}3~"
+    altDelete          "${rt_seq[esc]}d"
+    cmdDelete          "${rt_seq[dcs]}K"
 
-    ctrlSemicolon      "${s_seq[csi]}59;5u"
-    ctrlShiftZ         "${s_seq[dcs]}F"
+    ctrlSemicolon      "${rt_seq[csi]}59;5u"
+    ctrlShiftZ         "${rt_seq[dcs]}F"
 
-    cmdZ               "${s_seq[dcs]}z"
-    cmdShiftZ          "${s_seq[dcs]}Z"
-    cmdX               "${s_seq[dcs]}x"
+    cmdZ               "${rt_seq[dcs]}z"
+    cmdShiftZ          "${rt_seq[dcs]}Z"
+    cmdX               "${rt_seq[dcs]}x"
 
     cr                 $'\r'
-    altCr              "${s_seq[esc]}"$'\n'
+    altCr              "${rt_seq[esc]}"$'\n'
     tab                $'\t'
 
     ctrlV              "^V"
