@@ -9,7 +9,7 @@ Terse, specific, exhaustive: every change appears; trim words, never changes.
 
 `title` — `<type>(<scope>): <summary>`:
 - summary names what the branch changes as a whole; imperative, concise
-- one area → `(area)`, NEVER `batch`; only 2+ areas use `batch,<area>,<area>,...`
+- one area → `(area)`; 2+ areas → `(area,area,...)`
 
 `description` — markdown grouped by area:
 - `## <scope>` heading per area, first-appearance order
@@ -18,7 +18,7 @@ Terse, specific, exhaustive: every change appears; trim words, never changes.
 
 # Examples
 
-many areas — title `config(batch,zsh,direnv,keybindings): unify terminal keybindings and quiet shell startup`:
+many areas — title `config(zsh,direnv,keybindings): unify terminal keybindings and quiet shell startup`:
 
 ```
 ## zsh
