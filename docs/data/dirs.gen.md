@@ -31,7 +31,7 @@ root-ln
             config
               zsh
           skills
-            ko-git-branch-upsert
+            ko-git-branch-name-upsert
             ko-git-commit
             ko-git-mr-upsert
           themes

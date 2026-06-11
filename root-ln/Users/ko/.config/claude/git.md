@@ -8,7 +8,7 @@
 - [script](../../../../usr/local/scripts/shell/s-ko-llm-git-commit-msg-suggest) · [craft](prompts/s-ko-llm-git-commit-msg-suggest.md)
 - commit vs amend: pushed HEAD or different logical unit → new commit; else → `git commit --amend`
 
-### /ko-git-branch-upsert — create/rename branch to a conventional name
+### /ko-git-branch-name-upsert — create/rename branch to a conventional name
 
 Used by `/ko-git-commit` and `/ko-git-mr-upsert` for their branch step.
 
