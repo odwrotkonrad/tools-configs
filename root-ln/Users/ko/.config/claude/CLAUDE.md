@@ -1,3 +1,5 @@
+@comments.md
+
 ## Available Tools
 
 You have access to these and only these tools:
@@ -41,4 +43,4 @@ Up-to-date documentation is available using:
 
 <!-- TODO also need to have some web source -->
 
-@comments.md
+@git.md

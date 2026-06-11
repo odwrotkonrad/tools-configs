@@ -23,9 +23,18 @@
     "allow": [
       "Bash(cd ./*)",
       "Bash(git add *)",
+      "Bash(git checkout *)",
       "Bash(git commit *)",
+      "Bash(glab mr create *)",
+      "Bash(glab mr update *)",
       "Bash(man *)",
       "Bash(rg *)",
+      "Bash(s-ko-llm-git-branch-name-suggest *)",
+      "Bash(s-ko-llm-git-branch-name-suggest)",
+      "Bash(s-ko-llm-git-commit-msg-suggest *)",
+      "Bash(s-ko-llm-git-commit-msg-suggest)",
+      "Bash(s-ko-llm-git-mr-text-suggest *)",
+      "Bash(s-ko-llm-git-mr-text-suggest)",
       "Bash(* --help)",
       "Bash(* -h)",
       "Edit(**/*)",
@@ -48,7 +57,6 @@
       "Monitor",
       "NotebookEdit",
       "PowerShell",
-      "Skill",
       "TaskCreate",
       "TaskGet",
       "TaskList",
@@ -58,6 +66,12 @@
       "TodoWrite",
       "WebFetch",
       "WebSearch"
+    ],
+    "ask": [
+      "Skill(ko-git-branch-name-upsert)",
+      "Skill(ko-git-commit)",
+      "Skill(ko-git-mr-upsert)",
+      "Skill(ko-git-upsert-all)"
     ],
     "defaultMode": "default"
   },

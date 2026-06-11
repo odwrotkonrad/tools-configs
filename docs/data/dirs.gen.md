@@ -24,12 +24,17 @@ root-ln
           output-styles
           plugins
             marketplaces
+          prompts
           rules
             code
               python
             config
               zsh
           skills
+            ko-git-branch-name-upsert
+            ko-git-commit
+            ko-git-mr-upsert
+            ko-git-upsert-all
           themes
         direnv
         git
