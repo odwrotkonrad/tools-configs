@@ -48,7 +48,6 @@
       "Monitor",
       "NotebookEdit",
       "PowerShell",
-      "Skill",
       "TaskCreate",
       "TaskGet",
       "TaskList",
@@ -58,6 +57,11 @@
       "TodoWrite",
       "WebFetch",
       "WebSearch"
+    ],
+    "ask": [
+      "Skill(ko-git-branch-upsert)",
+      "Skill(ko-git-commit)",
+      "Skill(ko-git-mr-upsert)"
     ],
     "defaultMode": "default"
   },

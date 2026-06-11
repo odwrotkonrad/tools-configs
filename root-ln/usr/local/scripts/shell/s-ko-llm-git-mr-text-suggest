@@ -1,0 +1,40 @@
+#!/usr/bin/env zsh
+#>[≟]
+#   Generate an MR/PR title and description from main..HEAD via claude -p.
+#   Upstream: the git-mr skill.
+#   Downstream: git log/diff for <range> (default main..HEAD).
+#   $1 (optional): commit range. $2 (optional): additional runtime instructions.
+#
+#   Runs claude headless in its own context (no session history), so the text
+#   describes only the committed diff, never the conversation.
+#   Craft guide: ~/.config/claude/prompts/s-ko-llm-git-mr-text-suggest.md
+#   Output: JSON object { "title": ..., "description": ... }.
+#/[≟]
+
+#[…] 🤖🤖
+set -e
+
+range=${1:-main..HEAD}
+additional_runtime_instructions=${2:-}
+
+instructions=$(cat "$HOME/.config/claude/prompts/s-ko-llm-git-mr-text-suggest.md")
+
+schema='{"type":"object","properties":{"title":{"type":"string"},"description":{"type":"string"}},"required":["title","description"],"additionalProperties":false}'
+
+commits=$(git log --reverse --format='%h %s' "$range")
+[[ -n $commits ]] || { echo "error: no commits in $range" >&2; exit 1 }
+
+diff=$(git diff "${range/../...}")
+
+print -r -- "$instructions
+
+[commits ($range)]
+$commits
+
+[additional-runtime-instructions]
+$additional_runtime_instructions
+
+[diff]
+$diff" | claude -p --model claude-haiku-4-5 --system-prompt '' \
+  --output-format json --json-schema "$schema" | jq '.structured_output'
+#[⫶] 🤖🤖
