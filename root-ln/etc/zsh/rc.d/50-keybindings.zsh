@@ -3,42 +3,39 @@
 # root-ln/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
 #/[⌖]
 
-#[⌖] https://en.wikipedia.org/wiki/ANSI_escape_code
-ESC=$'\u001B'         #[≟] introducer for escape sequences
-CSI=$'\u001B['        #[≟] Control Sequence Introducer
-DCS=$'\u0090'         #[≟] Device Control String
 typeset -A keystrokes=(
-    bracketedPaste     "${CSI}200~"
+    bracketedPaste     "${rt_seq[csi]}200~"
 
-    up                 "${CSI}A"
-    down               "${CSI}B"
-    right              "${CSI}C"
-    left               "${CSI}D"
+    up                 "${rt_seq[csi]}A"
+    down               "${rt_seq[csi]}B"
+    right              "${rt_seq[csi]}C"
+    left               "${rt_seq[csi]}D"
 
-    cmdUp              "${DCS}U"
-    cmdDown            "${DCS}D"
+    cmdUp              "${rt_seq[dcs]}U"
+    cmdDown            "${rt_seq[dcs]}D"
     cmdRight           $'\x05'
     cmdLeft            $'\x01'
 
-    altLeft            "${ESC}b"
-    altRight           "${ESC}f"
+    altLeft            "${rt_seq[esc]}b"
+    altRight           "${rt_seq[esc]}f"
 
     backspace          "^H"
     altBackspace       $'\x17'
     cmdBackspace       $'\x15'
 
-    delete             "${CSI}3~"
-    altDelete          "${ESC}d"
-    cmdDelete          "${DCS}K"
+    delete             "${rt_seq[csi]}3~"
+    altDelete          "${rt_seq[esc]}d"
+    cmdDelete          "${rt_seq[dcs]}K"
 
-    cmdSemicolon       "${CSI}59;9u"
-    ctrlShiftZ         "${DCS}F"
+    ctrlSemicolon      "${rt_seq[csi]}59;5u"
+    ctrlShiftZ         "${rt_seq[dcs]}F"
 
-    cmdZ               "${DCS}z"
-    cmdShiftZ          "${DCS}Z"
-    cmdX               "${DCS}x"
+    cmdZ               "${rt_seq[dcs]}z"
+    cmdShiftZ          "${rt_seq[dcs]}Z"
+    cmdX               "${rt_seq[dcs]}x"
 
     cr                 $'\r'
+    altCr              "${rt_seq[esc]}"$'\n'
     tab                $'\t'
 
     ctrlV              "^V"
@@ -72,41 +69,12 @@ typeset -A cchars=(
 for action char in ${(kv)cchars}; stty ${action} ${char}
 #[⫶] stty
 
-# [≟] 🤖🤖 SIGINT (^C) signal handler - cancel editing and scroll the prompt to the top without clearing the screen, retaining the terminal contents (including the canceled buffer)
-TRAPINT() {
-    [[ -o zle ]] && {
-        [[ -n ${BUFFER} ]] && { print -n "${CSI}1G# ${BUFFER}"; zle kill-whole-line }
-        print -n ${(pl:$LINES::\n:)}; print -n "${CSI}H"; zle send-break
-    }
-}
-
 
 #[…] zshzle
 #[⌖] man zshzle > bindkey [≟] zsh doc on bindings
 
 #[≟] non-alnum chars counted as word; empty = strict word boundaries #>[⌖] $ man zshparam
 WORDCHARS=""
-
-
-#[…] 🤖🤖🤖 ctrlV [≟] listen for raw key sequences via kitten show-key
-fn-rt-keystrokes-listen() {
-    print
-    kitten show-key -m kitty
-    is-terminal kitty && print -n "${CSI}<u"
-    zle reset-prompt
-}
-zle -N fn-rt-keystrokes-listen
-#[⫶] ctrlV
-
-
-#[…] 🤖🤖 ctrlShiftZ [≟] resume the most recent background job (mirror of ^Z suspend)
-fn-rt-job-foreground() {
-    [[ -n ${jobstates} ]] || return
-    [[ -n ${BUFFER} ]] && zle .push-input
-    BUFFER="fg"; zle .accept-line
-}
-zle -N fn-rt-job-foreground
-#[⫶] ctrlShiftZ
 
 
 bindkey -N key_map
@@ -137,23 +105,29 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[altDelete]"        .delete-word
     "$keystrokes[cmdDelete]"        .kill-line
 
-    "$keystrokes[cmdSemicolon]"     .execute-named-cmd
-    "$keystrokes[ctrlShiftZ]"       fn-rt-job-foreground
+    "$keystrokes[ctrlSemicolon]"    execute-named-cmd
+    "$keystrokes[ctrlShiftZ]"       wd-fn-rt-job-foreground
 
     "$keystrokes[cmdZ]"             .undo
     "$keystrokes[cmdShiftZ]"        .redo
     "$keystrokes[cmdX]"             .kill-buffer
 
-    "$keystrokes[cr]"               .accept-line
+    "$keystrokes[cr]"               wd-fn-rt-accept-line
+    "$keystrokes[altCr]"            .self-insert-unmeta
     "$keystrokes[tab]"              .expand-or-complete
 
-    "$keystrokes[ctrlV]"            fn-rt-keystrokes-listen
+    "$keystrokes[ctrlV]"            wd-fn-rt-keystrokes-listen
 )
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
 #[⫶] zshzle
 
+
+# [≟] SIGINT (^C) signal handler — delegate to the clear-scrollable widget when zle is active
+TRAPINT() {
+    [[ -o zle ]] && zle wd-fn-rt-clear-scrollable
+}
 
 
 unset keystrokes_widgets disabled_cchars cchars

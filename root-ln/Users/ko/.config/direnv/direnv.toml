@@ -10,6 +10,9 @@ strict_env = true
 #[≟] fire warning if .envrc loading is slow
 warn_timeout = "300ms"
 
+#[≟]  hide the "export +VAR" diff line on directory entry
+hide_env_diff = true
+
 [whitelist]
 
 #[≟] trust projects having the prefix without asking
