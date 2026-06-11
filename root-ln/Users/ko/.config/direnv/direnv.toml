@@ -10,11 +10,8 @@ strict_env = true
 #[≟] fire warning if .envrc loading is slow
 warn_timeout = "300ms"
 
-#[≟] "-" disables normal logging (loading/unloading); errors still show (default "$name: %s")
-log_format = "-"
-
-#[≟] (default) hide the "export +VAR" diff line on directory entry
-hide_env_diff = false
+#[≟]  hide the "export +VAR" diff line on directory entry
+hide_env_diff = true
 
 [whitelist]
 
