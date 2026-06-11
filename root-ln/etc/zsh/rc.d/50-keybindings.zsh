@@ -31,7 +31,7 @@ typeset -A keystrokes=(
     altDelete          "${ESC}d"
     cmdDelete          "${DCS}K"
 
-    cmdSemicolon       "${CSI}59;9u"
+    ctrlSemicolon      "${CSI}59;5u"
     ctrlShiftZ         "${DCS}F"
 
     cmdZ               "${DCS}z"
@@ -137,7 +137,7 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[altDelete]"        .delete-word
     "$keystrokes[cmdDelete]"        .kill-line
 
-    "$keystrokes[cmdSemicolon]"     .execute-named-cmd
+    "$keystrokes[ctrlSemicolon]"    execute-named-cmd
     "$keystrokes[ctrlShiftZ]"       fn-rt-job-foreground
 
     "$keystrokes[cmdZ]"             .undo

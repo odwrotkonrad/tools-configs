@@ -945,6 +945,14 @@
     "key": "cmd+shift+down",
     "when": "terminalFocus"
   },
+  {
+    "args": {
+      "text": "\u001b[59;5u"
+    },
+    "command": "workbench.action.terminal.sendSequence",
+    "key": "ctrl+;",
+    "when": "terminalFocus"
+  },
   //[≟] terminal - shift+enter just like alt+enter
   {
     "args": {
