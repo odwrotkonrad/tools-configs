@@ -4,7 +4,7 @@
 
 # types:
 #   infra:     provisioning, hosts, services, runtime topology
-#   ci:        pipelines, build/release automation, CI config
+#   ci:        pipelines, build/release automation, CI config, git hooks, dev environment
 #   deps:      dependency add/remove/bump, lockfiles
 #   config:    settings/options of an existing tool or app
 #   scaffold:  new project/module skeleton, boilerplate

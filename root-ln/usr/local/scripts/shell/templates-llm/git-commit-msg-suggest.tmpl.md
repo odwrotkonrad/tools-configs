@@ -18,25 +18,25 @@
 Write a commit message from the staged diff. Fill `subject` and `description`.
 Terse, specific, exhaustive: every change appears, trim words, never changes.
 
-`subject`, `<type>(<scope>): <summary>`:
+`subject` → `<type>(<scope>): <summary>`:
 - imperative, lowercase, <=72 chars, no trailing period
 - names what changed, not the file. no filler ("update", "misc", "wip")
 - one area → `(area)`, 2+ areas → `(area,area,...)`
 
-`description`, the body:
+`description` → the body:
 - what each change does, concretely. wrap ~72 cols, flag breaking changes
 - multi-area change → group under an `area:` heading per area
 
 ## Examples
 
-one area, `config(direnv): silence load and unload logs`:
+one area → `config(direnv): silence load and unload logs`:
 
 ```
 Set log_format to empty so entering or leaving a directory no longer prints
 the "direnv: loading" / "direnv: unloading" lines.
 ```
 
-many areas, `config(zsh,kitty,vscode): bind ctrl+shift+z to foreground the last job`:
+many areas → `config(zsh,kitty,vscode): bind ctrl+shift+z to foreground the last job`:
 
 ```
 zsh:

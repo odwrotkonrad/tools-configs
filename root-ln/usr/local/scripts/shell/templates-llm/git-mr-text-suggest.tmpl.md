@@ -20,18 +20,18 @@ Terse, specific, exhaustive: every change in the diff appears, trim words, never
 - a change committed then reverted within the range is absent from the net diff → it MUST NOT appear
 - when a commit subject and the diff disagree, the diff wins
 
-`title`, `<type>(<scope>): <summary>`:
+`title` → `<type>(<scope>): <summary>`:
 - summary names what the diff changes as a whole, imperative, concise
 - one area → `(area)`, 2+ areas → `(area,area,...)`
 
-`description`, markdown grouped by area:
+`description` → markdown grouped by area:
 - `## <scope>` heading per area, first-appearance order in the diff
 - one `- ` bullet per change, reviewer-facing
 - flag breaking changes or migrations
 
 ## Examples
 
-many areas, title `config(zsh,direnv,keybindings): unify terminal keybindings and quiet shell startup`:
+many areas → title `config(zsh,direnv,keybindings): unify terminal keybindings and quiet shell startup`:
 
 ```
 ## zsh
@@ -45,7 +45,7 @@ many areas, title `config(zsh,direnv,keybindings): unify terminal keybindings an
 - bind ctrl+; to execute-named-command across zle, kitty, vscode
 ```
 
-one area, title `config(zsh): restructure zle widgets and naming`:
+one area → title `config(zsh): restructure zle widgets and naming`:
 
 ```
 ## zsh
