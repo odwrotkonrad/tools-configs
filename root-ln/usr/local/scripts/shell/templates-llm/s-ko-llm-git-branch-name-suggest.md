@@ -20,6 +20,6 @@ Suggest a branch name from the commit subjects and the in-flight changes
 
 - none: `tmp/scratch-20260611-153012`
 - one: `config/zsh-multiline-buffer`
-- many: `config/zsh-direnv-keybindings`
+- many: `config/zsh-direnv-claude-vscode`
 
 <!--[⫶] 🤖🤖 -->

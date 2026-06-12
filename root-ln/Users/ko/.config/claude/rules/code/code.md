@@ -9,7 +9,6 @@ paths:
   - "**/usr/local/scripts/**"
 ---
 
-<!--[…] 🤖 -->
 ## Code
 
 Generic coding guidelines.
@@ -24,11 +23,12 @@ Generic coding guidelines.
 
 - **Don't** write operations that fail or duplicate when run a second time.
 
-### Documenting Commands
+### Documentation
 
 **Do:**
 
 - **Do** write shell commands with a `$` prompt prefix, e.g. `` `$ git status` ``.
+- **Do** write docstrings and comments abrupt, terse, concise; use specific wording.
 
 ### Variable Naming
 
@@ -65,4 +65,3 @@ Generic coding guidelines.
 
 - **Don't** add error handling, fallbacks, or recovery unprompted.
 - **Don't** hide errors or suppress error output unprompted.
-<!--[⫶] 🤖 -->

@@ -1,49 +1,61 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven change request (MR/PR) generation
-#   Usage: s-ko-llm-git-mr-text-suggest [range] [extra-instructions]
+#   Usage: <extra-instructions-on-stdin> | s-ko-llm-git-mr-text-suggest [range]
+#   extra-instructions: optional, read from stdin when piped.
 #   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
 #   Prompt Template: ./templates-llm/s-ko-llm-git-mr-text-suggest.md
 #   Out: { "title": ..., "description": ... }.
 #/[≟]
 
-#[…] 🤖🤖
 set -e
 
 
-#[…] args
-range=${1:-main..HEAD}
-additional_runtime_instructions=${2:-}
-#[⫶] args
+#[…] script input
+typeset -A script_input=(
+  instructions_runtime "$([[ -t 0 ]] || cat)"
+
+  range "${1:-main..HEAD}"
+)
+#[⫶] script input
 
 
-#[…] template parameters
-typeset -A template_params=(
+#[……] template input
+typeset -A template_input=(
+  instructions_core ""
+  instructions_prose ""
+  instructions_runtime ""
+
   net_diff ""
   commits ""
 )
 
+#[…] template input prep 🤖
+template_input[commits]=$(git log --reverse --format='%h %s' "$script_input[range]")
+[[ -n $template_input[commits] ]] || { echo "error: no commits in $script_input[range]" >&2; exit 1 }
 
-template_params[commits]=$(git log --reverse --format='%h %s' "$range")
-[[ -n $template_params[commits] ]] || { echo "error: no commits in $range" >&2; exit 1 }
+template_input[net_diff]=$(git diff "${script_input[range]/../...}")
 
-template_params[net_diff]=$(git diff "${range/../...}")
-#[⫶] template parameters
+template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/s-ko-llm-git-mr-text-suggest.md")
+template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
+template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
+$script_input[instructions_runtime]"}
+#[⫶] template input prep 🤖
+#[⫶⫶] template input
 
 
 #[…] fill template
-instructions=$(cat "${0:A:h}/templates-llm/s-ko-llm-git-mr-text-suggest.md")
+prompt="## Commits ($script_input[range]) — secondary context only, may include reverted work
+$template_input[commits]
 
-prompt="$instructions
+## Net Diff (${script_input[range]/../...}) — source of truth, describe only what this shows
+$template_input[net_diff]
 
-[net-diff (${range/../...}) — source of truth, describe only what this shows]
-$template_params[net_diff]
+$template_input[instructions_prose]
 
-[commits ($range) — secondary context only, may include reverted work]
-$template_params[commits]
+$template_input[instructions_core]
 
-[additional-runtime-instructions]
-$additional_runtime_instructions"
+$template_input[instructions_runtime]"
 #[⫶] fill template
 
 
@@ -60,6 +72,5 @@ schema='{
   "additionalProperties": false
 }'
 
-print -r -- "$prompt" | s-ko-llm-claude "$schema"
+<<< "$prompt" s-ko-llm-claude "$schema"
 #[⫶] claude invocation
-#[⫶] 🤖🤖

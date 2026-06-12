@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven branch name generation
-#   Usage: s-ko-llm-git-branch-name-suggest [range] [extra-instructions] [include-unstaged=1]
+#   Usage: <extra-instructions-on-stdin> | s-ko-llm-git-branch-name-suggest [range] [include-unstaged=1]
 #   include-unstaged: 1 add tracked unstaged changes, 0 staged only. Never untracked.
+#   extra-instructions: optional, read from stdin when piped.
 #   Upstream: git-commit, git-mr skills. Downstream: git subjects + diffs.
 #   Prompt Template: ./templates-llm/s-ko-llm-git-branch-name-suggest.md
 #   Out: { "name": ... }.
@@ -11,54 +12,66 @@
 set -e
 
 
-#[…] args
-range=${1:-main..HEAD}
-additional_runtime_instructions=${2:-}
-include_unstaged=${3:-1}
-#[⫶] args
+#[…] script input
+typeset -A script_input=(
+  instructions_runtime "$([[ -t 0 ]] || cat)"
+
+  range "${1:-main..HEAD}"
+  include_unstaged "${2:-1}"
+)
+#[⫶] script input
 
 
-#[…] template parameters
-typeset -A template_params=(
+#[……] template input
+typeset -A template_input=(
+  instructions_core ""
+  instructions_prose ""
+  instructions_runtime ""
+
   commits_log_short ""
   changes ""
   changes_stats ""
 )
 
+#[…] template input prep 🤖
+template_input[commits_log_short]=$(git log --reverse --format='%s' "$script_input[range]")
 
-template_params[commits_log_short]=$(git log --reverse --format='%s' "$range")
-
-if [[ $include_unstaged == 1 ]]; then
-  template_params[changes]=$(git diff HEAD)
-  template_params[changes_stats]=$(git diff --stat HEAD)
+if [[ $script_input[include_unstaged] == 1 ]]; then
+  template_input[changes]=$(git diff HEAD)
+  template_input[changes_stats]=$(git diff --stat HEAD)
 else
-  template_params[changes]=$(git diff --cached)
-  template_params[changes_stats]=$(git diff --stat --cached)
+  template_input[changes]=$(git diff --cached)
+  template_input[changes_stats]=$(git diff --stat --cached)
 fi
 
-if [[ -z $template_params[commits_log_short] && -z $template_params[changes] ]]; then
+if [[ -z $template_input[commits_log_short] && -z $template_input[changes] ]]; then
   jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
   exit 0
 fi
-#[⫶] template parameters
+
+template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/s-ko-llm-git-branch-name-suggest.md")
+template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
+template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
+$script_input[instructions_runtime]"}
+#[⫶] template input prep 🤖
+#[⫶⫶] template input
 
 
 #[…] fill template
-instructions=$(cat "${0:A:h}/templates-llm/s-ko-llm-git-branch-name-suggest.md")
+prompt="## Full Diff
+$template_input[changes]
 
-prompt="$instructions
+## Commit List
+$template_input[commits_log_short]
 
-[commit-subjects ($range)]
-$template_params[commits_log_short]
+## Diff Stats
+$template_input[changes_stats]
 
-[changes-stats]
-$template_params[changes_stats]
+$template_input[instructions_prose]
 
-[changes]
-$template_params[changes]
+$template_input[instructions_core]
 
-[additional-runtime-instructions]
-$additional_runtime_instructions"
+$template_input[instructions_runtime]"
 #[⫶] fill template
 
 
@@ -74,5 +87,5 @@ schema='{
   "additionalProperties": false
 }'
 
-print -r -- "$prompt" | s-ko-llm-claude "$schema"
+<<< "$prompt" s-ko-llm-claude "$schema"
 #[⫶] claude invocation

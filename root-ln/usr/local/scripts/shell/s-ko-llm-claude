@@ -1,17 +1,23 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   Headless claude -p wrapper for s-ko-llm-* scripts. Sets shared defaults.
-#   Usage: <prompt-on-stdin> | s-ko-llm-claude <schema>
+#   Usage: <prompt-on-stdin> | s-ko-llm-claude <schema> [api-key-op-ref]
 #   Caller-exported env wins; override model/thinking knobs before invoking.
-#   Upstream: s-ko-llm-git-* scripts. Downstream: prompt on stdin, $1 schema.
+#   Upstream: s-ko-llm-git-* scripts. Downstream: prompt on stdin, $1 schema, $2 op ref.
 #   Out: .structured_output from claude's JSON.
 #/[≟]
 
-#[…] 🤖🤖
+
 set -e
 
-schema=$1
+#[…] script input
+typeset -A script_input=(
+  instructions "$(<&0)"
 
+  schema "$1"
+  claude_api_key_uri "${2:-op://ProgrammaticAccess/claude_api_key/password}"
+)
+#[⫶] script input
 
 env=(
   'CLAUDE_CODE_SIMPLE:=1'
@@ -21,15 +27,16 @@ env=(
   'MAX_THINKING_TOKENS:=0'
   'ANTHROPIC_MODEL:=haiku'
   #[∵] claude with CLAUDE_CODE_SIMPLE must use API Key auth
-  'ANTHROPIC_API_KEY:=$(op read "op://ProgrammaticAccess/claude_api_key/password")'
+  'ANTHROPIC_API_KEY:=$(op read "$script_input[claude_api_key_uri]")'
 )
 
+#[…] 🤖
 for kv in $env; do
   eval "export ${kv%%:=*}=\${$kv}"
 done
+#[⫶] 🤖
 
-claude -p \
+<<< "$script_input[instructions]" claude -p \
   --system-prompt '' \
   --output-format json \
-  --json-schema "$schema" | jq '.structured_output'
-#[⫶] 🤖🤖
+  --json-schema "$script_input[schema]" | jq '.structured_output'

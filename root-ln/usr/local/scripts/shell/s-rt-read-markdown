@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+#>[≟]
+#   Read a markdown file, optionally stripping YAML frontmatter and/or comments.
+#   Usage: s-rt-read-markdown [--strip-frontmatter] [--strip-comments] <file>
+#   --strip-frontmatter: drop a leading --- ... --- block.
+#   --strip-comments: drop <!-- ... --> blocks (incl. multi-line).
+#   Upstream: s-ko-llm-claude. Downstream: <file>. Out: file content on stdout.
+#/[≟]
+
+#[…] 🤖🤖🤖
+emulate -LR zsh
+setopt err_return
+
+strip_frontmatter=0 strip_comments=0
+while [[ $1 == --* ]]; do
+  case $1 in
+    --strip-frontmatter) strip_frontmatter=1 ;;
+    --strip-comments) strip_comments=1 ;;
+    *) print -u2 "s-rt-read-markdown: unknown option $1"; exit 1 ;;
+  esac
+  shift
+done
+
+file=$1
+content=$(<"$file")
+
+if (( strip_frontmatter )); then
+  content=$(print -r -- "$content" | sed '1{/^---$/!q;};1,/^---$/d')
+fi
+
+if (( strip_comments )); then
+  content=$(print -r -- "$content" | perl -0pe 's/<!--.*?-->\n?//gs')
+fi
+
+print -r -- "$content"
+#[⫶] 🤖🤖🤖

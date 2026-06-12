@@ -1,55 +1,67 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven commit message generation
-#   Usage: s-ko-llm-git-commit-msg-suggest [extra-instructions]
+#   Usage: <extra-instructions-on-stdin> | s-ko-llm-git-commit-msg-suggest
+#   extra-instructions: optional, read from stdin when piped.
 #   Upstream: git-commit skill. Prompt Template: ./templates-llm/s-ko-llm-git-commit-msg-suggest.md
 #   Out: { "subject": ..., "description": ... }.
 #/[≟]
 
-#[…] 🤖🤖
 set -e
 
 
-#[…] args
-additional_runtime_instructions=${1:-}
-#[⫶] args
+#[…] script input
+typeset -A script_input=(
+  instructions_runtime "$([[ -t 0 ]] || cat)"
+)
+#[⫶] script input
 
 
-#[…] template parameters
-typeset -A template_params=(
+#[……] template input
+typeset -A template_input=(
+  instructions_core ""
+  instructions_prose ""
+  instructions_runtime ""
+
   commit_template ""
   recent_commits ""
   staged_diff ""
 )
 
-
-template_params[staged_diff]=$(git diff --cached)
-[[ -n $template_params[staged_diff] ]] || { echo "error: nothing staged" >&2; exit 1 }
+#[…] template input prep 🤖
+template_input[staged_diff]=$(git diff --cached)
+[[ -n $template_input[staged_diff] ]] || { echo "error: nothing staged" >&2; exit 1 }
 
 template=$(git config --get commit.template)
 template=${template/#\~/$HOME}
-[[ -n $template && -f $template ]] && template_params[commit_template]=$(cat "$template")
+[[ -n $template && -f $template ]] && template_input[commit_template]=$(cat "$template")
 
-template_params[recent_commits]=$(git log -3 --format='--- %h%n%B')
-#[⫶] template parameters
+template_input[recent_commits]=$(git log -3 --format='--- %h%n%B')
+
+template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/s-ko-llm-git-commit-msg-suggest.md")
+template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
+template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
+$script_input[instructions_runtime]"}
+#[⫶] template input prep 🤖
+#[⫶⫶] template input
 
 
 #[…] fill template
-instructions=$(cat "${0:A:h}/templates-llm/s-ko-llm-git-commit-msg-suggest.md")
+prompt="## Commit Template
+$template_input[commit_template]
 
-prompt="$instructions
+## Recent Commits (full message, last 3)
+$template_input[recent_commits]
 
-[commit-template]
-$template_params[commit_template]
+## Staged Diff
+$template_input[staged_diff]
 
-[recent-commits (full message, last 3)]
-$template_params[recent_commits]
+$template_input[instructions_prose]
 
-[additional-runtime-instructions]
-$additional_runtime_instructions
+$template_input[instructions_core]
 
-[staged-diff]
-$template_params[staged_diff]"
+$template_input[instructions_runtime]
+"
 #[⫶] fill template
 
 
@@ -66,6 +78,5 @@ schema='{
   "additionalProperties": false
 }'
 
-print -r -- "$prompt" | s-ko-llm-claude "$schema"
+<<< "$prompt" s-ko-llm-claude "$schema"
 #[⫶] claude invocation
-#[⫶] 🤖🤖
