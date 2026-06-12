@@ -13,7 +13,7 @@ Suggest a branch name from the commit subjects and the in-flight changes
 - nothing to derive a type/scope from (no commits, no staged, no unstaged) → `tmp/scratch-<datetime>`
 - read `type(scope)` from each subject; `<type>` = first commit's type, else infer from the changed paths
 - one scope: `<type>/<scope>-<desc>`, `<desc>` = 2-4 hyphenated words
-- many scopes: `<type>/<scope>-<scope>-...`, first-appearance order, no desc
+- many scopes: `<type>/<scope>-<scope>-...`, order by amount of changes (most first), no desc
 - lowercase, hyphenated, no spaces
 
 # Examples
