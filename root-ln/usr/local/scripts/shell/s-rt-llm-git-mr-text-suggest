@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven change request (MR/PR) generation
-#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-mr-text-suggest [range]
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-mr-text-suggest [range] [template-file]
 #   extra-instructions: optional, read from stdin when piped.
+#   template-file: optional, defaults to ./templates-llm/git-mr-text-suggest.tmpl.md
 #   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
-#   Prompt Template: ./templates-llm/git-mr-text-suggest.md
 #   Out: { "title": ..., "description": ... }.
 #/[≟]
 
@@ -16,51 +16,37 @@ typeset -A script_input=(
   instructions_runtime "$([[ -t 0 ]] || cat)"
 
   range "${1:-main..HEAD}"
+  template_file "${2:-${0:A:h}/templates-llm/git-mr-text-suggest.tmpl.md}"
 )
 #[⫶] script input
 
 
-#[……] template input
+#[…] template input 🤖
 typeset -A template_input=(
-  instructions_core ""
-  instructions_prose ""
-  instructions_runtime ""
-
-  net_diff ""
-  commits ""
+  RANGE_COMMITS "$script_input[range]"
+  RANGE_DIFF "${script_input[range]/../...}"
+  COMMITS "$(git log --reverse --format='%h %s' "$script_input[range]")"
+  NET_DIFF "$(git diff "${script_input[range]/../...}")"
+  INSTRUCTIONS_RUNTIME "$script_input[instructions_runtime]"
 )
+#[⫶] template input 🤖
 
-#[…] template input prep 🤖
-template_input[commits]=$(git log --reverse --format='%h %s' "$script_input[range]")
-[[ -n $template_input[commits] ]] || { echo "error: no commits in $script_input[range]" >&2; exit 1 }
-
-template_input[net_diff]=$(git diff "${script_input[range]/../...}")
-
-template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/git-mr-text-suggest.md")
-template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
-template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
-$script_input[instructions_runtime]"}
-#[⫶] template input prep 🤖
-#[⫶⫶] template input
+# if there are no changes return
+[[ -n $template_input[COMMITS] ]] || { echo "error: no commits in $script_input[range]" >&2; exit 1 }
 
 
-#[…] fill template
-prompt="## Commits ($script_input[range]) — secondary context only, may include reverted work
-$template_input[commits]
-
-## Net Diff (${script_input[range]/../...}) — source of truth, describe only what this shows
-$template_input[net_diff]
-
-$template_input[instructions_prose]
-
-$template_input[instructions_core]
-
-$template_input[instructions_runtime]"
-#[⫶] fill template
+#[…] fill template 🤖
+prompt=$(
+  for k v in "${(@kv)template_input}"; do export "$k"="$v"; done
+  gomplate \
+    --plugin stripmd="${0:A:h}/s-rt-read-markdown" \
+    -f "$script_input[template_file]"
+)
+#[⫶] fill template 🤖
 
 
 #[…] claude invocation
-export ANTHROPIC_MODEL=opus
+export ANTHROPIC_MODEL=haiku
 
 schema='{
   "type": "object",

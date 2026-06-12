@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven commit message generation
-#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-commit-msg-suggest
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-commit-msg-suggest [template-file]
 #   extra-instructions: optional, read from stdin when piped.
-#   Upstream: git-commit skill. Prompt Template: ./templates-llm/git-commit-msg-suggest.md
-#   Out: { "subject": ..., "description": ... }.
+#   template-file: optional, defaults to ./templates-llm/git-commit-msg-suggest.tmpl.md
+#   Upstream: git-commit skill. Out: { "subject": ..., "description": ... }.
 #/[≟]
 
 set -e
@@ -13,60 +13,42 @@ set -e
 #[…] script input
 typeset -A script_input=(
   instructions_runtime "$([[ -t 0 ]] || cat)"
+
+  template_file "${1:-${0:A:h}/templates-llm/git-commit-msg-suggest.tmpl.md}"
 )
 #[⫶] script input
 
 
-#[……] template input
+#[…] template input 🤖
+get_commit_template() {
+  local f=$(git config --get commit.template); f=${f/#\~/$HOME}
+  [[ -n $f && -f $f ]] && cat "$f"
+}
+
 typeset -A template_input=(
-  instructions_core ""
-  instructions_prose ""
-  instructions_runtime ""
-
-  commit_template ""
-  recent_commits ""
-  staged_diff ""
+  COMMIT_TEMPLATE "$(get_commit_template)"
+  RECENT_COMMITS "$(git log -3 --format='--- %h%n%B')"
+  STAGED_DIFF "$(git diff --cached)"
+  INSTRUCTIONS_RUNTIME "$script_input[instructions_runtime]"
 )
-
-#[…] template input prep 🤖
-template_input[staged_diff]=$(git diff --cached)
-[[ -n $template_input[staged_diff] ]] || { echo "error: nothing staged" >&2; exit 1 }
-
-template=$(git config --get commit.template)
-template=${template/#\~/$HOME}
-[[ -n $template && -f $template ]] && template_input[commit_template]=$(cat "$template")
-
-template_input[recent_commits]=$(git log -3 --format='--- %h%n%B')
-
-template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/git-commit-msg-suggest.md")
-template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
-template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
-$script_input[instructions_runtime]"}
-#[⫶] template input prep 🤖
-#[⫶⫶] template input
+#[⫶] template input 🤖
 
 
-#[…] fill template
-prompt="## Commit Template
-$template_input[commit_template]
+# if there are no changes return
+[[ -n $template_input[STAGED_DIFF] ]] || { echo "error: nothing staged" >&2; exit 1 }
 
-## Recent Commits (full message, last 3)
-$template_input[recent_commits]
-
-## Staged Diff
-$template_input[staged_diff]
-
-$template_input[instructions_prose]
-
-$template_input[instructions_core]
-
-$template_input[instructions_runtime]
-"
-#[⫶] fill template
+#[…] fill template 🤖
+prompt=$(
+  for k v in "${(@kv)template_input}"; do export "$k"="$v"; done
+  gomplate \
+    --plugin stripmd="${0:A:h}/s-rt-read-markdown" \
+    -f "$script_input[template_file]"
+)
+#[⫶] fill template 🤖
 
 
 #[…] claude invocation
-export ANTHROPIC_MODEL=opus
+export ANTHROPIC_MODEL=haiku
 
 schema='{
   "type": "object",

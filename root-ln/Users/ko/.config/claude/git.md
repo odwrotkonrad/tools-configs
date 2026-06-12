@@ -11,7 +11,7 @@ Invokes the three skills in order: `/ko-git-branch-name-upsert` → `/ko-git-com
 ### /ko-git-commit — commit message from staged diff
 
 - in → out: staged diff + `<additional-runtime-instructions>` → `{subject, description}`
-- [script](../../../../usr/local/scripts/shell/s-rt-llm-git-commit-msg-suggest) · [craft](../../../../usr/local/scripts/shell/templates-llm/git-commit-msg-suggest.md)
+- [script](../../../../usr/local/scripts/shell/s-rt-llm-git-commit-msg-suggest) · [craft](../../../../usr/local/scripts/shell/templates-llm/git-commit-msg-suggest.tmpl.md)
 - commit vs amend: pushed HEAD or different logical unit → new commit; else → `git commit --amend`
 
 ### /ko-git-branch-name-upsert — create/rename branch to a conventional name
@@ -19,12 +19,12 @@ Invokes the three skills in order: `/ko-git-branch-name-upsert` → `/ko-git-com
 Used by `/ko-git-commit` and `/ko-git-mr-upsert` for their branch step.
 
 - in → out: commits + staged/unstaged changes → `{name}`; then `git checkout -b` (on base) or `git branch -m` (rename)
-- [script](../../../../usr/local/scripts/shell/s-rt-llm-git-branch-name-suggest) · [craft](../../../../usr/local/scripts/shell/templates-llm/git-branch-name-suggest.md)
+- [script](../../../../usr/local/scripts/shell/s-rt-llm-git-branch-name-suggest) · [craft](../../../../usr/local/scripts/shell/templates-llm/git-branch-name-suggest.tmpl.md)
 
 ### /ko-git-mr-upsert — create/update the MR/PR
 
 - in → out: `main...HEAD` net diff (commits = secondary context) → `{title, description}`; then create/update via the provider CLI
-- [script](../../../../usr/local/scripts/shell/s-rt-llm-git-mr-text-suggest) · [craft](../../../../usr/local/scripts/shell/templates-llm/git-mr-text-suggest.md)
+- [script](../../../../usr/local/scripts/shell/s-rt-llm-git-mr-text-suggest) · [craft](../../../../usr/local/scripts/shell/templates-llm/git-mr-text-suggest.tmpl.md)
 - CLI from `git remote get-url origin`: gitlab.com → `glab mr create`/edit, github.com → `gh pr create`/`gh pr edit`
 
 <!--[⫶] 🤖🤖 -->
