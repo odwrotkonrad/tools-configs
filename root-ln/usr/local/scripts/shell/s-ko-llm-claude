@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+#>[≟]
+#   Headless claude -p wrapper for s-ko-llm-* scripts. Sets shared defaults.
+#   Usage: <prompt-on-stdin> | s-ko-llm-claude <schema>
+#   Caller-exported env wins; override model/thinking knobs before invoking.
+#   Upstream: s-ko-llm-git-* scripts. Downstream: prompt on stdin, $1 schema.
+#   Out: .structured_output from claude's JSON.
+#/[≟]
+
+#[…] 🤖🤖
+set -e
+
+schema=$1
+
+
+env=(
+  'CLAUDE_CODE_SIMPLE:=1'
+  'CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT:=1'
+  'CLAUDE_CODE_DISABLE_THINKING:=1'
+  'CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING:=1'
+  'MAX_THINKING_TOKENS:=0'
+  'ANTHROPIC_MODEL:=haiku'
+  #[∵] claude with CLAUDE_CODE_SIMPLE must use API Key auth
+  'ANTHROPIC_API_KEY:=$(op read "op://ProgrammaticAccess/claude_api_key/password")'
+)
+
+for kv in $env; do
+  eval "export ${kv%%:=*}=\${$kv}"
+done
+
+claude -p \
+  --system-prompt '' \
+  --output-format json \
+  --json-schema "$schema" | jq '.structured_output'
+#[⫶] 🤖🤖

@@ -24,7 +24,6 @@ root-ln
           output-styles
           plugins
             marketplaces
-          prompts
           rules
             code
               python
@@ -81,6 +80,7 @@ root-ln
         python
           s_rt_scripts_lib
         shell
+          templates-llm
 tests
   scripts
     python

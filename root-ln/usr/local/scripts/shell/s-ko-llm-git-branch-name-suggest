@@ -1,45 +1,78 @@
 #!/usr/bin/env zsh
 #>[≟]
-#   Suggest a conventional branch name for the commits in <range> via claude -p.
-#   Upstream: the git-commit and git-mr skills, to verify or rename the branch.
-#   Downstream: git log subjects in <range> (default main..HEAD), plus the
-#   staged and unstaged change summaries so an in-progress branch (few or no
-#   commits) still gets a name derived from the work in flight.
-#
-#   Runs claude headless in its own context (no session history), so the name
-#   derives only from the committed subjects and working changes, never the
-#   conversation.
-#   Craft guide: ~/.config/claude/prompts/s-ko-llm-git-branch-name-suggest.md
-#   Output: JSON object { "name": ... }.
+#   LLM driven branch name generation
+#   Usage: s-ko-llm-git-branch-name-suggest [range] [extra-instructions] [include-unstaged=1]
+#   include-unstaged: 1 add tracked unstaged changes, 0 staged only. Never untracked.
+#   Upstream: git-commit, git-mr skills. Downstream: git subjects + diffs.
+#   Prompt Template: ./templates-llm/s-ko-llm-git-branch-name-suggest.md
+#   Out: { "name": ... }.
 #/[≟]
 
-#[…] 🤖🤖
 set -e
 
+
+#[…] args
 range=${1:-main..HEAD}
 additional_runtime_instructions=${2:-}
+include_unstaged=${3:-1}
+#[⫶] args
 
-instructions=$(cat "$HOME/.config/claude/prompts/s-ko-llm-git-branch-name-suggest.md")
 
-schema='{"type":"object","properties":{"name":{"type":"string"}},"required":["name"],"additionalProperties":false}'
+#[…] template parameters
+typeset -A template_params=(
+  commits_log_short ""
+  changes ""
+  changes_stats ""
+)
 
-subjects=$(git log --reverse --format='%s' "$range")
-staged=$(git diff --cached --stat)
-unstaged=$(git diff --stat)
-[[ -n $subjects || -n $staged || -n $unstaged ]] || { jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'; exit 0 }
 
-print -r -- "$instructions
+template_params[commits_log_short]=$(git log --reverse --format='%s' "$range")
+
+if [[ $include_unstaged == 1 ]]; then
+  template_params[changes]=$(git diff HEAD)
+  template_params[changes_stats]=$(git diff --stat HEAD)
+else
+  template_params[changes]=$(git diff --cached)
+  template_params[changes_stats]=$(git diff --stat --cached)
+fi
+
+if [[ -z $template_params[commits_log_short] && -z $template_params[changes] ]]; then
+  jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
+  exit 0
+fi
+#[⫶] template parameters
+
+
+#[…] fill template
+instructions=$(cat "${0:A:h}/templates-llm/s-ko-llm-git-branch-name-suggest.md")
+
+prompt="$instructions
 
 [commit-subjects ($range)]
-$subjects
+$template_params[commits_log_short]
 
-[staged-changes]
-$staged
+[changes-stats]
+$template_params[changes_stats]
 
-[unstaged-changes]
-$unstaged
+[changes]
+$template_params[changes]
 
 [additional-runtime-instructions]
-$additional_runtime_instructions" | claude -p --model opus --system-prompt '' \
-  --output-format json --json-schema "$schema" | jq '.structured_output'
-#[⫶] 🤖🤖
+$additional_runtime_instructions"
+#[⫶] fill template
+
+
+#[…] claude invocation
+export ANTHROPIC_MODEL=haiku
+
+schema='{
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}'
+
+print -r -- "$prompt" | s-ko-llm-claude "$schema"
+#[⫶] claude invocation
