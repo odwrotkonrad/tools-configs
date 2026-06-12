@@ -29,6 +29,7 @@ root-ln
               python
             config
               zsh
+            docs
           skills
             ko-git-branch-name-upsert
             ko-git-commit
