@@ -24,12 +24,12 @@ root-ln
           output-styles
           plugins
             marketplaces
-          prompts
           rules
             code
               python
             config
               zsh
+            docs
           skills
             ko-git-branch-name-upsert
             ko-git-commit
@@ -81,6 +81,7 @@ root-ln
         python
           s_rt_scripts_lib
         shell
+          templates-llm
 tests
   scripts
     python

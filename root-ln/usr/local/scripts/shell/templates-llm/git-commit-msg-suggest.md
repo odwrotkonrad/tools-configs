@@ -1,4 +1,4 @@
-<!-- used by the script s-ko-llm-git-commit-msg-suggest -->
+<!-- used by the script s-rt-llm-git-commit-msg-suggest -->
 
 <!--[…] 🤖🤖 -->
 

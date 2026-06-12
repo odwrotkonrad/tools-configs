@@ -1,0 +1,76 @@
+#!/usr/bin/env zsh
+#>[≟]
+#   LLM driven change request (MR/PR) generation
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-mr-text-suggest [range]
+#   extra-instructions: optional, read from stdin when piped.
+#   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
+#   Prompt Template: ./templates-llm/git-mr-text-suggest.md
+#   Out: { "title": ..., "description": ... }.
+#/[≟]
+
+set -e
+
+
+#[…] script input
+typeset -A script_input=(
+  instructions_runtime "$([[ -t 0 ]] || cat)"
+
+  range "${1:-main..HEAD}"
+)
+#[⫶] script input
+
+
+#[……] template input
+typeset -A template_input=(
+  instructions_core ""
+  instructions_prose ""
+  instructions_runtime ""
+
+  net_diff ""
+  commits ""
+)
+
+#[…] template input prep 🤖
+template_input[commits]=$(git log --reverse --format='%h %s' "$script_input[range]")
+[[ -n $template_input[commits] ]] || { echo "error: no commits in $script_input[range]" >&2; exit 1 }
+
+template_input[net_diff]=$(git diff "${script_input[range]/../...}")
+
+template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/git-mr-text-suggest.md")
+template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
+template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
+$script_input[instructions_runtime]"}
+#[⫶] template input prep 🤖
+#[⫶⫶] template input
+
+
+#[…] fill template
+prompt="## Commits ($script_input[range]) — secondary context only, may include reverted work
+$template_input[commits]
+
+## Net Diff (${script_input[range]/../...}) — source of truth, describe only what this shows
+$template_input[net_diff]
+
+$template_input[instructions_prose]
+
+$template_input[instructions_core]
+
+$template_input[instructions_runtime]"
+#[⫶] fill template
+
+
+#[…] claude invocation
+export ANTHROPIC_MODEL=opus
+
+schema='{
+  "type": "object",
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" }
+  },
+  "required": ["title", "description"],
+  "additionalProperties": false
+}'
+
+<<< "$prompt" s-rt-llm-claude "$schema"
+#[⫶] claude invocation

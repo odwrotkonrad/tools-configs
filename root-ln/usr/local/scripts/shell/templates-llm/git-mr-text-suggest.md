@@ -1,4 +1,4 @@
-<!-- used by the script s-ko-llm-git-mr-text-suggest -->
+<!-- used by the script s-rt-llm-git-mr-text-suggest -->
 
 <!--[…] 🤖🤖 -->
 
