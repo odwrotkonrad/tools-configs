@@ -139,7 +139,6 @@
   "editor.renderLineHighlight": "none",
   "editor.renderLineHighlightOnlyWhenFocus": true,
   "editor.scrollbar.horizontalScrollbarSize": 2,
-  "editor.scrollbar.verticalScrollbarSize": 2,
   "editor.scrollBeyondLastLine": false,
   "editor.stickyScroll.maxLineCount": 1,
   "editor.tabSize": 2,
@@ -175,8 +174,8 @@
   "search.showLineNumbers": false,
   "search.smartCase": true,
   "search.sortOrder": "modified",
-  "search.useGlobalIgnoreFiles": false,
-  "search.useParentIgnoreFiles": false,
+  "search.useGlobalIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true,
   //[⫶] search
 
   //[……] source control
@@ -239,7 +238,6 @@
   "scm.compactFolders": true,
   "scm.countBadge": "off",
   "scm.defaultViewSortKey": "status",
-  "scm.diffDecorations": "gutter",
   "scm.diffDecorationsGutterAction": "none",
   "scm.diffDecorationsIgnoreTrimWhitespace": "inherit",
   "scm.graph.badges": "filter",
@@ -537,6 +535,7 @@
   "editor.mouseWheelScrollSensitivity": 1,
   "editor.scrollbar.horizontal": "auto",
   "editor.scrollbar.vertical": "auto",
+  "editor.scrollbar.verticalScrollbarSize": 14,
   "editor.multiCursorModifier": "alt",
   "editor.suggest.insertMode": "insert",
   "editor.detectIndentation": true,
@@ -569,7 +568,7 @@
   "search.searchOnTypeDebouncePeriod": 300,
   "search.searchView.keywordSuggestions": false,
   "search.searchView.semanticSearchBehavior": "manual",
-  "search.useIgnoreFiles": false,
+  "search.useIgnoreFiles": true,
   "search.useReplacePreview": true,
   //[⫶] search
 
@@ -656,6 +655,7 @@
   "scm.repositories.explorer": false,
   "scm.inputFontSize": 13,
   "scm.graph.pageOnScroll": true,
+  "scm.diffDecorations": "all",
   "scm.diffDecorationsGutterWidth": 3,
   "scm.alwaysShowActions": false,
   "scm.diffDecorationsGutterVisibility": "always",
