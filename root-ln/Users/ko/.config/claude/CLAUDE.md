@@ -2,43 +2,47 @@
 
 ## Available Tools
 
-You have access to these and only these tools:
+Only these tools. Any other is forbidden.
 
 - Read
 - Glob
 - Edit
-- LSP - Code Intelligence Features for languages: ruby, python, golang, typescript, javascript
-
-Bash commands:
-
-- `$ man` - read  manual documentation pages
-- `$ rg` - recursively searches the current directory for lines matching a regex pattern. (pcre2)
-
-Attempting to use any other tools is forbidden.
+- LSP — code intelligence for ruby, python, golang, typescript, javascript
+- `$ man` — manual pages
+- `$ rg` — recursive regex search (pcre2)
 
 ## System Wide Tools Configuration
 
-Non project scoped configuration files must be edited in the designated `~/projects/configs` project. The project's `root-ln/` dir (symlinked) and `root-cp/` dir (copied) mirror the live files in the system, so never edit config files at their system paths directly — edit their counterparts under `~/projects/configs` project's `root-ln`/`root-cp`.
+**Do:**
+
+- **Do** edit non-project configs only in `~/projects/configs`, via their `root-ln/` (symlinked) or `root-cp/` (copied) counterparts.
+
+**Don't:**
+
+- **Don't** edit configs at their live system paths.
 
 ## IMPORTANT!
 
-<!--[∵] it happens claude tries to ask questions even if it doesn't have permissions to do so -->
+**Do:**
 
-Do not ask questions. Use common sense to fulfill user asks! Read documentation when in doubt.
+- **Do** read docs when in doubt before planning changes.
+- **Do** use common sense during a task; avoid reading docs mid-task.
+<!--[∵] For observability — a variable set before the command makes the event log record the assignment, not the command -->
+- **Do** tell the user to set a variable or add a tool to `PATH` in their shell, rather than doing it inline.
+- **Do** set a command's context through its options and arguments.
+- **Do** write temporary scripts as files in the project's `.user/claude/scripts/` (create it if absent), then run them.
 
-> **ALWAYS** prefer writing temporary scripts as files over multiline shell commands. **NEVER** inline a multiline script into a Bash command. Store every throwaway verification, migration, or scratch script as a file in the project root's `.user/claude/scripts/` (create one if it does not exist), then run it. **NEVER** remove these scripts after running them — leave them in place.
+**Don't:**
 
-When using Bash:
+- **Don't** ask questions. Instead use common sense to fulfill asks.
+- **Don't** prepend a command with a variable assignment, `cd`, or a full binary path.
+- **Don't** inline a multiline script into a Bash command.
+- **Don't** delete the scripts in `.user/claude/scripts/`.
 
-<!--[∵] For observability — if a variable is set before the executed command, the command name recorded in the event log is the assignment instead of the actual command -->
-- **Never** prepend a command with variable assignments. Instead, instruct the user to set the variable in their shell.
-- **Never** use a full binary path. If a tool is not on the `PATH`, instruct the user to add it to the `PATH`.
-- **Always** set a command's context through its options and arguments.
+Read docs via:
 
-Up-to-date documentation is available using:
-
-- Bash(man) e.g. `$ man foo`, `$ man 1 bar`
-- Read / Glob / Grep for raw documentation / specificiation / definition files
+- `$ man foo`, `$ man 1 bar`
+- Read / Glob / Grep for raw spec/definition files
 - `$ <cmd> --help|-h`
 
 <!-- TODO also need to have some web source -->
