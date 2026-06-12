@@ -41,4 +41,5 @@ done
   --output-format json \
   --tools "" \
   --allowedTools "" \
+  --effort low \
   --json-schema "$script_input[schema]" | jq '.structured_output'
