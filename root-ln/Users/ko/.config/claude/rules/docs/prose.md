@@ -19,3 +19,5 @@ paths:
 - **Don't** pad with preamble, postamble, or transitional phrases.
 - **Don't** use a general word when a precise one exists.
 - **Don't** write long sentences.
+- **Don't** use an em dash (—).
+- **Don't** use a semicolon (;).

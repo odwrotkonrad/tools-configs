@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven branch name generation
-#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-branch-name-suggest [range] [include-unstaged=1]
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-branch-name-suggest [range] [include-unstaged=1] [template-file]
 #   include-unstaged: 1 add tracked unstaged changes, 0 staged only. Never untracked.
 #   extra-instructions: optional, read from stdin when piped.
+#   template-file: optional, defaults to ./templates-llm/git-branch-name-suggest.tmpl.md
 #   Upstream: git-commit, git-mr skills. Downstream: git subjects + diffs.
-#   Prompt Template: ./templates-llm/git-branch-name-suggest.md
 #   Out: { "name": ... }.
 #/[≟]
 
@@ -18,68 +18,45 @@ typeset -A script_input=(
 
   range "${1:-main..HEAD}"
   include_unstaged "${2:-1}"
+  template_file "${3:-${0:A:h}/templates-llm/git-branch-name-suggest.tmpl.md}"
 )
 #[⫶] script input
 
 
-#[……] template input
+#[…] template input 🤖
+get_diff_ref() { [[ $script_input[include_unstaged] == 1 ]] && echo HEAD || echo --cached }
+get_current_branch() { local b=$(git rev-parse --abbrev-ref HEAD); [[ $b == main ]] || echo $b }
+get_commits_log_short() { git log --reverse --format='%s' "$script_input[range]" }
+get_commit_template() {
+  local f=$(git config --get commit.template); f=${f/#\~/$HOME}
+  [[ -n $f && -f $f ]] && cat "$f"
+}
+
 typeset -A template_input=(
-  instructions_core ""
-  instructions_prose ""
-  instructions_runtime ""
-
-  current_branch ""
-  commits_log_short ""
-  changes ""
-  changes_stats ""
+  CURRENT_BRANCH "$(get_current_branch)"
+  COMMIT_TEMPLATE "$(get_commit_template)"
+  CHANGES "$(git diff $(get_diff_ref))"
+  CHANGES_STATS "$(git diff --stat $(get_diff_ref))"
+  COMMITS_LOG_SHORT "$(get_commits_log_short)"
+  INSTRUCTIONS_RUNTIME "$script_input[instructions_runtime]"
 )
+#[⫶] template input 🤖
 
-#[…] template input prep 🤖
-template_input[commits_log_short]=$(git log --reverse --format='%s' "$script_input[range]")
-
-if [[ $script_input[include_unstaged] == 1 ]]; then
-  template_input[changes]=$(git diff HEAD)
-  template_input[changes_stats]=$(git diff --stat HEAD)
-else
-  template_input[changes]=$(git diff --cached)
-  template_input[changes_stats]=$(git diff --stat --cached)
-fi
-
-if [[ -z $template_input[commits_log_short] && -z $template_input[changes] ]]; then
+#[≟] skip llm if there is no diff
+if [[ -z $template_input[COMMITS_LOG_SHORT] && -z $template_input[CHANGES] ]]; then
   jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
   exit 0
 fi
 
-current_branch=$(git rev-parse --abbrev-ref HEAD)
-[[ $current_branch == main ]] || template_input[current_branch]=$current_branch
 
-template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/git-branch-name-suggest.md")
-template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
-template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
-$script_input[instructions_runtime]"}
-#[⫶] template input prep 🤖
-#[⫶⫶] template input
-
-
-#[…] fill template
-prompt="${template_input[current_branch]:+## Current Branch — keep it if it already fits the changes (~80%), only rename if clearly inaccurate
-$template_input[current_branch]
-
-}## Full Diff
-$template_input[changes]
-
-## Commit List
-$template_input[commits_log_short]
-
-## Diff Stats
-$template_input[changes_stats]
-
-$template_input[instructions_prose]
-
-$template_input[instructions_core]
-
-$template_input[instructions_runtime]"
-#[⫶] fill template
+#[…] fill template 🤖
+prompt=$(
+  for k v in "${(@kv)template_input}"; do export "$k"="$v"; done
+  gomplate \
+    --plugin stripmd="${0:A:h}/s-rt-read-markdown" \
+    -f "$script_input[template_file]"
+)
+#[⫶] fill template 🤖
 
 
 #[…] claude invocation

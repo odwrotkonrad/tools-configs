@@ -31,6 +31,7 @@ Only these tools. Any other is forbidden.
 - **Do** tell the user to set a variable or add a tool to `PATH` in their shell, rather than doing it inline.
 - **Do** set a command's context through its options and arguments.
 - **Do** write temporary scripts as files in the project's `.user/claude/scripts/` (create it if absent), then run them.
+- **Do** store temporary files (outputs, scratch data, captures) in the project's `.user/claude/tmp/` (create it if absent).
 
 **Don't:**
 
