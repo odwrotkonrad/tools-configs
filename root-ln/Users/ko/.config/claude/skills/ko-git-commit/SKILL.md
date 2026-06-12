@@ -12,7 +12,7 @@ Commit the staged changes with the suggested message. Args after the command →
 1. Inspect: `git status --porcelain`, `git diff[ --cached]`.
 2. Stage only changes you authored (`git add`); ask before staging others; multi-area → suggest splitting.
 3. On `main` → `ko-git-branch-name-upsert` skill first; else commit on the current branch.
-4. `s-ko-llm-git-commit-msg-suggest "<additional-runtime-instructions>"` → JSON `{subject, description}`.
+4. `printf '%s' "<additional-runtime-instructions>" | s-rt-llm-git-commit-msg-suggest` → JSON `{subject, description}`.
 5. Show the message, then commit it: `git commit -m "<subject>" -m "<description>"`.
 
 <!--[⫶] 🤖🤖 -->

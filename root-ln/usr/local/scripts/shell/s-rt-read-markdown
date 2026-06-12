@@ -4,7 +4,7 @@
 #   Usage: s-rt-read-markdown [--strip-frontmatter] [--strip-comments] <file>
 #   --strip-frontmatter: drop a leading --- ... --- block.
 #   --strip-comments: drop <!-- ... --> blocks (incl. multi-line).
-#   Upstream: s-ko-llm-claude. Downstream: <file>. Out: file content on stdout.
+#   Upstream: s-rt-llm-git-* scripts. Downstream: <file>. Out: file content on stdout.
 #/[≟]
 
 #[…] 🤖🤖🤖

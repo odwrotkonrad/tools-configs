@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 #>[≟]
-#   Headless claude -p wrapper for s-ko-llm-* scripts. Sets shared defaults.
-#   Usage: <prompt-on-stdin> | s-ko-llm-claude <schema> [api-key-op-ref]
+#   Headless claude -p wrapper for s-rt-llm-* scripts. Sets shared defaults.
+#   Usage: <prompt-on-stdin> | s-rt-llm-claude <schema> [api-key-op-ref]
 #   Caller-exported env wins; override model/thinking knobs before invoking.
-#   Upstream: s-ko-llm-git-* scripts. Downstream: prompt on stdin, $1 schema, $2 op ref.
+#   Upstream: s-rt-llm-git-* scripts. Downstream: prompt on stdin, $1 schema, $2 op ref.
 #   Out: .structured_output from claude's JSON.
 #/[≟]
 

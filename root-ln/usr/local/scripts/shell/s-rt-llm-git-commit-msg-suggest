@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven commit message generation
-#   Usage: <extra-instructions-on-stdin> | s-ko-llm-git-commit-msg-suggest
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-commit-msg-suggest
 #   extra-instructions: optional, read from stdin when piped.
-#   Upstream: git-commit skill. Prompt Template: ./templates-llm/s-ko-llm-git-commit-msg-suggest.md
+#   Upstream: git-commit skill. Prompt Template: ./templates-llm/git-commit-msg-suggest.md
 #   Out: { "subject": ..., "description": ... }.
 #/[≟]
 
@@ -38,7 +38,7 @@ template=${template/#\~/$HOME}
 
 template_input[recent_commits]=$(git log -3 --format='--- %h%n%B')
 
-template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/s-ko-llm-git-commit-msg-suggest.md")
+template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/git-commit-msg-suggest.md")
 template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
 template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
 $script_input[instructions_runtime]"}
@@ -78,5 +78,5 @@ schema='{
   "additionalProperties": false
 }'
 
-<<< "$prompt" s-ko-llm-claude "$schema"
+<<< "$prompt" s-rt-llm-claude "$schema"
 #[⫶] claude invocation

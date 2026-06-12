@@ -1,4 +1,4 @@
-<!-- used by the script s-ko-llm-git-branch-name-suggest -->
+<!-- used by the script s-rt-llm-git-branch-name-suggest -->
 
 <!--[…] 🤖🤖 -->
 
@@ -9,6 +9,7 @@ Suggest a branch name from the commit subjects and the in-flight changes
 
 # Craft
 
+- keep the current branch if it already fits the changes (~80%); only suggest a new name when it is clearly inaccurate or a `tmp/...` scratch name
 - prefer commit subjects; fall back to the staged/unstaged change summaries when there are few or no commits
 - nothing to derive a type/scope from (no commits, no staged, no unstaged) → `tmp/scratch-<datetime>`
 - read `type(scope)` from each subject; `<type>` = first commit's type, else infer from the changed paths

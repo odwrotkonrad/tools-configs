@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven change request (MR/PR) generation
-#   Usage: <extra-instructions-on-stdin> | s-ko-llm-git-mr-text-suggest [range]
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-mr-text-suggest [range]
 #   extra-instructions: optional, read from stdin when piped.
 #   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
-#   Prompt Template: ./templates-llm/s-ko-llm-git-mr-text-suggest.md
+#   Prompt Template: ./templates-llm/git-mr-text-suggest.md
 #   Out: { "title": ..., "description": ... }.
 #/[≟]
 
@@ -36,7 +36,7 @@ template_input[commits]=$(git log --reverse --format='%h %s' "$script_input[rang
 
 template_input[net_diff]=$(git diff "${script_input[range]/../...}")
 
-template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/s-ko-llm-git-mr-text-suggest.md")
+template_input[instructions_core]=$(s-rt-read-markdown --strip-comments "${0:A:h}/templates-llm/git-mr-text-suggest.md")
 template_input[instructions_prose]=$(s-rt-read-markdown --strip-frontmatter --strip-comments ~/.config/claude/rules/docs/prose.md)
 template_input[instructions_runtime]=${script_input[instructions_runtime]:+"## IMPORTANT
 $script_input[instructions_runtime]"}
@@ -72,5 +72,5 @@ schema='{
   "additionalProperties": false
 }'
 
-<<< "$prompt" s-ko-llm-claude "$schema"
+<<< "$prompt" s-rt-llm-claude "$schema"
 #[⫶] claude invocation

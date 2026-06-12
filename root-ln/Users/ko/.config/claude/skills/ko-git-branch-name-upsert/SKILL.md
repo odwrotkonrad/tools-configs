@@ -9,7 +9,7 @@ description: Create or rename the branch to a conventional name derived from its
 
 Upsert the branch to the suggested name. Args after the command → `<additional-runtime-instructions>`.
 
-1. `s-ko-llm-git-branch-name-suggest main..HEAD "<additional-runtime-instructions>"` → JSON `{name}`.
+1. `printf '%s' "<additional-runtime-instructions>" | s-rt-llm-git-branch-name-suggest main..HEAD` → JSON `{name}`.
 2. Upsert vs current (`git rev-parse --abbrev-ref HEAD`), confirm before mutating:
    - on `main` → `git checkout -b <name>`
    - feature branch, different name → `git branch -m <name>`
