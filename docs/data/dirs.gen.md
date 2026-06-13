@@ -50,6 +50,8 @@ root-ln
           completions
           functions
           rc.d
+      .ollama
+        models
       .ssh
       Library
         Application Support

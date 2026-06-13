@@ -44,6 +44,7 @@ loki: root-ln/etc/loki/config.yml
 man: root-ln/etc/man.conf
 mypy: root-ln/Users/ko/.config/mypy/config
 nvm: root-ln/Users/ko/.nvmrc
+ollama: root-ln/Users/ko/.ollama/server.json
 prettier: root-ln/Users/ko/.config/prettier/.prettierrc.yml
 pyenv: root-ln/etc/zshenv
 ruff: root-ln/Users/ko/.config/ruff/ruff.toml
