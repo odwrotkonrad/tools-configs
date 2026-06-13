@@ -1,20 +1,22 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven commit message generation
-#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-commit-msg-suggest [template-file]
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-commit-msg-suggest
 #   extra-instructions: optional, read from stdin when piped.
-#   template-file: optional, defaults to ./templates-llm/git-commit-msg-suggest.tmpl.md
+#   provider, model, template, env resolved from /etc/custom/llm.yml.
 #   Upstream: git-commit skill. Out: { "subject": ..., "description": ... }.
 #/[≟]
 
 set -e
 
+source "${0:A:h}/lib/s-rt-llm-lib"
+read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load "${0:t}")"
+lib-llm-env-export "${0:t}"
+
 
 #[…] script input
 typeset -A script_input=(
-  instructions_runtime "$([[ -t 0 ]] || cat)"
-
-  template_file "${1:-${0:A:h}/templates-llm/git-commit-msg-suggest.tmpl.md}"
+  in_instructions_runtime "$([[ -t 0 ]] || cat)"
 )
 #[⫶] script input
 
@@ -27,29 +29,22 @@ get_commit_template() {
 
 typeset -A template_input=(
   COMMIT_TEMPLATE "$(get_commit_template)"
-  RECENT_COMMITS "$(git log -3 --format='--- %h%n%B')"
-  STAGED_DIFF "$(git diff --cached)"
-  INSTRUCTIONS_RUNTIME "$script_input[instructions_runtime]"
+  DIFF_FULL "$(git diff --cached)"
+  DIFF_STATS "$(git diff --cached --stat)"
+  INSTRUCTIONS_RUNTIME "$script_input[in_instructions_runtime]"
 )
 #[⫶] template input 🤖
 
 
 # if there are no changes return
-[[ -n $template_input[STAGED_DIFF] ]] || { echo "error: nothing staged" >&2; exit 1 }
+[[ -n $template_input[DIFF_FULL] ]] || { echo "error: nothing staged" >&2; exit 1 }
 
 #[…] fill template 🤖
-prompt=$(
-  for k v in "${(@kv)template_input}"; do export "$k"="$v"; done
-  gomplate \
-    --plugin stripmd="${0:A:h}/s-rt-read-markdown" \
-    -f "$script_input[template_file]"
-)
+prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
 #[⫶] fill template 🤖
 
 
-#[…] claude invocation
-export ANTHROPIC_MODEL=haiku
-
+#[…] llm invocation
 schema='{
   "type": "object",
   "properties": {
@@ -60,5 +55,5 @@ schema='{
   "additionalProperties": false
 }'
 
-<<< "$prompt" s-rt-llm-claude "$schema"
-#[⫶] claude invocation
+<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema"
+#[⫶] llm invocation

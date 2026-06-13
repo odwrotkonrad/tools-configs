@@ -1,0 +1,38 @@
+providers:
+  claude-code:
+    script: s-rt-llm-run-claude-code
+    model: haiku
+    env:
+      CLAUDE_CODE_SIMPLE: "1"
+      CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT: "1"
+      CLAUDE_CODE_DISABLE_THINKING: "1"
+      CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1"
+      MAX_THINKING_TOKENS: "0"
+  ollama:
+    script: s-rt-llm-run-ollama
+    model: gemma4:e4b-mlx
+    think: false
+    options:
+      temperature: 0
+      num_ctx: 16384
+    env: {}
+
+scripts:
+  s-rt-llm-git-branch-name-suggest:
+    provider:
+      id: claude-code
+      config: {}
+    template: git-branch-name-suggest.tmpl.md
+    env: {}
+  s-rt-llm-git-commit-msg-suggest:
+    provider:
+      id: claude-code
+      config: {}
+    template: git-commit-msg-suggest.tmpl.md
+    env: {}
+  s-rt-llm-git-mr-text-suggest:
+    provider:
+      id: claude-code
+      config: {}
+    template: git-mr-text-suggest.tmpl.md
+    env: {}

@@ -1,0 +1,52 @@
+#!/usr/bin/env zsh
+#>[≟]
+#   Sourced lib: resolve an s-rt-llm-* script's provider from /etc/custom/llm.yml.
+#   provider = providers[script.provider.id] merged with script.provider.config.
+#   Usage: source ${0:A:h}/lib/s-rt-llm-lib
+#     read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load <script-name>)"
+#     lib-llm-env-export <script-name>                    # exports provider env <- script env
+#     prompt=$(lib-llm-prompt-fill <template> <assoc-name>) # fill template with assoc vars
+#/[≟]
+
+lib_llm_config=/etc/custom/llm.yml
+
+#[…] lib-llm-config-load 🤖🤖
+#[≟] print script, model, template (space-separated)
+lib-llm-config-load() {
+  local name=$1
+  name=$name yq '
+    .scripts[strenv(name)] as $s
+    | (.providers[$s.provider.id] * ($s.provider.config // {})) as $p
+    | [$p.script, $p.model, $s.template] | join(" ")
+  ' "$lib_llm_config"
+}
+#[⫶] lib-llm-config-load 🤖🤖
+
+#[…] lib-llm-env-export 🤖🤖
+#[≟] export provider env <- script env; preset caller env wins (no override)
+lib-llm-env-export() {
+  local name=$1 kv key
+  for kv in "${(@f)$(name=$name yq '
+    .scripts[strenv(name)] as $s
+    | (.providers[$s.provider.id] * ($s.provider.config // {})) as $p
+    | (($p.env // {}) * ($s.env // {})) | to_entries | .[] | .key + "=" + .value
+  ' "$lib_llm_config")}"; do
+    key=${kv%%=*}
+    [[ -n $kv && ! -v $key ]] && export "$kv"
+  done
+}
+#[⫶] lib-llm-env-export 🤖🤖
+
+#[…] lib-llm-prompt-fill 🤖🤖
+#[≟] render templates-llm/<template> with the named assoc's pairs as gomplate vars
+lib-llm-prompt-fill() {
+  local template=$1 assoc=$2
+  local base=${${(%):-%x}:A:h:h}
+  local -A vars=("${(@kv)${(P)assoc}}")
+
+  for k v in "${(@kv)vars}"; do export "$k"="$v"; done
+  gomplate \
+    --plugin stripmd="$base/s-rt-read-markdown" \
+    -f "$base/templates-llm/$template"
+}
+#[⫶] lib-llm-prompt-fill 🤖🤖

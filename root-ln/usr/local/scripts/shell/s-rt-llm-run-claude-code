@@ -1,0 +1,43 @@
+#!/usr/bin/env zsh
+#>[≟]
+#   Headless Claude Code -p wrapper for s-rt-llm-* scripts.
+#   Usage: <prompt-on-stdin> | s-rt-llm-run-claude-code --model <model> --schema <schema> [--api-key-uri <uri>]
+#   Sets ANTHROPIC_MODEL/API_KEY; caller-exported env (e.g. CLAUDE_CODE_*) wins.
+#   Key URI (op read) from --api-key-uri, default ProgrammaticAccess ref.
+#   Upstream: s-rt-llm-git-* scripts. Downstream: prompt on stdin, --model, --schema.
+#   Out: the structured output object.
+#/[≟]
+
+
+set -e
+
+#[…] script input
+zparseopts -D -E -- -model:=opt_model -schema:=opt_schema -api-key-uri:=opt_api_key_uri
+typeset -A script_input=(
+  in_instructions "$(<&0)"
+
+  opt_model "${opt_model[2]}"
+  opt_schema "${opt_schema[2]}"
+  opt_api_key_uri "${opt_api_key_uri[2]:-op://ProgrammaticAccess/claude_api_key/password}"
+)
+#[⫶] script input
+
+env=(
+  "ANTHROPIC_MODEL:=$script_input[opt_model]"
+  #[∵] claude with CLAUDE_CODE_SIMPLE must use API Key auth
+  'ANTHROPIC_API_KEY:=$(op read "$script_input[opt_api_key_uri]")'
+)
+
+#[…] 🤖
+for kv in $env; do
+  eval "export ${kv%%:=*}=\${$kv}"
+done
+#[⫶] 🤖
+
+<<< "$script_input[in_instructions]" claude -p \
+  --system-prompt '' \
+  --output-format json \
+  --tools "" \
+  --allowedTools "" \
+  --effort low \
+  --json-schema "$script_input[opt_schema]" | jq '.structured_output'

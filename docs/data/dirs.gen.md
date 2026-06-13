@@ -51,7 +51,6 @@ root-ln
           functions
           rc.d
       .ollama
-        models
       .ssh
       Library
         Application Support
@@ -83,6 +82,7 @@ root-ln
         python
           s_rt_scripts_lib
         shell
+          lib
           templates-llm
 tests
   scripts

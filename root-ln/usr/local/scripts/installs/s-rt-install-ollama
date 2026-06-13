@@ -2,18 +2,15 @@
 
 set -e
 
-models_dir=$HOME/.ollama/models
+models=(
 
-typeset -A models=(
-    ko-gemma4 ko-gemma4.Modelfile
+    gemma4:e4b-mlx
 )
 
 if ! command -v ollama >/dev/null 2>&1; then
     curl -fsSL https://ollama.com/install.sh | sh
 fi
 
-ollama pull gemma4
-
-for name modelfile in ${(kv)models}; do
-    ollama create "$name" -f "$models_dir/$modelfile"
+for model in $models; do
+    ollama pull "$model"
 done
