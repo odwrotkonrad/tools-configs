@@ -6,7 +6,7 @@
 
 ### /ko-git-upsert-all — run the whole flow
 
-Invokes the three skills in order: `/ko-git-commit` → `/ko-git-branch-name-upsert` → `/ko-git-mr-upsert`. Stops on any failure or declined confirmation; each step keeps its own confirmations.
+Invokes the three skills in order: `/ko-git-branch-name-upsert` → `/ko-git-commit` → `/ko-git-mr-upsert`. Stops on any failure or declined confirmation; each step keeps its own confirmations.
 
 ### /ko-git-commit — commit message from staged diff
 
@@ -16,7 +16,7 @@ Invokes the three skills in order: `/ko-git-commit` → `/ko-git-branch-name-ups
 
 ### /ko-git-branch-name-upsert — create/rename branch to a conventional name
 
-Run after `/ko-git-commit` (it derives the name from the latest commit), and by `/ko-git-mr-upsert` for its branch step.
+Runs before `/ko-git-commit`, and used by `/ko-git-mr-upsert` for its branch step.
 
 - in → out: commits + staged/unstaged changes → `{name}`; then `git checkout -b` (on base) or `git branch -m` (rename)
 - script: `s-rt-llm-git-branch-name-suggest`
