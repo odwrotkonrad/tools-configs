@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+set -e
+
+models=(
+    gemma4:e4b-mlx
+)
+
+if ! command -v ollama >/dev/null 2>&1; then
+    curl -fsSL https://ollama.com/install.sh | sh
+fi
+
+for model in $models; do
+    ollama pull "$model"
+done

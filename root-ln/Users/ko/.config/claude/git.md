@@ -16,7 +16,7 @@ Invokes the three skills in order: `/ko-git-branch-name-upsert` → `/ko-git-com
 
 ### /ko-git-branch-name-upsert — create/rename branch to a conventional name
 
-Used by `/ko-git-commit` and `/ko-git-mr-upsert` for their branch step.
+Runs before `/ko-git-commit`, and used by `/ko-git-mr-upsert` for its branch step.
 
 - in → out: commits + staged/unstaged changes → `{name}`; then `git checkout -b` (on base) or `git branch -m` (rename)
 - script: `s-rt-llm-git-branch-name-suggest`

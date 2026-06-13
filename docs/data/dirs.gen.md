@@ -50,6 +50,7 @@ root-ln
           completions
           functions
           rc.d
+      .ollama
       .ssh
       Library
         Application Support
@@ -81,6 +82,7 @@ root-ln
         python
           s_rt_scripts_lib
         shell
+          lib
           templates-llm
 tests
   scripts

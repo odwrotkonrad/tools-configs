@@ -1,10 +1,13 @@
 ## Data
 
-### Commits ({{ getenv "RANGE_COMMITS" }}, secondary context only, may include reverted work)
-{{ getenv "COMMITS" }}
+### Full Diff - source of truth
+{{ getenv "DIFF_FULL" }}
 
-### Net Diff ({{ getenv "RANGE_DIFF" }}, source of truth, describe only what this shows)
-{{ getenv "NET_DIFF" }}
+### Full Diff Stats
+{{ getenv "DIFF_STATS" }}
+
+### Latest Commit
+{{ getenv "LATEST_COMMIT" }}
 
 ## Style
 
@@ -13,12 +16,12 @@
 ## Task
 
 Write an MR/PR title and description from the net diff against main. Fill `title` and `description`.
-The net diff is the source of truth: describe only what it changes, not what the commits say.
+The net diff is the source of truth: describe only what it changes, not what the commit says.
 Terse, specific, exhaustive: every change in the diff appears, trim words, never changes.
 
-- derive everything from the net diff, commits are secondary context for intent and ordering only
-- a change committed then reverted within the range is absent from the net diff → it MUST NOT appear
-- when a commit subject and the diff disagree, the diff wins
+- derive everything from the net diff, the latest commit is secondary context for intent only
+- a change absent from the net diff MUST NOT appear, even if mentioned in the commit
+- when the commit and the diff disagree, the diff wins
 
 `title` → `<type>(<scope>): <summary>`:
 - summary names what the diff changes as a whole, imperative, concise

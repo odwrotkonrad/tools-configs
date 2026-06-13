@@ -1,53 +1,49 @@
 #!/usr/bin/env zsh
 #>[≟]
 #   LLM driven change request (MR/PR) generation
-#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-mr-text-suggest [range] [template-file]
+#   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-mr-text-suggest [--range <range>]
 #   extra-instructions: optional, read from stdin when piped.
-#   template-file: optional, defaults to ./templates-llm/git-mr-text-suggest.tmpl.md
+#   provider, model, template, env resolved from /etc/custom/llm.yml.
 #   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
 #   Out: { "title": ..., "description": ... }.
 #/[≟]
 
 set -e
 
+source "${0:A:h}/lib/s-rt-llm-lib"
+read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load "${0:t}")"
+lib-llm-env-export "${0:t}"
+
 
 #[…] script input
+zparseopts -D -E -- -range:=opt_range
 typeset -A script_input=(
-  instructions_runtime "$([[ -t 0 ]] || cat)"
+  in_instructions_runtime "$([[ -t 0 ]] || cat)"
 
-  range "${1:-main..HEAD}"
-  template_file "${2:-${0:A:h}/templates-llm/git-mr-text-suggest.tmpl.md}"
+  opt_range "${opt_range[2]:-main..HEAD}"
 )
 #[⫶] script input
 
 
 #[…] template input 🤖
 typeset -A template_input=(
-  RANGE_COMMITS "$script_input[range]"
-  RANGE_DIFF "${script_input[range]/../...}"
-  COMMITS "$(git log --reverse --format='%h %s' "$script_input[range]")"
-  NET_DIFF "$(git diff "${script_input[range]/../...}")"
-  INSTRUCTIONS_RUNTIME "$script_input[instructions_runtime]"
+  LATEST_COMMIT "$(git log -1 --format='%B' HEAD)"
+  DIFF_FULL "$(git diff "${script_input[opt_range]/../...}")"
+  DIFF_STATS "$(git diff --stat "${script_input[opt_range]/../...}")"
+  INSTRUCTIONS_RUNTIME "$script_input[in_instructions_runtime]"
 )
 #[⫶] template input 🤖
 
 # if there are no changes return
-[[ -n $template_input[COMMITS] ]] || { echo "error: no commits in $script_input[range]" >&2; exit 1 }
+[[ -n "$(git log --format=%h "$script_input[opt_range]")" ]] || { echo "error: no commits in $script_input[opt_range]" >&2; exit 1 }
 
 
 #[…] fill template 🤖
-prompt=$(
-  for k v in "${(@kv)template_input}"; do export "$k"="$v"; done
-  gomplate \
-    --plugin stripmd="${0:A:h}/s-rt-read-markdown" \
-    -f "$script_input[template_file]"
-)
+prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
 #[⫶] fill template 🤖
 
 
-#[…] claude invocation
-export ANTHROPIC_MODEL=haiku
-
+#[…] llm invocation
 schema='{
   "type": "object",
   "properties": {
@@ -58,5 +54,5 @@ schema='{
   "additionalProperties": false
 }'
 
-<<< "$prompt" s-rt-llm-claude "$schema"
-#[⫶] claude invocation
+<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema"
+#[⫶] llm invocation

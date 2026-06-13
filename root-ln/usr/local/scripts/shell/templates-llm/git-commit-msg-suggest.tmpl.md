@@ -1,10 +1,10 @@
 ## Data
 
-### Recent Commits (full message, last 3)
-{{ getenv "RECENT_COMMITS" }}
+### Full Diff
+{{ getenv "DIFF_FULL" }}
 
-### Staged Diff
-{{ getenv "STAGED_DIFF" }}
+### Diff Stats
+{{ getenv "DIFF_STATS" }}
 
 ### Commit Template
 {{ getenv "COMMIT_TEMPLATE" }}
