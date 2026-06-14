@@ -1,0 +1,23 @@
+#!/bin/zsh
+#>[≟]
+#   render every *.auto.tmpl in the configs repo's root-ln tree to its
+#   stripped sibling at the mirrored system path; secrets resolved from
+#   1Password via the op plugin. run as the user owning the op session.
+#   $1 - configs repo path (default: /Users/ko/projects/configs)
+#/[≟]
+
+emulate -LR zsh
+set -e
+
+if (( ! $+commands[gomplate] )) exit-with 1 "gomplate not found"
+if (( ! $+commands[op] )) exit-with 1 "op (1Password CLI) not found"
+
+configs=${1:-/Users/ko/projects/configs}
+[[ -d $configs/root-ln ]] || exit-with 1 "configs not found: $configs/root-ln"
+
+for src in $configs/root-ln/**/*.auto.tmpl(.DN); do
+  dst=${src#$configs/root-ln}
+  dst=${dst%.auto.tmpl}
+  gomplate -f "$src" -o "$dst"
+  print "${0:t}: rendered $dst"
+done

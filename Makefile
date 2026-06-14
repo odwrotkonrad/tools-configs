@@ -1,6 +1,6 @@
 #[≟] Project's Makefile
 WRAPPERS := run-sync run-repo-gen-files run-host-setup
-COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
+COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
 FILES := docs/data/dirs.gen.md README.md
 SCRIPTS := root-ln/usr/local/scripts
 PRETTY := $(CURDIR)/$(SCRIPTS)/shell/with-sections
@@ -17,12 +17,17 @@ run-repo-gen-files: $(FILES)
 #[…] commands
 run-host-upsert-configs:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-load-configs
+	@$(MAKE) run-host-render-templates
 
 run-host-delete-broken-links:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-clean-broken-links
 
 run-host-mk-dirs:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/installs/s-rt-mk-dirs
+
+#[≟] render *.auto.tmpl as current user (op session)
+run-host-render-templates:
+	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/installs/s-rt-render-templates $(CURDIR)
 
 run-repo-tests:
 	@$(PRETTY) pytest tests/scripts/python

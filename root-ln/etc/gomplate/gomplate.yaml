@@ -1,0 +1,7 @@
+plugins:
+  op:
+    cmd: op
+    args: [read, --no-newline]
+    timeout: 30s
+  stripmd:
+    cmd: /usr/local/scripts/shell/s-rt-read-markdown

@@ -17,6 +17,7 @@ root-ln
     ko
       .config
         asdf
+        aws
         claude
           agent-memory
           agents
@@ -65,6 +66,7 @@ root-ln
         LaunchAgents
   etc
     custom
+    gomplate
     grafana
       provisioning
         dashboards

@@ -45,8 +45,6 @@ lib-llm-prompt-fill() {
   local -A vars=("${(@kv)${(P)assoc}}")
 
   for k v in "${(@kv)vars}"; do export "$k"="$v"; done
-  gomplate \
-    --plugin stripmd="$base/s-rt-read-markdown" \
-    -f "$base/templates-llm/$template"
+  gomplate -f "$base/templates-llm/$template"
 }
 #[⫶] lib-llm-prompt-fill 🤖🤖

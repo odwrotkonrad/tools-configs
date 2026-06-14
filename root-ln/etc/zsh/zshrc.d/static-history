@@ -8,6 +8,13 @@ brew bundle add wget     #[≟] add pkg to Brewfile
 brew bundle remove wget  #[≟] remove pkg from Brewfile
 #[⫶] brew
 
+#[…] aws [≟] aws cli […] 🤖
+aws sso login --sso-session ko-org   #[≟] authorize the ko-org sso session
+aws s3 ls --profile ko-staging
+aws s3 ls --profile ko-ci
+export AWS_PROFILE=ko-staging        #[≟] set default profile to named profile
+#[⫶] aws [⫶] 🤖
+
 #[…] defaults [≟] access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
 defaults read com.apple.dock
