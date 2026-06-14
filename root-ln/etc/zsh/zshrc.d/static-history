@@ -8,12 +8,24 @@ brew bundle add wget     #[≟] add pkg to Brewfile
 brew bundle remove wget  #[≟] remove pkg from Brewfile
 #[⫶] brew
 
-#[…] aws [≟] aws cli […] 🤖
+#[…] aws
 aws sso login --sso-session ko-org   #[≟] authorize the ko-org sso session
 aws s3 ls --profile ko-staging
 aws s3 ls --profile ko-ci
 export AWS_PROFILE=ko-staging        #[≟] set default profile to named profile
-#[⫶] aws [⫶] 🤖
+#[⫶] aws
+
+#[…] gcloud - google cloud cli […] 🤖
+gcloud auth login
+gcloud auth application-default login
+gcloud config configurations list
+gcloud config configurations activate main
+gcloud config configurations activate staging
+gcloud config configurations activate production
+gcloud config list
+gcloud storage ls
+gcloud storage ls gs://ko-backups
+#[⫶] gcloud [⫶] 🤖
 
 #[…] defaults [≟] access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
