@@ -14,7 +14,7 @@ aws configure list
 aws configure list-profiles
 aws s3 ls --profile ko-staging
 export AWS_PROFILE=ko-staging        #[≟] set default profile to named profile
-aws s3 ls s3://ko-backups --profile
+aws s3 ls s3://ko-backups
 #[⫶] aws
 
 #[…] gcloud - google cloud cli […] 🤖
@@ -33,7 +33,7 @@ gcloud storage objects list 'gs://ko-backups/**'
 az login
 az account list                                          #[≟] list subscriptions
 az account set --subscription "Azure subscription 1"     #[≟] switch active subscription
-az storage container list --account-name backupsko --auth-mode login  # kobackups was taken...
+az storage container list --account-name backupsko --auth-mode login  #[∵] kobackups was taken, storage account names are globally unique
 #[⫶] azure
 
 #[…] defaults [≟] access the macOS user defaults system
