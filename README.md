@@ -35,10 +35,12 @@ zsh: root-ln/etc/zshrc
 
 #[…] other
 asdf: root-ln/Users/ko/.config/asdf/.asdfrc
+aws: root-ln/Users/ko/.config/aws/config.auto.tmpl
 direnv: root-ln/Users/ko/.config/direnv/direnv.toml
 editorconfig: root-ln/Users/ko/.editorconfig
 fzf: root-ln/etc/zsh/rc.d/20-tools.zsh
 golang: root-ln/etc/zshenv
+gomplate: root-ln/etc/gomplate/gomplate.yaml
 homebrew: root-ln/etc/zshrc
 loki: root-ln/etc/loki/config.yml
 man: root-ln/etc/man.conf

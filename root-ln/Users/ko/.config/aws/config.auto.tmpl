@@ -1,0 +1,34 @@
+[sso-session ko-org]
+sso_start_url = {{ op "op://ProgrammaticAccess/aws_ko_sso/password" }}
+sso_region = us-west-1
+sso_registration_scopes = sso:account:access
+
+[profile ko-identity]
+sso_session = ko-org
+sso_account_id = {{ op "op://ProgrammaticAccess/aws_ko_account_identity/password" }}
+sso_role_name = {{ op "op://ProgrammaticAccess/aws_ko_user_admin/password" }}
+region = us-east-1
+
+[profile ko-management]
+sso_session = ko-org
+sso_account_id = {{ op "op://ProgrammaticAccess/aws_ko_account_management/password" }}
+sso_role_name = {{ op "op://ProgrammaticAccess/aws_ko_user_admin/password" }}
+region = us-east-1
+
+[profile ko-ci]
+sso_session = ko-org
+sso_account_id = {{ op "op://ProgrammaticAccess/aws_ko_account_ci/password" }}
+sso_role_name = {{ op "op://ProgrammaticAccess/aws_ko_user_admin/password" }}
+region = us-east-1
+
+[profile ko-staging]
+sso_session = ko-org
+sso_account_id = {{ op "op://ProgrammaticAccess/aws_ko_account_staging/password" }}
+sso_role_name = {{ op "op://ProgrammaticAccess/aws_ko_user_admin/password" }}
+region = us-east-1
+
+[profile ko-production]
+sso_session = ko-org
+sso_account_id = {{ op "op://ProgrammaticAccess/aws_ko_account_production/password" }}
+sso_role_name = {{ op "op://ProgrammaticAccess/aws_ko_user_admin/password" }}
+region = us-east-1

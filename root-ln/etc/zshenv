@@ -27,6 +27,8 @@ typeset -A env_vars=(
     GOPATH              "${HOME}/go"
     ASDF_DATA_DIR       "${XDG_STATE_HOME}/asdf"
     ASDF_CONFIG_FILE    "${XDG_CONFIG_HOME}/asdf/.asdfrc"
+    AWS_CONFIG_FILE     "${XDG_CONFIG_HOME}/aws/config"
+    GOMPLATE_CONFIG     "/etc/gomplate/gomplate.yaml"
     PKG_CONFIG_PATH     "/opt/homebrew/opt/ruby/lib/pkgconfig"
     PYENV_ROOT          "${HOME}/.pyenv"
     PIP_DISABLE_PIP_VERSION_CHECK "1"
