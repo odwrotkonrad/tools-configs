@@ -12,7 +12,8 @@ configs=${1:-/Users/ko/projects/configs}
 #[…] symlinked tree
 pushd "$configs/root-ln"
 find * -type d -exec mkdir -p /{} \;
-find * -type f -exec ln -fvws "$PWD"/{} /{} \;
+#[≟] skip *.auto.tmpl: rendered to its stripped sibling by render-templates
+find * -type f ! -name '*.auto.tmpl' -exec ln -fvws "$PWD"/{} /{} \;
 popd
 #[⫶] symlinked tree
 
