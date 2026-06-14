@@ -23,6 +23,7 @@ typeset -a opts_enabled=(
   noflowcontrol
   nohistbeep
   nohup
+  nullglob #[≟] non-matching globs expand to nothing instead of erroring
   promptsubst
   pushdsilent
   rcexpandparam #[≟] array=(one two); print X${array}Y -> XoneY XtwoY
@@ -148,7 +149,6 @@ typeset -a opts_disabled=(
   norcs
   noshortloops
   nounset
-  nullglob
   numericglobsort
   octalzeroes
   overstrike

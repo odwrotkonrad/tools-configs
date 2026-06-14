@@ -2,23 +2,6 @@
 
 autoload -Uz add-zsh-hook
 
-#[…] 🤖🤖 predicates
-is-terminal() {
-  case ${1} in
-    kitty)  [[ ${TERM} == xterm-kitty ]] ;;
-    vscode) [[ ${TERM_PROGRAM} == vscode ]] ;;
-    *) return 2 ;;
-  esac
-}
-is-os() {
-  case ${1} in
-    mac)   [[ $(uname -s) == Darwin ]] ;;
-    linux) [[ $(uname -s) == Linux ]] ;;
-    *) return 2 ;;
-  esac
-}
-#[⫶] predicates
-
 function fn_otel_resource_cwd {
   export OTEL_RESOURCE_ATTRIBUTES="cwd=${PWD},project=${PWD:t}"
 }

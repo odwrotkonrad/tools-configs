@@ -1,0 +1,53 @@
+#!/bin/zsh
+
+emulate -LR zsh
+set -e
+
+#[……] 🤖🤖
+#[…] resolve the invoking user and their home (under sudo $HOME is root's)
+user=${SUDO_USER:-$USER}
+user_home=$(dscl . -read "/Users/$user" NFSHomeDirectory | cut -d' ' -f2)
+user_group=$(id -gn "$user")
+#[⫶]
+
+#[…] user dirs (XDG defaults + custom)
+user_dirs=(
+    "${user_home}/.cache/homebrew"
+    "${user_home}/.config"
+    "${user_home}/.local/bin"
+    "${user_home}/.local/share"
+    "${user_home}/.local/state"
+    "${user_home}/.local/state/asdf"
+    "${user_home}/.local/state/homebrew"
+    "${user_home}/.local/state/log"
+    "${user_home}/.local/state/vim/undo"
+    "${user_home}/.local/state/zsh"
+    "${user_home}/.local/state/zsh/completions"
+    "${user_home}/ScreenCapture"
+)
+mkdir -p ${user_dirs}
+chown -R "${user}:${user_group}" ${user_dirs}
+#[⫶]
+
+#[…] system service dirs: root-owned, user-group, group-writable + setgid, world read/list
+svc_dirs=(
+    /var/log/grafana
+    /var/log/jaeger
+    /var/log/loki
+    /var/log/prometheus
+    /var/log/dir_size_exporter
+    /var/log/port_exporter
+    /var/log/otelcol
+    /usr/local/var/grafana
+    /usr/local/var/prometheus
+    /usr/local/var/dir_size_exporter
+)
+mkdir -p ${svc_dirs}
+chown "root:${user_group}" ${svc_dirs}
+chmod 2775 ${svc_dirs}
+#[⫶]
+
+#[…] world-writable cache dir for the term-open-files helper
+install -d -m 1777 /var/custom/cache/s-rt-get-term-open-files-with
+#[⫶]
+#[⫶⫶] 🤖🤖

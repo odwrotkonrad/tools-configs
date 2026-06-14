@@ -1,0 +1,120 @@
+tap "azure/azure-cli"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
+# Library for command-line editing
+brew "readline"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@3"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Bash Automated Testing System
+brew "bats-core"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# Select default apps for documents and URL schemes on macOS
+brew "duti"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# Replace zsh completion selection menu with fzf
+brew "fzf-tab"
+# General-purpose data compression with high compression ratio
+brew "xz"
+# Zstandard is a real-time compression algorithm
+brew "zstd"
+# GNU compiler collection
+brew "gcc"
+# GitHub command-line tool
+brew "gh"
+# Perl compatible regular expressions library with a new API
+brew "pcre2"
+# Distributed revision control system
+brew "git"
+# Open-source GitLab command-line tool
+brew "glab"
+# Gorgeous metric visualizations and dashboards for timeseries databases
+brew "grafana"
+# Improved top (interactive process viewer)
+brew "htop"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Command-line interface for SQLite
+brew "sqlite"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.14"
+# Generic library support script
+brew "libtool"
+# Run LogQL queries against a Loki server
+brew "logcli"
+# Horizontally-scalable, highly-available log aggregation system
+brew "loki"
+# Utility for directing compilation
+brew "make"
+# Port scanning utility for large networks
+brew "nmap"
+# Platform built on V8 to build network applications
+brew "node"
+# OpenBSD freely-licensed SSH connectivity tools
+brew "openssh"
+# Swiss-army knife of markup format conversion
+brew "pandoc"
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
+# Modern replacement for ps written in Rust
+brew "procs"
+# Show ps output as a tree
+brew "pstree"
+# Python version management
+brew "pyenv"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Powerful, clean, object-oriented scripting language
+brew "ruby", link: false
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Simple keystroke visualizer
+brew "showkey"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Tool Command Language
+brew "tcl-tk"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
+# Executes a program periodically, showing output fullscreen
+brew "watch"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# General-purpose lossless data-compression library
+brew "zlib"
+# Command-line interface for 1Password
+cask "1password-cli"
+cask "azure/azure-cli/azure-cli-preview"
+cask "font-jetbrains-mono"
+go "github.com/hairyhenderson/gomplate/v4/cmd/gomplate"
+go "golang.org/x/tools/gopls"
+go "github.com/evilmartians/lefthook/v2"
+npm "@github/copilot"
+npm "corepack"
+npm "pyright"
+npm "typescript-language-server"
+npm "typescript"
+vscode "anthropic.claude-code"
+vscode "charliermarsh.ruff"
+vscode "editorconfig.editorconfig"
+vscode "esbenp.prettier-vscode"
+vscode "golang.go"
+vscode "mindaro-dev.file-downloader"
+vscode "ms-azuretools.vscode-containers"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-python-envs"
+vscode "yzhang.markdown-all-in-one"

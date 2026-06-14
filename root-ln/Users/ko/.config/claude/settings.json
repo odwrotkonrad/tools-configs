@@ -63,12 +63,12 @@
       "TaskOutput",
       "TaskStop",
       "TaskUpdate",
-      "TodoWrite",
-      "WebFetch",
-      "WebSearch"
+      "TodoWrite"
     ],
     "ask": [
       "Skill(ko-git-branch-name-upsert)",
+      "WebFetch",
+      "WebSearch",
       "Skill(ko-git-commit)",
       "Skill(ko-git-mr-upsert)",
       "Skill(ko-git-upsert-all)"

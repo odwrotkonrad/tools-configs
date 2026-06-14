@@ -1,7 +1,11 @@
 #[…] brew [≟] The Missing Package Manager for macOS (or Linux)
-brew list       #[≟] list all packages installed
-brew update     #[≟] update remotes
-brew upgrade    #[≟] install upgrades
+brew list                #[≟] list all packages installed
+brew update              #[≟] update remotes
+brew upgrade             #[≟] install upgrades
+brew install             #[≟] install from brewfile
+brew install wget        #[≟] install pkg
+brew bundle add wget     #[≟] add pkg to Brewfile
+brew bundle remove wget  #[≟] remove pkg from Brewfile
 #[⫶] brew
 
 #[…] defaults [≟] access the macOS user defaults system

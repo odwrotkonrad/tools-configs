@@ -1,18 +1,3 @@
-#[…] create dirs
-typeset -a dirs=(
-    "${HOME}/ScreenCapture"
-    "${XDG_CACHE_HOME}/homebrew"
-    "${XDG_STATE_HOME}/asdf"
-    "${XDG_STATE_HOME}/homebrew"
-    "${XDG_STATE_HOME}/log"
-    "${XDG_STATE_HOME}/vim/undo"
-    "${XDG_STATE_HOME}/zsh"                              #[≟] dir for e.g. zsh history
-    "${XDG_STATE_HOME}/zsh/completions"                  #[≟] for generated completions
-)
-mkdir -p ${(v)xdg_default_locations} ${dirs}             #[≟] create dirs if non existing
-unset dirs
-#[⫶] create dirs
-
 #[…] named dirs
 #>[≟]
 # hash - zsh builtin - modify the contents of the cmd and dir hash tables

@@ -1,11 +1,13 @@
 ---
 paths:
-  - "**/zsh/functions/**"
+  - "**/zsh/**functions"
 ---
 
 ## ZSH Functions
 
-Autoloaded by `/etc/zshrc`. Filename = function name (`rm` shadows the command; `fn-rt-*` called as-is).
+Autoloaded from `zsh/<phase>.d/functions/` (`zshenv.d` = all shells, `zshrc.d` = interactive). Filename = function name (`rm` shadows the command; `fn-rt-*` called as-is).
+
+Tiny eager helpers wanted in every shell go inline in `zshenv.d/auto.d/00-functions.zsh` (defined at source time, e.g. `is-os`, `exit-with`). Larger or lazy functions get their own autoloaded file under `functions/`.
 
 Every function starts with `emulate -LR zsh`.
 - -R - Reset shell options to defaults for the function (for portability, it will work regardless of options set by the shell)

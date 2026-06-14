@@ -20,5 +20,5 @@ eval "$(direnv hook zsh)"
 #[⫶] direnv
 
 #[…] rg completions
-[[ ! -s "/etc/zsh/completions/_rg" ]] && rg --generate=complete-zsh > "/etc/zsh/completions/_rg"
+[[ ! -s "/etc/zsh/zshrc.d/completions/_rg" ]] && rg --generate=complete-zsh > "/etc/zsh/zshrc.d/completions/_rg"
 #[⫶] rg completions
