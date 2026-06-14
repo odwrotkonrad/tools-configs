@@ -14,3 +14,7 @@ __pycache__/
 **/.mypy_cache/
 
 /root-ln/etc/**/*local*
+
+# azure cli writes auth state + indexes into its config dir; track only config
+/root-ln/Users/ko/.config/azure/*
+!/root-ln/Users/ko/.config/azure/config
