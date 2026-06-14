@@ -1,0 +1,14 @@
+#!/bin/zsh
+#>[≟]
+#   script wrapper: pretty-print a header and terminator around the command
+#[∵] when running commands one after another, distinguishes which output is whose
+#/[≟]
+
+emulate -LR zsh
+
+label=$1; [[ $1 == sudo ]] && label=$2
+
+print-with title "BEGIN ${label:t}"
+"$@"; rc=$?
+print-with title "END ${label:t}"
+exit $rc
