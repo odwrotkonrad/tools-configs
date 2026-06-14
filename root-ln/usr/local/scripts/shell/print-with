@@ -1,0 +1,16 @@
+#!/bin/zsh
+#>[≟] 🤖🤖 print-with <modifier> <text> — styled wrapper over print
+#   bold: %B/%b · title: text between dash bars sized to COLUMNS, or fixed --- if no tty width
+#/[≟]
+
+emulate -LR zsh
+
+local modifier=$1 text=$2 bar n
+
+case ${modifier} {
+  (bold)  text="%B${text}%b" ;;
+  (title) bar="---"; (( COLUMNS > ${#text} + 2 )) && { n=$(( (COLUMNS - ${#text} - 2) / 2 )); bar=${(l:n::-:)} }; text="${bar} %B${text}%b ${bar}" ;;
+  (*) return 2 ;;
+}
+
+print -P -- ${text}

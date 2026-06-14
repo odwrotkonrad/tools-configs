@@ -35,16 +35,3 @@ exit-with() {
   exit $code
 }
 
-#[…] 🤖🤖 print-with <modifier> <text> — styled wrapper over print
-print-with() {
-  local modifier=$1 text=$2 bar n
-
-  case ${modifier} {
-    (bold)  text="%B${text}%b" ;;
-    (title) n=$(( (${COLUMNS:-80} - ${#text} - 2) / 2 )); bar=${(l:n::-:)}; text="${bar} %B${text}%b ${bar}" ;;
-    (*) return 2 ;;
-  }
-
-  print -P -- ${text}
-}
-#[⫶] print-with
