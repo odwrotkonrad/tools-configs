@@ -1,0 +1,29 @@
+#!/bin/zsh
+#>[≟]
+#   run every installer in dependency order: brew bundle first (provides
+#   asdf/go/node/etc.), then dirs, language tools, clis, and services
+#/[≟]
+
+emulate -LR zsh
+set -e
+
+#[≟] brew packages, casks, go/npm globals, vscode extensions (Brewfile via brew.env)
+brew bundle install
+
+#[≟] remaining installers, in dependency order
+installers=(
+    s-rt-create-dirs
+    s-rt-install-asdf
+    s-rt-install-aws-cli
+    s-rt-install-gcloud-cli
+    s-rt-install-kitty
+    s-rt-install-jaeger
+    s-rt-install-ollama
+    s-rt-install-otel-collector
+    s-rt-install-prometheus
+)
+for installer in ${installers}; ${installer}
+
+#[≟] other language-level tools
+pip install -r /etc/python/requirements.txt
+gem install ruby-lsp

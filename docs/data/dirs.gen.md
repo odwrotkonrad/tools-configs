@@ -70,6 +70,7 @@ root-ln
         dashboards
           json
         datasources
+    homebrew
     jaeger
     loki
     otelcol
