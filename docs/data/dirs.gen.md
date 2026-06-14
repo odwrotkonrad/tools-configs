@@ -18,6 +18,7 @@ root-ln
       .config
         asdf
         aws
+        azure
         claude
           agent-memory
           agents

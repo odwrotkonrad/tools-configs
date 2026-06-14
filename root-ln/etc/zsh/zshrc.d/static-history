@@ -10,9 +10,11 @@ brew bundle remove wget  #[≟] remove pkg from Brewfile
 
 #[…] aws
 aws sso login --sso-session ko-org   #[≟] authorize the ko-org sso session
+aws configure list
+aws configure list-profiles
 aws s3 ls --profile ko-staging
-aws s3 ls --profile ko-ci
 export AWS_PROFILE=ko-staging        #[≟] set default profile to named profile
+aws s3 ls s3://ko-backups --profile
 #[⫶] aws
 
 #[…] gcloud - google cloud cli […] 🤖
@@ -23,9 +25,16 @@ gcloud config configurations activate main
 gcloud config configurations activate staging
 gcloud config configurations activate production
 gcloud config list
-gcloud storage ls
-gcloud storage ls gs://ko-backups
+gcloud storage buckets list
+gcloud storage objects list 'gs://ko-backups/**'
 #[⫶] gcloud [⫶] 🤖
+
+#[…] azure - azure cli
+az login
+az account list                                          #[≟] list subscriptions
+az account set --subscription "Azure subscription 1"     #[≟] switch active subscription
+az storage container list --account-name backupsko --auth-mode login  # kobackups was taken...
+#[⫶] azure
 
 #[…] defaults [≟] access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
