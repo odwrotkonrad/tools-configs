@@ -14,7 +14,6 @@ typeset -U path=(
     /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Support
     /opt/local/bin
     /opt/X11/bin
-    /opt/homebrew/share/google-cloud-sdk/bin
     /opt/homebrew/lib/ruby/gems/*/bin(N)
     /opt/homebrew/opt/ruby/bin
     /opt/homebrew/bin
