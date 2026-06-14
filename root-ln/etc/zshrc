@@ -24,26 +24,22 @@ typeset -U path=(
     /sbin
     ${path}
 )
-
 typeset -U fpath=(
-    ${XDG_CONFIG_HOME}/zsh/functions
-    ${XDG_STATE_HOME}/zsh/completions
-    /etc/zsh/functions
-    /etc/zsh/completions
-    /opt/homebrew/share/zsh/site-functions
+    /etc/zsh/zshrc.d/functions
+    /etc/zsh/zshrc.d/completions
     ${fpath}
 )
 #[⫶] set params
 
 #[…] plug-in files
-#[≟] source all files from zsh/rc.d in ascending by name order
-for rc in /etc/zsh/rc.d/*.zsh(on); {
-  . $rc
+#[≟] autoload zshrc.d functions (interactive)
+for f in /etc/zsh/zshrc.d/functions/*(N:t); {
+  emulate zsh -LRc "autoload $f"
 }
 
-#[≟] load functions
-for f in /etc/zsh/functions/**(:t); {
-  emulate zsh -LRc "autoload $f"
+#[≟] source zshrc.d/auto.d files in ascending by name order
+for rc in /etc/zsh/zshrc.d/auto.d/*.zsh(Non); {
+  . $rc
 }
 
 fn-rt-load-static-history

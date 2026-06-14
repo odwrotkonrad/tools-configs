@@ -57,3 +57,20 @@ typeset -A rt_seq=(
     goto-row-1  $'\u001B[H'  #[≟] ANSI -> CUP: cursor to row 1, column 1
 )
 #[⫶⫶] ANSI escape sequences
+
+
+typeset -U fpath=(
+    /etc/zsh/zshenv.d/functions
+    /opt/homebrew/share/zsh/site-functions
+    ${fpath}
+)
+
+#[≟] autoload zshenv.d functions (all shells)
+for f in /etc/zsh/zshenv.d/functions/*(N:t); {
+  emulate zsh -LRc "autoload $f"
+}
+
+#[≟] source zshenv.d/auto.d files (all shells) in ascending by name order
+for rc in /etc/zsh/zshenv.d/auto.d/*.zsh(Non); {
+  . $rc
+}

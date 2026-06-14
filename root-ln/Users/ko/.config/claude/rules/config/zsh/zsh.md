@@ -21,12 +21,16 @@ paths:
         .zshrc:
         .zlogin:
         .zlogout:
-        .zclaude:
-        completions/:
-        functions/:
-        rc.d/:
-          00-dirs.zsh:
-          10-tools.zsh:
+        zshenv.d/:                                          # loaded by .zshenv (all shells)
+          auto.d/:                                          # sourced in name order
+            99-claude.zsh:                                  # man-as-text; guarded on CLAUDECODE
+          functions/:                                       # autoloaded
+        zshrc.d/:                                           # loaded by .zshrc (interactive)
+          auto.d/:
+            00-dirs.zsh:
+            10-tools.zsh:
+          completions/:
+          functions/:
       root-ln/etc/:
         zshenv:
         zprofile:
@@ -34,21 +38,26 @@ paths:
         zlogin:
         zlogout:
         zsh/:
-          static-history: # static history items loaded for each shell
-          completions/:
-          rc.d/:
-            00-dirs.zsh:
-            10-shell.zsh:
-            20-tools.zsh:
-            30-functions.zsh:
-            40-aliases.zsh:
-            50-keybindings.zsh:
-          functions/:
-            rm:
-            fn-rt-load-os-open-files-with:
-            fn-rt-load-static-history:
-            fn-rt-ssh-generate-keys:
-            fn-rt-ssh-test-git-connection:
+          zshenv.d/:                                        # loaded by /etc/zshenv (all shells)
+            auto.d/:                                        # sourced in name order
+              00-functions.zsh:                             # is-os, is-arch, is-terminal, exit-with
+            functions/:                                     # autoloaded
+              rm:
+              fn-rt-load-os-open-files-with:
+              fn-rt-ssh-generate-keys:
+              fn-rt-ssh-test-git-connection:
+          zshrc.d/:                                         # loaded by /etc/zshrc (interactive)
+            static-history: # static history items loaded into each interactive shell
+            auto.d/:
+              00-dirs.zsh:
+              10-shell.zsh:
+              20-tools.zsh:
+              30-functions.zsh:
+              40-aliases.zsh:
+              50-keybindings.zsh:
+            completions/:
+            functions/:
+              fn-rt-load-static-history:
       root-ln/usr/local/scripts/:
         installs/:
           s-rt-install-asdf:
@@ -68,7 +77,6 @@ paths:
 | - | ----------------------------- | ----------------------- |
 | 1 | /etc/zshenv                   | all                     |
 | 2 | ${ZDOTDIR}/.zshenv            | all                     |
-| - | ${ZDOTDIR}/.zclaude           | Claude (custom)         |
 | 3 | /etc/zprofile                 | login                   |
 | 4 | ${ZDOTDIR}/.zprofile          | login                   |
 | 5 | /etc/zshrc                    | interactive             |
@@ -78,7 +86,7 @@ paths:
 | - | ${ZDOTDIR}/.zlogout           | login shell exit (1st)  |
 | - | /etc/zlogout                  | login shell exit (2nd)  |
 
-`/etc/zshrc` sources `/etc/zsh/rc.d/*.zsh` then autoloads `/etc/zsh/functions/*`; `.zshrc` sources `${ZDOTDIR}/rc.d/*.zsh`.
+Each startup phase has a `<phase>.d/` dir with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced in name order). `/etc/zshenv` loads `zshenv.d/` (all shells), `/etc/zshrc` loads `zshrc.d/` (interactive); same split in user space (`${ZDOTDIR}/zshenv.d/`, `${ZDOTDIR}/zshrc.d/`). Add an always-available helper to `zshenv.d/`, an interactive-only one to `zshrc.d/`.
 
 ### Documentation
 

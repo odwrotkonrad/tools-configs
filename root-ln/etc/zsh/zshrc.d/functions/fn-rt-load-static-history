@@ -1,5 +1,5 @@
 #>[≟]
-# purpose of this function is to load commands from /etc/zsh/static-history into in memory history list
+# purpose of this function is to load commands from /etc/zsh/zshrc.d/static-history into in memory history list
 # comment lines are removed
 # whitespace before comments is folded into two spaces
 #/[≟]
@@ -10,7 +10,7 @@ local TEMP_HIST=$(mktemp)
 local RGX_LINE='^(\w.*)'  #[≟] match commands (starting with a word character)
 local RGX_COMMENT='\s+(#)' #[≟] match whitespace before comment (#)
 
-rg $RGX_LINE --no-line-number --no-multiline /etc/zsh/static-history \
+rg $RGX_LINE --no-line-number --no-multiline /etc/zsh/zshrc.d/static-history \
   | rg $RGX_COMMENT -r '  $1' --passthru >| "$TEMP_HIST"
 
 fc -R "$TEMP_HIST"

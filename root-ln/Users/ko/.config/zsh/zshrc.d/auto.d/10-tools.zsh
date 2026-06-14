@@ -3,7 +3,7 @@
 #[…] asdf
 #[⌖] https://asdf-vm.com/guide/getting-started.html#_2-configure-asdf
 
-[[ ! -s "${ZDOTDIR}/completions/_asdf" ]] && asdf completion zsh > "${ZDOTDIR}/completions/_asdf"
+[[ ! -s "${ZDOTDIR}/zshrc.d/completions/_asdf" ]] && asdf completion zsh > "${ZDOTDIR}/zshrc.d/completions/_asdf"
 #[⫶] asdf
 
 #[…] nvm

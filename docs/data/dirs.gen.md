@@ -27,6 +27,7 @@ root-ln
           rules
             code
               python
+              zsh
             config
               zsh
             docs
@@ -47,9 +48,13 @@ root-ln
         tmux
         vim
         zsh
-          completions
-          functions
-          rc.d
+          zshenv.d
+            auto.d
+            functions
+          zshrc.d
+            auto.d
+            completions
+            functions
       .ollama
       .ssh
       Library
@@ -72,9 +77,13 @@ root-ln
     python
     rg
     zsh
-      completions
-      functions
-      rc.d
+      zshenv.d
+        auto.d
+        functions
+      zshrc.d
+        auto.d
+        completions
+        functions
   usr
     local
       scripts
