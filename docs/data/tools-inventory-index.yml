@@ -27,6 +27,7 @@ aws: root-ln/Users/ko/.config/aws/config.auto.tmpl
 direnv: root-ln/Users/ko/.config/direnv/direnv.toml
 editorconfig: root-ln/Users/ko/.editorconfig
 fzf: root-ln/etc/zsh/rc.d/20-tools.zsh
+gcloud: root-ln/Users/ko/.config/gcloud/configurations/config_main.auto.tmpl
 golang: root-ln/etc/zshenv
 gomplate: root-ln/etc/gomplate/gomplate.yaml
 homebrew: root-ln/etc/zshrc

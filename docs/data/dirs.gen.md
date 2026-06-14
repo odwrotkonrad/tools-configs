@@ -39,6 +39,8 @@ root-ln
             ko-git-upsert-all
           themes
         direnv
+        gcloud
+          configurations
         git
         homebrew
         kitty
