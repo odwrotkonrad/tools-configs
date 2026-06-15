@@ -65,21 +65,13 @@ typeset -A cchars=(
     erase   "$keystrokes[backspace]"        #[≟] backspace, remove last char
     werase  "$keystrokes[altBackspace]"     #[≟] alt+backspace, remove last word
 )
-
 for action char in ${(kv)cchars}; stty ${action} ${char}
 #[⫶] stty
 
 
-#[…] zshzle
-#[⌖] man zshzle > bindkey [≟] zsh doc on bindings
-
-#[≟] non-alnum chars counted as word; empty = strict word boundaries #>[⌖] $ man zshparam
-WORDCHARS=""
-
-
+#[…] zshzle #[⌖] man zshzle > bindkey
 bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
-
 
 typeset -A keystrokes_widgets=(
     "$keystrokes[bracketedPaste]"   .bracketed-paste
@@ -122,12 +114,3 @@ for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
 #[⫶] zshzle
-
-
-# [≟] SIGINT (^C) signal handler — delegate to the clear-scrollable widget when zle is active
-TRAPINT() {
-    [[ -o zle ]] && zle wd-fn-rt-clear-scrollable
-}
-
-
-unset keystrokes_widgets disabled_cchars cchars

@@ -17,7 +17,6 @@ run-repo-gen-files: $(FILES)
 #[…] commands
 run-host-upsert-configs:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-load-configs
-	@$(MAKE) run-host-render-templates
 
 run-host-delete-broken-links:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-clean-broken-links

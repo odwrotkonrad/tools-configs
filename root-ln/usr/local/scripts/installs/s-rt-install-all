@@ -15,6 +15,7 @@ installers=(
     s-rt-install-ollama
     s-rt-install-otel-collector
     s-rt-install-prometheus
+    s-rt-install-completions-zsh
 )
 for installer in ${installers}; ${installer}
 

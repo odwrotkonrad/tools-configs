@@ -2,13 +2,15 @@
 #[∵] trash is recoverable, rm unlinks irreversibly
 #[⌖] $ man trash
 
-emulate -LR zsh
+function rm {
+  emulate -LR zsh
 
-local -a paths
-local arg
-for arg in "$@"; do
-  [[ $arg == -* ]] && continue  #[≟] drop flags
-  paths+=("$arg")
-done
+  local -a paths
+  local arg
+  for arg in "$@"; do
+    [[ $arg == -* ]] && continue  #[≟] drop flags
+    paths+=("$arg")
+  done
 
-trash "${paths[@]}"
+  trash "${paths[@]}"
+}

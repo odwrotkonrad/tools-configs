@@ -1,0 +1,11 @@
+#!/bin/zsh
+#>[≟]
+#   generate zsh completion files
+#/[≟]
+
+emulate -LR zsh
+set -e
+umask 002
+
+rg --generate=complete-zsh > /etc/zsh/zshrc.d/completions/_rg
+asdf completion zsh > "${ZDOTDIR}/zshrc.d/completions/_asdf"
