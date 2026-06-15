@@ -1,17 +1,19 @@
 #[≟] short helper functions, defined inline and loaded eagerly for every shell
 
-#[…]  predicates
+#[…] predicates
 is-os() {
+  typeset os_name=$(uname -s)
   case ${1} {
-    (mac)   [[ $(uname -s) == Darwin ]] ;;
-    (linux) [[ $(uname -s) == Linux ]] ;;
+    (mac)   [[ $os_name == Darwin ]] ;;
+    (linux) [[ $os_name == Linux ]] ;;
     (*) return 2 ;;
   }
 }
 is-arch() {
+  hw_platform=$(uname -m)
   case ${1} {
-    (arm) [[ $(uname -m) == (arm64|aarch64) ]] ;;
-    (x86) [[ $(uname -m) == (x86_64|amd64) ]] ;;
+    (arm) [[ $hw_platform == (arm64|aarch64) ]] ;;
+    (x86) [[ $hw_platform == (x86_64|amd64) ]] ;;
     (*) return 2 ;;
   }
 }
@@ -25,10 +27,10 @@ is-terminal() {
 #[⫶] predicates
 
 exit-with() {
-  local code=$1 msg=$2
+  typeset code=$1 msg=${2}${2:+"\n"}
 
-  if (( ${+msg} && code==0 )) print -u2 $msg
-  if (( ${+msg} && code!=0 )) print $msg
+  if (( code==0 )) print -u2 -n ${msg}
+  if (( code!=0 )) print -n ${msg}
 
   exit $code
 }

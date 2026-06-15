@@ -9,6 +9,7 @@ typeset -a opts_enabled=(
   cshnullglob
   extendedglob
   extendedhistory
+  globassign #[≟] foo=*; >1 match -> foo becomes array of matches
   histignorespace
   histlexwords
   histverify
@@ -25,6 +26,7 @@ typeset -a opts_enabled=(
   promptsubst
   pushdsilent
   rcexpandparam #[≟] array=(one two); print X${array}Y -> XoneY XtwoY
+  typesetsilent #[≟] typeset param -> print param value
 
   #[≟] auto enabled by shell
   # interactive
@@ -33,7 +35,7 @@ typeset -a opts_enabled=(
   # shinstdin
   # zle
 )
-for opt in ${opts_enabled}; setopt ${opt}
+setopt ${opts_enabled}
 #[⫶] enabled options
 
 #[…] disabled options
@@ -70,7 +72,6 @@ typeset -a opts_disabled=(
   errexit
   errreturn
   forcefloat
-  globassign
   globcomplete
   globdots
   globstarshort
@@ -188,7 +189,6 @@ typeset -a opts_disabled=(
   sunkeyboardhack
   transientrprompt
   trapsasync
-  typesetsilent
   typesettounset
   verbose
   vi
@@ -196,5 +196,5 @@ typeset -a opts_disabled=(
   warnnestedvar
   xtrace
 )
-for opt in ${opts_disabled}; unsetopt ${opt}
+unsetopt ${opts_disabled}
 #[⫶] disabled options
