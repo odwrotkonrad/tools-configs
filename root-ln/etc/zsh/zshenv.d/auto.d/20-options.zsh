@@ -26,7 +26,6 @@ typeset -a opts_enabled=(
   promptsubst
   pushdsilent
   rcexpandparam #[≟] array=(one two); print X${array}Y -> XoneY XtwoY
-  typesetsilent #[≟] typeset param -> print param value
 
   #[≟] auto enabled by shell
   # interactive
@@ -189,6 +188,7 @@ typeset -a opts_disabled=(
   sunkeyboardhack
   transientrprompt
   trapsasync
+  typesetsilent #[≟] typeset param -> print param value
   typesettounset
   verbose
   vi
