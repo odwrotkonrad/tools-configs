@@ -1,7 +1,9 @@
-emulate -LR zsh
+function fn-rt-load-os-open-files-with {
+  emulate -LR zsh
 
-(( $+commands[duti] )) || { print -u2 "fn-rt-load-os-open-files-with: duti not found"; return 1 }
+  (( $+commands[duti] )) || { print -u2 "fn-rt-load-os-open-files-with: duti not found"; return 1 }
 
-s-rt-get-os-open-files-with | while read -r bundle uti role; do
-  duti -s "$bundle" "$uti" "$role"
-done
+  s-rt-get-os-open-files-with | while read -r bundle uti role; do
+    duti -s "$bundle" "$uti" "$role"
+  done
+}

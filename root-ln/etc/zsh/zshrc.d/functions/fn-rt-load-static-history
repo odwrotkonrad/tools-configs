@@ -4,13 +4,15 @@
 # whitespace before comments is folded into two spaces
 #/[≟]
 
-emulate -LR zsh
+function fn-rt-load-static-history {
+  emulate -LR zsh
 
-local TEMP_HIST=$(mktemp)
-local RGX_LINE='^(\w.*)'  #[≟] match commands (starting with a word character)
-local RGX_COMMENT='\s+(#)' #[≟] match whitespace before comment (#)
+  local TEMP_HIST=$(mktemp)
+  local RGX_LINE='^(\w.*)'  #[≟] match commands (starting with a word character)
+  local RGX_COMMENT='\s+(#)' #[≟] match whitespace before comment (#)
 
-rg $RGX_LINE --no-line-number --no-multiline /etc/zsh/zshrc.d/static-history \
-  | rg $RGX_COMMENT -r '  $1' --passthru >| "$TEMP_HIST"
+  rg $RGX_LINE --no-line-number --no-multiline /etc/zsh/zshrc.d/static-history \
+    | rg $RGX_COMMENT -r '  $1' --passthru >| "$TEMP_HIST"
 
-fc -R "$TEMP_HIST"
+  fc -R "$TEMP_HIST"
+}
