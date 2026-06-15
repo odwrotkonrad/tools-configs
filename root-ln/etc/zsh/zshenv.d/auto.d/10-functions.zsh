@@ -1,8 +1,6 @@
-#>[≟] short helper functions, defined inline and loaded eagerly for every shell
-#   larger or lazy functions get their own autoloaded file under ../functions/
-#/[≟]
+#[≟] short helper functions, defined inline and loaded eagerly for every shell
 
-#[…] 🤖🤖 predicates
+#[…]  predicates
 is-os() {
   case ${1} {
     (mac)   [[ $(uname -s) == Darwin ]] ;;
@@ -34,4 +32,3 @@ exit-with() {
 
   exit $code
 }
-

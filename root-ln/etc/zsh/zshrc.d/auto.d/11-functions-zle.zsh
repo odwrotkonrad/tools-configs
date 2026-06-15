@@ -1,5 +1,4 @@
-#[≟] zshzle widgets
-#[⌖] man zshzle > zle
+#[≟] zshzle widgets #[⌖] man zshzle > zle
 
 wd-fn-rt-clear-scrollable() {
     #[≟] abort current input and clear screen in a way it can be scrolled above to see what inputs was aborted
@@ -47,6 +46,12 @@ wd-fn-rt-keystrokes-listen() {
     kitten show-key -m kitty
 }
 
+zle-intr() {
+    #[≟] SIGINT (^C) signal handler
+
+    zle wd-fn-rt-clear-scrollable
+}
+
 
 typeset -a wd_fn_rt=(
    wd-fn-rt-job-foreground
@@ -54,5 +59,4 @@ typeset -a wd_fn_rt=(
    wd-fn-rt-clear-scrollable
    wd-fn-rt-keystrokes-listen
 )
-
 for widget ( $wd_fn_rt ) zle -N $widget

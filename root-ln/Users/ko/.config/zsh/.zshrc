@@ -1,18 +1,15 @@
 #[≟] 6th zsh file sourced, after /etc/zshrc; only for interactive shells
 
-typeset -U fpath=(
-    ${XDG_CONFIG_HOME}/zsh/zshrc.d/functions
-    ${XDG_CONFIG_HOME}/zsh/zshrc.d/completions
+typeset -a funcs=(
+    ${XDG_CONFIG_HOME}/zsh/zshrc.d/{functions,completions}
     ${XDG_STATE_HOME}/zsh/completions
-    ${fpath}
 )
 
-for f in ${XDG_CONFIG_HOME}/zsh/zshrc.d/functions/*(N:t); {
-  emulate zsh -LRc "autoload $f"
-}
-
-for rc in ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d/*.zsh(on); {
-  . $rc
-}
+fn-rt-insert fpath $funcs
+fn-rt-autoload-functions $funcs
+fn-rt-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
 
 emulate zsh -LRc "autoload -Uz compinit" && compinit
+
+# had to be disabled for loading configs, renabling here
+setopt localoptions localtraps

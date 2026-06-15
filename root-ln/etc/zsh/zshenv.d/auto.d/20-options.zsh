@@ -15,8 +15,6 @@ typeset -a opts_enabled=(
   ignoreeof
   incappendhistorytime
   interactivecomments
-  localoptions
-  localtraps
   noappendhistory
   nobeep
   noclobber
@@ -40,7 +38,6 @@ for opt in ${opts_enabled}; setopt ${opt}
 
 #[…] disabled options
 typeset -a opts_disabled=(
-  #[≟] disabled by default
   aliasfuncdef
   allexport
   alwaystoend
@@ -102,7 +99,9 @@ typeset -a opts_disabled=(
   listpacked
   listrowsfirst
   localloops
+  localoptions #[∵] off here, re-enabled at end of .zshrc so a user-invoked function's setopt won't leak to the shell; on during config run so loader functions can scope their own options
   localpatterns
+  localtraps   #[∵] same as localoptions
   longlistjobs
   magicequalsubst
   mailwarning
@@ -199,16 +198,3 @@ typeset -a opts_disabled=(
 )
 for opt in ${opts_disabled}; unsetopt ${opt}
 #[⫶] disabled options
-
-#[…] parameters
-typeset -A zsh_params=(
-  histchars       '!^#'                         #[≟] histexpand-char quicksubst-char comment-char (defaults)
-  HISTFILE    "${XDG_STATE_HOME}/zsh/history"
-  HISTSIZE    15_000
-  PS1         '%1~ %# '                         #[≟] cwd-basename prompt-sigil (%#: # root, %% user)
-  PS2         '> '                              #[≟] continuation-line prompt
-  PS4         '+ '                              #[≟] prompt when debugging prompt with XTRACE is set
-  SAVEHIST    10_000
-)
-for k v in "${(@kv)zsh_params}"; typeset "$k=$v"
-#[⫶] parameters
