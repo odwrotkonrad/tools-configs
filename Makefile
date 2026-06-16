@@ -1,14 +1,16 @@
 #[≟] Project's Makefile
-WRAPPERS := run-sync run-repo-gen-files run-host-setup
-COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
-FILES := docs/data/dirs.gen.md README.md
+WRAPPERS := run-sync-quick run-sync-full run-repo-once run-repo-gen-files run-host-setup
+COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
+FILES := docs/data/dirs.gen.md
 SCRIPTS := root-ln/usr/local/scripts
 PRETTY := $(CURDIR)/$(SCRIPTS)/shell/with-sections
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 .PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
 
 #[…] wrappers
-run-sync: .env run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
+run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
+run-sync-full: run-sync-quick run-host-render-templates
+run-repo-once: .env run-repo-upsert-git-hooks
 run-host-setup: run-host-mk-dirs run-host-upsert-configs run-host-install-all
 
 run-repo-gen-files: $(FILES)
@@ -24,9 +26,13 @@ run-host-delete-broken-links:
 run-host-mk-dirs:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/installs/s-rt-mk-dirs
 
-#[≟] render *.auto.tmpl as current user (op session)
+#[≟] render *.host.auto.tmpl as current user (op session)
 run-host-render-templates:
-	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/installs/s-rt-render-templates $(CURDIR)
+	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/installs/s-rt-render-templates-host $(CURDIR)
+
+#[≟] render *.repo.auto.tmpl as current user (op session)
+run-repo-render-templates:
+	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/installs/s-rt-render-templates-repo $(CURDIR)
 
 run-repo-tests:
 	@$(PRETTY) pytest tests/scripts/python
@@ -53,7 +59,4 @@ run-host-restart-services:
 
 docs/data/dirs.gen.md:
 	./$(SCRIPTS)/python/s-rt-generate-tree > $@
-
-README.md:
-	./$(SCRIPTS)/python/s-rt-gen-markdown docs/templates/README.tmpl.md > $@
 #[⫶] files

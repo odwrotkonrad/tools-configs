@@ -17,7 +17,7 @@
 {{ end }}
 ## Style
 
-{{ stripmd "--strip-frontmatter" "--strip-comments" "--increment-heading-levels" "/Users/ko/.config/claude/rules/docs/prose.md" | strings.TrimSpace }}
+{{ readMarkdown "--strip-frontmatter" "--strip-comments" "--increment-heading-levels" "/Users/ko/.config/claude/rules/docs/prose.md" | strings.TrimSpace }}
 
 ## Task
 

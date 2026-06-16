@@ -2,11 +2,13 @@
   memory
 .vscode
 docs
-  data
-  readme
+  assets
     images
     recordings
-  templates
+  data
+  prose
+    commenting-convention
+    description
 root-cp
   Library
     LaunchDaemons
@@ -102,8 +104,6 @@ root-ln
 tests
   scripts
     python
-      s-rt-gen-markdown
-        fixture
       s-rt-generate-tree
         fixture
       s-rt-get-os-open-files-with

@@ -2,11 +2,11 @@
 
 @memory/naming.md
 
-@../docs/readme/purpose.md
+@../docs/prose/description/agents.md
 
 @../docs/data/tools-inventory-index.yml
 
-@../Makefile
+@../docs/data/makefile.agents.md
 
 <!-- seems like not loaded by default -->
 @CLAUDE.local.md

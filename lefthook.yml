@@ -17,7 +17,7 @@ pre-commit:
 post-commit:
   jobs:
     - name: reload-config
-      run: make run-sync
+      run: make run-sync-quick
 
 pre-push:
   jobs:
