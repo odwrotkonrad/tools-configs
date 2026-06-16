@@ -14,11 +14,11 @@ exit 0 on match, or print a unified diff to stderr and exit 22 on mismatch.
 Examples:
 
     $ s-rt-generate-tree
-    $ s-rt-generate-tree --check docs/data/dirs.gen.md
+    $ s-rt-generate-tree --check docs/data/repo-structure.md
     $ s-rt-generate-tree --help
 
 Upstream Interfaces with:
-- `> <file>` — intended consumer of the printed tree (e.g. docs/data/dirs.gen.md)
+- `> <file>` — intended consumer of the printed tree (e.g. docs/data/repo-structure.md)
 
 Downstream Interfaces with:
 - git repo at the cwd — its index supplies the tracked paths

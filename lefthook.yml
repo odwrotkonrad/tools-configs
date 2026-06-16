@@ -4,7 +4,7 @@ extends:
 pre-commit:
   jobs:
     - name: docsgen
-      run: make run-repo-gen-files && git add docs/data/dirs.gen.md README.md
+      run: make run-repo-render-templates && git add docs/data/repo-structure.md README.md
 
     - name: ruff-scripts
       glob: "root-ln/usr/local/scripts/python/s-*"

@@ -25,12 +25,3 @@ is-terminal() {
   }
 }
 #[⫶] predicates
-
-exit-with() {
-  typeset code=$1 msg=${2}${2:+"\n"}
-
-  if (( code==0 )) print -u2 -n ${msg}
-  if (( code!=0 )) print -n ${msg}
-
-  exit $code
-}

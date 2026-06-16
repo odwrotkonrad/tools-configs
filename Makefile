@@ -1,19 +1,20 @@
 #[≟] Project's Makefile
-WRAPPERS := run-sync-quick run-sync-full run-repo-once run-repo-gen-files run-host-setup
+WRAPPERS := run-sync-quick run-sync-full
 COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
-FILES := docs/data/dirs.gen.md
 SCRIPTS := root-ln/usr/local/scripts
-PRETTY := $(CURDIR)/$(SCRIPTS)/shell/with-sections
+PRETTY := zsh -c 'autoload -Uz with-sections; with-sections "$$@"' with-sections
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
-.PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
+
+export FPATH := $(CURDIR)/ci/zsh/functions
+export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(PATH)
+export PYTHONPATH := $(CURDIR)/$(SCRIPTS)/python
+export MYPYPATH := $(CURDIR)/$(SCRIPTS)/python
+export GOMPLATE_CONFIG := $(CURDIR)/root-ln/etc/gomplate/gomplate.yaml
+.PHONY: $(WRAPPERS) $(COMMANDS)
 
 #[…] wrappers
-run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
-run-sync-full: run-sync-quick run-host-render-templates
-run-repo-once: .env run-repo-upsert-git-hooks
-run-host-setup: run-host-mk-dirs run-host-upsert-configs run-host-install-all
-
-run-repo-gen-files: $(FILES)
+run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks run-repo-render-templates
+run-sync-full: run-sync-quick run-host-mk-dirs run-host-render-templates
 #[⫶] wrappers
 
 #[…] commands
@@ -24,15 +25,13 @@ run-host-delete-broken-links:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-clean-broken-links
 
 run-host-mk-dirs:
-	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/installs/s-rt-mk-dirs
+	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-mk-dirs
 
-#[≟] render *.host.auto.tmpl as current user (op session)
 run-host-render-templates:
-	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/installs/s-rt-render-templates-host $(CURDIR)
+	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/shell/s-rt-render-templates-host $(CURDIR)
 
-#[≟] render *.repo.auto.tmpl as current user (op session)
 run-repo-render-templates:
-	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/installs/s-rt-render-templates-repo $(CURDIR)
+	@$(PRETTY) $(CURDIR)/$(SCRIPTS)/shell/s-rt-render-templates-repo $(CURDIR)
 
 run-repo-tests:
 	@$(PRETTY) pytest tests/scripts/python
@@ -52,11 +51,3 @@ run-host-restart-services:
 	@$(PRETTY) ./$(SCRIPTS)/shell/s-rt-reload-services
 
 #[⫶] commands
-
-#[…] files
-.env: .env.example
-	cp $< $@
-
-docs/data/dirs.gen.md:
-	./$(SCRIPTS)/python/s-rt-generate-tree > $@
-#[⫶] files

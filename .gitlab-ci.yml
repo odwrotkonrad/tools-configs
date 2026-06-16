@@ -2,23 +2,20 @@ stages:
   - validate
   - test
 
-variables:
-  PYTHONPATH: root-ln/usr/local/scripts/python
-  MYPYPATH: root-ln/usr/local/scripts/python
-
 .base-python:
   needs: []
   image: python:3.14-slim
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make git zsh
+    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
-    - export PATH="$CI_PROJECT_DIR/root-ln/usr/local/scripts/shell:$PATH"
+    - curl -fsSL https://github.com/hairyhenderson/gomplate/releases/latest/download/gomplate_linux-amd64 -o /usr/local/bin/gomplate
+    - chmod +x /usr/local/bin/gomplate
 
 validate-docsgen:
   extends: .base-python
   stage: validate
   script:
-    - make run-repo-gen-files
+    - make run-repo-render-templates
     - git diff --exit-code
 
 validate-typecheck:
