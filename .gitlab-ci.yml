@@ -8,7 +8,7 @@ stages:
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
-    - curl -fsSL https://github.com/hairyhenderson/gomplate/releases/latest/download/gomplate_linux-amd64 -o /usr/local/bin/gomplate
+    - curl -fsSL https://github.com/hairyhenderson/gomplate/releases/download/v5.1.0/gomplate_linux-amd64 -o /usr/local/bin/gomplate
     - chmod +x /usr/local/bin/gomplate
 
 validate-docsgen:
