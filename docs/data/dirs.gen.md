@@ -2,10 +2,13 @@
   memory
 .vscode
 docs
-  data
-  readme
+  assets
     images
     recordings
+  data
+  prose
+    commenting-convention
+    description
   templates
 root-cp
   Library

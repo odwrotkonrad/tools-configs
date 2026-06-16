@@ -1,5 +1,5 @@
 #[≟] Project's Makefile
-WRAPPERS := run-sync run-repo-gen-files run-host-setup
+WRAPPERS := run-sync-quick run-sync-full run-repo-once run-repo-gen-files run-host-setup
 COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
 FILES := docs/data/dirs.gen.md README.md
 SCRIPTS := root-ln/usr/local/scripts
@@ -8,7 +8,9 @@ MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 .PHONY: $(WRAPPERS) $(COMMANDS) $(FILES)
 
 #[…] wrappers
-run-sync: .env run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
+run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks
+run-sync-full: run-sync-quick run-host-render-templates
+run-repo-once: .env run-repo-upsert-git-hooks
 run-host-setup: run-host-mk-dirs run-host-upsert-configs run-host-install-all
 
 run-repo-gen-files: $(FILES)
