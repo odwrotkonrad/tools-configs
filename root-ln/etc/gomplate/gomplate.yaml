@@ -3,5 +3,7 @@ plugins:
     cmd: op
     args: [read, --no-newline]
     timeout: 30s
-  stripmd:
+  readMarkdown:
     cmd: /usr/local/scripts/shell/s-rt-read-markdown
+  readYml:
+    cmd: /usr/local/scripts/shell/s-rt-read-yml

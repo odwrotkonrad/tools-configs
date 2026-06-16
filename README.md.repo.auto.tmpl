@@ -1,19 +1,18 @@
+{{- $inv := readYml "docs/data/tools-inventory-index.yml" | data.YAML -}}
 ## **Config**uration file**s**
 
-{{ load('../prose/description/human.md').content }}
-{{ load('../prose/purpose.human.md').content }}
-{% set f = load('../data/tools-inventory-index.yml') %}
-## {{ f.frontmatter.title }}
+{{ file.Read "docs/prose/description/human.md" }}
+{{ file.Read "docs/prose/purpose.human.md" }}
+## {{ $inv.frontmatter.title }}
 
-{{ f.frontmatter.description }}
+{{ $inv.frontmatter.description }}
 
 ```yaml
-{{ f.content }}```
+{{ $inv.body }}```
 
-{% for uri, desc in f.frontmatter.references.items() %}
-- [{{ uri }}]({{ uri }}) - {{ desc }}
-{% endfor %}
-
+{{ range $uri, $desc := $inv.frontmatter.references -}}
+- [{{ $uri }}]({{ $uri }}) - {{ $desc }}
+{{ end }}
 ## Observability
 
 ### Claude Code

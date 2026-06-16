@@ -37,12 +37,12 @@ zsh: root-ln/etc/zshrc
 
 #[…] other
 asdf: root-ln/Users/ko/.config/asdf/.asdfrc
-aws: root-ln/Users/ko/.config/aws/config.auto.tmpl
+aws: root-ln/Users/ko/.config/aws/config.host.auto.tmpl
 azure: root-ln/Users/ko/.config/azure/config
 direnv: root-ln/Users/ko/.config/direnv/direnv.toml
 editorconfig: root-ln/Users/ko/.editorconfig
 fzf: root-ln/etc/zsh/rc.d/20-tools.zsh
-gcloud: root-ln/Users/ko/.config/gcloud/configurations/config_main.auto.tmpl
+gcloud: root-ln/Users/ko/.config/gcloud/configurations/config_main.host.auto.tmpl
 golang: root-ln/etc/zshenv
 gomplate: root-ln/etc/gomplate/gomplate.yaml
 homebrew: root-ln/etc/zshrc

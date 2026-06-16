@@ -9,7 +9,6 @@ docs
   prose
     commenting-convention
     description
-  templates
 root-cp
   Library
     LaunchDaemons
@@ -105,8 +104,6 @@ root-ln
 tests
   scripts
     python
-      s-rt-gen-markdown
-        fixture
       s-rt-generate-tree
         fixture
       s-rt-get-os-open-files-with
