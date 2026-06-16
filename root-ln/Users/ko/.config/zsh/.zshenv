@@ -29,6 +29,7 @@ typeset -a bins=(
     ${XDG_BIN_HOME}
     ${GOPATH}/bin
     ${PYENV_ROOT}/bin
+    ${PYENV_ROOT}/shims
     ${ASDF_DATA_DIR}/shims
     /usr/local/go/bin
     /usr/local/bin

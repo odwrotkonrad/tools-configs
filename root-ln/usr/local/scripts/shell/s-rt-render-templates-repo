@@ -1,0 +1,28 @@
+#!/bin/zsh
+#>[≟] 🤖🤖
+#   render every *.repo.tmpl under templates/ to the repo-root-relative
+#   path named in its `render-to:` frontmatter; the frontmatter is stripped
+#   before rendering. no secrets, so no op session needed.
+#   $1 - configs repo path (default: /Users/ko/projects/configs)
+#/[≟] 🤖🤖
+
+emulate -LR zsh
+set -e
+
+autoload -Uz exit-with
+
+if (( ! $+commands[gomplate] )) exit-with 1 "gomplate not found"
+
+#[…] 🤖🤖
+configs=${1:-/Users/ko/projects/configs}
+[[ -d $configs ]] || exit-with 1 "configs not found: $configs"
+
+cd "$configs"
+for src in templates/**/*.repo.tmpl(.DN); do
+  render_to=$(sed -n '1{/^---$/!q;};1d;/^---$/q;s/^render-to:[[:space:]]*//p' "$src")
+  [[ -n $render_to ]] || exit-with 1 "missing render-to frontmatter: $src"
+  body=$(sed '1{/^---$/!q;};1,/^---$/d' "$src")
+  print -r -- "$body" | gomplate --chmod 0644 -o "$configs/$render_to"
+  print "${0:t}: rendered $configs/$render_to"
+done
+#[⫶] 🤖🤖

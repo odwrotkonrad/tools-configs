@@ -1,6 +1,12 @@
 .claude
   memory
 .vscode
+ci
+  python
+    scripts
+  zsh
+    functions
+    scripts
 docs
   assets
     images
@@ -101,6 +107,9 @@ root-ln
         shell
           lib
           templates-llm
+templates
+  docs
+  env
 tests
   scripts
     python

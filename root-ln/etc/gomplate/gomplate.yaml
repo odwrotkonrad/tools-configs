@@ -4,6 +4,10 @@ plugins:
     args: [read, --no-newline]
     timeout: 30s
   readMarkdown:
-    cmd: /usr/local/scripts/shell/s-rt-read-markdown
+    cmd: s-rt-read-markdown
   readYml:
-    cmd: /usr/local/scripts/shell/s-rt-read-yml
+    cmd: s-rt-read-yml
+  generateTree:
+    cmd: s-rt-generate-tree
+  mergeUpsertEnv:
+    cmd: s-rt-merge-upsert-env

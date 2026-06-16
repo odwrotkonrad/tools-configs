@@ -13,4 +13,4 @@
 
 ## Directory Tree
 
-@../docs/data/dirs.gen.md
+@../docs/data/repo-structure.md
