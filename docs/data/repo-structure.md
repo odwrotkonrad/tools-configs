@@ -1,5 +1,4 @@
 .claude
-  memory
 .vscode
 ci
   python
@@ -31,6 +30,7 @@ root-ln
           agent-memory
           agents
           commands
+          memory
           output-styles
           plugins
             marketplaces

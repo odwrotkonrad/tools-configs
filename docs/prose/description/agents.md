@@ -1,6 +1,6 @@
 ## Repo Is
 
-Git-tracked dotfiles, extended into root os space.
+Git-tracked dotfiles, extended into root OS space.
 Every option explicitly configured.
 Scripts.
-Linked, copied, templatized.
+Loaded onto host: link (`root-ln/`), copy (`root-cp/`), render templates (`*.auto.tmpl`).

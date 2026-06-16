@@ -23,12 +23,14 @@ paths:
         .zlogout:
         zshenv.d/:                                          # loaded by .zshenv (all shells)
           auto.d/:                                          # sourced in name order
-            99-claude.zsh:                                  # man-as-text; guarded on CLAUDECODE
+            30-params.zsh.host.auto.tmpl:                   # rendered per host
+            81-claude.zsh:                                  # man-as-text, clobber; guarded on CLAUDECODE
           functions/:                                       # autoloaded
         zshrc.d/:                                           # loaded by .zshrc (interactive)
           auto.d/:
-            00-dirs.zsh:
-            10-tools.zsh:
+            30-params.zsh:
+            50-dirs.zsh:
+            80-tools.zsh:
           completions/:
           functions/:
       root-ln/etc/:
@@ -39,22 +41,29 @@ paths:
         zlogout:
         zsh/:
           zshenv.d/:                                        # loaded by /etc/zshenv (all shells)
+            fn-loaders.zsh:                                 # autoload helpers
             auto.d/:                                        # sourced in name order
-              00-functions.zsh:                             # is-os, is-arch, is-terminal, exit-with
+              10-functions.zsh:                             # is-os, is-arch, is-terminal
+              20-options.zsh:
+              30-params.zsh:
             functions/:                                     # autoloaded
               rm:
+              exit-with:
+              print-with:
+              with-sections:
               fn-rt-load-os-open-files-with:
               fn-rt-ssh-generate-keys:
               fn-rt-ssh-test-git-connection:
           zshrc.d/:                                         # loaded by /etc/zshrc (interactive)
-            static-history: # static history items loaded into each interactive shell
+            static-history:                                 # items loaded into each interactive shell
             auto.d/:
-              00-dirs.zsh:
-              10-shell.zsh:
-              20-tools.zsh:
-              30-functions.zsh:
+              00-local.zsh:
+              10-functions.zsh:
+              11-functions-zle.zsh:
+              30-params.zsh:
               40-aliases.zsh:
-              50-keybindings.zsh:
+              80-tools.zsh:
+              90-keybindings.zsh:
             completions/:
             functions/:
               fn-rt-load-static-history:
@@ -62,7 +71,6 @@ paths:
         installs/:
           s-rt-install-asdf:
           s-rt-install-kitty:
-          s-rt-install-misc:
           s-rt-install-prometheus:
         shell/:
           s-rt-load-configs:
@@ -71,7 +79,7 @@ paths:
 
 ### Startup Order
 
-`${ZDOTDIR}` = `~/.config/zsh` (the zsh config dir).
+`${ZDOTDIR}` = `~/.config/zsh`.
 
 | # | File                          | Shells                  |
 | - | ----------------------------- | ----------------------- |
@@ -86,7 +94,7 @@ paths:
 | - | ${ZDOTDIR}/.zlogout           | login shell exit (1st)  |
 | - | /etc/zlogout                  | login shell exit (2nd)  |
 
-Each startup phase has a `<phase>.d/` dir with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced in name order). `/etc/zshenv` loads `zshenv.d/` (all shells), `/etc/zshrc` loads `zshrc.d/` (interactive); same split in user space (`${ZDOTDIR}/zshenv.d/`, `${ZDOTDIR}/zshrc.d/`). Add an always-available helper to `zshenv.d/`, an interactive-only one to `zshrc.d/`.
+Each phase has `<phase>.d/` with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced in name order). `/etc/zshenv` loads `zshenv.d/` (all shells); `/etc/zshrc` loads `zshrc.d/` (interactive); same split in user space. Put always-available helpers in `zshenv.d/`, interactive-only in `zshrc.d/`.
 
 ### Documentation
 
@@ -111,4 +119,4 @@ and these:
 
 Links:
 
-- [XDG base dirs](https://specifications.freedesktop.org/basedir-spec/latest/) — zshenv
+- [XDG base dirs](https://specifications.freedesktop.org/basedir-spec/latest/)

@@ -1,11 +1,14 @@
-# How to Comment?
+## Commenting Guide
 
+### Syntax
 ⌖ - where?
 ∵ - why?
 ≟ - what?
 🤖 🤖🤖 🤖🤖🤖 - ai gen
 
-```Example
+### Example
+
+```
 foo 123         #[⌖] $ man 5 foo
 param=foo       #[∵] foo over bar: better DX
 cmd -f          #[≟] -f means foo ()

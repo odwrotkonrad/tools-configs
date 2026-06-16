@@ -8,28 +8,18 @@ paths:
 ### Files
 ```
 Library/Application Support/Code/User/
-├── .exported
-│   ├── defaultKeybindings.jsonc
-│   └── defaultSettings.jsonc
-├── keybindings.json                       # actual keybindings configuration
-├── settings.json                          # actual settings
-└── unmodified-settings.jsonc              # unmodified settings
+  .exported/                  # exported VS Code defaults; source of commands/settings
+    defaultKeybindings.jsonc
+    defaultSettings.jsonc
+  keybindings.json            # active keybindings
+  settings.json               # active settings
 ```
 
 ### Documentation
 
-Use these files as the source of available commands / settings; these are exported files from VS Code.
-```sh
-├── .exported
-│   ├── defaultKeybindings.jsonc
-│   └── defaultSettings.jsonc
-```
+Read `.exported/` for available commands and settings.
 
-Extensions documentation is located at:
-
-`/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/<ext>/package.json`
-
-where <ext> is git, github, etc.
+Extension docs: `/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/<ext>/package.json` (`<ext>` = git, github, …).
 
 ```jsonc
 // <ext>/package.json structure
