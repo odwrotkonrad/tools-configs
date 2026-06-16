@@ -1,6 +1,6 @@
-@memory/comments.md
+@../docs/prose/commenting-convention/agents.md
 
-@memory/naming.md
+@../docs/prose/file-naming.agents.md
 
 @../docs/prose/description/agents.md
 

@@ -14,13 +14,20 @@ paths:
 
 ```yml
 root-ln/Users/ko/.config/claude/:
-  CLAUDE.md: # global instructions, all projects
+  CLAUDE.md:                # global instructions, all projects
+  comments.md:              # @-included by CLAUDE.md
+  git.md:                   # @-included by CLAUDE.md
   settings.json:
   agents/:
   agent-memory/:
   commands/:
   output-styles/:
+    interactive-code.md:
   skills/:
+    ko-git-branch-name-upsert/:
+    ko-git-commit/:
+    ko-git-mr-upsert/:
+    ko-git-upsert-all/:
   themes/:
   rules/:
     code/:
@@ -28,33 +35,32 @@ root-ln/Users/ko/.config/claude/:
       python/:
         python.md:
         scripts.md:
+      zsh/:
+        zsh.md:
     config/:
-      claudecode.md: # this file
+      claudecode.md:        # this file
       git.md:
       ssh.md:
       vscode.md:
       zsh/:
         zsh.md:
         functions.md:
+    docs/:
+      prose.md:
   plugins/:
     installed_plugins.json:
     known_marketplaces.json:
     marketplaces/:
 ```
 
-Project-scoped instructions lives in (preferred) `<repo>/.claude/` or `<repo>/CLAUDE.md`.
+Project instructions live in `<repo>/.claude/` (preferred) or `<repo>/CLAUDE.md`.
 
 ### Documentation
 
-#### Local
-- `$ claude --help`
+Local: `$ claude --help`
 
-#### Online
-
-settings.json schema:  https://json.schemastore.org/claude-code-settings.json
-
-Claude Code Documentation Online
-- base URL: `https://code.claude.com/docs`
-- md pages index: /llms.txt
-- md all in one .md doc: /llms-full.txt
-- keywords: **settings**, **permissions**, **memory**, **env-vars**, cli-reference, claude-directory, commands, sub-agents, skills, output-styles, plugins, plugins-reference, hooks, mcp
+Online:
+- settings.json schema: https://json.schemastore.org/claude-code-settings.json
+- docs base: `https://code.claude.com/docs`
+- pages index: `/llms.txt` · all-in-one: `/llms-full.txt`
+- keywords: settings, permissions, memory, env-vars, cli-reference, claude-directory, commands, sub-agents, skills, output-styles, plugins, plugins-reference, hooks, mcp

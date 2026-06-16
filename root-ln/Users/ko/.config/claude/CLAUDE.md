@@ -1,51 +1,34 @@
-@comments.md
+@memory/comments.md
 
 ## Available Tools
 
-Only these tools. Any other is forbidden.
+Use only these. Any other forbidden.
 
 - Read
 - Glob
 - Edit
-- LSP — code intelligence for ruby, python, golang, typescript, javascript
+- LSP — code intelligence: ruby, python, golang, typescript, javascript
 - `$ man` — manual pages
 - `$ rg` — recursive regex search (pcre2)
 
-## System Wide Tools Configuration
+## System-Wide Configs
 
-**Do:**
+- Edit non-project configs only in `~/projects/configs`, via `root-ln/` (symlinked) or `root-cp/` (copied) counterparts. Live system paths are derived.
 
-- **Do** edit non-project configs only in `~/projects/configs`, via their `root-ln/` (symlinked) or `root-cp/` (copied) counterparts.
+## IMPORTANT
 
-**Don't:**
-
-- **Don't** edit configs at their live system paths.
-
-## IMPORTANT!
-
-**Do:**
-
-- **Do** read docs when in doubt before planning changes.
-- **Do** use common sense during a task; avoid reading docs mid-task.
-<!--[∵] For observability — a variable set before the command makes the event log record the assignment, not the command -->
-- **Do** tell the user to set a variable or add a tool to `PATH` in their shell, rather than doing it inline.
-- **Do** set a command's context through its options and arguments.
-- **Do** write temporary scripts as files in the project's `.user/claude/scripts/` (create it if absent), then run them.
-- **Do** store temporary files (outputs, scratch data, captures) in the project's `.user/claude/tmp/` (create it if absent).
-
-**Don't:**
-
-- **Don't** ask questions. Instead use common sense to fulfill asks.
-- **Don't** prepend a command with a variable assignment, `cd`, or a full binary path.
-- **Don't** inline a multiline script into a Bash command.
-- **Don't** delete the scripts in `.user/claude/scripts/`.
+- Read docs when in doubt, before planning. Avoid reading mid-task; use common sense.
+- Fulfill asks with common sense. Ask only when lost.
+- Tell the user to set a var or add a tool to `PATH` in their shell. Keep it out of inline commands.
+- Set command context via options and arguments. Run the bare command (no leading var assignment, `cd`, or full binary path).
+- Write temp scripts to `.user/claude/scripts/` (create if absent), then run. Keep them.
+- Store temp files (outputs, scratch, captures) in `.user/claude/tmp/` (create if absent).
+- Pass a multiline script as a file, not inline in a Bash command.
 
 Read docs via:
 
 - `$ man foo`, `$ man 1 bar`
-- Read / Glob / Grep for raw spec/definition files
+- Read / Glob / rg for raw spec/definition files
 - `$ <cmd> --help|-h`
 
-<!-- TODO also need to have some web source -->
-
-@git.md
+@memory/git.md
