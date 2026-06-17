@@ -19,10 +19,10 @@ run-sync-full: run-sync-quick run-host-mk-dirs run-host-render-templates
 
 #[…] commands
 run-host-upsert-configs:
-	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-load-configs
+	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-upsert-configs
 
 run-host-delete-broken-links:
-	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-clean-broken-links
+	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-delete-broken-links
 
 run-host-mk-dirs:
 	@$(PRETTY) sudo $(CURDIR)/$(SCRIPTS)/shell/s-rt-mk-dirs
@@ -48,6 +48,6 @@ run-host-install-all:
 
 #[≟] reload running service launchagents
 run-host-restart-services:
-	@$(PRETTY) ./$(SCRIPTS)/shell/s-rt-reload-services
+	@$(PRETTY) ./$(SCRIPTS)/shell/s-rt-restart-services
 
 #[⫶] commands

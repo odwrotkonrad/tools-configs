@@ -7,6 +7,8 @@
 
 setopt dotglob errexit
 
+if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
+
 configs=${1:-/Users/ko/projects/configs}
 
 function cp_owner {
@@ -14,7 +16,7 @@ function cp_owner {
   local dest=$2
   local owner=$(stat -f '%u:%g' -- $src)
 
-  sudo chown -- $owner $dest
+  chown -- $owner $dest
 }
 
 function cp_perms {
@@ -22,7 +24,7 @@ function cp_perms {
   local dest=$2
   local perms=$(stat -f '%Lp' -- $src)
 
-  sudo chmod -- $perms $dest
+  chmod -- $perms $dest
 }
 
 #[…] symlinked tree
@@ -62,13 +64,13 @@ repo_files_ex=( ${repo_files:|ex} )
 
 # 2. create dirs, copying file permissions, retaining root ownership
 for dir ( $repo_dirs ) {
-  sudo mkdir -p /$dir
+  mkdir -p /$dir
   cp_perms $dir /$dir
 }
 
 # 3. create copies, copying file permissions, retaining root ownership
 for file ( $repo_files_ex ) {
-  sudo cp ${file:a} /$file
+  cp ${file:a} /$file
   cp_perms $file /$file
 }
 #[⫶] copied tree
