@@ -1,0 +1,76 @@
+#!/bin/zsh
+#>[≟]
+#   Load <configs> into the system root, mirroring directory structure.
+#   <configs>/root-ln files are symlinked (live, follow the repo).
+#   <configs>/root-cp files are copied as root
+#/[≟]
+
+setopt dotglob errexit
+
+if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
+
+configs=${1:-/Users/ko/projects/configs}
+
+function cp_owner {
+  local src=$1
+  local dest=$2
+  local owner=$(stat -f '%u:%g' -- $src)
+
+  chown -- $owner $dest
+}
+
+function cp_perms {
+  local src=$1
+  local dest=$2
+  local perms=$(stat -f '%Lp' -- $src)
+
+  chmod -- $perms $dest
+}
+
+#[…] symlinked tree
+pushd "$configs/root-ln"
+
+typeset -a repo_files repo_files ex repo_files_ex
+
+# 1. get files from git
+ex=( **/*.auto.tmpl )
+repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_dirs=( ${(u)repo_files:h} )
+repo_files_ex=( ${repo_files:|ex} )
+
+# 2. create dirs, copying owner and file permissions
+for dir ( $repo_dirs ) {
+  mkdir -p /$dir
+  cp_owner $dir /$dir
+  cp_perms $dir /$dir
+}
+
+# 3. create links, copying owner and file permissions
+for file ( $repo_files_ex ) {
+  ln -fvws ${file:a} /$file
+  cp_owner $file /$file
+  cp_perms $file /$file
+}
+popd
+#[⫶] symlinked tree
+
+#[…] copied tree
+pushd "$configs/root-cp"
+
+# 1. get files from git
+repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_dirs=( ${(u)repo_files:h} )
+repo_files_ex=( ${repo_files:|ex} )
+
+# 2. create dirs, copying file permissions, retaining root ownership
+for dir ( $repo_dirs ) {
+  mkdir -p /$dir
+  cp_perms $dir /$dir
+}
+
+# 3. create copies, copying file permissions, retaining root ownership
+for file ( $repo_files_ex ) {
+  cp ${file:a} /$file
+  cp_perms $file /$file
+}
+#[⫶] copied tree

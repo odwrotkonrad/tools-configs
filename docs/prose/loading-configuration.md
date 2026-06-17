@@ -2,10 +2,10 @@
 
 ```sh
 #[≟] first load (script not yet on PATH)
-zsh root-ln/usr/local/scripts/shell/s-rt-load-configs
+zsh root-ln/usr/local/scripts/shell/s-rt-upsert-configs
 
 #[≟] subsequent loads
-s-rt-load-configs
+s-rt-upsert-configs
 ```
 
 ### Make targets
@@ -13,7 +13,7 @@ s-rt-load-configs
 Host-scoped targets wrap the loading scripts:
 
 ```sh
-#[≟] install configuration files as links in the system root, creating directories when necessary (same as s-rt-load-configs script)
+#[≟] install configuration files as links in the system root, creating directories when necessary (same as s-rt-upsert-configs script)
 make run-host-upsert-configs
 
 #[≟] prune broken symlinks if there are any
