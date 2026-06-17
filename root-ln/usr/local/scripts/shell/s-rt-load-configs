@@ -5,32 +5,70 @@
 #   <configs>/root-cp files are copied as root
 #/[≟]
 
-set -e
+setopt dotglob errexit
 
 configs=${1:-/Users/ko/projects/configs}
 
+function cp_owner {
+  local src=$1
+  local dest=$2
+  local owner=$(stat -f '%u:%g' -- $src)
+
+  sudo chown -- $owner $dest
+}
+
+function cp_perms {
+  local src=$1
+  local dest=$2
+  local perms=$(stat -f '%Lp' -- $src)
+
+  sudo chmod -- $perms $dest
+}
+
 #[…] symlinked tree
 pushd "$configs/root-ln"
-find * -type d -exec mkdir -p /{} \;
-#[≟] skip *.auto.tmpl: rendered to its stripped sibling by render-templates
-find * -type f ! -name '*.auto.tmpl' -exec ln -fvws "$PWD"/{} /{} \;
+
+typeset -a repo_files repo_files ex repo_files_ex
+
+# 1. get files from git
+ex=( **/*.auto.tmpl )
+repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_dirs=( ${(u)repo_files:h} )
+repo_files_ex=( ${repo_files:|ex} )
+
+# 2. create dirs, copying owner and file permissions
+for dir ( $repo_dirs ) {
+  mkdir -p /$dir
+  cp_owner $dir /$dir
+  cp_perms $dir /$dir
+}
+
+# 3. create links, copying owner and file permissions
+for file ( $repo_files_ex ) {
+  ln -fvws ${file:a} /$file
+  cp_owner $file /$file
+  cp_perms $file /$file
+}
 popd
 #[⫶] symlinked tree
 
-#[…] 🤖🤖 user owns dirs the root run created
-if [[ -n $SUDO_USER ]] {
-  user_home=$(dscl . -read "/Users/$SUDO_USER" NFSHomeDirectory | cut -d' ' -f2)
-  user_group=$(id -gn "$SUDO_USER")
-  [[ -d $user_home ]] && chown -R "$SUDO_USER:$user_group" "$user_home"/.config(N) "$user_home"/.ssh(N) "$user_home"/.ollama(N)
-  chown "$SUDO_USER:$user_group" /etc/zsh/zshrc.d/completions
-}
-#[⫶] user-owned dirs
-
 #[…] copied tree
 pushd "$configs/root-cp"
-find * -type d -exec mkdir -p /{} \;
-find * -type f | while read -r f; do
-  sudo install -v -o root -g wheel -m "$(stat -f %Lp "$f")" "$f" "/$f"
-done
-popd
+
+# 1. get files from git
+repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_dirs=( ${(u)repo_files:h} )
+repo_files_ex=( ${repo_files:|ex} )
+
+# 2. create dirs, copying file permissions, retaining root ownership
+for dir ( $repo_dirs ) {
+  sudo mkdir -p /$dir
+  cp_perms $dir /$dir
+}
+
+# 3. create copies, copying file permissions, retaining root ownership
+for file ( $repo_files_ex ) {
+  sudo cp ${file:a} /$file
+  cp_perms $file /$file
+}
 #[⫶] copied tree

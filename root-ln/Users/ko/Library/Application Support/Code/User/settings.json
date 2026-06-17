@@ -132,7 +132,7 @@
   "editor.guides.highlightActiveIndentation": false,
   "editor.guides.indentation": false,
   "editor.hideCursorInOverviewRuler": false,
-  "editor.lineNumbers": "off",
+  "editor.lineNumbers": "on",
   "editor.minimap.enabled": false,
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
