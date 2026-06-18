@@ -1,0 +1,148 @@
+#!/bin/zsh
+#>[≟]
+#   provision a throwaway macOS (Tahoe) Tart VM, rsync the local working tree in
+#   (incl. uncommitted; no push/clone), run the full host bootstrap
+#   (upsert-configs, mk-dirs, install-all), verify key binaries resolve.
+#   tear down on success; keep VM on failure.
+#
+#   ONE-TIME per VM — disable SIP so the disk can grow past the recovery
+#   partition (the full toolchain overflows the ~44G default container):
+#     1. tart stop configs-test
+#     2. tart run --recovery --vnc-experimental configs-test   # prints a vnc:// url
+#     3. open the vnc url -> Utilities > Terminal -> `csrutil disable`
+#        (choose user admin / password admin) -> `reboot`
+#     4. re-run this script; the prepare step then grows the disk automatically.
+
+#/[≟]
+
+emulate -LR zsh
+setopt errexit pipefail
+autoload -Uz log-msg
+
+#[……] 🤖🤖🤖🤖
+#[≟] neutralize the host op-1password ssh askpass + agent #[∵] they override sshpass -p, break vm auth
+unset SSH_ASKPASS SSH_AUTH_SOCK
+export SSH_ASKPASS_REQUIRE=never
+
+#[…] config
+typeset image=ghcr.io/cirruslabs/macos-tahoe-vanilla:26.5  #[∵] no brew/taps preinstalled -> tests real bootstrap
+typeset vm=configs-test
+typeset repo_root=${0:A:h:h:h:h:h:h}  #[≟] root-ln/usr/local/scripts/shell/<script> -> repo root
+typeset ssh_user=admin ssh_pass=admin
+typeset disk_gb=150  #[∵] ~30% over the ~40G default for toolchain headroom
+typeset -a verify_bins=( brew asdf aws gcloud kitty jaeger otelcol prometheus ollama )
+#[≟] vanilla has no guest agent so use password ssh (sshpass)
+typeset -a ssh_opts=( -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 )
+#[⫶]
+
+#[…] preflight
+(( $+commands[tart] )) || { log-msg -t vm-test -- "tart not found; brew install cirruslabs/cli/tart"; exit 1 }
+(( $+commands[sshpass] )) || { log-msg -t vm-test -- "sshpass not found; brew install sshpass"; exit 1 }
+#[⫶]
+
+#[…] provision: reuse a running vm, else clone fresh + boot headless
+if { tart list 2>/dev/null | grep -q "$vm.*running" } {
+  log-msg -t vm-test -- "reusing running $vm"
+} else {
+  tart delete $vm 2>/dev/null || true  #[≟] clear any stopped leftover
+  log-msg -t vm-test -- "cloning vm $vm from $image"
+  tart clone $image $vm
+  log-msg -t vm-test -- "setting disk to ${disk_gb}G"
+  tart set $vm --disk-size $disk_gb
+  log-msg -t vm-test -- "booting $vm (headless)"
+  tart run --no-graphics $vm &
+}
+#[⫶]
+
+#[…] wait for ip + password ssh (vanilla: no guest agent)
+log-msg -t vm-test -- "waiting for vm ip"
+typeset ip
+until ip=$(tart ip $vm 2>/dev/null) && [[ -n $ip ]]; do sleep 2; done
+
+log-msg -t vm-test -- "waiting for ssh at $ip"
+#[≟] require 3 consecutive auths #[∵] fresh-boot sshd accepts before password auth is stable
+typeset ok=0
+until (( ok >= 3 )) {
+  if { sshpass -p $ssh_pass ssh $ssh_opts $ssh_user@$ip true 2>/dev/null } { (( ++ok )) } else { ok=0 }
+  sleep 2
+}
+log-msg -t vm-test -- "ssh up at $ip"
+#[⫶]
+
+#[…] prepare vm: create ko user, prereqs, empty configs dir owned by ko
+typeset configs_dir=/Users/ko/projects/configs
+typeset prepare='
+set -e
+#[≟] grow apfs container to fill the disk #[∵] container stuck ~44G behind recovery partition
+#    requires SIP off (one-time: tart run --recovery $vm -> csrutil disable -> reboot). tolerant otherwise.
+if diskutil list disk0 | grep -q Apple_APFS_Recovery; then
+  if sudo diskutil eraseVolume free none disk0s3 2>/dev/null; then
+    sudo diskutil repairDisk disk0 <<< y       #[≟] refresh GPT so the freed space is allocatable
+    sudo diskutil apfs resizeContainer disk0s2 0 || true
+  else
+    echo "vm-test: disk grow skipped — SIP on. run: tart run --recovery --vnc-experimental '"$vm"' then csrutil disable"
+  fi
+fi
+df -h /
+
+# command line tools (git, make) if absent #[∵] headless: xcode-select --install is a gui prompt
+if ! xcode-select -p >/dev/null 2>&1; then
+  sudo touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress  #[≟] makes softwareupdate list CLT
+  label=$(softwareupdate -l 2>/dev/null | grep -o "Label: Command Line Tools.*" | tail -1 | sed "s/Label: //")
+  sudo softwareupdate -i "$label" --verbose
+  sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+fi
+
+# create admin user ko #[∵] scripts hardcode /Users/ko paths; no password (key ssh + nopasswd sudo)
+if ! id ko >/dev/null 2>&1; then
+  sudo sysadminctl -addUser ko -fullName ko -admin -adminUser admin -adminPassword admin
+  id ko >/dev/null 2>&1 || { echo "failed to create user ko"; exit 1 }
+fi
+#[≟] SETENV lets ko run sudo --preserve-env=FPATH,PATH (autoloaded fns + ci PATH)
+printf "%s\n%s\n" "Defaults env_keep += \"FPATH PATH\"" "ko ALL=(ALL) NOPASSWD: SETENV: ALL" | sudo tee /etc/sudoers.d/ko-vm-test >/dev/null
+
+#[≟] brew prefix is admin-owned from the base image; hand it to ko so install-all can write
+[[ -d /opt/homebrew ]] && sudo chown -R ko:staff /opt/homebrew
+
+sudo rm -rf '"$configs_dir"'
+sudo -u ko mkdir -p '"$configs_dir"'
+'
+log-msg -t vm-test -- "preparing vm (user ko, prereqs)"
+sshpass -p $ssh_pass ssh $ssh_opts $ssh_user@$ip "zsh -lc ${(q)prepare}"
+#[⫶]
+
+#[…] rsync the working tree (incl. uncommitted) into the vm — no push, no gitlab
+#[≟] remote rsync runs as ko (dir is ko-owned); copy the whole tree verbatim
+log-msg -t vm-test -- "rsyncing working tree into $configs_dir"
+rsync -a --delete \
+  -e "sshpass -p $ssh_pass ssh $ssh_opts" --rsync-path="sudo -u ko rsync" \
+  $repo_root/ $ssh_user@$ip:$configs_dir/
+#[⫶]
+
+#[…] run host bootstrap as ko, verify binaries
+typeset bootstrap='
+set -e
+cd '"$configs_dir"'
+#[≟] stage synced tree so git ls-files matches working tree #[∵] uncommitted renames/adds
+sudo -u ko --set-home git -C '"$configs_dir"' add -A
+#[≟] --set-home: HOME=/Users/ko #[∵] brew/asdf caches resolve from $HOME, not admins
+sudo -u ko --set-home make run-host-upsert-configs
+sudo -u ko --set-home make run-host-mk-dirs
+sudo -u ko --set-home make run-host-install-all
+
+echo "── verifying binaries ──"
+fail=0
+for b in '"${verify_bins[*]}"'; do
+  if sudo -u ko -i command -v "$b" >/dev/null 2>&1; then echo "ok   $b"; else echo "MISS $b"; fail=1; fi
+done
+exit $fail
+'
+log-msg -t vm-test -- "running bootstrap in vm"
+if { sshpass -p $ssh_pass ssh $ssh_opts $ssh_user@$ip "zsh -lc ${(q)bootstrap}" } {
+  log-msg -t vm-test -- "PASS — $vm left running for reuse. delete: tart delete $vm"
+} else {
+  log-msg -t vm-test -- "FAIL — $vm left running for debug. ssh: sshpass -p $ssh_pass ssh $ssh_user@$ip"
+  exit 1
+}
+#[⫶]
+#[⫶⫶] 🤖🤖🤖🤖

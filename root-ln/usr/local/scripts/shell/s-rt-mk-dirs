@@ -13,10 +13,10 @@ function mk_dirs {
   local -a owner perms
   local dir
   zparseopts -D -E -owner:=owner -perms:=perms
-  for dir ( $@ ) {
+  for dir ( ${(o)@} ) {  #[≟] 🤖🤖 (o) lexical sort -> parents before children
     if [[ ! -d $dir ]] {
-      mkdir -p $dir ; log-msg -t mkdir -- $dir
-      if (( $#owner )) { chown -R $owner[2] $dir; log-msg -t chown -- "$dir $owner[2]" }
+      mkdir $dir ; log-msg -t mkdir -- $dir  #[≟] 🤖🤖 no -p; parents made first
+      if (( $#owner )) { chown $owner[2] $dir; log-msg -t chown -- "$dir $owner[2]" }  #[≟] 🤖🤖 no -R; per-dir
       if (( $#perms )) { chmod $perms[2] $dir; log-msg -t chmod -- "$dir $perms[2]" }
     }
   }
@@ -26,19 +26,20 @@ configs=${1:-/Users/ko/projects/configs}
 configs_owner=$(stat -f '%Su:%Sg' -- $configs)
 home=/Users/${configs_owner%%:*}
 
-# define dirs
+#[≟] 🤖🤖 braces enumerate parents+children; empty element {,..} keeps the parent dir itself
+#[∵] mk_dirs sorts (o) so parents precede children for plain mkdir (no -p)
 dirs_user_space=(
-  .cache/homebrew
+  .cache{,/homebrew}
   .config
-  .local/{bin,share}
-  .local/state{,/asdf,/homebrew,/log,/vim/undo,/zsh,/zsh/completions}
+  .local{,/bin,/share,/state,/state/asdf,/state/homebrew,/state/log,/state/vim,/state/vim/undo,/state/zsh,/state/zsh/completions} #[≟] 🤖🤖
   ScreenCapture
 )
 dirs_user_space=( $home/${^dirs_user_space} )
 
 dirs_system_space=(
   /var/log/{grafana,jaeger,loki,prometheus,dir_size_exporter,port_exporter,otelcol}
-  /usr/local/var/{grafana,prometheus,dir_size_exporter}
+  /usr/local/var{,/grafana,/prometheus,/dir_size_exporter} #[≟] 🤖🤖
+  /var/custom{,/cache} #[≟] 🤖🤖
 )
 
 dirs_system_space_world=(

@@ -1,25 +1,9 @@
 #!/bin/zsh
 
 emulate -LR zsh
-set -e
+setopt errexit
 
 #[…] 🤖🤖
-brew bundle install
-
-installers=(
-    s-rt-install-asdf
-    s-rt-install-aws-cli
-    s-rt-install-gcloud-cli
-    s-rt-install-kitty
-    s-rt-install-jaeger
-    s-rt-install-ollama
-    s-rt-install-otel-collector
-    s-rt-install-prometheus
-    s-rt-install-completions-zsh
-)
-for installer in ${installers}; ${installer}
-
-#[≟] other language-level tools
-pip install -r /etc/python/requirements.txt
-gem install ruby-lsp
+#[≟] run numbered installers in order; gaps let you insert later. 00-brew bootstraps homebrew
+for installer ( ${0:h}/s-rt-install-<->-*(n) ) $installer
 #[⫶] 🤖🤖

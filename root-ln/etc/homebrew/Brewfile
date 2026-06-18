@@ -1,4 +1,6 @@
 tap "azure/azure-cli"
+tap "cirruslabs/cli"
+tap "esolitos/ipa" #[≟] 🤖🤖🤖
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
 # Library for command-line editing
@@ -35,6 +37,8 @@ brew "pcre2"
 brew "git"
 # Open-source GitLab command-line tool
 brew "glab"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # Gorgeous metric visualizations and dashboards for timeseries databases
 brew "grafana"
 # Improved top (interactive process viewer)
@@ -79,8 +83,12 @@ brew "ruby", link: false
 brew "shellcheck"
 # Simple keystroke visualizer
 brew "showkey"
+# Non-interactive ssh password auth (for vm-test against vanilla images)
+brew "esolitos/ipa/sshpass" #[≟] 🤖🤖🤖
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Create, run and manage macOS and Linux VMs on Apple Silicon
+brew "cirruslabs/cli/tart"
 # Tool Command Language
 brew "tcl-tk"
 # Terminal multiplexer
@@ -99,6 +107,7 @@ brew "zlib"
 cask "1password-cli"
 cask "azure/azure-cli/azure-cli-preview"
 cask "font-jetbrains-mono"
+cask "visual-studio-code"
 go "github.com/hairyhenderson/gomplate/v4/cmd/gomplate"
 go "golang.org/x/tools/gopls"
 go "github.com/evilmartians/lefthook/v2"
