@@ -3,6 +3,7 @@
 
 function print-with {
   emulate -LR zsh
+  setopt errexit pipefail
 
   local modifier=$1 text=$2 bar n
 

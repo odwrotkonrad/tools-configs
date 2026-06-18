@@ -1,0 +1,16 @@
+#[≟] log a line as 'HH:MM:SS.mmm: [title: ]msg', title via optional -t/--title
+
+function log-msg {
+  emulate -LR zsh
+  setopt errexit pipefail
+  autoload -Uz print-with
+  zmodload zsh/datetime
+
+  local -a title
+  zparseopts -D t:=title -title:=title
+
+  local stamp=${(%):-"%D{%H:%M:%S}"}.${${EPOCHREALTIME#*.}[1,3]}
+  local prefix=${title:+"$(print-with bold $title[2]): "}
+
+  print -- "$stamp: $prefix$*"
+}

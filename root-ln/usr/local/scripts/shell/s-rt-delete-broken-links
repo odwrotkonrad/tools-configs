@@ -8,10 +8,11 @@
 emulate -LR zsh
 setopt errexit dotglob
 IFS=
+autoload -Uz log-msg
 configs=${1:-/Users/ko/projects/configs}
 
 function delete_broken_links {
-  local root=$1 ; print -l "delete_broken_links: $root"
+  local root=$1 ; log-msg -t delete-broken-links -- $root
 
   typeset -aU dirs broken
   # 1. 10 last refs -> all dirs
@@ -32,7 +33,7 @@ function delete_broken_links {
 
   # 5. broken links -> trash
 
-  if (( $#broken )) { rm $broken ; print -l "rm: $broken" }
+  if (( $#broken )) { rm $broken ; log-msg -t rm -- $broken }
 }
 
 for root ( root-{ln,cp} ) {

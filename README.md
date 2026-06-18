@@ -1,5 +1,4 @@
 ## **Config**uration file**s**
-
 Dotfiles extended into root OS space. Loaded onto the host by symlinking (`root-ln/`), copying (`root-cp/`), and rendering templates (`*.auto.tmpl`).
 
 ## Purpose
@@ -14,9 +13,7 @@ Optimized for a reader, future reference and not frequent, regular software upda
 - Standarized information annotation specified in @docs/prose/commenting-convention/human.md, for explaining choices and pointing to documentation.
 
 ## Tools Inventory Index
-
 Tool -> primary config file.
-
 ```yaml
 #[…] primary
 claude: root-ln/Users/ko/.config/claude/settings.json
@@ -58,29 +55,17 @@ tmux: root-ln/Users/ko/.config/tmux/tmux.conf
 vim: root-ln/Users/ko/.config/vim/vimrc
 #[⫶] other
 ```
-
 - [docs/data/tools-inventory-full.yml](docs/data/tools-inventory-full.yml) - Full file lists per tool.
 
 ## Observability
-
 ### Claude Code
-
 Dashboard for Claude Code usage, cost and token metrics.
-
 ![Claude Code dashboard](docs/assets/images/grafana-claude-code-dashboard-pt-1.png)
-
 [recording](docs/assets/recordings/grafana-cc-dashboard.gif) · [more](docs/assets/images/grafana-claude-code-dashboard-pt-2.png)
-
 ### Host System
-
 Dashboard for host CPU, memory, disk and network metrics.
-
 ![Host system dashboard](docs/assets/images/grafana-host-dashboard-pt-1.png)
-
 [recording](docs/assets/recordings/grafana-host-dashboard.gif) · [more](docs/assets/images/grafana-host-dashboard-pt-2.png)
-
 ## ☢️ Danger Zone - Loading Configs ☢️
-
 Loading configuration directly modifies the OS, including system, non-user files. If you find anything of interest, prefer copying these pieces into your own config.
-
 [Loading Configs](docs/prose/loading-configuration.md)
