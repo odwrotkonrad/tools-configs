@@ -6,10 +6,11 @@
 #/[≟]
 
 setopt dotglob errexit
+IFS= # do not split into multiple args on spaces e.g. 'Application Support'
+configs=${1:-/Users/ko/projects/configs}
+
 
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
-
-configs=${1:-/Users/ko/projects/configs}
 
 function cp_owner {
   local src=$1
@@ -30,11 +31,11 @@ function cp_perms {
 #[…] symlinked tree
 pushd "$configs/root-ln"
 
-typeset -a repo_files repo_files ex repo_files_ex
+typeset -a repo_files repo_dirs ex repo_files_ex
 
 # 1. get files from git
 ex=( **/*.auto.tmpl )
-repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} )
 
@@ -58,7 +59,7 @@ popd
 pushd "$configs/root-cp"
 
 # 1. get files from git
-repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} )
 
