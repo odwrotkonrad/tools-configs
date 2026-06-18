@@ -1,12 +1,12 @@
 #[≟] Project's Makefile
 WRAPPERS := run-sync-quick run-sync-full
-COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs
+COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-vm-test
 SCRIPTS := root-ln/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 PRETTY := zsh -c 'autoload -Uz with-sections; with-sections "$$@"' with-sections
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 
-export FPATH := $(CURDIR)/ci/zsh/functions
+export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
 export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$(PATH)
 export PYTHONPATH := $(CURDIR)/$(SCRIPTS)/python
 export MYPYPATH := $(CURDIR)/$(SCRIPTS)/python
@@ -50,5 +50,9 @@ run-host-install-all:
 #[≟] reload running service launchagents
 run-host-restart-services:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-restart-services
+
+#[≟] provision a throwaway macOS Tart vm and run the full bootstrap
+run-vm-test:
+	@$(PRETTY) $(CI_SCRIPTS)/s-rt-vm-test
 
 #[⫶] commands

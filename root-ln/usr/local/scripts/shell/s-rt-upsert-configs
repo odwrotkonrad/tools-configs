@@ -19,7 +19,8 @@ function cp_owner {
   local dest=$2
   local owner=$(stat -f '%u:%g' -- $src)
 
-  chown -- $owner $dest ; log-msg -t chown -- "$owner $dest"
+  # -h - change owner of the link
+  chown -h -- $owner $dest ; log-msg -t chown -- "$owner $dest"  #[≟] -h: the link itself, not its target
 }
 
 function cp_perms {
@@ -27,7 +28,8 @@ function cp_perms {
   local dest=$2
   local perms=$(stat -f '%Lp' -- $src)
 
-  chmod -- $perms $dest ; log-msg -t chmod -- "$perms $dest"
+  # -h - change perms of the link
+  chmod -h -- $perms $dest ; log-msg -t chmod -- "$perms $dest"
 }
 
 #[…] symlinked tree
@@ -41,10 +43,14 @@ repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} )
 
-# 2. create dirs, copying owner and file permissions
-for dir ( $repo_dirs ) {
+#[≟] 🤖🤖 add every ancestor dir #[∵] plain mkdir (no -p) needs each parent made + owned, not just the leaf
+typeset -aU repo_dirs_all #[≟] 🤖🤖
+for dir ( $repo_dirs ) { while [[ $dir == */* ]] { repo_dirs_all+=$dir; dir=$dir:h }; repo_dirs_all+=$dir } #[≟] 🤖🤖
+
+# 2. create dirs (parents first), copying owner and file permissions #[≟] 🤖🤖
+for dir ( ${(o)repo_dirs_all} ) {  #[≟] 🤖🤖 (o) sort -> parents before children
   if [[ ! -d /$dir ]] {
-    mkdir -p /$dir; log-msg -t mkdir -- /$dir
+    mkdir /$dir; log-msg -t mkdir -- /$dir  #[≟] 🤖🤖 no -p
     cp_owner $dir /$dir
     cp_perms $dir /$dir
   }

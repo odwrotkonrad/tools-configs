@@ -2,6 +2,8 @@
 
 disable log #[∵] this builtin would shadow /usr/bin/log binary
 
+export ZDOTDIR=${HOME}/.config/zsh #[∵] so $ZDOTDIR/.zshenv (user config, PATH) loads next 🤖🤖
+
 #[……] env
 setopt allexport
 

@@ -1,0 +1,15 @@
+#[≟] install-if-missing <cmd> <installer-fn>: skip+log if cmd present, else log+run+log
+
+function install-if-missing {
+  emulate -LR zsh
+  local cmd=$1 installer=$2
+
+  if (( $+commands[$cmd] )) {
+    log-msg -t $cmd -- already installed
+    return
+  }
+
+  log-msg -t $cmd -- installing
+  $installer
+  log-msg -t $cmd -- installed
+}

@@ -1,5 +1,7 @@
 {
   "trustedtaps": [
-    "azure/azure-cli"
+    "azure/azure-cli",
+    "cirruslabs/cli",
+    "esolitos/ipa"
   ]
 }
