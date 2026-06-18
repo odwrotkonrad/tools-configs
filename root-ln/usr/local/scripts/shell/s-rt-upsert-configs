@@ -18,7 +18,7 @@ function cp_owner {
   local dest=$2
   local owner=$(stat -f '%u:%g' -- $src)
 
-  chown -- $owner $dest ; print "chown: $owner $dest"
+  chown -- $owner $dest ; log-msg -t chown -- "$owner $dest"
 }
 
 function cp_perms {
@@ -26,7 +26,7 @@ function cp_perms {
   local dest=$2
   local perms=$(stat -f '%Lp' -- $src)
 
-  chmod -- $perms $dest ; print "chmod: $perms $dest"
+  chmod -- $perms $dest ; log-msg -t chmod -- "$perms $dest"
 }
 
 #[…] symlinked tree
@@ -43,7 +43,7 @@ repo_files_ex=( ${repo_files:|ex} )
 # 2. create dirs, copying owner and file permissions
 for dir ( $repo_dirs ) {
   if [[ ! -d /$dir ]] {
-    mkdir -p /$dir; print "mkdir: /$dir"
+    mkdir -p /$dir; log-msg -t mkdir -- /$dir
     cp_owner $dir /$dir
     cp_perms $dir /$dir
   }
@@ -53,7 +53,7 @@ for dir ( $repo_dirs ) {
 for file ( $repo_files_ex ) {
   dest=/$file
   if [[ ${dest:A} != ${file:A} ]] {
-    ln -fws ${file:a} $dest ; print "ln: $dest"
+    ln -fws ${file:a} $dest ; log-msg -t ln -- $dest
     cp_owner $file $dest
     cp_perms $file $dest
   }
@@ -73,7 +73,7 @@ repo_files_ex=( ${repo_files:|ex} )
 # 2. create dirs, copying file permissions, apply root ownership
 for dir ( $repo_dirs ) {
   if [[ ! -d /$dir ]] {
-    mkdir -p /$dir; print "created dir: /$dir"
+    mkdir -p /$dir; log-msg -t mkdir -- /$dir
     cp_perms $dir /$dir
   }
 }
@@ -85,11 +85,11 @@ typeset -A perms=(
 
 for file ( $repo_files_ex ) {
   if { ! cmp -s ${file:a} /$file } {
-    cp ${file:a} /$file; print "copied file: /$file"
+    cp ${file:a} /$file; log-msg -t cp -- /$file
     if [[ -n ${perms[/$file]} ]] {
       perm=${perms[/$file]}
-      chown -- ${perm%% *} /$file; print "chown: /$file ${perm%% *}"
-      chmod -- ${perm##* } /$file; print "chmod: /$file ${perm##* }"
+      chown -- ${perm%% *} /$file; log-msg -t chown -- "${perm%% *} /$file"
+      chmod -- ${perm##* } /$file; log-msg -t chmod -- "${perm##* } /$file"
     } else {
       cp_perms $file /$file
     }

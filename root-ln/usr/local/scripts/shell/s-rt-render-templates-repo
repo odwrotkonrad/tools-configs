@@ -23,6 +23,6 @@ for src in templates/**/*.repo.tmpl(.DN); do
   [[ -n $render_to ]] || exit-with 1 "missing render-to frontmatter: $src"
   body=$(sed '1{/^---$/!q;};1,/^---$/d' "$src")
   print -r -- "$body" | gomplate --chmod 0644 -o "$configs/$render_to"
-  print "${0:t}: rendered $configs/$render_to"
+  log-msg -t gomplate -- "$configs/$render_to"
 done
 #[⫶] 🤖🤖

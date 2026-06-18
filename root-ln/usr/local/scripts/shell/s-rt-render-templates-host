@@ -1,23 +1,23 @@
 #!/bin/zsh
 #>[≟]
-#   render every *.host.auto.tmpl in the configs repo's root-ln tree to its
-#   stripped sibling at the mirrored system path; secrets resolved from
-#   1Password via the op plugin. run as the user owning the op session.
-#   $1 - configs repo path (default: /Users/ko/projects/configs)
+#   1. search for all *.host.auto.tmpl templates
+#   2. render it on the host
 #/[≟]
 
 emulate -LR zsh
-set -e
-
-if (( ! $+commands[gomplate] )) exit-with 1 "gomplate not found"
-if (( ! $+commands[op] )) exit-with 1 "op (1Password CLI) not found"
+IFS=
+setopt errexit
 
 configs=${1:-/Users/ko/projects/configs}
-[[ -d $configs/root-ln ]] || exit-with 1 "configs not found: $configs/root-ln"
+t_ext='.host.auto.tmpl'
 
-for src in $configs/root-ln/**/*.host.auto.tmpl(.DN); do
-  dst=${src#$configs/root-ln}
-  dst=${dst%.host.auto.tmpl}
-  gomplate -f "$src" -o "$dst"
-  print "${0:t}: rendered $dst"
-done
+pushd $configs/root-ln
+
+#[≟] . - regular files, D - GLOB_DOT opt (search hidden)
+for template ( **/*${t_ext}(.D) ) {
+  #[≟] % - strip non greedy from the end
+  render_to=/${template%${t_ext}}
+  gomplate -f "$template" -o "$render_to" ; log-msg -t gomplate -- $render_to
+}
+
+popd
