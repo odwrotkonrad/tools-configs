@@ -6,6 +6,7 @@ ci
   zsh
     functions
     scripts
+      installs
 docs
   assets
     images

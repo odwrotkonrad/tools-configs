@@ -1,53 +1,51 @@
 #!/bin/zsh
 
 emulate -LR zsh
-set -e
+setopt errexit
 
-#[……] 🤖🤖
-#[…] resolve the invoking user and their home (under sudo $HOME is root's)
-user=${SUDO_USER:-$USER}
-user_home=$(dscl . -read "/Users/$user" NFSHomeDirectory | cut -d' ' -f2)
-user_group=$(id -gn "$user")
-#[⫶]
+if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 
-#[…] user dirs (XDG defaults + custom)
-user_dirs=(
-    "${user_home}/.cache/homebrew"
-    "${user_home}/.config"
-    "${user_home}/.local/bin"
-    "${user_home}/.local/share"
-    "${user_home}/.local/state"
-    "${user_home}/.local/state/asdf"
-    "${user_home}/.local/state/homebrew"
-    "${user_home}/.local/state/log"
-    "${user_home}/.local/state/vim/undo"
-    "${user_home}/.local/state/zsh"
-    "${user_home}/.local/state/zsh/completions"
-    "${user_home}/ScreenCapture"
+typeset configs configs_owner home
+typeset -a dirs_user_space dirs_system_space dirs_system_space_world
+
+function mk_dirs {
+  local -a owner perms
+  local dir
+  zparseopts -D -E -owner:=owner -perms:=perms
+  for dir ( $@ ) {
+    if [[ ! -d $dir ]] {
+      mkdir -p $dir ; print "mkdir: $dir"
+      if (( $#owner )) { chown -R $owner[2] $dir; print "chown: $dir $owner[2]" }
+      if (( $#perms )) { chmod $perms[2] $dir; print "chmod: $dir $perms[2]" }
+    }
+  }
+}
+
+configs=${1:-/Users/ko/projects/configs}
+configs_owner=$(stat -f '%Su:%Sg' -- $configs)
+home=/Users/${configs_owner%%:*}
+
+# define dirs
+dirs_user_space=(
+  .cache/homebrew
+  .config
+  .local/{bin,share}
+  .local/state{,/asdf,/homebrew,/log,/vim/undo,/zsh,/zsh/completions}
+  ScreenCapture
 )
-mkdir -p ${user_dirs}
-chown -R "${user}:${user_group}" ${user_dirs}
-#[⫶]
+dirs_user_space=( $home/${^dirs_user_space} )
 
-#[…] system service dirs: root-owned, user-group, group-writable + setgid, world read/list
-svc_dirs=(
-    /var/log/grafana
-    /var/log/jaeger
-    /var/log/loki
-    /var/log/prometheus
-    /var/log/dir_size_exporter
-    /var/log/port_exporter
-    /var/log/otelcol
-    /usr/local/var/grafana
-    /usr/local/var/prometheus
-    /usr/local/var/dir_size_exporter
+dirs_system_space=(
+  /var/log/{grafana,jaeger,loki,prometheus,dir_size_exporter,port_exporter,otelcol}
+  /usr/local/var/{grafana,prometheus,dir_size_exporter}
 )
-mkdir -p ${svc_dirs}
-chown "root:${user_group}" ${svc_dirs}
-chmod 2775 ${svc_dirs}
-#[⫶]
 
-#[…] world-writable cache dir for the term-open-files helper
-install -d -m 1777 /var/custom/cache/s-rt-get-term-open-files-with
-#[⫶]
-#[⫶⫶] 🤖🤖
+dirs_system_space_world=(
+  /var/custom/cache/s-rt-get-term-open-files-with
+)
+
+
+# create dirs
+mk_dirs --owner $configs_owner $dirs_user_space
+mk_dirs --owner root:${configs_owner#*:} --perms 2775 $dirs_system_space
+mk_dirs --perms 1777 $dirs_system_space_world

@@ -1,25 +1,42 @@
-#!/bin/bash
+#!/bin/zsh
 #>[≟]
-#   collect root-ln/ paths from the last 10 commits and the working tree
-#   (staged + unstaged, including rename sources), then prune top-level
-#   broken links in each mapped system dir
+#   1. collect dirs from the last 10 commits,
+#   2. search for broken links within dirs
+#   3. remove broken links
 #/[≟]
 
-set -e
-
+emulate -LR zsh
+setopt errexit dotglob
+IFS=
 configs=${1:-/Users/ko/projects/configs}
 
-{
-  git -C "$configs" -c core.quotePath=false log -10 --name-only --pretty=format: --diff-filter=ACDR
-  git -C "$configs" status --porcelain -z | tr '\0' '\n'
-} \
-  | grep -oE 'root-ln/.*' \
-  | grep '/' \
-  | sed 's|/[^/]*$||' \
-  | sort -u \
-  | while IFS= read -r dir; do
-      sysdir="/${dir#root-ln/}"
-      #[≟] only top-level broken links targeting this repo
-      find "$sysdir" -maxdepth 1 -type l -lname "$configs/*" \
-        ! -exec test -e {} \; -print -delete 2>/dev/null || true
-    done
+function delete_broken_links {
+  local root=$1 ; print -l "delete_broken_links: $root"
+
+  typeset -aU dirs broken
+  # 1. 10 last refs -> all dirs
+  for ref ( ${(@f)$(git rev-list -10 HEAD)} ) {
+    dirs+=( ${(@f)$(git ls-tree -dr --name-only $ref)} )
+  }
+
+  # 2. dirs -> dirs with at least 2 parts #[∵] reducing search radius
+  dirs=( ${(M)dirs:#*/?*} ) # [≟] (M) keep matches, pattern: path with atleast one non trailing slash
+
+  # 3. dirs -> OS dirs
+  dirs=( /${^dirs} )
+
+  # 4. dirs -> broken links
+  for dir ( $dirs ) {
+    broken+=( $dir/*(-@N) )
+  }
+
+  # 5. broken links -> trash
+
+  if (( $#broken )) { rm $broken ; print -l "rm: $broken" }
+}
+
+for root ( root-{ln,cp} ) {
+  pushd $configs/$root
+  delete_broken_links $root
+  popd
+}

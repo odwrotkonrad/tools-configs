@@ -5,18 +5,20 @@
 #   <configs>/root-cp files are copied as root
 #/[≟]
 
-setopt dotglob errexit
+emulate -LR zsh
+setopt errexit dotglob
+IFS= # do not split into multiple args on spaces e.g. 'Application Support'
+configs=${1:-/Users/ko/projects/configs}
+
 
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
-
-configs=${1:-/Users/ko/projects/configs}
 
 function cp_owner {
   local src=$1
   local dest=$2
   local owner=$(stat -f '%u:%g' -- $src)
 
-  chown -- $owner $dest
+  chown -- $owner $dest ; print "chown: $owner $dest"
 }
 
 function cp_perms {
@@ -24,53 +26,74 @@ function cp_perms {
   local dest=$2
   local perms=$(stat -f '%Lp' -- $src)
 
-  chmod -- $perms $dest
+  chmod -- $perms $dest ; print "chmod: $perms $dest"
 }
 
 #[…] symlinked tree
 pushd "$configs/root-ln"
 
-typeset -a repo_files repo_files ex repo_files_ex
+typeset -a repo_files repo_dirs ex repo_files_ex
 
 # 1. get files from git
 ex=( **/*.auto.tmpl )
-repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} )
 
 # 2. create dirs, copying owner and file permissions
 for dir ( $repo_dirs ) {
-  mkdir -p /$dir
-  cp_owner $dir /$dir
-  cp_perms $dir /$dir
+  if [[ ! -d /$dir ]] {
+    mkdir -p /$dir; print "mkdir: /$dir"
+    cp_owner $dir /$dir
+    cp_perms $dir /$dir
+  }
 }
 
 # 3. create links, copying owner and file permissions
 for file ( $repo_files_ex ) {
-  ln -fvws ${file:a} /$file
-  cp_owner $file /$file
-  cp_perms $file /$file
+  dest=/$file
+  if [[ ${dest:A} != ${file:A} ]] {
+    ln -fws ${file:a} $dest ; print "ln: $dest"
+    cp_owner $file $dest
+    cp_perms $file $dest
+  }
 }
 popd
 #[⫶] symlinked tree
+
 
 #[…] copied tree
 pushd "$configs/root-cp"
 
 # 1. get files from git
-repo_files=( ${(f)"$(git ls-files --exclude-standard)"} )
+repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} )
 
-# 2. create dirs, copying file permissions, retaining root ownership
+# 2. create dirs, copying file permissions, apply root ownership
 for dir ( $repo_dirs ) {
-  mkdir -p /$dir
-  cp_perms $dir /$dir
+  if [[ ! -d /$dir ]] {
+    mkdir -p /$dir; print "created dir: /$dir"
+    cp_perms $dir /$dir
+  }
 }
 
-# 3. create copies, copying file permissions, retaining root ownership
+# 3. copy files if modified; modify perms and ownership if specified
+typeset -A perms=(
+  /etc/sudoers.d/configs  'root:wheel 0440'
+)
+
 for file ( $repo_files_ex ) {
-  cp ${file:a} /$file
-  cp_perms $file /$file
+  if { ! cmp -s ${file:a} /$file } {
+    cp ${file:a} /$file; print "copied file: /$file"
+    if [[ -n ${perms[/$file]} ]] {
+      perm=${perms[/$file]}
+      chown -- ${perm%% *} /$file; print "chown: /$file ${perm%% *}"
+      chmod -- ${perm##* } /$file; print "chmod: /$file ${perm##* }"
+    } else {
+      cp_perms $file /$file
+    }
+  }
 }
+popd
 #[⫶] copied tree
