@@ -8,6 +8,7 @@
 emulate -LR zsh
 setopt errexit dotglob
 IFS= # do not split into multiple args on spaces e.g. 'Application Support'
+autoload -Uz log-msg
 configs=${1:-/Users/ko/projects/configs}
 
 

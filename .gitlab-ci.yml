@@ -10,6 +10,8 @@ stages:
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
     - curl -fsSL https://github.com/hairyhenderson/gomplate/releases/download/v5.1.0/gomplate_linux-amd64 -o /usr/local/bin/gomplate
     - chmod +x /usr/local/bin/gomplate
+    - curl -fsSL https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64 -o /usr/local/bin/yq
+    - chmod +x /usr/local/bin/yq
 
 validate-docsgen:
   extends: .base-python

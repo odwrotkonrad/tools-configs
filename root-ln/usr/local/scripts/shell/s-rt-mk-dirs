@@ -2,6 +2,7 @@
 
 emulate -LR zsh
 setopt errexit
+autoload -Uz log-msg
 
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 

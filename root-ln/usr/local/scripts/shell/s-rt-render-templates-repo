@@ -1,28 +1,43 @@
 #!/bin/zsh
-#>[≟] 🤖🤖
-#   render every *.repo.tmpl under templates/ to the repo-root-relative
-#   path named in its `render-to:` frontmatter; the frontmatter is stripped
-#   before rendering. no secrets, so no op session needed.
-#   $1 - configs repo path (default: /Users/ko/projects/configs)
-#/[≟] 🤖🤖
+#>[≟]
+#   1. search for all *.repo.auto.tmpl templates under templates/
+#   2. render it to the repo path in its render-to: frontmatter
+#/[≟]
 
 emulate -LR zsh
-set -e
+IFS=
+setopt errexit pipefail
+autoload -Uz log-msg
 
-autoload -Uz exit-with
-
-if (( ! $+commands[gomplate] )) exit-with 1 "gomplate not found"
-
-#[…] 🤖🤖
 configs=${1:-/Users/ko/projects/configs}
-[[ -d $configs ]] || exit-with 1 "configs not found: $configs"
 
-cd "$configs"
-for src in templates/**/*.repo.tmpl(.DN); do
-  render_to=$(sed -n '1{/^---$/!q;};1d;/^---$/q;s/^render-to:[[:space:]]*//p' "$src")
-  [[ -n $render_to ]] || exit-with 1 "missing render-to frontmatter: $src"
-  body=$(sed '1{/^---$/!q;};1,/^---$/d' "$src")
-  print -r -- "$body" | gomplate --chmod 0644 -o "$configs/$render_to"
-  log-msg -t gomplate -- "$configs/$render_to"
-done
-#[⫶] 🤖🤖
+function strip-frontmatter-if-empty {
+  local content=$(<&0)
+  local -a lines=( ${(f)content} ) #[≟] f - replace newlines with \n
+
+  local empty_frontmatter=$'---\n{}\n---'
+  local head=${(F)lines[1,3]} #[≟] F - replace \n with newlines
+
+  if [[ $head == $empty_frontmatter ]] content=${(F)lines[4,-1]}
+  print -r -- $content
+}
+
+function render_template {
+  local template=$1
+  local render_to
+
+  # 1. read render-to from frontmatter
+  render_to=$(yq -f extract '.render-to' $template)
+
+  # 2. render template cleaning frontmatter on the fly
+  yq -f process 'del(.render-to)' $template \
+    | strip-frontmatter-if-empty \
+    | gomplate --chmod 0660 -o $configs/$render_to ; log-msg -t gomplate -- $configs/$render_to
+}
+
+pushd $configs
+#[≟] . - regular files, D - GLOB_DOT opt (search hidden)
+for template ( templates/**/*.repo.auto.tmpl(.D) ) {
+  render_template $template
+}
+popd

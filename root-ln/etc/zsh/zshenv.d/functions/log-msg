@@ -2,6 +2,8 @@
 
 function log-msg {
   emulate -LR zsh
+  setopt errexit pipefail
+  autoload -Uz print-with
   zmodload zsh/datetime
 
   local -a title

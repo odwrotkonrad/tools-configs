@@ -5,8 +5,8 @@ plugins:
     timeout: 30s
   readMarkdown:
     cmd: s-rt-read-markdown
-  readYml:
-    cmd: s-rt-read-yml
+  readWithFrontmatter:
+    cmd: s-rt-read-with-frontmatter
   generateTree:
     cmd: s-rt-generate-tree
   mergeUpsertEnv:

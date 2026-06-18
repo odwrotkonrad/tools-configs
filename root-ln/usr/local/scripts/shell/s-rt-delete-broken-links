@@ -8,6 +8,7 @@
 emulate -LR zsh
 setopt errexit dotglob
 IFS=
+autoload -Uz log-msg
 configs=${1:-/Users/ko/projects/configs}
 
 function delete_broken_links {
