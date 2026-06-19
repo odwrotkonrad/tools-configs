@@ -136,6 +136,26 @@
     "key": "alt+\\",
     "command": "editor.action.toggleWordWrap"
   },
+  //[≟] alt+shift+l — advanced editing mode: cycle line numbers + folding on/off 🤖🤖
+  {
+    "key": "alt+shift+l",
+    "command": "settings.cycle",
+    "args": {
+      "id": "advanced-editing-mode",
+      "values": [
+        {
+          "editor.lineNumbers": "off",
+          "editor.folding": false,
+          "editor.stickyScroll.enabled": false
+        },
+        {
+          "editor.lineNumbers": "on",
+          "editor.folding": true,
+          "editor.stickyScroll.enabled": true
+        }
+      ]
+    }
+  },
   {
     "key": "alt+m",
     "command": "workbench.action.toggleMaximizeEditorGroup"
