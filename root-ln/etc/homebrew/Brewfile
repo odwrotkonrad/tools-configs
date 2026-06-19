@@ -1,6 +1,6 @@
 tap "azure/azure-cli"
 tap "cirruslabs/cli"
-tap "hashicorp/tap" #[≟] 🤖🤖
+tap "hashicorp/tap"
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
 # Library for command-line editing
@@ -87,8 +87,12 @@ brew "showkey"
 brew "stow"
 # Create, run and manage macOS and Linux VMs on Apple Silicon
 brew "cirruslabs/cli/tart"
+# GitLab CI runner that runs jobs on this host
+brew "gitlab-runner"
+# GitLab runner custom executor that runs jobs inside ephemeral Tart VMs
+brew "cirruslabs/cli/gitlab-tart-executor"
 # Tool to build identical machine images for multiple platforms (bake the SIP-off vm base)
-brew "hashicorp/tap/packer" #[≟] 🤖🤖
+brew "hashicorp/tap/packer"
 # Tool Command Language
 brew "tcl-tk"
 # Terminal multiplexer

@@ -4,6 +4,7 @@
     "cirruslabs/cli"
   ],
   "trustedformulae": [
+    "cirruslabs/cli/gitlab-tart-executor",
     "hashicorp/tap/packer"
   ]
 }

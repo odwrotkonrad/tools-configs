@@ -7,20 +7,17 @@ packer {
   }
 }
 
-#[≟] derive from the base image baked by configs-base.pkr.hcl
+#[≟] derive from the base image baked by macos-tahoe-vanilla.pkr.hcl
 variable "vm_base_name" {
-  type    = string
-  default = "configs-base"
+  type = string
 }
 
 variable "vm_name" {
-  type    = string
-  default = "configs"
+  type = string
 }
 
 variable "repo_path" {
-  type    = string
-  default = "/Users/ko/projects/configs"
+  type = string
 }
 
 #[≟] host-side git bundle (git bundle create configs.git.bundle --all) cloned into the vm — required
@@ -29,8 +26,7 @@ variable "bundle_path" {
 }
 
 variable "pubkey_path" {
-  type    = string
-  default = "/Users/ko/.ssh/id_vm_access.pub"
+  type = string
 }
 
 source "tart-cli" "tart" {
