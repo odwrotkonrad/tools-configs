@@ -28,6 +28,11 @@ variable "bundle_path" {
   type = string
 }
 
+variable "pubkey_path" {
+  type    = string
+  default = "/Users/ko/.ssh/id_vm_access.pub"
+}
+
 source "tart-cli" "tart" {
   vm_base_name = var.vm_base_name
   vm_name      = var.vm_name
@@ -40,11 +45,22 @@ build {
   sources = ["source.tart-cli.tart"]
 
   provisioner "file" {
+    source      = var.pubkey_path
+    destination = "/tmp/authorized_key.pub"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo install -d -o ko -g staff -m 700 /Users/ko/.ssh",
+      "sudo install -o ko -g staff -m 600 /tmp/authorized_key.pub /Users/ko/.ssh/authorized_keys",
+    ]
+  }
+
+  provisioner "file" {
     source      = var.bundle_path
     destination = "/tmp/configs.git.bundle"
   }
 
-  #[≟] git clone the bundle into the repo path as ko
   provisioner "shell" {
     inline = [
       "sudo install -d -o ko -g staff \"$(dirname '${var.repo_path}')\"",

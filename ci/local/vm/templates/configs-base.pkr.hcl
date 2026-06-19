@@ -19,7 +19,7 @@ variable "vm_name" {
 
 variable "pubkey_path" {
   type    = string
-  default = "/Users/ko/.ssh/id_local_access.pub"
+  default = "/Users/ko/.ssh/id_vm_access.pub"
 }
 
 source "tart-cli" "tart" {
@@ -42,7 +42,6 @@ build {
     destination = "/tmp/authorized_key.pub"
   }
 
-  #[≟] create user ko, open ssh to all users, install the key into ko's authorized_keys
   provisioner "shell" {
     inline = [
       "id ko >/dev/null 2>&1 || sudo sysadminctl -addUser ko -fullName ko -admin -adminUser admin -adminPassword admin",
@@ -55,7 +54,6 @@ build {
     ]
   }
 
-  #[≟] install command line tools (make, git) headlessly #[∵] xcode-select --install needs a gui
   provisioner "shell" {
     inline = [
       "if ! xcode-select -p >/dev/null 2>&1; then sudo touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress; label=$(softwareupdate -l 2>/dev/null | grep -o 'Label: Command Line Tools.*' | tail -1 | sed 's/Label: //'); sudo softwareupdate -i \"$label\" --verbose; sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress; fi",

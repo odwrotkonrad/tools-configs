@@ -2,7 +2,8 @@
 .vscode
 ci
   local
-    vm-template
+    vm
+      templates
   python
     scripts
   zsh

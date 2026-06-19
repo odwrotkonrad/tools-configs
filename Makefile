@@ -6,7 +6,7 @@ CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
 PRETTY := $(ZSH) with-sections with-sections
 VM_REPO := /Users/ko/projects/configs
-IN_VM := ./ci/local/ssh-vm.zsh cd $(VM_REPO) '&&' make
+IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
@@ -55,22 +55,20 @@ run-host-install-all:
 run-host-restart-services:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-restart-services
 
-#[≟] build configs-base (ko, key, CLT) — slow stable layer, run once
+#[…] vm
 run-repo-build-vm-base:
-	@$(PRETTY) ./ci/local/build-base-vm.zsh
+	@$(PRETTY) ./ci/local/vm/build-vm.zsh configs-base
 
-#[≟] build configs from configs-base (repo cloned in)
 run-repo-build-vm:
-	@$(PRETTY) ./ci/local/build-configs-vm.zsh
+	@$(PRETTY) ./ci/local/vm/build-vm.zsh configs
 
-#[≟] ssh into the configs vm (interactive — no PRETTY wrapping #[∵] needs the tty)
 run-repo-ssh-vm:
-	@./ci/local/ssh-vm.zsh
+	@./ci/local/vm/ssh-vm.zsh
 
-#[≟] build the configs vm then run the bootstrap targets in order inside it
 run-repo-test-vm: run-repo-build-vm
 	@$(IN_VM) run-host-upsert-configs
 	@$(IN_VM) run-host-mk-dirs
 	@$(IN_VM) run-host-install-all
+#[⫶] vm
 
 #[⫶] commands
