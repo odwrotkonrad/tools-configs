@@ -1,10 +1,12 @@
 #[≟] Project's Makefile
 WRAPPERS := run-sync-quick run-sync-full run-repo-build-vm-all
-COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-build-vm-base run-repo-build-vm run-repo-ssh-vm run-repo-test-infra run-repo-test-upsert-configs run-repo-test-mk-dirs run-repo-test-install-all
+COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-build-vm-base run-repo-build-vm run-repo-ssh-vm run-repo-test-vm
 SCRIPTS := root-ln/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
 PRETTY := $(ZSH) with-sections with-sections
+VM_REPO := /Users/ko/projects/configs
+IN_VM := ./ci/local/ssh-vm.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
@@ -65,14 +67,10 @@ run-repo-build-vm:
 run-repo-ssh-vm:
 	@./ci/local/ssh-vm.zsh
 
-#[≟] run in-vm tests in the scaffolded vm
-run-repo-test-infra:
-	@$(PRETTY) ./ci/local/run-vm.zsh infra
-run-repo-test-upsert-configs:
-	@$(PRETTY) ./ci/local/run-vm.zsh upsert-configs
-run-repo-test-mk-dirs:
-	@$(PRETTY) ./ci/local/run-vm.zsh mk-dirs
-run-repo-test-install-all:
-	@$(PRETTY) ./ci/local/run-vm.zsh install-all
+#[≟] build the configs vm then run the bootstrap targets in order inside it
+run-repo-test-vm: run-repo-build-vm
+	@$(IN_VM) run-host-upsert-configs
+	@$(IN_VM) run-host-mk-dirs
+	@$(IN_VM) run-host-install-all
 
 #[⫶] commands
