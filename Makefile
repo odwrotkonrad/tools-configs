@@ -3,7 +3,8 @@ WRAPPERS := run-sync-quick run-sync-full run-repo-build-vm-all
 COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-build-vm-base run-repo-build-vm run-repo-ssh-vm run-repo-test-infra run-repo-test-upsert-configs run-repo-test-mk-dirs run-repo-test-install-all
 SCRIPTS := root-ln/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
-PRETTY := zsh -c 'autoload -Uz with-sections; with-sections "$$@"' with-sections
+ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
+PRETTY := $(ZSH) with-sections with-sections
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
@@ -21,13 +22,13 @@ run-repo-build-vm-all: run-repo-build-vm-base run-repo-build-vm
 
 #[…] commands
 run-host-upsert-configs:
-	@$(PRETTY) sudo $(CI_SCRIPTS)/s-rt-upsert-configs
+	@sudo $(PRETTY) s-rt-upsert-configs
 
 run-host-delete-broken-links:
-	@$(PRETTY) sudo $(CI_SCRIPTS)/s-rt-delete-broken-links
+	@sudo $(PRETTY) s-rt-delete-broken-links
 
 run-host-mk-dirs:
-	@$(PRETTY) sudo $(CI_SCRIPTS)/s-rt-mk-dirs
+	@sudo $(PRETTY) s-rt-mk-dirs
 
 run-host-render-templates:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-host

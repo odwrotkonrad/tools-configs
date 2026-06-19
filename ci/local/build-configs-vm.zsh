@@ -13,8 +13,10 @@ typeset bundle=$(mktemp -t configs.git.bundle)
 git -C $repo_root bundle create $bundle --all
 
 # build derivative (clone base + git clone the repo) and boot
+tart stop configs 2>/dev/null || true
 tart delete configs 2>/dev/null || true
 packer build -var bundle_path=$bundle $templates/configs.pkr.hcl
+
 tart run --no-graphics configs &
 #[⫶⫶] 🤖🤖
 
