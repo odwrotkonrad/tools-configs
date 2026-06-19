@@ -1,0 +1,20 @@
+#!/bin/zsh
+#>[≟]
+#   In-VM test for s-rt-mk-dirs: run `make run-host-mk-dirs` as user ko.
+#   Assumes a prepared VM (user ko, prereqs, tree synced to $configs_dir).
+#   Runnable standalone in-VM.
+#
+#     s-rt-test-mk-dirs [configs-dir]   # default /Users/ko/projects/configs
+#/[≟]
+
+emulate -LR zsh
+setopt errexit pipefail
+autoload -Uz log-msg
+
+#[……] 🤖🤖🤖
+typeset configs_dir=${1:-/Users/ko/projects/configs}
+cd $configs_dir
+#[≟] --set-home: HOME=/Users/ko #[∵] brew/asdf caches resolve from $HOME, not admins
+log-msg -t test-mk-dirs -- "run-host-mk-dirs"
+sudo -u ko --set-home make run-host-mk-dirs
+#[⫶⫶] 🤖🤖🤖

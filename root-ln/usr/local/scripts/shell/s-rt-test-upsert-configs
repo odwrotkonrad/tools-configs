@@ -1,0 +1,22 @@
+#!/bin/zsh
+#>[≟]
+#   In-VM test for s-rt-upsert-configs: stage the synced tree, then run
+#   `make run-host-upsert-configs` as user ko. Assumes a prepared VM (user ko,
+#   prereqs, tree synced to $configs_dir). Runnable standalone in-VM.
+#
+#     s-rt-test-upsert-configs [configs-dir]   # default /Users/ko/projects/configs
+#/[≟]
+
+emulate -LR zsh
+setopt errexit pipefail
+autoload -Uz log-msg
+
+#[……] 🤖🤖🤖
+typeset configs_dir=${1:-/Users/ko/projects/configs}
+cd $configs_dir
+#[≟] stage synced tree so git ls-files matches working tree #[∵] uncommitted renames/adds
+sudo -u ko --set-home git -C $configs_dir add -A
+#[≟] --set-home: HOME=/Users/ko #[∵] brew/asdf caches resolve from $HOME, not admins
+log-msg -t test-upsert-configs -- "run-host-upsert-configs"
+sudo -u ko --set-home make run-host-upsert-configs
+#[⫶⫶] 🤖🤖🤖

@@ -3,5 +3,8 @@
     "azure/azure-cli",
     "cirruslabs/cli",
     "esolitos/ipa"
+  ],
+  "trustedformulae": [
+    "hashicorp/tap/packer"
   ]
 }
