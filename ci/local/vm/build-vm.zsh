@@ -3,17 +3,25 @@
 emulate -LR zsh
 setopt errexit pipefail
 
+#[……] 🤖🤖
 typeset repo_root=$(git -C ${0:A:h} rev-parse --show-toplevel)
 typeset templates=$repo_root/ci/local/vm/templates
 typeset key=~/.ssh/id_vm_access
-typeset name=$1
 
+typeset name=$1
 typeset -a packer_args=()
 function build_args {
-  if [[ $name != configs ]] return
-  local bundle=$(mktemp -t configs.git.bundle)
-  git -C $repo_root bundle create $bundle --all
-  packer_args=(-var bundle_path=$bundle)
+  local -a var_files=(
+    $templates/$name.pkrvars.hcl(N)
+    $templates/$name.local.pkrvars.hcl(N)
+  )
+  packer_args=( ${var_files[@]/#/-var-file=} )
+
+  if [[ $name == ko-macos-tahoe-vanilla-configs-local ]] {
+    local bundle=$(mktemp -t configs.git.bundle)
+    git -C $repo_root bundle create $bundle --all
+    packer_args+=(-var bundle_path=$bundle)
+  }
 }
 
 function build_vm {
@@ -29,6 +37,7 @@ function build_vm {
 build_args
 build_vm
 
-if [[ $name == configs ]] {
-  tart run --no-graphics configs &
+if [[ $name == ko-macos-tahoe-vanilla-configs-local ]] {
+  tart run --no-graphics $name &
 }
+#[⫶⫶] 🤖🤖

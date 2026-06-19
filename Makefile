@@ -35,8 +35,9 @@ run-host-mk-dirs:
 run-host-render-templates:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-host
 
+RENDER_LOCAL ?= --local
 run-repo-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-repo $(CURDIR)
+	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-repo $(RENDER_LOCAL) $(CURDIR)
 
 run-repo-tests:
 	@$(PRETTY) pytest tests/scripts/python
@@ -57,10 +58,10 @@ run-host-restart-services:
 
 #[…] vm
 run-repo-build-vm-base:
-	@$(PRETTY) ./ci/local/vm/build-vm.zsh configs-base
+	@$(PRETTY) ./ci/local/vm/build-vm.zsh ko-macos-tahoe-vanilla
 
 run-repo-build-vm:
-	@$(PRETTY) ./ci/local/vm/build-vm.zsh configs
+	@$(PRETTY) ./ci/local/vm/build-vm.zsh ko-macos-tahoe-vanilla-configs-local
 
 run-repo-ssh-vm:
 	@./ci/local/vm/ssh-vm.zsh

@@ -8,18 +8,23 @@ packer {
 }
 
 variable "vm_base_name" {
-  type    = string
-  default = "ghcr.io/cirruslabs/macos-tahoe-vanilla:latest"
+  type = string
 }
 
 variable "vm_name" {
-  type    = string
-  default = "configs-base"
+  type = string
 }
 
 variable "pubkey_path" {
-  type    = string
-  default = "/Users/ko/.ssh/id_vm_access.pub"
+  type = string
+}
+
+variable "username" {
+  type = string
+}
+
+variable "password" {
+  type = string
 }
 
 source "tart-cli" "tart" {
@@ -44,12 +49,13 @@ build {
 
   provisioner "shell" {
     inline = [
-      "id ko >/dev/null 2>&1 || sudo sysadminctl -addUser ko -fullName ko -admin -adminUser admin -adminPassword admin",
-      "echo 'ko ALL=(ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/ko >/dev/null",
+      "id ${var.username} >/dev/null 2>&1 || sudo sysadminctl -addUser ${var.username} -fullName ${var.username} -admin -adminUser admin -adminPassword admin",
+      "sudo sysadminctl -resetPasswordFor ${var.username} -newPassword '${var.password}' -adminUser admin -adminPassword admin", #[≟] ssh auth for gitlab-tart-executor (TART_EXECUTOR_SSH_USERNAME) 🤖🤖
+      "echo '${var.username} ALL=(ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/${var.username} >/dev/null",
       #[≟] open remote login to all users #[∵] avoid the com.apple.access_ssh group lockout
-      "sudo install -d -o ko -g staff -m 700 /Users/ko/.ssh",
-      "sudo install -o ko -g staff -m 600 /tmp/authorized_key.pub /Users/ko/.ssh/authorized_keys",
-      "sudo dseditgroup -o edit -a ko -t user com.apple.access_ssh",
+      "sudo install -d -o ${var.username} -g staff -m 700 /Users/${var.username}/.ssh",
+      "sudo install -o ${var.username} -g staff -m 600 /tmp/authorized_key.pub /Users/${var.username}/.ssh/authorized_keys",
+      "sudo dseditgroup -o edit -a ${var.username} -t user com.apple.access_ssh",
       "sudo dscacheutil -flushcache"
     ]
   }

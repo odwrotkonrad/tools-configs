@@ -1,7 +1,8 @@
 #!/bin/zsh
 #>[≟]
-#   1. search for all *.repo.auto.tmpl templates under templates/
+#   1. search for all *.repo.auto.tmpl templates under templates/ and ci/
 #   2. render it to the repo path in its render-to: frontmatter
+#   --local: also render local templates (*local* in name); off by default
 #/[≟]
 
 emulate -LR zsh
@@ -9,7 +10,11 @@ IFS=
 setopt errexit pipefail
 autoload -Uz log-msg
 
+#[……] 🤖🤖
+zparseopts -D -F -- -local=local || exit 1
 configs=${1:-/Users/ko/projects/configs}
+local_glob='*local*'
+#[⫶⫶] 🤖🤖
 
 function strip-frontmatter-if-empty {
   local content=$(<&0)
@@ -26,6 +31,14 @@ function render_template {
   local template=$1
   local render_to
 
+  #[≟] no frontmatter: render next to the template, sans .repo.auto.tmpl 🤖
+  if [[ $(head -1 $template) != '---' ]] {
+    render_to=${template%.repo.auto.tmpl}
+    gomplate --chmod 0660 -f $template -o $configs/$render_to
+    log-msg -t gomplate -- $configs/$render_to
+    return
+  }
+
   # 1. read render-to from frontmatter
   render_to=$(yq -f extract '.render-to' $template)
 
@@ -37,7 +50,9 @@ function render_template {
 
 pushd $configs
 #[≟] . - regular files, D - GLOB_DOT opt (search hidden)
-for template ( templates/**/*.repo.auto.tmpl(.D) ) {
+for template ( {templates,ci}/**/*.repo.auto.tmpl(.D) ) {
+  #[≟] skip local templates unless --local 🤖🤖
+  if (( ! $#local )) && [[ ${template:t} == ${~local_glob} ]] continue
   render_template $template
 }
 popd

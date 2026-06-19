@@ -4,7 +4,7 @@ emulate -LR zsh
 setopt errexit pipefail
 autoload -Uz exit-with
 
-typeset vm=configs
+typeset vm=ko-macos-tahoe-vanilla-configs-local
 typeset user=$USER
 typeset key=~/.ssh/id_vm_access
 

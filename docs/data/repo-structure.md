@@ -72,6 +72,7 @@ root-ln
             auto.d
             completions
             functions
+      .gitlab-runner
       .ollama
       .ssh
       Library
