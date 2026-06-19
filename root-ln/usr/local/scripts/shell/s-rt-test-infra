@@ -1,0 +1,24 @@
+#!/bin/zsh
+#>[≟]
+#   In-VM test wrapper: run the full host bootstrap test against the synced tree
+#   by invoking, in order: s-rt-test-upsert-configs, s-rt-test-mk-dirs,
+#   s-rt-test-install-all. Fails fast. Assumes a prepared VM (user ko, prereqs,
+#   tree synced to $configs_dir).
+#
+#     s-rt-test-infra [configs-dir]   # default /Users/ko/projects/configs
+#
+#   Scaffolded by ci/local/vm-scaffold.zsh, which brings the VM up; run this
+#   inside the VM (over ssh as admin, or directly).
+#/[≟]
+
+emulate -LR zsh
+setopt errexit pipefail
+
+#[……] 🤖🤖🤖
+typeset configs_dir=${1:-/Users/ko/projects/configs}
+typeset here=${0:A:h}
+
+$here/s-rt-test-upsert-configs $configs_dir
+$here/s-rt-test-mk-dirs $configs_dir
+$here/s-rt-test-install-all $configs_dir
+#[⫶⫶] 🤖🤖🤖
