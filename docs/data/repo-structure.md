@@ -1,6 +1,9 @@
 .claude
 .vscode
 ci
+  local
+    vm
+      templates
   python
     scripts
   zsh

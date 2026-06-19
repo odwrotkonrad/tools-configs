@@ -1,9 +1,12 @@
 #[≟] Project's Makefile
-WRAPPERS := run-sync-quick run-sync-full
-COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-vm-test
+WRAPPERS := run-sync-quick run-sync-full run-repo-build-vm-all
+COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-build-vm-base run-repo-build-vm run-repo-ssh-vm run-repo-test-vm
 SCRIPTS := root-ln/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
-PRETTY := zsh -c 'autoload -Uz with-sections; with-sections "$$@"' with-sections
+ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
+PRETTY := $(ZSH) with-sections with-sections
+VM_REPO := /Users/ko/projects/configs
+IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
@@ -16,17 +19,18 @@ export GOMPLATE_CONFIG := $(CURDIR)/root-ln/etc/gomplate/gomplate.yaml
 #[…] wrappers
 run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks run-repo-render-templates
 run-sync-full: run-sync-quick run-host-mk-dirs run-host-render-templates
+run-repo-build-vm-all: run-repo-build-vm-base run-repo-build-vm
 #[⫶] wrappers
 
 #[…] commands
 run-host-upsert-configs:
-	@$(PRETTY) sudo $(CI_SCRIPTS)/s-rt-upsert-configs
+	@sudo $(PRETTY) s-rt-upsert-configs
 
 run-host-delete-broken-links:
-	@$(PRETTY) sudo $(CI_SCRIPTS)/s-rt-delete-broken-links
+	@sudo $(PRETTY) s-rt-delete-broken-links
 
 run-host-mk-dirs:
-	@$(PRETTY) sudo $(CI_SCRIPTS)/s-rt-mk-dirs
+	@sudo $(PRETTY) s-rt-mk-dirs
 
 run-host-render-templates:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-host
@@ -51,8 +55,20 @@ run-host-install-all:
 run-host-restart-services:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-restart-services
 
-#[≟] provision a throwaway macOS Tart vm and run the full bootstrap
-run-vm-test:
-	@$(PRETTY) $(CI_SCRIPTS)/s-rt-vm-test
+#[…] vm
+run-repo-build-vm-base:
+	@$(PRETTY) ./ci/local/vm/build-vm.zsh configs-base
+
+run-repo-build-vm:
+	@$(PRETTY) ./ci/local/vm/build-vm.zsh configs
+
+run-repo-ssh-vm:
+	@./ci/local/vm/ssh-vm.zsh
+
+run-repo-test-vm: run-repo-build-vm
+	@$(IN_VM) run-host-upsert-configs
+	@$(IN_VM) run-host-mk-dirs
+	@$(IN_VM) run-host-install-all
+#[⫶] vm
 
 #[⫶] commands

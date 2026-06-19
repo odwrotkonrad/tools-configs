@@ -1,6 +1,6 @@
 tap "azure/azure-cli"
 tap "cirruslabs/cli"
-tap "esolitos/ipa" #[≟] 🤖🤖🤖
+tap "hashicorp/tap" #[≟] 🤖🤖
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
 # Library for command-line editing
@@ -83,12 +83,12 @@ brew "ruby", link: false
 brew "shellcheck"
 # Simple keystroke visualizer
 brew "showkey"
-# Non-interactive ssh password auth (for vm-test against vanilla images)
-brew "esolitos/ipa/sshpass" #[≟] 🤖🤖🤖
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
 # Create, run and manage macOS and Linux VMs on Apple Silicon
 brew "cirruslabs/cli/tart"
+# Tool to build identical machine images for multiple platforms (bake the SIP-off vm base)
+brew "hashicorp/tap/packer" #[≟] 🤖🤖
 # Tool Command Language
 brew "tcl-tk"
 # Terminal multiplexer
