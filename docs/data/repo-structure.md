@@ -12,6 +12,7 @@ docs
     images
     recordings
   data
+  keybindings
   prose
     commenting-convention
     description

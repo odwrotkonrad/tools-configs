@@ -125,6 +125,7 @@
   "editor.find.autoFindInSelection": "never",
   "editor.find.loop": false,
   "editor.folding": false,
+  "editor.stickyScroll.enabled": false,
   "editor.fontFamily": "'JetBrains Mono'",
   "editor.fontSize": 12,
   "editor.formatOnSave": false,
@@ -132,7 +133,7 @@
   "editor.guides.highlightActiveIndentation": false,
   "editor.guides.indentation": false,
   "editor.hideCursorInOverviewRuler": false,
-  "editor.lineNumbers": "on",
+  "editor.lineNumbers": "off",
   "editor.minimap.enabled": false,
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
@@ -269,7 +270,7 @@
   "terminal.integrated.detectLocale": "off",
   "terminal.integrated.enableFileLinks": "notRemote",
   "terminal.integrated.enableMultiLinePasteWarning": "never",
-  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.enablePersistentSessions": true,
   "terminal.integrated.environmentChangesRelaunch": false,
   "terminal.integrated.fastScrollSensitivity": 2,
   "terminal.integrated.fontFamily": "'CaskaydiaCove Nerd Font Mono'",
@@ -421,7 +422,6 @@
   //[…] other
   "chat.disableAIFeatures": true,
   "chat.agent.enabled": false,
-  "breadcrumbs.enabled": false,
   //[⫶] other
 
   //[…] per-language settings
