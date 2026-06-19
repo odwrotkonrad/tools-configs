@@ -14,5 +14,6 @@ typeset templates=$HOME/projects/configs/ci/local/vm-template
 # build base image
 tart stop configs-base 2>/dev/null || true
 tart delete configs-base 2>/dev/null || true
+packer init $templates/configs-base.pkr.hcl
 packer build $templates/configs-base.pkr.hcl
 #[⫶⫶] 🤖🤖
