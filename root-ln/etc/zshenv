@@ -7,6 +7,12 @@ export ZDOTDIR=${HOME}/.config/zsh #[why] so $ZDOTDIR/.zshenv (user config, PATH
 ##[>] env
 setopt allexport
 
+XDG_BIN_HOME="${HOME}/.local/bin"               #[what] xdg - bin recommendation
+XDG_CACHE_HOME="${HOME}/.cache"                 #[what] user-specific non-esseintial data
+XDG_CONFIG_HOME="${HOME}/.config"               #[what] user-specific configuration files
+XDG_DATA_HOME="${HOME}/.local/share"            #[what] user-specific data files
+XDG_LOCAL_HOME="${HOME}/.local"
+XDG_STATE_HOME="${HOME}/.local/state"           #[what] user-specific state data
 EDITOR='vim'
 VISUAL='vim'
 LANG='C.UTF-8'
