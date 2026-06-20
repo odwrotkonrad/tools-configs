@@ -7,7 +7,7 @@ autoload -Uz log-msg
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 
 typeset configs configs_owner home
-typeset -a dirs_user_space dirs_system_space dirs_system_space_world
+typeset -a dirs_user_space dirs_root_space dirs_system_space dirs_system_space_world
 
 function mk_dirs {
   local -a owner perms
@@ -29,12 +29,14 @@ home=/Users/${configs_owner%%:*}
 #[what] 🤖🤖 braces enumerate parents+children; empty element {,..} keeps the parent dir itself
 #[why] mk_dirs sorts (o) so parents precede children for plain mkdir (no -p)
 dirs_user_space=(
-  .cache{,/homebrew}
+  .cache{,/homebrew,/zsh}
   .config
   .local{,/bin,/share,/state,/state/asdf,/state/homebrew,/state/log,/state/vim,/state/vim/undo,/state/zsh,/state/zsh/completions} #[what] 🤖🤖
   ScreenCapture
 )
 dirs_user_space=( $home/${^dirs_user_space} )
+
+dirs_root_space=( /var/root/{.cache{,/zsh},.config,.local{,/bin,/share,/state{,/zsh{,/completions}}}} )
 
 dirs_system_space=(
   /var/log/{grafana,jaeger,loki,prometheus,dir_size_exporter,port_exporter,otelcol}
@@ -49,5 +51,6 @@ dirs_system_space_world=(
 
 # create dirs
 mk_dirs --owner $configs_owner $dirs_user_space
+mk_dirs --owner root:wheel $dirs_root_space
 mk_dirs --owner root:${configs_owner#*:} --perms 2775 $dirs_system_space
 mk_dirs --perms 1777 $dirs_system_space_world

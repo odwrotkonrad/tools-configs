@@ -24,6 +24,9 @@ function fn_preexec_dispatch {
 }
 add-zsh-hook preexec fn_preexec_dispatch
 
+add-zsh-hook chpwd  fn-rt-env-autoload
+add-zsh-hook precmd fn-rt-env-autoload
+
 ##[>] 🤖🤖 do not add cmds starting (after 0+ whitespace) with a histchars char to history
 function zshaddhistory {
   emulate -L zsh

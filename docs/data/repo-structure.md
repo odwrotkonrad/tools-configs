@@ -54,7 +54,6 @@ root-ln
             ko-git-mr-upsert
             ko-git-upsert-all
           themes
-        direnv
         gcloud
           configurations
         git
