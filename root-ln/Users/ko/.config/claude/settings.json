@@ -104,5 +104,11 @@
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto"
+  "theme": "auto",
+  "statusLine": {
+    "type": "command",
+    "command": "ccstatusline",
+    "padding": 0,
+    "refreshInterval": 10
+  }
 }

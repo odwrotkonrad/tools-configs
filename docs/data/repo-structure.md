@@ -33,6 +33,7 @@ root-ln
         asdf
         aws
         azure
+        ccstatusline
         claude
           agent-memory
           agents

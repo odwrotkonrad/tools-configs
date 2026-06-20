@@ -16,6 +16,7 @@ Optimized for a reader, future reference and not frequent, regular software upda
 Tool -> primary config file.
 ```yaml
 ##[>] primary
+ccstatusline: root-ln/Users/ko/.config/ccstatusline/settings.json
 claude: root-ln/Users/ko/.config/claude/settings.json
 defaults: root-ln/etc/defaults.yml
 duti: root-ln/etc/custom/os-open-files-with.yml
