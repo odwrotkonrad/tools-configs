@@ -1,7 +1,7 @@
 #!/bin/zsh
-#>[≟]
+#>[what]
 #   install aws cli v2 per os/arch via is-os/is-arch predicates
-#/[≟]
+#/[what]
 
 emulate -LR zsh
 setopt errexit

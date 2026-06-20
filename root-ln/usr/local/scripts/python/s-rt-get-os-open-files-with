@@ -32,7 +32,7 @@ from s_rt_scripts_lib import errors as lib_err
 from s_rt_scripts_lib import input as lib_input
 from s_rt_scripts_lib import parameters as lib_param
 
-# […] types
+##[>] types
 type UtiStr = str
 """a uniform type identifier (e.g. `public.python-script`, `com.adobe.pdf`)."""
 
@@ -44,10 +44,10 @@ type ApplicationStr = str
 
 type RolesDict = dict[RoleStr, list[UtiStr]]
 type AppsDict = dict[ApplicationStr, RolesDict]
-# [⫶] types
+##[<] types
 
 
-# […] contract
+##[>] contract
 class Action(lib_param.BaseAction):
     USAGE = lib_param.USAGE
     GET_OPEN_FILES_WITH = "get-open-files-with"
@@ -78,10 +78,10 @@ class Input(lib_input.BaseInput):
     config: Config = Config.model_construct()
 
 
-# [⫶] contract
+##[<] contract
 
 
-# […] implementation
+##[>] implementation
 def get_open_files_with(
     apps: AppsDict,
 ) -> tuple[str | None, lib_err.Error | None]:
@@ -95,14 +95,14 @@ def get_open_files_with(
     return "\n".join(lines), None
 
 
-# [⫶] implementation
+##[<] implementation
 
 
-# […] main
+##[>] main
 def main(
     input: Input,
 ) -> tuple[str | None, lib_err.Error | None]:
-    """[≟] Dispatch the resolved action to its handler."""
+    """[what] Dispatch the resolved action to its handler."""
     match input.params.action:
         case Action.USAGE:
             return lib_input.usage(__doc__), None
@@ -121,4 +121,4 @@ if __name__ == "__main__":
                 print(lib_err.Errors.message(err), file=sys.stderr)
                 sys.exit(err.code)
             print(out)
-# [⫶] main
+##[<] main

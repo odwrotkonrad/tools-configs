@@ -1,16 +1,16 @@
-#[≟] 2nd file sourced after /etc/zshenv
+#[what] 2nd file sourced after /etc/zshenv
 
-#[……] env
+##[>] env
 setopt allexport
 
-#[…] xdg
-XDG_BIN_HOME="${HOME}/.local/bin"               #[≟] xdg - bin recommendation
-XDG_CACHE_HOME="${HOME}/.cache"                 #[≟] user-specific non-esseintial data
-XDG_CONFIG_HOME="${HOME}/.config"               #[≟] user-specific configuration files
-XDG_DATA_HOME="${HOME}/.local/share"            #[≟] user-specific data files
+###[>] xdg
+XDG_BIN_HOME="${HOME}/.local/bin"               #[what] xdg - bin recommendation
+XDG_CACHE_HOME="${HOME}/.cache"                 #[what] user-specific non-esseintial data
+XDG_CONFIG_HOME="${HOME}/.config"               #[what] user-specific configuration files
+XDG_DATA_HOME="${HOME}/.local/share"            #[what] user-specific data files
 XDG_LOCAL_HOME="${HOME}/.local"
-XDG_STATE_HOME="${HOME}/.local/state"           #[≟] user-specific state data
-#[⫶] xdg
+XDG_STATE_HOME="${HOME}/.local/state"           #[what] user-specific state data
+###[<] xdg
 
 ASDF_CONFIG_FILE="${XDG_CONFIG_HOME}/asdf/.asdfrc"
 ASDF_DATA_DIR="${XDG_STATE_HOME}/asdf"
@@ -23,7 +23,7 @@ PYENV_ROOT="${HOME}/.pyenv"
 PYTHONPATH="/usr/local/scripts/python"
 
 unsetopt allexport
-#[⫶⫶] env
+##[<] env
 
 typeset -a bins=(
     ${XDG_BIN_HOME}

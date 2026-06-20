@@ -42,7 +42,7 @@ from s_rt_scripts_lib import input as lib_input
 from s_rt_scripts_lib import parameters as lib_param
 import yaml
 
-# [……] 🤖🤖
+##[>] 🤖🤖
 CACHE_DIR = Path(
     os.environ.get(
         "LINGUIST_CACHE_DIR", "/var/custom/cache/s-rt-get-term-open-files-with"
@@ -54,7 +54,7 @@ LANGUAGES_URL = (
 )
 
 
-# […] types
+###[>] types
 type LanguageCategoryStr = str
 """a language family bucket (e.g. `programming`, `prose`)."""
 
@@ -86,10 +86,10 @@ class OpenerRule(BaseModel):
 
 type SectionsDict = dict[SectionNameStr, list[OpenerRule]]
 """the terminal config mapping: each section -> its opener rules."""
-# [⫶] types
+###[<] types
 
 
-# […] contract
+###[>] contract
 class Action(lib_param.BaseAction):
     USAGE = lib_param.USAGE
     GET_OPEN_FILES_WITH = "get-open-files-with"
@@ -135,10 +135,10 @@ class Input(lib_input.BaseInput):
     config: Config = Config.model_construct()
 
 
-# [⫶] contract
+###[<] contract
 
 
-# […] implementation
+###[>] implementation
 def fetch_languages() -> tuple[str | None, lib_err.Error | None]:
     """Return the language→extensions data, downloading to the cache if absent.
 
@@ -211,14 +211,14 @@ def get_open_files_with(
     return "\n".join(f"{ext}={opener}" for ext, opener in aliases.items()), None
 
 
-# [⫶] implementation
+###[<] implementation
 
 
-# […] main
+###[>] main
 def main(
     input: Input,
 ) -> tuple[str | None, lib_err.Error | None]:
-    """[≟] Dispatch the resolved action to its handler."""
+    """[what] Dispatch the resolved action to its handler."""
     match input.params.action:
         case Action.USAGE:
             return lib_input.usage(__doc__), None
@@ -239,5 +239,5 @@ if __name__ == "__main__":
                 print(lib_err.Errors.message(err), file=sys.stderr)
                 sys.exit(err.code)
             print(out)
-# [⫶] main
-# [⫶⫶] 🤖🤖
+###[<] main
+##[<] 🤖🤖

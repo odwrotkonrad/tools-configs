@@ -1,6 +1,6 @@
-#[≟] short helper functions, defined inline and loaded eagerly for every shell
+#[what] short helper functions, defined inline and loaded eagerly for every shell
 
-#[…] predicates
+##[>] predicates
 is-os() {
   typeset os_name=$(uname -s)
   case ${1} {
@@ -24,4 +24,4 @@ is-terminal() {
     (*) return 2 ;;
   }
 }
-#[⫶] predicates
+##[<] predicates

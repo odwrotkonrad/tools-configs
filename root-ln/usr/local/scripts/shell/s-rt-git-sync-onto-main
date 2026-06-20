@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-#>[≟] 🤖🤖
+#>[what] 🤖🤖
 #   Sync the working branch with main. Autostashes a dirty tree.
 #   on main: fast-forward from origin.
 #   on a branch:
@@ -10,9 +10,9 @@
 #   Usage: s-rt-git-sync-onto-main
 #   Downstream: git, origin.
 #   Exit Codes: 22 rebase conflicts · 23 already merged (switched to main)
-#/[≟] 🤖🤖
+#/[what] 🤖🤖
 
-#[…] 🤖🤖
+##[>] 🤖🤖
 emulate -LR zsh
 set -e
 
@@ -39,4 +39,4 @@ if ! git rebase --autostash main; then
   git diff --name-only --diff-filter=U | sed 's/^/  /' >&2
   exit-with 22 "resolve conflicts, then \`git rebase --continue\` (or \`--abort\`)"
 fi
-#[⫶] 🤖🤖
+##[<] 🤖🤖

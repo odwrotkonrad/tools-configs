@@ -1,4 +1,4 @@
-#[≟] 6th zsh file sourced, after /etc/zshrc; only for interactive shells
+#[what] 6th zsh file sourced, after /etc/zshrc; only for interactive shells
 
 typeset -a funcs=(
     ${XDG_CONFIG_HOME}/zsh/zshrc.d/{functions,completions}

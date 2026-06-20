@@ -1,4 +1,4 @@
-#[⌖] $ man git-config
+#[where] $ man git-config
 
 [advice]
 	statusHints = false

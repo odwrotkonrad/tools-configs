@@ -1,6 +1,6 @@
-#>[⌖]
+#>[where]
 # https://prometheus.io/docs/prometheus/latest/configuration/configuration/
-#/[⌖]
+#/[where]
 
 global:
   scrape_interval: 15s

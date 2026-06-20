@@ -1,13 +1,13 @@
 #!/usr/bin/env zsh
-#>[≟] 🤖🤖
+#>[what] 🤖🤖
 #   Read a file with a leading --- YAML frontmatter block and print a YAML doc
 #   exposing both halves: `frontmatter:` (the parsed header, verbatim) and
 #   `body:` (the remaining content as a literal block scalar).
 #   Usage: s-rt-read-with-frontmatter <file>
 #   Upstream: gomplate `readWithFrontmatter` plugin. Downstream: <file>.
-#/[≟] 🤖🤖
+#/[what] 🤖🤖
 
-#[…] 🤖🤖
+##[>] 🤖🤖
 emulate -LR zsh
 setopt err_return
 
@@ -21,4 +21,4 @@ print -r -- "frontmatter:"
 print -r -- "$front" | sed 's/^/  /'
 print -r -- "body: |"
 print -r -- "$body" | sed 's/^/  /'
-#[⫶] 🤖🤖
+##[<] 🤖🤖

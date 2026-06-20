@@ -1,23 +1,23 @@
 #!/bin/zsh
-#>[≟]
+#>[what]
 #   install everything the package managers manage, in order:
 #   taps, casks, brew formulae, asdf, pyenv+pip, gem, go, npm, vscode (last).
-#   parses /etc/homebrew/Brewfile by type #[∵] brew bundle can't order by type, and
+#   parses /etc/homebrew/Brewfile by type #[why] brew bundle can't order by type, and
 #   ignores our custom go/npm directives.
-#/[≟]
+#/[what]
 
 emulate -LR zsh
 setopt errexit pipefail
 
-#[……] 🤖🤖🤖
-#[…] read Brewfile entries by type #[∵] zsh-native, no rg (not installed yet at this point)
+##[>] 🤖🤖🤖
+###[>] read Brewfile entries by type #[why] zsh-native, no rg (not installed yet at this point)
 typeset brewfile=/etc/homebrew/Brewfile
 typeset -a brewfile_lines=( ${(f)"$(<$brewfile)"} )
 entries() {
   local line prefix="$1 \""
   for line ( $brewfile_lines ) {
     [[ $line == ${prefix}* ]] || continue
-    print -r -- ${${line#$prefix}%%\"*}  #[≟] strip `<type> "` prefix and trailing quote (+opts)
+    print -r -- ${${line#$prefix}%%\"*}  #[what] strip `<type> "` prefix and trailing quote (+opts)
   }
 }
 typeset -a taps=( ${(f)"$(entries tap)"} )
@@ -26,17 +26,17 @@ typeset -a formulae=( ${(f)"$(entries brew)"} )
 typeset -a go_pkgs=( ${(f)"$(entries go)"} )
 typeset -a npm_pkgs=( ${(f)"$(entries npm)"} )
 typeset -a vscode_exts=( ${(f)"$(entries vscode)"} )
-#[⫶]
+###[<]
 
-#[…] taps, then casks, then formulae
+###[>] taps, then casks, then formulae
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
 for t ( $taps ) brew tap $t
 (( $#casks )) && brew install --cask $casks
 (( $#formulae )) && brew install $formulae
-#[⫶]
+###[<]
 
-#[…] asdf plugins + tool versions from .tool-versions
+###[>] asdf plugins + tool versions from .tool-versions
 typeset -A plugins=(
   terraform https://github.com/asdf-community/asdf-hashicorp.git
   kubectl   https://github.com/asdf-community/asdf-kubectl.git
@@ -45,28 +45,28 @@ typeset -A plugins=(
 )
 for name url ( ${(kv)plugins} ) asdf plugin add $name $url
 asdf install
-#[⫶]
+###[<]
 
-#[…] python via pyenv #[∵] provides pip; -s skips if already installed
+###[>] python via pyenv #[why] provides pip; -s skips if already installed
 pyenv install -s 3.14.5
 pyenv global 3.14.5
-eval "$(pyenv init - zsh)" #[∵] activate shims in this non-interactive shell
-#[⫶]
+eval "$(pyenv init - zsh)" #[why] activate shims in this non-interactive shell
+###[<]
 
-#[…] language-level packages
+###[>] language-level packages
 pip install -r /etc/python/requirements.txt
 gem install ruby-lsp
-#[⫶]
+###[<]
 
-#[…] go
+###[>] go
 for pkg ( $go_pkgs ) go install $pkg@latest
-#[⫶]
+###[<]
 
-#[…] npm
+###[>] npm
 (( $#npm_pkgs )) && npm install -g $npm_pkgs
-#[⫶]
+###[<]
 
-#[…] vscode extensions last #[∵] need the code cli (from the editor) present
+###[>] vscode extensions last #[why] need the code cli (from the editor) present
 for ext ( $vscode_exts ) code --install-extension $ext --force
-#[⫶]
-#[⫶⫶] 🤖
+###[<]
+##[<] 🤖

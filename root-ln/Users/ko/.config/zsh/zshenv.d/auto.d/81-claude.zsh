@@ -1,13 +1,13 @@
-#[≟] config for claude spawned shells only
+#[what] config for claude spawned shells only
 
 if (( ! ${+CLAUDECODE})) return 0
 
 
-#[≟] let > overwrite (no noclobber prompts) 🤖
+#[what] let > overwrite (no noclobber prompts) 🤖
 setopt clobber
 
 
-#[≟] render manpage as plain text
+#[what] render manpage as plain text
 function man {
   mandoc -T utf8 -O indent=0 "$(/usr/bin/man -w "$@")" \
     | col -bx \

@@ -1,19 +1,19 @@
-#[⌖] $ man 1 direnv.toml
+#[where] $ man 1 direnv.toml
 
 [global]
-#[≟] enable .env loading, not just .envrc
+#[what] enable .env loading, not just .envrc
 load_dotenv = true
 
-#[≟] .envrc file loading must succeed, otherwise fire error
+#[what] .envrc file loading must succeed, otherwise fire error
 strict_env = true
 
-#[≟] fire warning if .envrc loading is slow
+#[what] fire warning if .envrc loading is slow
 warn_timeout = "300ms"
 
-#[≟]  hide the "export +VAR" diff line on directory entry
+#[what]  hide the "export +VAR" diff line on directory entry
 hide_env_diff = true
 
 [whitelist]
 
-#[≟] trust projects having the prefix without asking
+#[what] trust projects having the prefix without asking
 prefix = ["~/projects/ko"]

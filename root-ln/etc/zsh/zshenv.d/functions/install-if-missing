@@ -1,4 +1,4 @@
-#[≟] install-if-missing <cmd> <installer-fn>: skip+log if cmd present, else log+run+log
+#[what] install-if-missing <cmd> <installer-fn>: skip+log if cmd present, else log+run+log
 
 function install-if-missing {
   emulate -LR zsh

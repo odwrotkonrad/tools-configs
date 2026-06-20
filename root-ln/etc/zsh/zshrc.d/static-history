@@ -1,23 +1,23 @@
-#[…] brew [≟] The Missing Package Manager for macOS (or Linux)
-brew list                #[≟] list all packages installed
-brew update              #[≟] update remotes
-brew upgrade             #[≟] install upgrades
-brew install             #[≟] install from brewfile
-brew install wget        #[≟] install pkg
-brew bundle add wget     #[≟] add pkg to Brewfile
-brew bundle remove wget  #[≟] remove pkg from Brewfile
-#[⫶] brew
+##[>] brew [what] The Missing Package Manager for macOS (or Linux)
+brew list                #[what] list all packages installed
+brew update              #[what] update remotes
+brew upgrade             #[what] install upgrades
+brew install             #[what] install from brewfile
+brew install wget        #[what] install pkg
+brew bundle add wget     #[what] add pkg to Brewfile
+brew bundle remove wget  #[what] remove pkg from Brewfile
+##[<] brew
 
-#[…] aws
-aws sso login --sso-session ko-org   #[≟] authorize the ko-org sso session
+##[>] aws
+aws sso login --sso-session ko-org   #[what] authorize the ko-org sso session
 aws configure list
 aws configure list-profiles
 aws s3 ls --profile ko-staging
-export AWS_PROFILE=ko-staging        #[≟] set default profile to named profile
+export AWS_PROFILE=ko-staging        #[what] set default profile to named profile
 aws s3 ls s3://ko-backups
-#[⫶] aws
+##[<] aws
 
-#[…] gcloud - google cloud cli […] 🤖
+##[>] gcloud - google cloud cli 🤖
 gcloud auth login
 gcloud auth application-default login
 gcloud config configurations list
@@ -27,25 +27,25 @@ gcloud config configurations activate production
 gcloud config list
 gcloud storage buckets list
 gcloud storage objects list 'gs://ko-backups/**'
-#[⫶] gcloud [⫶] 🤖
+##[<] gcloud 🤖
 
-#[…] azure - azure cli
+##[>] azure - azure cli
 az login
-az account list                                          #[≟] list subscriptions
-az account set --subscription "Azure subscription 1"     #[≟] switch active subscription
-az storage container list --account-name backupsko --auth-mode login  #[∵] kobackups was taken, storage account names are globally unique
-#[⫶] azure
+az account list                                          #[what] list subscriptions
+az account set --subscription "Azure subscription 1"     #[what] switch active subscription
+az storage container list --account-name backupsko --auth-mode login  #[why] kobackups was taken, storage account names are globally unique
+##[<] azure
 
-#[…] defaults [≟] access the macOS user defaults system
+##[>] defaults [what] access the macOS user defaults system
 defaults delete com.apple.dock "autohide"
 defaults read com.apple.dock
 defaults read | rg --only-matching  'com.apple[.\w]+' - | sort | uniq
 defaults find com.apple.dock
 defaults write com.apple.dock "autohide" -bool "false"
-#[⫶] defaults
+##[<] defaults
 
-#[…] git [≟] the stupid content tracker
-git stash                       #[≟] stash tracked files
+##[>] git [what] the stupid content tracker
+git stash                       #[what] stash tracked files
 git add .
 git commit
 git push
@@ -53,44 +53,44 @@ git push --force-with-lease
 git status
 git stash pop
 git stash show
-#[⫶] git
+##[<] git
 
-#[…] kitten [≟] kitty's CLI utility
-kitten themes                   #[≟] interactive theme selection
-#[⫶] kitten
+##[>] kitten [what] kitty's CLI utility
+kitten themes                   #[what] interactive theme selection
+##[<] kitten
 
-#[…] launchctl [≟] Interfaces with launchd
-#[≟] -k - if service is running remove it and start again
-launchctl bootstrap gui/$(id -u) /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist  #[≟] load service
-launchctl bootout gui/$(id -u)/d-ko-load-defaults-config                                         #[≟] unload service
-launchctl kickstart -k gui/$(id -u)/d-ko-load-defaults-config                                    #[≟] run service
-launchctl list                                                                                      #[≟] list all services
-launchctl print gui/$(id -u)/d-ko-load-defaults-config                                           #[≟] show details of a service
-#[⫶] launchctl
+##[>] launchctl [what] Interfaces with launchd
+#[what] -k - if service is running remove it and start again
+launchctl bootstrap gui/$(id -u) /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist  #[what] load service
+launchctl bootout gui/$(id -u)/d-ko-load-defaults-config                                         #[what] unload service
+launchctl kickstart -k gui/$(id -u)/d-ko-load-defaults-config                                    #[what] run service
+launchctl list                                                                                      #[what] list all services
+launchctl print gui/$(id -u)/d-ko-load-defaults-config                                           #[what] show details of a service
+##[<] launchctl
 
-#[…] plutil [≟] property list utility
-#[≟] -p - pretty print
-plutil -p  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                        #[≟] print plist
-plutil -lint  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                     #[≟] lint plist
-plutil -convert json /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to json
-plutil -convert xml1 /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[≟] plist to xml (from various formats)
-#[⫶] plutil
+##[>] plutil [what] property list utility
+#[what] -p - pretty print
+plutil -p  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                        #[what] print plist
+plutil -lint  /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist                     #[what] lint plist
+plutil -convert json /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[what] plist to json
+plutil -convert xml1 /Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist              #[what] plist to xml (from various formats)
+##[<] plutil
 
-#[……] zsh builtins
-#[…] emulate
-emulate -R zsh  #[≟] reset shell opts to defaults for current shell
-emulate -L zsh  #[≟] set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
-#[⫶] emulate
+##[>] zsh builtins
+###[>] emulate
+emulate -R zsh  #[what] reset shell opts to defaults for current shell
+emulate -L zsh  #[what] set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
+###[<] emulate
 
-#[…] setopt
-setopt          #[≟] show all enabled shell options
-unsetopt        #[≟] show all disabled shell options
-set -o          #[≟] show all shell options with on/off status
-#[⫶] setopt
+###[>] setopt
+setopt          #[what] show all enabled shell options
+unsetopt        #[what] show all disabled shell options
+set -o          #[what] show all shell options with on/off status
+###[<] setopt
 
-exec zsh     #[≟] reload config by replacing current process (no nested shell); re-runs full startup chain
-#[⫶⫶] zsh builtins
+exec zsh     #[what] reload config by replacing current process (no nested shell); re-runs full startup chain
+##[<] zsh builtins
 
-#[…] other
+##[>] other
 logcli query --quiet --limit=2 '{service_name="claude-code"}'
 python -m pip install -r /etc/python/requirements.txt

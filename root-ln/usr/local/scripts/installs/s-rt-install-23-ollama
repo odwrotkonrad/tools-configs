@@ -14,11 +14,11 @@ function install_ollama {
 }
 install-if-missing ollama install_ollama
 
-# #[≟] 🤖🤖 ensure server is up #[∵] `ollama pull` needs it; headless has no launchd/app daemon
+# #[what] 🤖🤖 ensure server is up #[why] `ollama pull` needs it; headless has no launchd/app daemon
 # if { ! ollama ps >/dev/null 2>&1 } {
 #   ollama serve >/dev/null 2>&1 &
 #   until ollama ps >/dev/null 2>&1; do sleep 1; done
 # }
 #
-# #[≟] always pull models (idempotent)
+# #[what] always pull models (idempotent)
 # for model ( $models ) ollama pull $model

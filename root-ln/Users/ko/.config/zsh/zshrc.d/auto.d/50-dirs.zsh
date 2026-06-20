@@ -1,4 +1,4 @@
-#[≟] set shortcuts for accessing directories e.g. ~x_bin -> $XDG_BIN_HOME
+#[what] set shortcuts for accessing directories e.g. ~x_bin -> $XDG_BIN_HOME
 
 hash -d x_bin="${XDG_BIN_HOME}" \
         x_cache="${XDG_CACHE_HOME}" \

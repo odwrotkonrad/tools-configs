@@ -1,4 +1,4 @@
-<!--[…] 🤖 -->
+<!-- ##[>] 🤖 -->
 ## Comments
 
 ### 🤖 Mark AI-Generated Code
@@ -16,10 +16,10 @@ Lower confidence → more 🤖. Match count to attention wanted.
 Before writing/editing ANY file, check marked; if not, add. Catch an unmarked block → mark immediately, unasked.
 
 ```sh
-#[…] 🤖🤖
+##[>] 🤖🤖
 foo_a=1
 foo_b=2
-#[⫶] 🤖🤖
+##[<] 🤖🤖
 ```
 When in doubt: MARK IT.
 

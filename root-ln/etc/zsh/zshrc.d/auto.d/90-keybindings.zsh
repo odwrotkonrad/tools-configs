@@ -1,7 +1,7 @@
-#>[⌖]
-# root-ln/Users/ko/.config/kitty/kitty.conf                                #[≟] keystroke producer
-# root-ln/Users/ko/Library/Application Support/Code/User/keybindings.json  #[≟] keystroke producer
-#/[⌖]
+#>[where]
+# root-ln/Users/ko/.config/kitty/kitty.conf                                #[what] keystroke producer
+# root-ln/Users/ko/Library/Application Support/Code/User/keybindings.json  #[what] keystroke producer
+#/[where]
 
 typeset -A keystrokes=(
     bracketedPaste     "${rt_seq[csi]}200~"
@@ -47,8 +47,8 @@ typeset -A keystrokes=(
 )
 
 
-#[…] stty [⌖] man stty [≟] set the options for a terminal device interface
-#[⌖] stty -a # source of cchars
+##[>] stty [where] man stty [what] set the options for a terminal device interface
+#[where] stty -a # source of cchars
 typeset -a disabled_cchars=(
     start
     stop
@@ -56,20 +56,20 @@ typeset -a disabled_cchars=(
 for cchar in ${disabled_cchars}; stty ${cchar} undef
 
 typeset -A cchars=(
-    susp    "$keystrokes[ctrlZ]"            #[≟] Process Suspend (SIGTSTP)
-    quit    "$keystrokes[ctrlBackslash]"    #[≟] Process Quit + core dump (SIGQUIT)
-    intr    "$keystrokes[ctrlC]"            #[≟] Process Interrupt (SIGINT)
-    status  "$keystrokes[ctrlT]"            #[≟] Process Status (SIGINFO)
-    lnext   "$keystrokes[ctrlV]"            #[≟] Literal Next, listen next key sequence verbatim
-    kill    "$keystrokes[ctrlX]"            #[≟] cut the whole input line
-    erase   "$keystrokes[backspace]"        #[≟] backspace, remove last char
-    werase  "$keystrokes[altBackspace]"     #[≟] alt+backspace, remove last word
+    susp    "$keystrokes[ctrlZ]"            #[what] Process Suspend (SIGTSTP)
+    quit    "$keystrokes[ctrlBackslash]"    #[what] Process Quit + core dump (SIGQUIT)
+    intr    "$keystrokes[ctrlC]"            #[what] Process Interrupt (SIGINT)
+    status  "$keystrokes[ctrlT]"            #[what] Process Status (SIGINFO)
+    lnext   "$keystrokes[ctrlV]"            #[what] Literal Next, listen next key sequence verbatim
+    kill    "$keystrokes[ctrlX]"            #[what] cut the whole input line
+    erase   "$keystrokes[backspace]"        #[what] backspace, remove last char
+    werase  "$keystrokes[altBackspace]"     #[what] alt+backspace, remove last word
 )
 for action char in ${(kv)cchars}; stty ${action} ${char}
-#[⫶] stty
+##[<] stty
 
 
-#[…] zshzle #[⌖] man zshzle > bindkey
+##[>] zshzle #[where] man zshzle > bindkey
 bindkey -N key_map
 bindkey -M key_map -R "^@"-"~" self-insert
 
@@ -113,4 +113,4 @@ typeset -A keystrokes_widgets=(
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
-#[⫶] zshzle
+##[<] zshzle

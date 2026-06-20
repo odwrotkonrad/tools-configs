@@ -4,7 +4,7 @@ paths:
   - "/usr/local/scripts/python/**"
 ---
 
-<!--[…] 🤖🤖 -->
+<!-- ##[>] 🤖🤖 -->
 ## Python Scripts
 
 - Output results to stdout.
@@ -49,12 +49,12 @@ paths:
 ### Structure
 
 - Reuse `s_rt_scripts_lib`: `BaseInput`/`usage`, `BaseParameters`/`BaseAction`/`Pattern`, `ScriptBaseOptions`, `BaseConfig`.
-- Divide body into labeled `# […] name` / `# [⫶]` sections, in order:
-  1. `# […] errors` — domain codes + `MESSAGES` (omit if none).
-  2. `# […] types` — `type X = base` aliases.
-  3. `# […] contract` — pydantic models: `Action`, `Arguments`/`Options`, `Parameters`, `Config`.
-  4. `# […] implementation` — handlers + helpers, before `main`.
-  5. `# […] main` — `main` then `if __name__ == "__main__"` gate, last.
+- Divide body into labeled `##[>] name` / `##[<]` sections, in order:
+  1. `##[>] errors` — domain codes + `MESSAGES` (omit if none).
+  2. `##[>] types` — `type X = base` aliases.
+  3. `##[>] contract` — pydantic models: `Action`, `Arguments`/`Options`, `Parameters`, `Config`.
+  4. `##[>] implementation` — handlers + helpers, before `main`.
+  5. `##[>] main` — `main` then `if __name__ == "__main__"` gate, last.
 - Make `main(input)` pure dispatch: `match input.params.action`, each action → its own function.
 - Keep the `main` pipeline flat (input-to-output path).
 - Make every function return `(output, Error | None)`; `main` returns the action's resolved tuple.
@@ -99,21 +99,21 @@ from s_rt_scripts_lib import errors as lib_err
 from s_rt_scripts_lib import input as lib_input
 from s_rt_scripts_lib import parameters as lib_param
 
-# […] errors
+##[>] errors
 class Errors(lib_err.Errors):
     NO_ENTRY = 21
     MESSAGES = lib_err.Errors.MESSAGES | {NO_ENTRY: "entry not found: {entry}"}
-# [⫶] errors
+##[<] errors
 
 
-# […] types
+##[>] types
 type GroupNameStr = str
 type EntryNameStr = str
 type EntryStr = str
-# [⫶] types
+##[<] types
 
 
-# […] contract
+##[>] contract
 class Action(lib_param.BaseAction):
     GET = "get"
 
@@ -150,10 +150,10 @@ class Input(lib_input.BaseInput):
 
     params: Parameters
     config: Config | None = None
-# [⫶] contract
+##[<] contract
 
 
-# […] implementation
+##[>] implementation
 def get(
     entry: EntryNameStr, entries: dict[EntryNameStr, EntryStr]
 ) -> tuple[EntryStr | None, lib_err.Error | None]:
@@ -161,12 +161,12 @@ def get(
     if entry not in entries:
         return None, lib_err.Error(Errors.NO_ENTRY, entry=entry)
     return entries[entry], None
-# [⫶] implementation
+##[<] implementation
 
 
-# […] main
+##[>] main
 def main(input: Input) -> tuple[str | None, lib_err.Error | None]:
-    """[≟] Dispatch the resolved action to its handler."""
+    """[what] Dispatch the resolved action to its handler."""
     match input.params.action:
         case Action.USAGE:
             return lib_input.usage(__doc__), None
@@ -182,18 +182,18 @@ if __name__ == "__main__":
         print(Errors.message(error), file=sys.stderr)
         sys.exit(error.code)
     print(out)
-# [⫶] main
+##[<] main
 ```
 
 ## Testing
 
 - Test every script under `tests/scripts/python/<script-name>/`.
 - Declare cases as data in a sibling `cases.yml`: `name`, `input`/`args`, expected `exit`, expected `stdout` (fixture filename) or `stderr`.
-- Group cases into `#[…] positive` / `#[…] error` sections.
+- Group cases into `##[>] positive` / `##[>] error` sections.
 - Load with `load_cases`, drive one parametrized `test_case` via `@cases(...)` (ids from `name`).
 - Reuse `s_rt_scripts_test_lib`: `load_cases`/`cases`, `run`, `match_line`.
 - Reuse shared `test_show_usage` (asserts `--help`/`-h` prints docstring, exits `0`).
 - Wrap expected `stderr`/`stdout` in `/.../ ` for regex (via `match_line`); bare string matches exactly.
 - Prefer fixture files under `fixture/` (staged into `tmp_path` per case).
 - Keep cases in `cases.yml`, not the test body.
-<!--[⫶] 🤖🤖 -->
+<!-- ##[<] 🤖🤖 -->

@@ -1,58 +1,58 @@
 domains:
   NSGlobalDomain:
-    AppleShowAllExtensions: true #[≟] do not hide file extensions e.g. Google Chrome -> Google Chrome.app
-    NSTableViewDefaultSizeMode: 3 #[≟] increase size of TableView, e.g. in Finder it's the favourites and locations left bar
-    AppleSpacesSwitchOnActivate: true #[≟] when activating an app, switch to the space where its window is open instead of pulling it to the current space
+    AppleShowAllExtensions: true #[what] do not hide file extensions e.g. Google Chrome -> Google Chrome.app
+    NSTableViewDefaultSizeMode: 3 #[what] increase size of TableView, e.g. in Finder it's the favourites and locations left bar
+    AppleSpacesSwitchOnActivate: true #[what] when activating an app, switch to the space where its window is open instead of pulling it to the current space
 
   com.apple.dock:
-    orientation: right #[≟] place the dock on the right
-    tilesize: 40 #[≟] size of the dock
-    autohide: true #[≟] toggle auto-hiding dock
-    autohide-delay: null #[≟] delay time for hiding dock
-    autohide-time-modifier: null #[≟] delay time for showing dock
-    show-recents: false #[≟] recently closed apps won't show in the dock
-    mineffect: genie #[≟] effect when minimizing an app
-    static-only: false #[≟] show running apps alongside pinned ones, not only running apps
-    scroll-to-open: true #[≟] scrolling up on a dock icon opens exposé for that app
-    expose-group-apps: true #[≟] group apps together in mission control
+    orientation: right #[what] place the dock on the right
+    tilesize: 40 #[what] size of the dock
+    autohide: true #[what] toggle auto-hiding dock
+    autohide-delay: null #[what] delay time for hiding dock
+    autohide-time-modifier: null #[what] delay time for showing dock
+    show-recents: false #[what] recently closed apps won't show in the dock
+    mineffect: genie #[what] effect when minimizing an app
+    static-only: false #[what] show running apps alongside pinned ones, not only running apps
+    scroll-to-open: true #[what] scrolling up on a dock icon opens exposé for that app
+    expose-group-apps: true #[what] group apps together in mission control
 
   com.apple.screencapture:
-    disable-shadow: false #[≟] do not add a drop shadow around the window in window-capture screenshots
-    include-date: true #[≟] include the date and time in screenshot filenames
-    location: ~/ScreenCapture #[≟] save screenshots to ~/ScreenCapture instead of the desktop
-    show-thumbnail: true #[≟] show the floating thumbnail preview in the bottom-right corner after capturing
-    type: png #[≟] save screenshots in PNG format
+    disable-shadow: false #[what] do not add a drop shadow around the window in window-capture screenshots
+    include-date: true #[what] include the date and time in screenshot filenames
+    location: ~/ScreenCapture #[what] save screenshots to ~/ScreenCapture instead of the desktop
+    show-thumbnail: true #[what] show the floating thumbnail preview in the bottom-right corner after capturing
+    type: png #[what] save screenshots in PNG format
 
   com.apple.Safari:
-    ShowFullURLInSmartSearchField: true #[≟] show the full URL in the address bar instead of just the domain
+    ShowFullURLInSmartSearchField: true #[what] show the full URL in the address bar instead of just the domain
 
   com.apple.finder:
-    AppleShowAllFiles: true #[≟] show hidden files
-    ShowPathbar: true #[≟] show pathbar at the bottom
-    FXPreferredViewStyle: clmv #[≟] set default view to column view
-    _FXSortFoldersFirst: true #[≟] sort items with directories at the top
-    FinderSpawnTab: false #[≟] new directories are opened as windows
-    FXDefaultSearchScope: SCcf #[≟] when starting a search, use the currently opened directory as the search scope
-    FXRemoveOldTrashItems: false #[≟] disable auto-scheduled bin clearing
-    FXEnableExtensionChangeWarning: false #[≟] do not show warning when changing file extension
-    _FXEnableColumnAutoSizing: true #[≟] toggle dynamic column view with non-fixed width and non-fixed number of columns
-    ShowStatusBar: true #[≟] show status bar at the bottom with number of items and available space
-    CreateDesktop: true #[≟] whether to show items (dirs, hard drives, etc.) on the desktop at all
+    AppleShowAllFiles: true #[what] show hidden files
+    ShowPathbar: true #[what] show pathbar at the bottom
+    FXPreferredViewStyle: clmv #[what] set default view to column view
+    _FXSortFoldersFirst: true #[what] sort items with directories at the top
+    FinderSpawnTab: false #[what] new directories are opened as windows
+    FXDefaultSearchScope: SCcf #[what] when starting a search, use the currently opened directory as the search scope
+    FXRemoveOldTrashItems: false #[what] disable auto-scheduled bin clearing
+    FXEnableExtensionChangeWarning: false #[what] do not show warning when changing file extension
+    _FXEnableColumnAutoSizing: true #[what] toggle dynamic column view with non-fixed width and non-fixed number of columns
+    ShowStatusBar: true #[what] show status bar at the bottom with number of items and available space
+    CreateDesktop: true #[what] whether to show items (dirs, hard drives, etc.) on the desktop at all
     ShowHardDrivesOnDesktop: true
     ShowExternalHardDrivesOnDesktop: true
     ShowRemovableMediaOnDesktop: true
     ShowMountedServersOnDesktop: true
 
   com.apple.menuextra.clock:
-    IsAnalog: true #[≟] show clock as an analog clock
+    IsAnalog: true #[what] show clock as an analog clock
 
   kCFPreferencesAnyApplication:
-    TSMLanguageIndicatorEnabled: false #[≟] hide language indicator
+    TSMLanguageIndicatorEnabled: false #[what] hide language indicator
 
   com.apple.spaces:
-    spans-displays: true #[≟] toggle desktops spanning displays; changing desktop changes it on all displays
+    spans-displays: true #[what] toggle desktops spanning displays; changing desktop changes it on all displays
 
   com.apple.WindowManager:
-    StandardHideWidgets: true #[≟] hide widgets on desktop when desktop is not the main view
+    StandardHideWidgets: true #[what] hide widgets on desktop when desktop is not the main view
 
 apps: [Dock, Finder, SystemUIServer, Safari]

@@ -1,14 +1,14 @@
 #!/usr/bin/env zsh
-#>[≟] 🤖🤖
+#>[what] 🤖🤖
 #   Merge-upsert a dotenv file from an example-defaults file and print it:
 #   start from <example> defaults, overlay <env> values (existing wins, and
 #   keys only in <env> are kept), then print sorted KEY=VALUE lines. blank and
 #   `#` comment lines are skipped. a missing <env> yields just the defaults.
 #   Usage: s-rt-merge-upsert-env <env> <example>
 #   Upstream: gomplate `mergeUpsertEnv` plugin. Downstream: <env>, <example>.
-#/[≟] 🤖🤖
+#/[what] 🤖🤖
 
-#[…] 🤖🤖
+##[>] 🤖🤖
 emulate -LR zsh
 setopt err_return extended_glob
 
@@ -37,4 +37,4 @@ read_into $example
 read_into $env
 
 for key in ${(ok)merged}; print -r -- "$key=${merged[$key]}"
-#[⫶] 🤖🤖
+##[<] 🤖🤖

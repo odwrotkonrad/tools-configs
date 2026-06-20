@@ -7,7 +7,7 @@ packer {
   }
 }
 
-#[≟] derive from the base image baked by macos-tahoe-vanilla.pkr.hcl
+#[what] derive from the base image baked by macos-tahoe-vanilla.pkr.hcl
 variable "vm_base_name" {
   type = string
 }
@@ -20,7 +20,7 @@ variable "repo_path" {
   type = string
 }
 
-#[≟] host-side git bundle (git bundle create configs.git.bundle --all) cloned into the vm — required
+#[what] host-side git bundle (git bundle create configs.git.bundle --all) cloned into the vm — required
 variable "bundle_path" {
   type = string
 }
