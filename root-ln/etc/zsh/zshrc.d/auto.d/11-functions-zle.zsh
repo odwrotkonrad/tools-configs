@@ -49,7 +49,9 @@ wd-fn-rt-keystrokes-listen() {
 zle-intr() {
     #[what] SIGINT (^C) signal handler
 
-    zle wd-fn-rt-clear-scrollable
+    if { zle } {
+      zle wd-fn-rt-clear-scrollable
+    }
 }
 
 

@@ -17,27 +17,27 @@ export GOMPLATE_CONFIG := $(CURDIR)/root-ln/etc/gomplate/gomplate.yaml
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
 ##[>] wrappers
-run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks run-repo-render-templates
-run-sync-full: run-sync-quick run-host-mk-dirs run-host-render-templates
+run-sync-quick: run-host-upsert-configs run-host-mk-dirs run-host-delete-broken-links run-repo-upsert-git-hooks run-repo-render-templates
+run-sync-full: run-sync-quick run-host-render-templates
 run-repo-build-vm-all: run-repo-build-vm-base run-repo-build-vm
 ##[<] wrappers
 
 ##[>] commands
 run-host-upsert-configs:
-	@sudo $(PRETTY) s-rt-upsert-configs
+	@sudo $(PRETTY) upsert-configs
 
 run-host-delete-broken-links:
-	@sudo $(PRETTY) s-rt-delete-broken-links
+	@sudo $(PRETTY) delete-broken-links
 
 run-host-mk-dirs:
-	@sudo $(PRETTY) s-rt-mk-dirs
+	@sudo $(PRETTY) mk-dirs
 
 run-host-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-host
+	@$(PRETTY) $(CI_SCRIPTS)/render-templates-onto-host
 
 RENDER_LOCAL ?= --local
 run-repo-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-repo $(RENDER_LOCAL) $(CURDIR)
+	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-onto-repo $(RENDER_LOCAL) $(CURDIR)
 
 run-repo-tests:
 	@$(PRETTY) pytest tests/scripts/python
@@ -54,14 +54,14 @@ run-host-install-all:
 
 #[what] reload running service launchagents
 run-host-restart-services:
-	@$(PRETTY) $(CI_SCRIPTS)/s-rt-restart-services
+	@$(PRETTY) $(CI_SCRIPTS)/restart-services
 
 ##[>] vm
 run-repo-build-vm-base:
-	@$(PRETTY) ./ci/local/vm/build-vm.zsh ko-macos-tahoe-vanilla
+	@$(PRETTY) $(CI_SCRIPTS)/build-vm ko-macos-tahoe-vanilla
 
 run-repo-build-vm:
-	@$(PRETTY) ./ci/local/vm/build-vm.zsh ko-macos-tahoe-vanilla-configs-local
+	@$(PRETTY) $(CI_SCRIPTS)/build-vm ko-macos-tahoe-vanilla-configs-local
 
 run-repo-ssh-vm:
 	@./ci/local/vm/ssh-vm.zsh

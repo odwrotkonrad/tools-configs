@@ -4,11 +4,11 @@ Comments advertise themselves to a reader with a label prefix, to facilitate rea
 
 ## Notation
 
-| Question | Prefix    | Description                         |
-| -------- | --------- | ----------------------------------- |
-| Where?   | `[where]` | Related reads, sources, references  |
-| What?    | `[what]`  | What it is, what its purpose is     |
-| Why?     | `[why]`   | Why it exists, why chosen over else |
+| Question | Prefix    | Description                                  |
+| -------- | --------- | -------------------------------------------- |
+| Where?   | `[where]` | Related reads, sources, references           |
+| What?    | `[what]`  | What it is?                                  |
+| Why?     | `[why]`   | Why it exists, purpose, why chosen over else |
 
 
 Presenting understanding[what], reasoning[why], and sources[where] behind code allows further examination of why a bug might be introduced, and gives an opportunity to review not just the code written but the conceptual foundation behind it.

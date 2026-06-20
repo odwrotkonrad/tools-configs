@@ -73,7 +73,6 @@ paths:
           s-rt-install-kitty:
           s-rt-install-prometheus:
         shell/:
-          s-rt-upsert-configs:
           s-rt-load-defaults-config:
 ```
 
