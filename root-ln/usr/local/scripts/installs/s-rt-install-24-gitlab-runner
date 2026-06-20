@@ -1,11 +1,12 @@
 #!/bin/zsh
+#[……] 🤖🤖🤖
 
 emulate -LR zsh
 setopt errexit pipefail
 
 autoload -Uz log-msg
 
-#[……] retire brew gitlab-runner service 🤖🤖🤖
+#[……] retire brew gitlab-runner service
 #>[≟]
 #   retire brew's gitlab-runner service so our repo-owned
 #   d-ko-gitlab-runner.plist supervises the runner instead
