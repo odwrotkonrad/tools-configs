@@ -1,9 +1,9 @@
 #!/bin/zsh
-#>[≟]
+#>[what]
 #   Load <configs> into the system root, mirroring directory structure.
 #   <configs>/root-ln files are symlinked (live, follow the repo).
 #   <configs>/root-cp files are copied as root
-#/[≟]
+#/[what]
 
 emulate -LR zsh
 setopt errexit dotglob
@@ -20,7 +20,7 @@ function cp_owner {
   local owner=$(stat -f '%u:%g' -- $src)
 
   # -h - change owner of the link
-  chown -h -- $owner $dest ; log-msg -t chown -- "$owner $dest"  #[≟] -h: the link itself, not its target
+  chown -h -- $owner $dest ; log-msg -t chown -- "$owner $dest"  #[what] -h: the link itself, not its target
 }
 
 function cp_perms {
@@ -32,7 +32,7 @@ function cp_perms {
   chmod -h -- $perms $dest ; log-msg -t chmod -- "$perms $dest"
 }
 
-#[…] symlinked tree
+##[>] symlinked tree
 pushd "$configs/root-ln"
 
 typeset -a repo_files repo_dirs ex repo_files_ex
@@ -43,14 +43,14 @@ repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} )
 
-#[≟] 🤖🤖 add every ancestor dir #[∵] plain mkdir (no -p) needs each parent made + owned, not just the leaf
-typeset -aU repo_dirs_all #[≟] 🤖🤖
-for dir ( $repo_dirs ) { while [[ $dir == */* ]] { repo_dirs_all+=$dir; dir=$dir:h }; repo_dirs_all+=$dir } #[≟] 🤖🤖
+#[what] 🤖🤖 add every ancestor dir #[why] plain mkdir (no -p) needs each parent made + owned, not just the leaf
+typeset -aU repo_dirs_all #[what] 🤖🤖
+for dir ( $repo_dirs ) { while [[ $dir == */* ]] { repo_dirs_all+=$dir; dir=$dir:h }; repo_dirs_all+=$dir } #[what] 🤖🤖
 
-# 2. create dirs (parents first), copying owner and file permissions #[≟] 🤖🤖
-for dir ( ${(o)repo_dirs_all} ) {  #[≟] 🤖🤖 (o) sort -> parents before children
+# 2. create dirs (parents first), copying owner and file permissions #[what] 🤖🤖
+for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before children
   if [[ ! -d /$dir ]] {
-    mkdir /$dir; log-msg -t mkdir -- /$dir  #[≟] 🤖🤖 no -p
+    mkdir /$dir; log-msg -t mkdir -- /$dir  #[what] 🤖🤖 no -p
     cp_owner $dir /$dir
     cp_perms $dir /$dir
   }
@@ -66,10 +66,10 @@ for file ( $repo_files_ex ) {
   }
 }
 popd
-#[⫶] symlinked tree
+##[<] symlinked tree
 
 
-#[…] copied tree
+##[>] copied tree
 pushd "$configs/root-cp"
 
 # 1. get files from git
@@ -103,4 +103,4 @@ for file ( $repo_files_ex ) {
   }
 }
 popd
-#[⫶] copied tree
+##[<] copied tree

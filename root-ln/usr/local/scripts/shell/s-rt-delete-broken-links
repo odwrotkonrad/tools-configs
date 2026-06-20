@@ -1,9 +1,9 @@
 #!/bin/zsh
-#>[≟]
+#>[what]
 #   1. collect dirs from the last 10 commits,
 #   2. search for broken links within dirs
 #   3. remove broken links
-#/[≟]
+#/[what]
 
 emulate -LR zsh
 setopt errexit dotglob
@@ -20,8 +20,8 @@ function delete_broken_links {
     dirs+=( ${(@f)$(git ls-tree -dr --name-only $ref)} )
   }
 
-  # 2. dirs -> dirs with at least 2 parts #[∵] reducing search radius
-  dirs=( ${(M)dirs:#*/?*} ) # [≟] (M) keep matches, pattern: path with atleast one non trailing slash
+  # 2. dirs -> dirs with at least 2 parts #[why] reducing search radius
+  dirs=( ${(M)dirs:#*/?*} ) # [what] (M) keep matches, pattern: path with atleast one non trailing slash
 
   # 3. dirs -> OS dirs
   dirs=( /${^dirs} )

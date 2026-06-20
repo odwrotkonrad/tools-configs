@@ -1,4 +1,4 @@
-# […] 🤖🤖
+##[>] 🤖🤖
 class Error(Exception):
     """An error carrying its exit code and context; returned or raised."""
 
@@ -32,4 +32,4 @@ class Errors:
             return f_msg
 
 
-# [⫶] 🤖🤖
+##[<] 🤖🤖

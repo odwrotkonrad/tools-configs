@@ -11,7 +11,7 @@ from s_rt_scripts_lib.parameters import USAGE
 from s_rt_scripts_lib.parameters import BaseParameters
 
 
-# […] 🤖🤖
+##[>] 🤖🤖
 class BaseInput(BaseModel):
     """The validated invocation wrapping its `params` and optional `config`."""
 
@@ -55,4 +55,4 @@ def usage(doc: str | None) -> str:
     return (doc or "").strip() or "invalid usage"
 
 
-# [⫶] 🤖🤖
+##[<] 🤖🤖

@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
-#>[≟]
+#>[what]
 #   LLM driven commit message generation
 #   Usage: <extra-instructions-on-stdin> | s-rt-llm-git-commit-msg-suggest
 #   extra-instructions: optional, read from stdin when piped.
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
 #   Upstream: git-commit skill. Out: { "subject": ..., "description": ... }.
-#/[≟]
+#/[what]
 
 set -e
 
@@ -14,14 +14,14 @@ read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load "${0:t}")"
 lib-llm-env-export "${0:t}"
 
 
-#[…] script input
+##[>] script input
 typeset -A script_input=(
   in_instructions_runtime "$([[ -t 0 ]] || cat)"
 )
-#[⫶] script input
+##[<] script input
 
 
-#[…] template input 🤖
+##[>] template input 🤖
 get_commit_template() {
   local f=$(git config --get commit.template); f=${f/#\~/$HOME}
   [[ -n $f && -f $f ]] && cat "$f"
@@ -33,18 +33,18 @@ typeset -A template_input=(
   DIFF_STATS "$(git diff --cached --stat)"
   INSTRUCTIONS_RUNTIME "$script_input[in_instructions_runtime]"
 )
-#[⫶] template input 🤖
+##[<] template input 🤖
 
 
 # if there are no changes return
 [[ -n $template_input[DIFF_FULL] ]] || { echo "error: nothing staged" >&2; exit 1 }
 
-#[…] fill template 🤖
+##[>] fill template 🤖
 prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
-#[⫶] fill template 🤖
+##[<] fill template 🤖
 
 
-#[…] llm invocation
+##[>] llm invocation
 schema='{
   "type": "object",
   "properties": {
@@ -56,4 +56,4 @@ schema='{
 }'
 
 <<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema"
-#[⫶] llm invocation
+##[<] llm invocation

@@ -1,4 +1,4 @@
-#[…] positive
+##[>] positive
 - name: ok_generate
   case: generate
   exit: 0
@@ -7,9 +7,9 @@
 - name: ok_check_match
   case: check_match
   exit: 0
-#[⫶] positive
+##[<] positive
 
-#[…] error
+##[>] error
 - name: err_check_differs
   case: check_differs
   exit: 22
@@ -29,4 +29,4 @@
   input: [--check, a, b]
   exit: 11
   stderr: "/invalid arguments: .*/"
-#[⫶] error
+##[<] error

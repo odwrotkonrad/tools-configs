@@ -1,11 +1,11 @@
-#[≟] ripgrep configuration
+#[what] ripgrep configuration
 
-#>[⌖]
+#>[where]
 # https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
 # $ man rg
-#/[⌖]
+#/[where]
 
-#[…] modified
+##[>] modified
 --ignore-file=/etc/rg/rgignore
 --no-ignore-exclude
 --no-ignore-global
@@ -36,9 +36,9 @@
 --max-filesize=4G
 --no-mmap
 --regex-size-limit=1G
-#[⫶] modified
+##[<] modified
 
-#[…] defaults
+##[>] defaults
 # --color=auto
 # --encoding=auto
 # --heading
@@ -46,9 +46,9 @@
 # --path-separator=/
 # --threads=0
 # --with-filename
-#[⫶] defaults
+##[<] defaults
 
-#[…] unset
+##[>] unset
 # --block-buffered
 # --byte-offset
 # --case-sensitive
@@ -61,7 +61,7 @@
 # --line-buffered
 # --line-regexp
 # --max-columns-preview
-# --max-columns=(terminal width - 5) #[⌖] dynamically set via fn-rt-rg in root-ln/etc/zsh/rc.d/40-aliases.zsh
+# --max-columns=(terminal width - 5) #[where] dynamically set via fn-rt-rg in root-ln/etc/zsh/rc.d/40-aliases.zsh
 # --max-count=NUM
 # --no-filename
 # --no-ignore
@@ -84,10 +84,10 @@
 # --unrestricted
 # --vimgrep
 # --word-regexp
-#[⫶] unset
+##[<] unset
 
-#[…] deprecated
+##[>] deprecated
 # --auto-hybrid-regex
 # --no-pcre2-unicode
 # --sort-files
-#[⫶] deprecated
+##[<] deprecated

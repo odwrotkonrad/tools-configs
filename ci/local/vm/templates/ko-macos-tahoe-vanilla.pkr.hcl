@@ -50,9 +50,9 @@ build {
   provisioner "shell" {
     inline = [
       "id ${var.username} >/dev/null 2>&1 || sudo sysadminctl -addUser ${var.username} -fullName ${var.username} -admin -adminUser admin -adminPassword admin",
-      "sudo sysadminctl -resetPasswordFor ${var.username} -newPassword '${var.password}' -adminUser admin -adminPassword admin", #[≟] ssh auth for gitlab-tart-executor (TART_EXECUTOR_SSH_USERNAME) 🤖🤖
+      "sudo sysadminctl -resetPasswordFor ${var.username} -newPassword '${var.password}' -adminUser admin -adminPassword admin", #[what] ssh auth for gitlab-tart-executor (TART_EXECUTOR_SSH_USERNAME) 🤖🤖
       "echo '${var.username} ALL=(ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/${var.username} >/dev/null",
-      #[≟] open remote login to all users #[∵] avoid the com.apple.access_ssh group lockout
+      #[what] open remote login to all users #[why] avoid the com.apple.access_ssh group lockout
       "sudo install -d -o ${var.username} -g staff -m 700 /Users/${var.username}/.ssh",
       "sudo install -o ${var.username} -g staff -m 600 /tmp/authorized_key.pub /Users/${var.username}/.ssh/authorized_keys",
       "sudo dseditgroup -o edit -a ${var.username} -t user com.apple.access_ssh",

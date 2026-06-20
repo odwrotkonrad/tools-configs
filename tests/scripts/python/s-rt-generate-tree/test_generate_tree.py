@@ -9,7 +9,7 @@ from s_rt_scripts_test_lib.run import match_line
 from s_rt_scripts_test_lib.run import run
 from s_rt_scripts_test_lib.test_show_usage import test_show_usage  # noqa: F401
 
-# […] 🤖🤖🤖
+##[>] 🤖🤖🤖
 FIXTURE = Path(__file__).parent / "fixture"
 CASES = load_cases(__file__, "cases.yml")
 TRACKED = (".hidden/note.md", "docs/data/x.yml", "src/lib/a.py", "README.md")
@@ -71,4 +71,4 @@ def test_case(tree_script, capsys, case, tmp_path):
             )
 
 
-# [⫶] 🤖🤖🤖
+##[<] 🤖🤖🤖

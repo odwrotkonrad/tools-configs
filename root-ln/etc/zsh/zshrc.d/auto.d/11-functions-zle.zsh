@@ -1,7 +1,7 @@
-#[≟] zshzle widgets #[⌖] man zshzle > zle
+#[what] zshzle widgets #[where] man zshzle > zle
 
 wd-fn-rt-clear-scrollable() {
-    #[≟] abort current input and clear screen in a way it can be scrolled above to see what inputs was aborted
+    #[what] abort current input and clear screen in a way it can be scrolled above to see what inputs was aborted
 
     # 1. print current input as a comment
     if [[ ${BUFFER} ]] {
@@ -19,8 +19,8 @@ wd-fn-rt-clear-scrollable() {
 }
 
 wd-fn-rt-accept-line() {
-    #[≟] multiline aware accept-line wrapper
-    #[∵] native behavior would show PS2 and not use zle multiline editing features otherwise, so multiline editing widgets would not work as expected
+    #[what] multiline aware accept-line wrapper
+    #[why] native behavior would show PS2 and not use zle multiline editing features otherwise, so multiline editing widgets would not work as expected
 
     local trail=${(M)BUFFER%'\'}
     if [[ $trail ]] {
@@ -32,7 +32,7 @@ wd-fn-rt-accept-line() {
 }
 
 wd-fn-rt-job-foreground() {
-    #[≟] resume the most recent background job
+    #[what] resume the most recent background job
 
     if [[ ! ${jobstates} ]] {
       return
@@ -42,12 +42,12 @@ wd-fn-rt-job-foreground() {
 }
 
 wd-fn-rt-keystrokes-listen() {
-    #[≟] listen for raw key sequences
+    #[what] listen for raw key sequences
     kitten show-key -m kitty
 }
 
 zle-intr() {
-    #[≟] SIGINT (^C) signal handler
+    #[what] SIGINT (^C) signal handler
 
     zle wd-fn-rt-clear-scrollable
 }

@@ -15,7 +15,7 @@ Optimized for a reader, future reference and not frequent, regular software upda
 ## Tools Inventory Index
 Tool -> primary config file.
 ```yaml
-#[…] primary
+##[>] primary
 claude: root-ln/Users/ko/.config/claude/settings.json
 defaults: root-ln/etc/defaults.yml
 duti: root-ln/etc/custom/os-open-files-with.yml
@@ -30,9 +30,9 @@ rg: root-ln/etc/rg/rgrc
 ssh: root-ln/Users/ko/.ssh/config
 vscode: root-ln/Users/ko/Library/Application Support/Code/User/settings.json
 zsh: root-ln/etc/zshrc
-#[⫶] primary
+##[<] primary
 
-#[…] other
+##[>] other
 asdf: root-ln/Users/ko/.config/asdf/.asdfrc
 aws: root-ln/Users/ko/.config/aws/config.host.auto.tmpl
 azure: root-ln/Users/ko/.config/azure/config
@@ -54,7 +54,7 @@ pyenv: root-ln/etc/zshenv
 ruff: root-ln/Users/ko/.config/ruff/ruff.toml
 tmux: root-ln/Users/ko/.config/tmux/tmux.conf
 vim: root-ln/Users/ko/.config/vim/vimrc
-#[⫶] other
+##[<] other
 ```
 - [docs/data/tools-inventory-full.yml](docs/data/tools-inventory-full.yml) - Full file lists per tool.
 

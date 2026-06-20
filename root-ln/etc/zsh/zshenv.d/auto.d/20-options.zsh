@@ -1,15 +1,15 @@
-#[⌖] $ man zshoptions
+#[where] $ man zshoptions
 
-#[…] enabled options
+##[>] enabled options
 typeset -a opts_enabled=(
   autopushd
-  braceccl #[≟] print 1{abw-z}2 -> 1a2 1b2 1w2 1x2 1y2 1z2
+  braceccl #[what] print 1{abw-z}2 -> 1a2 1b2 1w2 1x2 1y2 1z2
   cdsilent
   combiningchars
   cshnullglob
   extendedglob
   extendedhistory
-  globassign #[≟] foo=*; >1 match -> foo becomes array of matches
+  globassign #[what] foo=*; >1 match -> foo becomes array of matches
   histignorespace
   histlexwords
   histverify
@@ -22,12 +22,12 @@ typeset -a opts_enabled=(
   noflowcontrol
   nohistbeep
   nohup
-  nullglob #[≟] non-matching globs expand to nothing instead of erroring
+  nullglob #[what] non-matching globs expand to nothing instead of erroring
   promptsubst
   pushdsilent
-  rcexpandparam #[≟] array=(one two); print X${array}Y -> XoneY XtwoY
+  rcexpandparam #[what] array=(one two); print X${array}Y -> XoneY XtwoY
 
-  #[≟] auto enabled by shell
+  #[what] auto enabled by shell
   # interactive
   # login
   # monitor
@@ -35,9 +35,9 @@ typeset -a opts_enabled=(
   # zle
 )
 setopt ${opts_enabled}
-#[⫶] enabled options
+##[<] enabled options
 
-#[…] disabled options
+##[>] disabled options
 typeset -a opts_disabled=(
   aliasfuncdef
   allexport
@@ -99,9 +99,9 @@ typeset -a opts_disabled=(
   listpacked
   listrowsfirst
   localloops
-  localoptions #[∵] off here, re-enabled at end of .zshrc so a user-invoked function's setopt won't leak to the shell; on during config run so loader functions can scope their own options
+  localoptions #[why] off here, re-enabled at end of .zshrc so a user-invoked function's setopt won't leak to the shell; on during config run so loader functions can scope their own options
   localpatterns
-  localtraps   #[∵] same as localoptions
+  localtraps   #[why] same as localoptions
   longlistjobs
   magicequalsubst
   mailwarning
@@ -188,7 +188,7 @@ typeset -a opts_disabled=(
   sunkeyboardhack
   transientrprompt
   trapsasync
-  typesetsilent #[≟] typeset param -> print param value
+  typesetsilent #[what] typeset param -> print param value
   typesettounset
   verbose
   vi
@@ -197,4 +197,4 @@ typeset -a opts_disabled=(
   xtrace
 )
 unsetopt ${opts_disabled}
-#[⫶] disabled options
+##[<] disabled options

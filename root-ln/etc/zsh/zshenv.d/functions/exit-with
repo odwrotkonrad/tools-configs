@@ -1,4 +1,4 @@
-#[≟] print msg then exit code; code 0 -> stderr, nonzero -> stdout
+#[what] print msg then exit code; code 0 -> stderr, nonzero -> stdout
 
 function exit-with {
   emulate -LR zsh

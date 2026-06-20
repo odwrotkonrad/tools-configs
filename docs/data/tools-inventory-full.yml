@@ -5,7 +5,7 @@ references:
   docs/data/tools-inventory-index.yml: Primary config file per tool.
 ---
 
-#[≟] Shared files referenced by many tools.
+#[what] Shared files referenced by many tools.
 files:
   root-ln/Users/ko/.config/zsh/rc.d/10-tools.zsh:
   root-ln/etc/:
@@ -15,7 +15,7 @@ files:
     zsh/rc.d/40-aliases.zsh:
     zsh/static-history:
 
-#>[≟] Tool specific files
+#>[what] Tool specific files
 tools:
   - asdf:
       files:

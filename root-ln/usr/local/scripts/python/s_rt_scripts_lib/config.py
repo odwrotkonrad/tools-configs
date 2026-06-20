@@ -14,7 +14,7 @@ type RawConfigDict = dict[str, object]
 """the untyped mapping parsed from a YAML config file."""
 
 
-# […] 🤖🤖
+##[>] 🤖🤖
 class BaseConfig(BaseModel):
     """Reads the system + user /etc/custom/<NAME> YAML files into `data`."""
 
@@ -67,4 +67,4 @@ class BaseConfig(BaseModel):
         return self
 
 
-# [⫶] 🤖🤖
+##[<] 🤖🤖

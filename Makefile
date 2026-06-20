@@ -1,4 +1,4 @@
-#[≟] Project's Makefile
+#[what] Project's Makefile
 WRAPPERS := run-sync-quick run-sync-full run-repo-build-vm-all
 COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-build-vm-base run-repo-build-vm run-repo-ssh-vm run-repo-test-vm
 SCRIPTS := root-ln/usr/local/scripts
@@ -16,13 +16,13 @@ export MYPYPATH := $(CURDIR)/$(SCRIPTS)/python
 export GOMPLATE_CONFIG := $(CURDIR)/root-ln/etc/gomplate/gomplate.yaml
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
-#[…] wrappers
+##[>] wrappers
 run-sync-quick: run-host-upsert-configs run-host-delete-broken-links run-repo-upsert-git-hooks run-repo-render-templates
 run-sync-full: run-sync-quick run-host-mk-dirs run-host-render-templates
 run-repo-build-vm-all: run-repo-build-vm-base run-repo-build-vm
-#[⫶] wrappers
+##[<] wrappers
 
-#[…] commands
+##[>] commands
 run-host-upsert-configs:
 	@sudo $(PRETTY) s-rt-upsert-configs
 
@@ -52,11 +52,11 @@ run-repo-upsert-git-hooks:
 run-host-install-all:
 	@$(PRETTY) $(CI_SCRIPTS)/installs/s-rt-install-all
 
-#[≟] reload running service launchagents
+#[what] reload running service launchagents
 run-host-restart-services:
 	@$(PRETTY) $(CI_SCRIPTS)/s-rt-restart-services
 
-#[…] vm
+##[>] vm
 run-repo-build-vm-base:
 	@$(PRETTY) ./ci/local/vm/build-vm.zsh ko-macos-tahoe-vanilla
 
@@ -70,6 +70,6 @@ run-repo-test-vm: run-repo-build-vm
 	@$(IN_VM) run-host-upsert-configs
 	@$(IN_VM) run-host-mk-dirs
 	@$(IN_VM) run-host-install-all
-#[⫶] vm
+##[<] vm
 
-#[⫶] commands
+##[<] commands

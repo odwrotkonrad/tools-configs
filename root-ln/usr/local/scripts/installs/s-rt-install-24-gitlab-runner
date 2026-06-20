@@ -1,16 +1,16 @@
 #!/bin/zsh
-#[……] 🤖🤖🤖
+##[>] 🤖🤖🤖
 
 emulate -LR zsh
 setopt errexit pipefail
 
 autoload -Uz log-msg
 
-#[……] retire brew gitlab-runner service
-#>[≟]
+###[>] retire brew gitlab-runner service
+#>[what]
 #   retire brew's gitlab-runner service so our repo-owned
 #   d-ko-gitlab-runner.plist supervises the runner instead
-#/[≟]
+#/[what]
 
 uid=$(id -u)
 brew_plist="$HOME/Library/LaunchAgents/homebrew.mxcl.gitlab-runner.plist"
@@ -29,4 +29,4 @@ if [[ -e $brew_plist ]] {
 } else {
   log-msg -t gitlab-runner -- "no stale brew plist, skipping bootout"
 }
-#[⫶⫶] retire brew gitlab-runner service 🤖🤖🤖
+###[<] retire brew gitlab-runner service 🤖🤖🤖

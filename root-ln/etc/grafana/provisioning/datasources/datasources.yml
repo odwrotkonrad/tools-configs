@@ -1,11 +1,11 @@
-#>[⌖]
+#>[where]
 # https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
-#/[⌖]
+#/[where]
 
 apiVersion: 1
 
 datasources:
-  #[≟] Prometheus — metrics scraped from otelcol (8889) + prometheus self (9090).
+  #[what] Prometheus — metrics scraped from otelcol (8889) + prometheus self (9090).
   - name: Prometheus
     type: prometheus
     uid: prometheus
@@ -13,7 +13,7 @@ datasources:
     url: http://localhost:9090
     isDefault: true
 
-  #[≟] Loki — logs OTLP backend.
+  #[what] Loki — logs OTLP backend.
   - name: Loki
     type: loki
     uid: loki
@@ -27,7 +27,7 @@ datasources:
           datasourceUid: jaeger
           url: "$${__value.raw}"
 
-  #[≟] Jaeger — traces, served by the jaeger_query extension in otelcol.
+  #[what] Jaeger — traces, served by the jaeger_query extension in otelcol.
   - name: Jaeger
     type: jaeger
     uid: jaeger

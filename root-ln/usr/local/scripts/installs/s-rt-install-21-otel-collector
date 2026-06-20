@@ -16,16 +16,16 @@ function install_otelcol {
   tmpdir=$(mktemp -d)
   trap 'rm -rf "$tmpdir"' EXIT
 
-  #[≟] 1. download release archive
+  #[what] 1. download release archive
   curl -L -o "$tmpdir/$archive" "$url"
 
-  #[≟] 2. verify checksum
+  #[what] 2. verify checksum
   echo "$sha256  $tmpdir/$archive" | shasum -a 256 -c -
 
-  #[≟] 3. extract archive
+  #[what] 3. extract archive
   tar -xzf "$tmpdir/$archive" -C "$tmpdir"
 
-  #[≟] 4. install binary to standard PATH location
+  #[what] 4. install binary to standard PATH location
   sudo install -m 0755 "$tmpdir/otelcol" "$prefix/bin/otelcol"
 }
 

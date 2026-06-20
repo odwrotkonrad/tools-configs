@@ -5,7 +5,7 @@ import pytest
 import yaml
 
 
-# […] 🤖🤖
+##[>] 🤖🤖
 def run(module, argv):
     module.sys.argv = [module.__name__, *argv]
     if inspect.signature(module.main).parameters:
@@ -85,4 +85,4 @@ def run_case(script, capsys, case, tmp_path, mocker):
         assert exc.value.code == code
 
 
-# [⫶] 🤖🤖
+##[<] 🤖🤖

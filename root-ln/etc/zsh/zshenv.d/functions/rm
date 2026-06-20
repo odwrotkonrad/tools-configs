@@ -1,6 +1,6 @@
-#[≟] shadow rm with trash; drop flags, forward paths only
-#[∵] trash is recoverable, rm unlinks irreversibly
-#[⌖] $ man trash
+#[what] shadow rm with trash; drop flags, forward paths only
+#[why] trash is recoverable, rm unlinks irreversibly
+#[where] $ man trash
 
 function rm {
   emulate -LR zsh
@@ -8,7 +8,7 @@ function rm {
   local -a paths
   local arg
   for arg in "$@"; do
-    [[ $arg == -* ]] && continue  #[≟] drop flags
+    [[ $arg == -* ]] && continue  #[what] drop flags
     paths+=("$arg")
   done
 

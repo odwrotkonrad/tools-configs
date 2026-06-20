@@ -1,4 +1,4 @@
-#[≟] 🤖🤖 print-with <modifier> <text> — styled wrapper over print
+#[what] 🤖🤖 print-with <modifier> <text> — styled wrapper over print
 #   bold: %B/%b · title: text between dash bars sized to COLUMNS, or fixed --- if no tty width
 
 function print-with {

@@ -12,7 +12,7 @@ USAGE = "usage"
 """the base usage action value, shared by every script's Action."""
 
 
-# […] 🤖🤖
+##[>] 🤖🤖
 class BaseAction(StrEnum):
     """The action base; each script's Action extends it with its own members."""
 
@@ -83,4 +83,4 @@ class BaseParameters(BaseModel):
         return shaped
 
 
-# [⫶] 🤖🤖
+##[<] 🤖🤖

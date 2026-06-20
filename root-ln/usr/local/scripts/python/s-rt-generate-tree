@@ -44,8 +44,8 @@ from s_rt_scripts_lib import options as lib_options
 from s_rt_scripts_lib import parameters as lib_param
 
 
-# [……] 🤖🤖
-# […] errors
+##[>] 🤖🤖
+###[>] errors
 class Errors(lib_err.Errors):
     """The script's exit-code contract: the `1x` band plus the `2x` domain."""
 
@@ -57,10 +57,10 @@ class Errors(lib_err.Errors):
     }
 
 
-# [⫶] errors
+###[<] errors
 
 
-# […] types
+###[>] types
 type DirPathStr = str
 """a tracked file's path, relative to the repo root."""
 
@@ -74,10 +74,10 @@ type CheckPathStr = str
 """a path to the file compared in `--check` mode."""
 
 
-# [⫶] types
+###[<] types
 
 
-# […] contract
+###[>] contract
 class Action(lib_param.BaseAction):
     USAGE = lib_param.USAGE
     GENERATE = "generate"
@@ -123,10 +123,10 @@ class Input(lib_input.BaseInput):
     config: None = None
 
 
-# [⫶] contract
+###[<] contract
 
 
-# […] implementation
+###[>] implementation
 def tracked_dirs(
     repo_path: str,
 ) -> tuple[list[DirPathStr] | None, lib_err.Error | None]:
@@ -206,14 +206,14 @@ def check(
     return None, lib_err.Error(Errors.DIFFERS, diff=diff)
 
 
-# [⫶] implementation
+###[<] implementation
 
 
-# […] main
+###[>] main
 def main(
     input: Input,
 ) -> tuple[str | None, lib_err.Error | None]:
-    """[≟] Dispatch the resolved action to its handler."""
+    """[what] Dispatch the resolved action to its handler."""
     match input.params.action:
         case Action.USAGE:
             return lib_input.usage(__doc__), None
@@ -234,5 +234,5 @@ if __name__ == "__main__":
                 print(Errors.message(err), file=sys.stderr)
                 sys.exit(err.code)
             print(out, end="")
-# [⫶] main
-# [⫶⫶] 🤖🤖
+###[<] main
+##[<] 🤖🤖

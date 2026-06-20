@@ -3,7 +3,7 @@
 emulate -LR zsh
 setopt errexit
 
-#[…] 🤖🤖
-#[≟] run numbered installers in order; gaps let you insert later. 00-brew bootstraps homebrew
+##[>] 🤖🤖
+#[what] run numbered installers in order; gaps let you insert later. 00-brew bootstraps homebrew
 for installer ( ${0:h}/s-rt-install-<->-*(n) ) $installer
-#[⫶] 🤖🤖
+##[<] 🤖🤖

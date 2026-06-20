@@ -1,4 +1,4 @@
-#[≟] log a line as 'HH:MM:SS.mmm: [title: ]msg', title via optional -t/--title
+#[what] log a line as 'HH:MM:SS.mmm: [title: ]msg', title via optional -t/--title
 
 function log-msg {
   emulate -LR zsh

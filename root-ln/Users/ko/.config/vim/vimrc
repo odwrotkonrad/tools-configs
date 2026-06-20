@@ -1,44 +1,44 @@
 set virtualedit=onemore
 
-"#[≟] Enable mouse support
+"#[what] Enable mouse support
 set mouse=a
 
-"#[≟] Yank/paste use the system clipboard by default
+"#[what] Yank/paste use the system clipboard by default
 set clipboard=unnamedplus
 
-"#[≟] Show line numbers
+"#[what] Show line numbers
 set number
 
-"#[≟] Keep up to 1000 levels of undo
+"#[what] Keep up to 1000 levels of undo
 set undolevels=1000
 
-"#[≟] A tab counts as 2 columns wide
+"#[what] A tab counts as 2 columns wide
 set tabstop=2
 
-"#[≟] Auto-wrap inserted text
+"#[what] Auto-wrap inserted text
 set textwidth=100
 
-"#[≟] Remember up to 1000 lines of command/search history
+"#[what] Remember up to 1000 lines of command/search history
 set history=1000
 
-"#[≟] toggle line wrap
+"#[what] toggle line wrap
 set wrap
 
-"#[≟] line wrap on word boundaries
+"#[what] line wrap on word boundaries
 set linebreak
 
-"#[≟] highlight all matches when searching
+"#[what] highlight all matches when searching
 set hls
 
-"#[≟] ignore case when searching
+"#[what] ignore case when searching
 set ic
 
-"#[≟] persistent undo — undo history is saved to disk and survives
+"#[what] persistent undo — undo history is saved to disk and survives
 set undofile
 
-"#[≟] undo files location
+"#[what] undo files location
 set undodir=$XDG_STATE_HOME/vim/undo//
 
 
-"#[≟] <sfile>:h - directory of this vimrc; sources keybindings.vim
+"#[what] <sfile>:h - directory of this vimrc; sources keybindings.vim
 source <sfile>:h/keybindings.vim

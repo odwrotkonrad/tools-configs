@@ -3,7 +3,7 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-#[……] 🤖🤖
+##[>] 🤖🤖
 typeset repo_root=$(git -C ${0:A:h} rev-parse --show-toplevel)
 typeset templates=$repo_root/ci/local/vm/templates
 typeset key=~/.ssh/id_vm_access
@@ -40,4 +40,4 @@ build_vm
 if [[ $name == ko-macos-tahoe-vanilla-configs-local ]] {
   tart run --no-graphics $name &
 }
-#[⫶⫶] 🤖🤖
+##[<] 🤖🤖

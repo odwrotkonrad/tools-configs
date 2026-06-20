@@ -1,4 +1,4 @@
-#[≟] 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
+#[what] 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
 
 typeset -a funcs=(
     /etc/zsh/zshrc.d/functions
