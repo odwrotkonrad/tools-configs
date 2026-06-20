@@ -40,7 +40,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(max by (app) (up), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\")",
+          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(max by (app) (up), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\"), \"rank\",\"7\",\"app\",\"gitlab_runner\")",
           "instant": true,
           "format": "table"
         },
@@ -50,7 +50,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(min by (app) ((time() - max by (app) (process_start_time_seconds)) or (max by (app) (otelcol_process_uptime)) or (time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s]))) and on (app) (max by (app) (up) == 1), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\")",
+          "expr": "label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(min by (app) ((time() - max by (app) (process_start_time_seconds)) or (max by (app) (otelcol_process_uptime)) or (time() - max_over_time(timestamp(up == 0)[30d:30s])) or (time() - min_over_time(timestamp(up)[30d:30s]))) and on (app) (max by (app) (up) == 1), \"rank\",\"0\",\"app\",\"otelcol\"), \"rank\",\"1\",\"app\",\"prometheus\"), \"rank\",\"2\",\"app\",\"grafana\"), \"rank\",\"3\",\"app\",\"loki\"), \"rank\",\"4\",\"app\",\"jaeger\"), \"rank\",\"5\",\"app\",\"port_exporter\"), \"rank\",\"6\",\"app\",\"dir_size_exporter\"), \"rank\",\"7\",\"app\",\"gitlab_runner\")",
           "instant": true,
           "format": "table"
         },
@@ -70,7 +70,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "label_replace((label_replace(max by (app)(up{app=\"otelcol\"}), \"metrics\",\"http://localhost:8889/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"prometheus\"}), \"metrics\",\"http://localhost:9090/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"grafana\"}), \"metrics\",\"http://localhost:9300/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"loki\"}), \"metrics\",\"http://localhost:3100/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"jaeger\"}), \"metrics\",\"http://localhost:8890/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"port_exporter\"}), \"metrics\",\"http://localhost:9101/\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"dir_size_exporter\"}), \"metrics\",\"http://localhost:9102/\",\"app\",\".*\")), \"metrics_icon\",\"↗\",\"app\",\".*\")",
+          "expr": "label_replace((label_replace(max by (app)(up{app=\"otelcol\"}), \"metrics\",\"http://localhost:8889/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"prometheus\"}), \"metrics\",\"http://localhost:9090/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"grafana\"}), \"metrics\",\"http://localhost:9300/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"loki\"}), \"metrics\",\"http://localhost:3100/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"jaeger\"}), \"metrics\",\"http://localhost:8890/metrics\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"port_exporter\"}), \"metrics\",\"http://localhost:9101/\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"dir_size_exporter\"}), \"metrics\",\"http://localhost:9102/\",\"app\",\".*\")) or (label_replace(max by (app)(up{app=\"gitlab_runner\"}), \"metrics\",\"http://localhost:9252/metrics\",\"app\",\".*\")), \"metrics_icon\",\"↗\",\"app\",\".*\")",
           "instant": true,
           "format": "table"
         }

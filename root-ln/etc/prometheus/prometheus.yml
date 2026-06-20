@@ -66,3 +66,9 @@ scrape_configs:
       - targets: ["localhost:9300"]
         labels:
           app: "grafana"
+
+  - job_name: "gitlab-runner"
+    static_configs:
+      - targets: ["localhost:9252"]
+        labels:
+          app: "gitlab_runner"

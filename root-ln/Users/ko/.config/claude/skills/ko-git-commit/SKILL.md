@@ -5,9 +5,10 @@ description: Write a conventional commit message from authored changes. Write, g
 
 ## /ko-git-commit Steps
 
-1. Decide amend/fresh commit:
+1. Sync: `$ s-rt-git-sync-onto-main`. Exit 22 → resolve conflicts. Exit 23 → continue on `main`
+2. Decide amend/fresh commit:
    - same logical unit, target commit not on `main` (local or unmerged branch) → amend: `$ git reset --soft HEAD~1`. Pushed-but-unmerged → later force-push
    - else → fresh commit
-2. Stage all: `$ git add .`
-3. Generate from staged diff: `$ s-rt-llm-git-commit-msg-suggest` → `{subject, description}`.
-4. `$ git commit -m "<subject>" -m "<description>"`
+3. Stage all: `$ git add .`
+4. Generate from staged diff: `$ s-rt-llm-git-commit-msg-suggest` → `{subject, description}`.
+5. `$ git commit -m "<subject>" -m "<description>"`

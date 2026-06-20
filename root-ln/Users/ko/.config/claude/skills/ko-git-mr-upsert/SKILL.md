@@ -12,7 +12,7 @@ description: Create or update the MR/PR with a title and description from branch
 3. Generate: `$ s-rt-llm-git-mr-text-suggest` → `{title, description}` from `main...HEAD`.
 4. Pick CLI from `git remote get-url origin`: gitlab.com → `glab` | github.com → `gh`.
 5. Upsert MR:
-   - no open MR → create
+   - no open MR → create as draft (`glab mr create --draft ...` | `gh pr create --draft ...`)
    - open MR →
-    - same source branch → edit text: update
-    - changed source branch → close + create
+    - same source branch → edit text: update (leave draft/ready untouched)
+    - changed source branch → close + create as draft
