@@ -5,6 +5,7 @@ references:
   docs/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 ##[>] primary
+ccstatusline: root-ln/Users/ko/.config/ccstatusline/settings.json
 claude: root-ln/Users/ko/.config/claude/settings.json
 defaults: root-ln/etc/defaults.yml
 duti: root-ln/etc/custom/os-open-files-with.yml

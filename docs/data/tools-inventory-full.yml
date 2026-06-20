@@ -24,6 +24,10 @@ tools:
           .tool-versions:
         root-ln/etc/zsh/functions/fn_asdf_install:
 
+  - ccstatusline:
+      files:
+        root-ln/Users/ko/.config/ccstatusline/settings.json:
+
   - claude:
       files:
         root-ln/Users/ko/.config/claude/:
