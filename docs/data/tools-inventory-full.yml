@@ -43,10 +43,6 @@ tools:
           usr/local/scripts/shell/s-rt-load-defaults-config:
           Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist:
 
-  - direnv:
-      files:
-        root-ln/Users/ko/.config/direnv/direnv.toml:
-
   - editorconfig:
       files:
         root-ln/Users/ko/.editorconfig:
