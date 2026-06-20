@@ -39,10 +39,17 @@ test-scripts:
 test-configs-e2e-macos:
   stage: test
   needs: []
+  #[…] 🤖🤖
+  rules:
+    - if: $CI_MERGE_REQUEST_DRAFT == "true"
+      when: never
+    - when: on_success
+  #[⫶] 🤖🤖
   #[∵] macos remote vms have minimum lease time of 24h, I don't need 24/7 instance running so my local machine polls gitlab pipeline, executes the job and sends results back
   tags: [local]
   image: ko-macos-tahoe-vanilla
   resource_group: local-macos
+  interruptible: true  #[≟] newer pipeline auto-cancels this job 🤖🤖
   variables:
     GIT_CLONE_PATH: $CI_BUILDS_DIR/configs
   script:
