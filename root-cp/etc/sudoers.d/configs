@@ -1,6 +1,3 @@
-ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-delete-broken-links *
-ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-mk-dirs *
-ko ALL=(root) NOPASSWD: /usr/local/scripts/shell/s-rt-upsert-configs *
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/s-rt-delete-broken-links *
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/s-rt-mk-dirs *
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/s-rt-upsert-configs *
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/delete-broken-links *
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/mk-dirs *
+ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/upsert-configs *
