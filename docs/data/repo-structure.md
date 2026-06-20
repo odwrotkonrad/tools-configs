@@ -25,6 +25,8 @@ root-cp
   etc
     sudoers.d
 root-ln
+  Library
+    LaunchAgents
   Users
     ko
       .config

@@ -24,7 +24,7 @@ reload() {
 }
 
 #[…] user agents
-reload "gui/$(id -u)" "" "$HOME"/Library/LaunchAgents/d-ko-*.plist
+reload "gui/$(id -u)" "" "$HOME"/Library/LaunchAgents/d-ko-*.plist /Library/LaunchAgents/d-ko-*.plist
 #[⫶] user agents
 
 #[…] root daemons
