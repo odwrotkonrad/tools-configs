@@ -27,6 +27,9 @@ root-ln
   Users
     ko
       .config
+        agents
+          docs
+          templates
         asdf
         aws
         azure
@@ -35,7 +38,6 @@ root-ln
           agent-memory
           agents
           commands
-          memory
           output-styles
           plugins
             marketplaces

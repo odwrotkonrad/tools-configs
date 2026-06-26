@@ -49,6 +49,7 @@ references:
   assets/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 ##[>] primary
+agents: root-ln/Users/ko/.config/agents/templates/AGENTS.md.host.auto.tmpl
 ccstatusline: root-ln/Users/ko/.config/ccstatusline/settings.json
 claude: root-ln/Users/ko/.config/claude/settings.json
 codex: root-ln/Users/ko/.config/codex/config.toml
@@ -144,6 +145,9 @@ root-ln
   Users
     ko
       .config
+        agents
+          docs
+          templates
         asdf
         aws
         azure
@@ -152,7 +156,6 @@ root-ln
           agent-memory
           agents
           commands
-          memory
           output-styles
           plugins
             marketplaces
