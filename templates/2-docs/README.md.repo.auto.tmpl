@@ -1,11 +1,11 @@
 ---
 render-to: README.md
 ---
-{{- $inv := readWithFrontmatter "docs/data/tools-inventory-index.yml" | data.YAML -}}
+{{- $inv := readWithFrontmatter "assets/data/tools-inventory-index.yml" | data.YAML -}}
 ## **Config**uration file**s**
 
-{{ file.Read "docs/prose/description/human.md" }}
-{{ file.Read "docs/prose/purpose.human.md" }}
+{{ file.Read "assets/docs-human/description.md" }}
+{{ file.Read "assets/docs-human/purpose.md" }}
 ## {{ $inv.frontmatter.title }}
 
 {{ $inv.frontmatter.description }}
@@ -22,20 +22,20 @@ render-to: README.md
 
 Dashboard for Claude Code usage, cost and token metrics.
 
-![Claude Code dashboard](docs/assets/images/grafana-claude-code-dashboard-pt-1.png)
+![Claude Code dashboard](assets/images/grafana-claude-code-dashboard-pt-1.png)
 
-[recording](docs/assets/recordings/grafana-cc-dashboard.gif) · [more](docs/assets/images/grafana-claude-code-dashboard-pt-2.png)
+[recording](assets/recordings/grafana-cc-dashboard.gif) · [more](assets/images/grafana-claude-code-dashboard-pt-2.png)
 
 ### Host System
 
 Dashboard for host CPU, memory, disk and network metrics.
 
-![Host system dashboard](docs/assets/images/grafana-host-dashboard-pt-1.png)
+![Host system dashboard](assets/images/grafana-host-dashboard-pt-1.png)
 
-[recording](docs/assets/recordings/grafana-host-dashboard.gif) · [more](docs/assets/images/grafana-host-dashboard-pt-2.png)
+[recording](assets/recordings/grafana-host-dashboard.gif) · [more](assets/images/grafana-host-dashboard-pt-2.png)
 
 ## ☢️ Danger Zone - Loading Configs ☢️
 
 Loading configuration directly modifies the OS, including system, non-user files. If you find anything of interest, prefer copying these pieces into your own config.
 
-[Loading Configs](docs/prose/loading-configuration.md)
+[Loading Configs](assets/docs-human/loading-configuration.md)
