@@ -55,6 +55,7 @@ root-ln
             ko-git-mr-upsert
             ko-git-upsert-all
           themes
+        codex
         gcloud
           configurations
         git
