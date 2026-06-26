@@ -40,6 +40,10 @@ tools:
             known_marketplaces.json:
             installed_plugins.json:
 
+  - codex:
+      files:
+        root-ln/Users/ko/.config/codex/config.toml:
+
   - defaults:
       files:
         root-ln/:

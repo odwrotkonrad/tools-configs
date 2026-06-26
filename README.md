@@ -18,6 +18,7 @@ Tool -> primary config file.
 ##[>] primary
 ccstatusline: root-ln/Users/ko/.config/ccstatusline/settings.json
 claude: root-ln/Users/ko/.config/claude/settings.json
+codex: root-ln/Users/ko/.config/codex/config.toml
 defaults: root-ln/etc/defaults.yml
 duti: root-ln/etc/custom/os-open-files-with.yml
 git: root-ln/Users/ko/.config/git/config
