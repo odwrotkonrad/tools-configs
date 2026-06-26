@@ -9,16 +9,21 @@ add-zsh-hook chpwd fn_otel_resource_cwd
 fn_otel_resource_cwd
 
 function fn_auth_glab {
-  local cfg=${XDG_CONFIG_HOME:-$HOME/.config}/glab-cli/config.yml
-  [[ -s $cfg ]] || glab --help >/dev/null 2>&1  #[why] any glab run, even --help, generates config.yml
-  yq -e '(.hosts."gitlab.com".token // "") != ""' $cfg >/dev/null 2>&1 && return 0
-  local token=$(op read "op://ProgrammaticAccess/gitlab_pat/password")
-  [[ -n $token ]] && yq -i ".hosts.\"gitlab.com\".token = \"$token\"" $cfg
+  glab auth status >/dev/null 2>&1 && return 0
+  local token=$(op read "op://ProgrammaticAccess/gitlab/access_token")
+  [[ -n $token ]] && print -r -- $token | glab auth login --hostname gitlab.com --stdin
+}
+
+function fn_auth_codex {
+  codex login status >/dev/null 2>&1 && return 0
+  local key=$(op read "op://ProgrammaticAccess/codex/api_key")
+  [[ -n $key ]] && print -r -- $key | codex login --with-api-key
 }
 
 function fn_preexec_dispatch {
   case ${1} in
-    glab*) fn_auth_glab ;;
+    glab*)  fn_auth_glab ;;
+    codex*) fn_auth_codex ;;
   esac
   return 0
 }

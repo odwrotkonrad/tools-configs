@@ -1,0 +1,62 @@
+#!/bin/zsh
+#>[what]
+#   1. search for all *.host.auto.tmpl templates
+#   2. render it on the host
+#/[what]
+
+emulate -LR zsh
+IFS=
+setopt errexit pipefail
+autoload -Uz log-msg tmpl-strip-frontmatter-if-empty tmpl-resolve-at-includes tmpl-header
+
+configs=${1:-/Users/ko/projects/configs}
+t_ext='.host.auto.tmpl'
+
+##[>] 🤖
+filemode_default=0600
+typeset -A filemode_custom=()
+##[<] 🤖
+
+function render_template {
+  local template=$1
+  local render_to filemode
+
+  ##[>] 🤖🤖
+  #[what] no frontmatter: render to /<template%ext>, the live absolute path
+  if [[ $(head -1 $template) != '---' ]] {
+    render_to=/${template%${t_ext}}
+    filemode=${filemode_custom[$render_to]:-$filemode_default}
+    gomplate --chmod $filemode -f $template -o $render_to ; log-msg -t gomplate -- $render_to
+    return
+  }
+
+  #[what] read render-to as a list of live paths (scalar back-compat via flatten)
+  local -a render_tos=( ${(f)"$(yq -f extract '[.render-to] | flatten | .[]' $template)"} )
+  render_tos=( ${render_tos/#\~/$HOME} ) #[what] /# - anchor ~ to the front, expand to $HOME
+
+  #[what] render body once to a temp, fan out per output
+  local body=$(mktemp)
+  yq -f process 'del(.render-to)' $template \
+    | tmpl-strip-frontmatter-if-empty \
+    | gomplate > $body
+
+  for render_to ( $render_tos ) {
+    filemode=${filemode_custom[$render_to]:-$filemode_default}
+    #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
+    tmpl-header $render_to $template > $render_to
+    if [[ ${render_to:t} == *AGENTS* ]] {
+      tmpl-resolve-at-includes $configs < $body >> $render_to
+    } else {
+      cat $body >> $render_to
+    }
+    chmod $filemode $render_to
+    log-msg -t gomplate -- $render_to
+  }
+  rm -f $body
+  ##[<] 🤖🤖
+}
+
+pushd $configs/root-ln
+#[what] . - regular files, D - GLOB_DOT opt (search hidden)
+for template ( **/*${t_ext}(.D) ) render_template $template
+popd

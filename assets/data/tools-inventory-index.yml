@@ -2,11 +2,13 @@
 title: Tools Inventory Index
 description: Tool -> primary config file.
 references:
-  docs/data/tools-inventory-full.yml: Full file lists per tool.
+  assets/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 ##[>] primary
+agents: root-ln/Users/ko/.config/agents/templates/AGENTS.md.host.auto.tmpl
 ccstatusline: root-ln/Users/ko/.config/ccstatusline/settings.json
 claude: root-ln/Users/ko/.config/claude/settings.json
+codex: root-ln/Users/ko/.config/codex/config.toml
 defaults: root-ln/etc/defaults.yml
 duti: root-ln/etc/custom/os-open-files-with.yml
 git: root-ln/Users/ko/.config/git/config

@@ -18,7 +18,7 @@ typeset -A script_input=(
 
   opt_model "${opt_model[2]}"
   opt_schema "${opt_schema[2]}"
-  opt_api_key_uri "${opt_api_key_uri[2]:-op://ProgrammaticAccess/claude_api_key/password}"
+  opt_api_key_uri "${opt_api_key_uri[2]:-op://ProgrammaticAccess/claude/api_key}"
 )
 ##[<] script input
 

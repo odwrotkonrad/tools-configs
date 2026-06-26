@@ -30,8 +30,8 @@ home=/Users/${configs_owner%%:*}
 #[why] mk_dirs sorts (o) so parents precede children for plain mkdir (no -p)
 dirs_user_space=(
   .cache{,/homebrew,/zsh}
-  .config
-  .local{,/bin,/share,/state,/state/asdf,/state/homebrew,/state/log,/state/vim,/state/vim/undo,/state/zsh,/state/zsh/completions} #[what] 🤖🤖
+  .config{,/codex}
+  .local{,/bin,/share,/state,/state/asdf,/state/codex,/state/codex/log,/state/homebrew,/state/log,/state/vim,/state/vim/undo,/state/zsh,/state/zsh/completions} #[what] 🤖🤖
   ScreenCapture
 )
 dirs_user_space=( $home/${^dirs_user_space} )

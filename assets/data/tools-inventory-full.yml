@@ -2,7 +2,7 @@
 title: Tools Inventory
 description: Inventory of tools and their config files.
 references:
-  docs/data/tools-inventory-index.yml: Primary config file per tool.
+  assets/data/tools-inventory-index.yml: Primary config file per tool.
 ---
 
 #[what] Shared files referenced by many tools.
@@ -39,6 +39,10 @@ tools:
           plugins/:
             known_marketplaces.json:
             installed_plugins.json:
+
+  - codex:
+      files:
+        root-ln/Users/ko/.config/codex/config.toml:
 
   - defaults:
       files:

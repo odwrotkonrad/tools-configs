@@ -33,11 +33,11 @@ run-host-mk-dirs:
 	@sudo $(PRETTY) mk-dirs
 
 run-host-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/render-templates-onto-host
+	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-host
 
 RENDER_LOCAL ?= --local
 run-repo-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/s-rt-render-templates-onto-repo $(RENDER_LOCAL) $(CURDIR)
+	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-repo $(RENDER_LOCAL) $(CURDIR)
 
 run-repo-tests:
 	@$(PRETTY) pytest tests/scripts/python
