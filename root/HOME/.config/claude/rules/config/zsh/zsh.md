@@ -50,7 +50,6 @@ paths:
               rm:
               exit-with:
               print-with:
-              with-sections:
               fn-root-load-os-open-files-with:
               fn-root-ssh-generate-keys:
               fn-root-ssh-test-git-connection:

@@ -16,29 +16,11 @@ configs=${1:-$HOME/projects/configs}
 
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 
-#[what] map a repo-relative path to its live dest: HOME/<rest> -> $HOME/<rest>, else /<rest>
-function to_dest { [[ $1 == HOME/* ]] && print -r -- $HOME/${1#HOME/} || print -r -- /$1 }
-
-function cp_owner {
-  local src=$1
-  local dest=$2
-  local owner=$(stat -f '%u:%g' -- $src)
-
-  # -h - change owner of the link
-  chown -h -- $owner $dest ; log-msg -t chown -- "$owner $dest"  #[what] -h: the link itself, not its target
-}
-
-function cp_perms {
-  local src=$1
-  local dest=$2
-  local perms=$(stat -f '%Lp' -- $src)
-
-  # -h - change perms of the link
-  chmod -h -- $perms $dest ; log-msg -t chmod -- "$perms $dest"
-}
+#[what] map a repo-relative path to its live dest: HOME or HOME/<rest> -> $HOME[/<rest>], else /<rest>
+function to_dest { [[ $1 == HOME || $1 == HOME/* ]] && print -r -- ${HOME}${1#HOME} || print -r -- /$1 }
 
 #[what] copied dests with explicit owner:perms; format 'owner:group mode'
-#[why] root-owned launchd daemons must be root:wheel 0644; no entry -> mirror repo file
+#[why] sole source of owner/perms; root-owned launchd daemons must be root:wheel 0644
 typeset -A perms=()
 for d ( dir-size-exporter grafana jaeger loki otelcol port-exporter prometheus ) {
   perms[/Library/LaunchDaemons/d-root-$d.plist]='root:wheel 0644'
@@ -62,13 +44,15 @@ copy_files=( **/*${cp_ext} )        #[what] copy-pass set
 #[why] built from ALL repo files (links + copies) so parents exist for both passes
 for dir ( $repo_dirs ) { while [[ $dir == */* ]] { repo_dirs_all+=$dir; dir=$dir:h }; repo_dirs_all+=$dir } #[what] 🤖🤖
 
-# 2. create dirs (parents first), copying owner and file permissions #[what] 🤖🤖
+# 2. create dirs (parents first) #[what] 🤖🤖
+home_user=${SUDO_USER:-$(stat -f '%Su' -- $HOME)} #[why] root runs this; HOME-tree dirs belong to the invoking user (SUDO_USER), not root
 for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before children
   ddir=$(to_dest $dir)
-  if [[ ! -d $ddir ]] {
+  if [[ -d $ddir ]] { continue }
+  if [[ $dir == HOME/* ]] {  #[what] 🤖🤖 make HOME-tree dirs as the user, so they are user-owned from birth (no chown)
+    sudo -u $home_user mkdir $ddir; log-msg -t mkdir -- "$ddir ($home_user)"
+  } else {
     mkdir $ddir; log-msg -t mkdir -- $ddir  #[what] 🤖🤖 no -p
-    cp_owner $dir $ddir
-    cp_perms $dir $ddir
   }
 }
 
@@ -78,8 +62,6 @@ for file ( $repo_files_ex ) {
   if [[ ${dest:A} != ${file:A} ]] {
     fn-root-backup-if-exists --repo-root $configs $dest  #[what] keep any non-repo dest first
     ln -fws ${file:a} $dest ; log-msg -t ln -- $dest
-    cp_owner $file $dest
-    cp_perms $file $dest
   }
 }
 ##[<] link pass
@@ -94,9 +76,6 @@ for file ( $copy_files ) {
       perm=${perms[$dest]}
       chown -- ${perm%% *} $dest; log-msg -t chown -- "${perm%% *} $dest"
       chmod -- ${perm##* } $dest; log-msg -t chmod -- "${perm##* } $dest"
-    } else {
-      cp_owner $file $dest #[what] no entry -> mirror repo file
-      cp_perms $file $dest
     }
   }
 }
