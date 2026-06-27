@@ -49,10 +49,10 @@ home_user=${SUDO_USER:-$(stat -f '%Su' -- $HOME)} #[why] root runs this; HOME-tr
 for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before children
   ddir=$(to_dest $dir)
   if [[ -d $ddir ]] { continue }
-  if [[ $dir == HOME/* ]] {  #[what] 🤖🤖 make HOME-tree dirs as the user, so they are user-owned from birth (no chown)
-    sudo -u $home_user mkdir $ddir; log-msg -t mkdir -- "$ddir ($home_user)"
+  if [[ $dir == HOME/* ]] {  #[what] 🤖🤖 HOME-tree: made as the user (user-owned, no chown), 0750 (group read, no world)
+    (umask 027; sudo -u $home_user mkdir $ddir); log-msg -t mkdir -- "$ddir ($home_user)"
   } else {
-    mkdir $ddir; log-msg -t mkdir -- $ddir  #[what] 🤖🤖 no -p
+    (umask 022; mkdir $ddir); log-msg -t mkdir -- $ddir  #[what] 🤖🤖 root-tree: 0755 (world-readable); no -p
   }
 }
 
@@ -71,7 +71,8 @@ for file ( $copy_files ) {
   dest=$(to_dest ${file%${cp_ext}}) #[what] strip marker -> live path
   if { ! cmp -s ${file:a} $dest } {
     fn-root-backup-if-exists $dest  #[what] a real copied dest is never a repo-pointing symlink (no --repo-root)
-    cp ${file:a} $dest; log-msg -t cp -- $dest
+    if [[ ${file%${cp_ext}} == HOME/* ]] { (umask 027; cp ${file:a} $dest) } else { (umask 022; cp ${file:a} $dest) } #[what] 🤖🤖 HOME-tree 0640, root-tree 0644
+    log-msg -t cp -- $dest
     if [[ -n ${perms[$dest]} ]] {
       perm=${perms[$dest]}
       chown -- ${perm%% *} $dest; log-msg -t chown -- "${perm%% *} $dest"

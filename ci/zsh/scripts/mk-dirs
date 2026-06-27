@@ -1,24 +1,26 @@
 #!/bin/zsh
 
 emulate -LR zsh
-setopt errexit
+setopt errexit localtraps
 autoload -Uz log-msg
 
 : ${HOME:?HOME must be set}
 
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 
-typeset configs configs_owner home
+typeset configs configs_owner configs_user home
 typeset -a dirs_user_space dirs_root_space dirs_system_space dirs_system_space_world
 
 function mk_dirs {
-  local -a owner perms
+  local -a user owner perms umask_opt
   local dir
-  zparseopts -D -E -owner:=owner -perms:=perms
+  zparseopts -D -E -user:=user -owner:=owner -perms:=perms -umask:=umask_opt  #[what] 🤖🤖 --user: create as this user (owned at birth, no chown); --umask: scope creation mode
+  if (( $#umask_opt )) { local saved=$(umask); umask $umask_opt[2]; trap "umask $saved" EXIT }  #[what] 🤖🤖 localtraps restores on return
   for dir ( ${(o)@} ) {  #[what] 🤖🤖 (o) lexical sort -> parents before children
     if [[ ! -d $dir ]] {
-      mkdir $dir ; log-msg -t mkdir -- $dir  #[what] 🤖🤖 no -p; parents made first
-      if (( $#owner )) { chown $owner[2] $dir; log-msg -t chown -- "$dir $owner[2]" }  #[what] 🤖🤖 no -R; per-dir
+      if (( $#user )) { sudo -u $user[2] mkdir $dir } else { mkdir $dir }  #[what] 🤖🤖 no -p; parents made first
+      log-msg -t mkdir -- $dir
+      if (( $#owner )) { chown $owner[2] $dir; log-msg -t chown -- "$dir $owner[2]" }  #[what] 🤖🤖 no -R; per-dir; only for custom owner
       if (( $#perms )) { chmod $perms[2] $dir; log-msg -t chmod -- "$dir $perms[2]" }
     }
   }
@@ -26,6 +28,7 @@ function mk_dirs {
 
 configs=${1:-$HOME/projects/configs}
 configs_owner=$(stat -f '%Su:%Sg' -- $configs)
+configs_user=${SUDO_USER:-${configs_owner%%:*}} #[what] 🤖🤖 invoking user; user-space dirs created under this identity
 home=$HOME
 
 #[what] 🤖🤖 braces enumerate parents+children; empty element {,..} keeps the parent dir itself
@@ -52,7 +55,7 @@ dirs_system_space_world=(
 
 
 # create dirs
-mk_dirs --owner $configs_owner $dirs_user_space
-mk_dirs --owner root:wheel $dirs_root_space
-mk_dirs --owner root:${configs_owner#*:} --perms 2775 $dirs_system_space
-mk_dirs --perms 1777 $dirs_system_space_world
+mk_dirs --umask 027 --user $configs_user $dirs_user_space                          #[what] 🤖🤖 user-owned at birth; 0750 (group read, no world)
+mk_dirs --umask 022 $dirs_root_space                                               #[what] 🤖🤖 root:wheel default; 0755 (world-readable)
+mk_dirs --owner root:${configs_owner#*:} --perms 2775 $dirs_system_space #[what] custom group + setgid; chmod sets mode (umask moot)
+mk_dirs --perms 1777 $dirs_system_space_world                          #[what] custom sticky world-writable; chmod sets mode (umask moot)
