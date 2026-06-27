@@ -28,7 +28,7 @@ function delete_broken_links {
   # 3. dirs -> OS dirs; HOME/<rest> -> $HOME/<rest>, else /<rest>
   local -a os_dirs
   for dir ( $dirs ) {
-    [[ $dir == HOME/* ]] && os_dirs+=$HOME/${dir#HOME/} || os_dirs+=/$dir
+    [[ $dir == HOME/* ]] && os_dirs+=( $HOME/${dir#HOME/} ) || os_dirs+=( /$dir )
   }
   dirs=( $os_dirs )
 
@@ -40,7 +40,7 @@ function delete_broken_links {
 
   # 5. broken links -> trash
 
-  if (( $#broken )) { rm $broken ; log-msg -t rm -- $broken }
+  if (( $#broken )) { rm $broken ; log-msg -t rm -- ${(j: :)broken} }
 }
 
 pushd $configs/root

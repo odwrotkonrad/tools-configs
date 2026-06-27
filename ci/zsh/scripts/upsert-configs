@@ -50,7 +50,7 @@ for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before c
   ddir=$(to_dest $dir)
   if [[ -d $ddir ]] { continue }
   if [[ $dir == HOME/* ]] {  #[what] 🤖🤖 HOME-tree: made as the user (user-owned, no chown), 0750 (group read, no world)
-    (umask 027; sudo -u $home_user mkdir $ddir); log-msg -t mkdir -- "$ddir ($home_user)"
+    (umask 027; sudo -u $home_user mkdir $ddir); log-msg -t mkdir -- $ddir
   } else {
     (umask 022; mkdir $ddir); log-msg -t mkdir -- $ddir  #[what] 🤖🤖 root-tree: 0755 (world-readable); no -p
   }
