@@ -4,6 +4,8 @@ emulate -LR zsh
 setopt errexit
 autoload -Uz log-msg
 
+: ${HOME:?HOME must be set}
+
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 
 typeset configs configs_owner home
@@ -22,9 +24,9 @@ function mk_dirs {
   }
 }
 
-configs=${1:-/Users/ko/projects/configs}
+configs=${1:-$HOME/projects/configs}
 configs_owner=$(stat -f '%Su:%Sg' -- $configs)
-home=/Users/${configs_owner%%:*}
+home=$HOME
 
 #[what] 🤖🤖 braces enumerate parents+children; empty element {,..} keeps the parent dir itself
 #[why] mk_dirs sorts (o) so parents precede children for plain mkdir (no -p)
@@ -45,7 +47,7 @@ dirs_system_space=(
 )
 
 dirs_system_space_world=(
-  /var/custom/cache/s-rt-get-term-open-files-with
+  /var/custom/cache/s-root-get-term-open-files-with
 )
 
 

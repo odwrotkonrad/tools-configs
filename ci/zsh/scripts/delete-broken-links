@@ -9,7 +9,9 @@ emulate -LR zsh
 setopt errexit dotglob
 IFS=
 autoload -Uz log-msg
-configs=${1:-/Users/ko/projects/configs}
+configs=${1:-$HOME/projects/configs}
+
+: ${HOME:?HOME must be set}
 
 function delete_broken_links {
   local root=$1 ; log-msg -t delete-broken-links -- $root
@@ -23,21 +25,24 @@ function delete_broken_links {
   # 2. dirs -> dirs with at least 2 parts #[why] reducing search radius
   dirs=( ${(M)dirs:#*/?*} ) # [what] (M) keep matches, pattern: path with atleast one non trailing slash
 
-  # 3. dirs -> OS dirs
-  dirs=( /${^dirs} )
+  # 3. dirs -> OS dirs; HOME/<rest> -> $HOME/<rest>, else /<rest>
+  local -a os_dirs
+  for dir ( $dirs ) {
+    [[ $dir == HOME/* ]] && os_dirs+=$HOME/${dir#HOME/} || os_dirs+=/$dir
+  }
+  dirs=( $os_dirs )
 
-  # 4. dirs -> broken links
+  # 4. dirs -> broken links (ignore our *.bk backups)
   for dir ( $dirs ) {
     broken+=( $dir/*(-@N) )
   }
+  broken=( ${broken:#*.bk} )
 
   # 5. broken links -> trash
 
   if (( $#broken )) { rm $broken ; log-msg -t rm -- $broken }
 }
 
-for root ( root-{ln,cp} ) {
-  pushd $configs/$root
-  delete_broken_links $root
-  popd
-}
+pushd $configs/root
+delete_broken_links root
+popd

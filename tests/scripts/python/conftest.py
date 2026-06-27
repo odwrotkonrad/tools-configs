@@ -5,7 +5,7 @@ import sys
 import pytest
 
 HERE = Path(__file__).resolve().parent
-SCRIPTS_DIR = HERE.parents[2] / "root-ln/usr/local/scripts/python"
+SCRIPTS_DIR = HERE.parents[2] / "root/usr/local/scripts/python"
 
 for path in (HERE, SCRIPTS_DIR):
     if str(path) not in sys.path:

@@ -12,7 +12,7 @@ autoload -Uz log-msg tmpl-strip-frontmatter-if-empty tmpl-resolve-at-includes tm
 
 ##[>] 🤖🤖
 zparseopts -D -F -- -local=local || exit 1
-configs=${1:-/Users/ko/projects/configs}
+configs=${1:-$HOME/projects/configs}
 local_glob='*local*'
 ##[<] 🤖🤖
 

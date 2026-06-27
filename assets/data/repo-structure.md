@@ -21,73 +21,68 @@ ci
     functions
     scripts
       installs
-root-cp
-  Library
-    LaunchDaemons
-  etc
-    sudoers.d
-root-ln
+root
+  HOME
+    .config
+      agents
+        docs
+        templates
+      asdf
+      aws
+      azure
+      ccstatusline
+      claude
+        agent-memory
+        agents
+        commands
+        output-styles
+        plugins
+          marketplaces
+        rules
+          code
+            python
+            zsh
+          config
+            zsh
+          docs
+        skills
+          user-git-branch-name-upsert
+          user-git-commit
+          user-git-mr-upsert
+          user-git-upsert-all
+        themes
+      codex
+      gcloud
+        configurations
+      git
+      homebrew
+      kitty
+      lefthook
+      mypy
+      prettier
+      ruff
+      tmux
+      vim
+      zsh
+        zshenv.d
+          auto.d
+          functions
+        zshrc.d
+          auto.d
+          completions
+          functions
+    .gitlab-runner
+    .ollama
+    .ssh
+    Library
+      Application Support
+        Code
+          User
+            .exported
+      LaunchAgents
   Library
     LaunchAgents
-  Users
-    ko
-      .config
-        agents
-          docs
-          templates
-        asdf
-        aws
-        azure
-        ccstatusline
-        claude
-          agent-memory
-          agents
-          commands
-          output-styles
-          plugins
-            marketplaces
-          rules
-            code
-              python
-              zsh
-            config
-              zsh
-            docs
-          skills
-            ko-git-branch-name-upsert
-            ko-git-commit
-            ko-git-mr-upsert
-            ko-git-upsert-all
-          themes
-        codex
-        gcloud
-          configurations
-        git
-        homebrew
-        kitty
-        lefthook
-        mypy
-        prettier
-        ruff
-        tmux
-        vim
-        zsh
-          zshenv.d
-            auto.d
-            functions
-          zshrc.d
-            auto.d
-            completions
-            functions
-      .gitlab-runner
-      .ollama
-      .ssh
-      Library
-        Application Support
-          Code
-            User
-              .exported
-        LaunchAgents
+    LaunchDaemons
   etc
     custom
     gomplate
@@ -103,6 +98,7 @@ root-ln
     prometheus
     python
     rg
+    sudoers.d
     zsh
       zshenv.d
         auto.d
@@ -116,7 +112,7 @@ root-ln
       scripts
         installs
         python
-          s_rt_scripts_lib
+          s_root_scripts_lib
         shell
           lib
           templates-llm
@@ -127,9 +123,9 @@ templates
 tests
   scripts
     python
-      s-rt-generate-tree
+      s-root-generate-tree
         fixture
-      s-rt-get-os-open-files-with
-      s-rt-get-term-open-files-with
+      s-root-get-os-open-files-with
+      s-root-get-term-open-files-with
         mock
-      s_rt_scripts_test_lib
+      s_root_scripts_test_lib

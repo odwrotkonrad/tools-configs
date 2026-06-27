@@ -1,7 +1,7 @@
 #!/bin/sh
 #>[what]
 #   reload running service launchagents and launchdaemons
-#   kickstart each loaded d-ko-* (agents) / d-rt-* (daemons) in its domain, bootstrap if absent
+#   kickstart each loaded d-user-* (agents) / d-root-* (daemons) in its domain, bootstrap if absent
 #   agents -> gui/<uid> (user) · daemons -> system (root, via sudo)
 #/[what]
 
@@ -24,9 +24,9 @@ reload() {
 }
 
 ##[>] user agents
-reload "gui/$(id -u)" "" "$HOME"/Library/LaunchAgents/d-ko-*.plist /Library/LaunchAgents/d-ko-*.plist
+reload "gui/$(id -u)" "" "$HOME"/Library/LaunchAgents/d-user-*.plist /Library/LaunchAgents/d-user-*.plist
 ##[<] user agents
 
 ##[>] root daemons
-reload system sudo /Library/LaunchDaemons/d-rt-*.plist
+reload system sudo /Library/LaunchDaemons/d-root-*.plist
 ##[<] root daemons

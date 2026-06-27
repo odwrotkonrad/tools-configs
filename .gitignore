@@ -1,4 +1,4 @@
-!root-ln/**/.*
+!root/**/.*
 
 # project-local vscode workspace settings
 !.vscode/
@@ -13,14 +13,11 @@ __pycache__/
 .pytest_cache/
 **/.mypy_cache/
 
-/root-ln/etc/**/*local*
+
+/root/etc/**/*local*
 
 # rendered packer variables
 /ci/local/vm/templates/*.local.pkrvars.hcl
 
 # go binaries built on demand by run-repo-ci-prepare-executables
 /ci/go/bin/
-
-# azure cli writes auth state + indexes into its config dir; track only config
-/root-ln/Users/ko/.config/azure/*
-!/root-ln/Users/ko/.config/azure/config

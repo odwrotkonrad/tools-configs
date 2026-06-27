@@ -1,3 +1,0 @@
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/delete-broken-links *
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/mk-dirs *
-ko ALL=(root) NOPASSWD: /Users/ko/projects/configs/ci/zsh/scripts/upsert-configs *

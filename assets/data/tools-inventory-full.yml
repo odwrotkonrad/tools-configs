@@ -7,8 +7,8 @@ references:
 
 #[what] Shared files referenced by many tools.
 files:
-  root-ln/Users/ko/.config/zsh/rc.d/10-tools.zsh:
-  root-ln/etc/:
+  root/HOME/.config/zsh/rc.d/10-tools.zsh:
+  root/etc/:
     zshenv:
     zshrc:
     zsh/rc.d/20-tools.zsh:
@@ -19,18 +19,18 @@ files:
 tools:
   - asdf:
       files:
-        root-ln/Users/ko/:
+        root/HOME/:
           .config/asdf/.asdfrc:
           .tool-versions:
-        root-ln/etc/zsh/functions/fn_asdf_install:
+        root/etc/zsh/functions/fn_asdf_install:
 
   - ccstatusline:
       files:
-        root-ln/Users/ko/.config/ccstatusline/settings.json:
+        root/HOME/.config/ccstatusline/settings.json:
 
   - claude:
       files:
-        root-ln/Users/ko/.config/claude/:
+        root/HOME/.config/claude/:
           CLAUDE.md:
           settings.json:
           agents/:
@@ -42,28 +42,28 @@ tools:
 
   - codex:
       files:
-        root-ln/Users/ko/.config/codex/config.toml:
+        root/HOME/.config/codex/config.toml.host.auto.tmpl:
 
   - defaults:
       files:
-        root-ln/:
+        root/:
           etc/defaults.yml:
-          usr/local/scripts/shell/s-rt-load-defaults-config:
-          Users/ko/Library/LaunchAgents/d-ko-load-defaults-config.plist:
+          usr/local/scripts/shell/s-root-load-defaults-config:
+          Users/ko/Library/LaunchAgents/d-user-load-defaults-config.plist:
 
   - editorconfig:
       files:
-        root-ln/Users/ko/.editorconfig:
+        root/HOME/.editorconfig:
 
   - fzf:
 
   - git:
       files:
-        root-ln/Users/ko/.config/git/:
+        root/HOME/.config/git/:
           config:
           ignore:
           commit-template:
-        root-ln/etc/zsh/functions/fn-rt-ssh-test-git-connection:
+        root/etc/zsh/functions/fn-root-ssh-test-git-connection:
 
   - golang:
 
@@ -71,13 +71,13 @@ tools:
 
   - jaeger:
       files:
-        root-ln/etc/jaeger/config.yml:
-        root-ln/usr/local/scripts/installs/s-rt-install-jaeger:
-        root-cp/Library/LaunchDaemons/d-rt-jaeger.plist:
+        root/etc/jaeger/config.yml:
+        root/usr/local/scripts/installs/s-root-install-jaeger:
+        root/Library/LaunchDaemons/d-root-jaeger.plist.host.auto.cp:
 
   - kitty:
       files:
-        root-ln/Users/ko/.config/kitty/:
+        root/HOME/.config/kitty/:
           kitty.conf:
           dark-theme.auto.conf:
           light-theme.auto.conf:
@@ -85,64 +85,64 @@ tools:
 
   - man:
       files:
-        root-ln/etc/man.conf:
+        root/etc/man.conf:
 
   - nvm:
       files:
-        root-ln/Users/ko/.nvmrc:
+        root/HOME/.nvmrc:
 
   - prettier:
       files:
-        root-ln/Users/ko/.config/prettier/.prettierrc.yml:
+        root/HOME/.config/prettier/.prettierrc.yml:
 
   - prometheus:
       files:
-        root-ln/etc/prometheus/prometheus.yml:
-        root-ln/usr/local/scripts/installs/s-rt-install-prometheus:
-        root-cp/Library/LaunchDaemons/d-rt-prometheus.plist:
+        root/etc/prometheus/prometheus.yml:
+        root/usr/local/scripts/installs/s-root-install-prometheus:
+        root/Library/LaunchDaemons/d-root-prometheus.plist.host.auto.cp:
 
   - pyenv:
 
   - rg:
       files:
-        root-ln/etc/rg/:
+        root/etc/rg/:
           rgrc:
           rgignore:
-        root-ln/etc/zsh/functions/fn-rt-load-static-history:
+        root/etc/zsh/functions/fn-root-load-static-history:
 
   - ruff:
       files:
-        root-ln/Users/ko/.config/ruff/ruff.toml:
+        root/HOME/.config/ruff/ruff.toml:
 
   - ssh:
       files:
-        root-ln/Users/ko/.ssh/config:
-        root-ln/etc/zsh/functions/:
-          fn-rt-ssh-generate-keys:
-          fn-rt-ssh-test-git-connection:
+        root/HOME/.ssh/config:
+        root/etc/zsh/functions/:
+          fn-root-ssh-generate-keys:
+          fn-root-ssh-test-git-connection:
 
   - tmux:
       files:
-        root-ln/Users/ko/.config/tmux/tmux.conf:
+        root/HOME/.config/tmux/tmux.conf:
 
   - vim:
       files:
-        root-ln/Users/ko/.config/vim/vimrc:
+        root/HOME/.config/vim/vimrc:
 
   - vscode:
       files:
-        root-ln/Users/ko/Library/Application Support/Code/User/settings.json:
+        root/HOME/Library/Application Support/Code/User/settings.json.host.auto.tmpl:
 
   - zsh:
       files:
-        root-ln/Users/ko/.config/zsh/:
+        root/HOME/.config/zsh/:
           .zshenv:
           .zprofile:
           .zshrc:
           .zlogin:
           .zlogout:
           rc.d/00-dirs.zsh:
-        root-ln/etc/:
+        root/etc/:
           zprofile:
           zlogin:
           zlogout:

@@ -7,26 +7,61 @@
 emulate -LR zsh
 IFS=
 setopt errexit pipefail
-autoload -Uz log-msg tmpl-strip-frontmatter-if-empty tmpl-resolve-at-includes tmpl-header
+autoload -Uz log-msg tmpl-strip-frontmatter-if-empty tmpl-resolve-at-includes tmpl-header fn-root-backup-if-exists
 
-configs=${1:-/Users/ko/projects/configs}
+configs=${1:-$HOME/projects/configs}
 t_ext='.host.auto.tmpl'
 
-##[>] 🤖
+: ${HOME:?HOME must be set}
+
+##[>] 🤖🤖
 filemode_default=0600
 typeset -A filemode_custom=()
-##[<] 🤖
+typeset -A owner_custom=()
+#[what] root-owned dests: launchd plist must be 0644 root:wheel; sudoers 0440 root:wheel
+filemode_custom[/etc/sudoers.d/configs]=0440
+owner_custom[/etc/sudoers.d/configs]=root:wheel
+filemode_custom[/Library/LaunchAgents/d-user-gitlab-runner.plist]=0644
+owner_custom[/Library/LaunchAgents/d-user-gitlab-runner.plist]=root:wheel
+##[<] 🤖🤖
+
+#[what] map a stripped template path to its live dest: HOME/<rest> -> $HOME/<rest>, else /<rest>
+function host_dest { [[ $1 == HOME/* ]] && print -r -- $HOME/${1#HOME/} || print -r -- /$1 }
+
+#[what] 🤖🤖 run "$@" as root unless dest ($1) is under $HOME (user-owned)
+function priv {
+  local dest=$1; shift
+  if [[ $dest == $HOME/* ]] { "$@" } else { sudo "$@" }
+}
+
+#[what] 🤖🤖 back up an existing dest before clobber; $HOME via fn, root dest via sudo cp
+function backup_dest {
+  local dest=$1
+  if [[ $dest == $HOME/* ]] {
+    fn-root-backup-if-exists --repo-root $configs $dest
+  } elif [[ -e $dest && ! -L $dest ]] {
+    sudo cp -p -- $dest $dest.$(date +%Y%m%dT%H%M%S).bk ; log-msg -t backup -- $dest.bk
+  }
+}
 
 function render_template {
   local template=$1
-  local render_to filemode
+  local render_to filemode owner
 
   ##[>] 🤖🤖
-  #[what] no frontmatter: render to /<template%ext>, the live absolute path
+  #[what] no frontmatter: render to the live absolute path (HOME/ -> $HOME/)
   if [[ $(head -1 $template) != '---' ]] {
-    render_to=/${template%${t_ext}}
+    render_to=$(host_dest ${template%${t_ext}})
     filemode=${filemode_custom[$render_to]:-$filemode_default}
-    gomplate --chmod $filemode -f $template -o $render_to ; log-msg -t gomplate -- $render_to
+    owner=${owner_custom[$render_to]}
+    backup_dest $render_to
+    #[what] 🤖🤖 render to a temp, then place with the right privilege (sudo iff dest is root-owned)
+    local tmp=$(mktemp)
+    gomplate -f $template -o $tmp
+    local -a own_opt=() #[why] IFS= unset disables word-split; build flags as array so they pass as separate args
+    [[ -n $owner ]] && own_opt=( -o ${owner%%:*} -g ${owner#*:} )
+    priv $render_to install -m $filemode $own_opt $tmp $render_to
+    rm -f $tmp ; log-msg -t gomplate -- $render_to
     return
   }
 
@@ -42,6 +77,7 @@ function render_template {
 
   for render_to ( $render_tos ) {
     filemode=${filemode_custom[$render_to]:-$filemode_default}
+    fn-root-backup-if-exists --repo-root $configs $render_to
     #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
     tmpl-header $render_to $template > $render_to
     if [[ ${render_to:t} == *AGENTS* ]] {
@@ -56,7 +92,7 @@ function render_template {
   ##[<] 🤖🤖
 }
 
-pushd $configs/root-ln
+pushd $configs/root
 #[what] . - regular files, D - GLOB_DOT opt (search hidden)
 for template ( **/*${t_ext}(.D) ) render_template $template
 popd

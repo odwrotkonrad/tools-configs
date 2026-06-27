@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+emulate -LR zsh
+setopt errexit
+
+##[>] 🤖🤖
+#[what] run numbered installers in order; gaps let you insert later. 00-brew bootstraps homebrew
+for installer ( ${0:h}/s-root-install-<->-*(n) ) $installer
+##[<] 🤖🤖

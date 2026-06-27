@@ -1,0 +1,27 @@
+#[what] back up an existing dest before a loader overwrites it
+#[what] copy <dest> -> <dest>.<ts>.bk (mtime ts), preserving mode/owner
+#[what] --repo-root <dir>: skip symlinks already pointing into this repo (links we made)
+#[why] make loads non-destructive: keep whatever the host had before
+
+function fn-root-backup-if-exists {
+  emulate -LR zsh
+  setopt errexit
+  autoload -Uz log-msg
+
+  local -a repo_root
+  zparseopts -D -E -repo-root:=repo_root
+  local dest=$1
+
+  if [[ -L $dest ]] {
+    [[ -e $dest ]] || return 0  #[what] broken link: nothing to preserve
+    local target=${dest:A}
+    #[what] skip links we own: resolved target sits inside the repo root
+    if (( $#repo_root )) && [[ $target == ${repo_root[2]:A}/* ]] return 0
+  } elif [[ ! -e $dest ]] {
+    return 0
+  }
+
+  local ts=$(date +%Y%m%dT%H%M%S)
+  local bk=$dest.$ts.bk
+  cp -p -- $dest $bk ; log-msg -t backup -- $bk  #[what] -p: keep mode, owner, times
+}
