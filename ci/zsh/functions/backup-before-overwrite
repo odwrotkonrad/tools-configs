@@ -3,7 +3,7 @@
 #[what] --repo-root <dir>: skip symlinks already pointing into this repo (links we made)
 #[why] make loads non-destructive: keep whatever the host had before
 
-function fn-root-backup-if-exists {
+function backup-before-overwrite {
   emulate -LR zsh
   setopt errexit
   autoload -Uz log-msg

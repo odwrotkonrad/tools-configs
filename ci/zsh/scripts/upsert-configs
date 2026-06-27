@@ -9,7 +9,7 @@
 emulate -LR zsh
 setopt errexit dotglob
 IFS= # do not split into multiple args on spaces e.g. 'Application Support'
-autoload -Uz log-msg fn-root-backup-if-exists
+autoload -Uz log-msg backup-before-overwrite
 configs=${1:-$HOME/projects/configs}
 
 : ${HOME:?HOME must be set} #[why] dest paths derive from the invoking user's home
@@ -60,7 +60,7 @@ for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before c
 for file ( $repo_files_ex ) {
   dest=$(to_dest $file)
   if [[ ${dest:A} != ${file:A} ]] {
-    fn-root-backup-if-exists --repo-root $configs $dest  #[what] keep any non-repo dest first
+    backup-before-overwrite --repo-root $configs $dest  #[what] keep any non-repo dest first
     ln -fws ${file:a} $dest ; log-msg -t ln -- $dest
   }
 }
@@ -70,7 +70,7 @@ for file ( $repo_files_ex ) {
 for file ( $copy_files ) {
   dest=$(to_dest ${file%${cp_ext}}) #[what] strip marker -> live path
   if { ! cmp -s ${file:a} $dest } {
-    fn-root-backup-if-exists $dest  #[what] a real copied dest is never a repo-pointing symlink (no --repo-root)
+    backup-before-overwrite $dest  #[what] a real copied dest is never a repo-pointing symlink (no --repo-root)
     if [[ ${file%${cp_ext}} == HOME/* ]] { (umask 027; cp ${file:a} $dest) } else { (umask 022; cp ${file:a} $dest) } #[what] 🤖🤖 HOME-tree 0640, root-tree 0644
     log-msg -t cp -- $dest
     if [[ -n ${perms[$dest]} ]] {

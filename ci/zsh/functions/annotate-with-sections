@@ -1,7 +1,7 @@
 #[what] pretty-print a header and terminator around the command
 #[why] when running commands one after another, distinguishes which output is whose
 
-function with-sections {
+function annotate-with-sections {
   emulate -LR zsh
   autoload -Uz print-with
 

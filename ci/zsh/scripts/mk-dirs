@@ -12,16 +12,16 @@ typeset configs configs_owner configs_user home
 typeset -a dirs_user_space dirs_root_space dirs_system_space dirs_system_space_world
 
 function mk_dirs {
-  local -a user owner perms umask_opt
+  local -a opt_user opt_chown opt_chmod opt_umask
   local dir
-  zparseopts -D -E -user:=user -owner:=owner -perms:=perms -umask:=umask_opt  #[what] 🤖🤖 --user: create as this user (owned at birth, no chown); --umask: scope creation mode
-  if (( $#umask_opt )) { local saved=$(umask); umask $umask_opt[2]; trap "umask $saved" EXIT }  #[what] 🤖🤖 localtraps restores on return
+  zparseopts -D -E -user:=opt_user -owner:=opt_chown -perms:=opt_chmod -umask:=opt_umask  #[what] 🤖🤖 --user: create as this user (owned at birth, no chown); --umask: scope creation mode
+  if (( $#opt_umask )) { local saved=$(umask); umask $opt_umask[2]; trap "umask $saved" EXIT }  #[what] 🤖🤖 localtraps restores on return
   for dir ( ${(o)@} ) {  #[what] 🤖🤖 (o) lexical sort -> parents before children
     if [[ ! -d $dir ]] {
-      if (( $#user )) { sudo -u $user[2] mkdir $dir } else { mkdir $dir }  #[what] 🤖🤖 no -p; parents made first
+      if (( $#opt_user )) { sudo -u $opt_user[2] mkdir $dir } else { mkdir $dir }  #[what] 🤖🤖 no -p; parents made first
       log-msg -t mkdir -- $dir
-      if (( $#owner )) { chown $owner[2] $dir; log-msg -t chown -- "$dir $owner[2]" }  #[what] 🤖🤖 no -R; per-dir; only for custom owner
-      if (( $#perms )) { chmod $perms[2] $dir; log-msg -t chmod -- "$dir $perms[2]" }
+      if (( $#opt_chown )) { chown $opt_chown[2] $dir; log-msg -t chown -- "$dir $opt_chown[2]" }  #[what] 🤖🤖 no -R; per-dir; only for custom owner
+      if (( $#opt_chmod )) { chmod $opt_chmod[2] $dir; log-msg -t chmod -- "$dir $opt_chmod[2]" }
     }
   }
 }

@@ -4,7 +4,7 @@ COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-
 SCRIPTS := root/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
-PRETTY := $(ZSH) with-sections with-sections
+PRETTY := $(ZSH) annotate-with-sections annotate-with-sections
 VM_REPO := /Users/user/projects/configs
 IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root/HOME/.config/mypy/config
