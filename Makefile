@@ -62,6 +62,7 @@ run-repo-ci-tests:
 #[what] mypy typecheck
 run-repo-ci-typecheck:
 	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-root-*
+	@$(PRETTY) $(MYPY) --scripts-are-modules ci/python/scripts/*
 	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/s_root_scripts_lib
 
 #[what] install lefthook git hooks

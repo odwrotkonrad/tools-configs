@@ -123,7 +123,7 @@ templates
 tests
   scripts
     python
-      s-root-generate-tree
+      gen-dirs-tree
         fixture
       s-root-get-os-open-files-with
       s-root-get-term-open-files-with

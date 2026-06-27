@@ -1,1 +1,1 @@
-Dotfiles extended into root OS space. Loaded onto the host from one `root/` tree: symlinked by default, copied where marked `.host.auto.cp`, and rendered from `*.auto.tmpl` templates.
+Dotfiles extended into root OS space. Loaded onto the host from one `root/` tree: symlinked by default, copied where marked `.host.auto.cp`, and rendered onto host from `*.host.auto.tmpl` templates. `*.repo.auto.tmpl` templates render onto the repo (generated docs, vm vars).

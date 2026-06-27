@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 #>[what]
 #   Read a markdown file, optionally stripping YAML frontmatter and/or comments.
-#   Usage: s-root-read-markdown [--strip-frontmatter] [--strip-comments] [--increment-heading-levels] <file>
+#   Usage: read-markdown [--strip-frontmatter] [--strip-comments] [--increment-heading-levels] <file>
 #   --strip-frontmatter: drop a leading --- ... --- block.
 #   --strip-comments: drop <!-- ... --> blocks (incl. multi-line).
 #   --increment-heading-levels [n]: demote every ATX heading n levels (default 1), capped at 6.
@@ -18,7 +18,7 @@ while [[ $1 == --* ]]; do
     --strip-frontmatter) strip_frontmatter=1 ;;
     --strip-comments) strip_comments=1 ;;
     --increment-heading-levels) increment_heading_levels=1; [[ $2 == <-> ]] && { increment_heading_levels=$2; shift } ;;
-    *) print -u2 "s-root-read-markdown: unknown option $1"; exit 1 ;;
+    *) print -u2 "read-markdown: unknown option $1"; exit 1 ;;
   esac
   shift
 done

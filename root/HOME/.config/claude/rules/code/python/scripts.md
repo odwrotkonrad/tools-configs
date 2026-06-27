@@ -2,6 +2,7 @@
 paths:
   - "**/root/usr/local/scripts/python/**"
   - "/usr/local/scripts/python/**"
+  - "**/ci/python/scripts/**"
 ---
 
 <!-- ##[>] 🤖🤖 -->

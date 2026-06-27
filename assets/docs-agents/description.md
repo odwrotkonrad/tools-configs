@@ -3,4 +3,5 @@
 Git-tracked dotfiles, extended into root OS space.
 Every option explicitly configured.
 Scripts.
-Loaded onto host from one `root/` tree: symlinked by default, `.host.auto.cp` copied, `*.auto.tmpl` rendered.
+Loaded onto host from one `root/` tree: symlinked by default, `.host.auto.cp` copied, `*.host.auto.tmpl` rendered onto host.
+`*.repo.auto.tmpl` rendered onto repo (generated docs, vm vars).

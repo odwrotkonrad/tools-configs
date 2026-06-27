@@ -40,7 +40,8 @@ Executables: `<kind>-<space>-<descriptive-name>`.
 Git-tracked dotfiles, extended into root OS space.
 Every option explicitly configured.
 Scripts.
-Loaded onto host from one `root/` tree: symlinked by default, `.host.auto.cp` copied, `*.auto.tmpl` rendered.
+Loaded onto host from one `root/` tree: symlinked by default, `.host.auto.cp` copied, `*.host.auto.tmpl` rendered onto host.
+`*.repo.auto.tmpl` rendered onto repo (generated docs, vm vars).
 
 ---
 title: Tools Inventory Index
@@ -251,7 +252,7 @@ templates
 tests
   scripts
     python
-      s-root-generate-tree
+      gen-dirs-tree
         fixture
       s-root-get-os-open-files-with
       s-root-get-term-open-files-with
