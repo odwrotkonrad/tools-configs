@@ -1,0 +1,20 @@
+#[what] pretty-print a header and terminator around the command
+#[why] when running commands one after another, distinguishes which output is whose
+
+function annotate-with-sections {
+  emulate -LR zsh
+  autoload -Uz print-with
+
+  ##[>] 🤖🤖 label: command basename (skip leading sudo) + the last non-config option
+  local cmd=$1
+  [[ $cmd == sudo ]] && cmd=$2
+  local label=${cmd:t}
+  local opts=(${${(M)argv:#-*}:#*config*})
+  [[ -n ${opts[-1]} ]] && label+=" ${opts[-1]}"
+  ##[<]
+
+  print-with title "BEGIN ${label}"
+  "$@"; local rc=$?
+  print-with title "END ${label}"
+  return $rc
+}

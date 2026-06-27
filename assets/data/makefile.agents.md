@@ -3,7 +3,7 @@
 
 ### Wrappers:
 
-`run-sync`: `run-host-upsert-configs -> run-host-mk-dirs -> run-host-delete-broken-links -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates`
+`run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates`
 `run-sync-full`: `run-repo-ci-prepare-executables -> run-sync -> run-host-render-templates`
 `run-repo-ci-vm-all`: `run-repo-ci-vm-build-base -> run-repo-ci-vm-build`
 

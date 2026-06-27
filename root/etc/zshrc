@@ -1,0 +1,15 @@
+#[what] 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
+
+typeset -a funcs=(
+    /etc/zsh/zshrc.d/functions
+    /etc/zsh/zshrc.d/completions
+    /opt/homebrew/share/zsh/site-functions  # mostly completions
+)
+
+fn-root-insert fpath $funcs
+fn-root-autoload-functions $funcs
+fn-root-source /etc/zsh/zshrc.d/auto.d
+fn-root-load-static-history
+
+# must be defined outside of function, otherwise local traps don't revert trap (zsh bug?)
+trap -- 'zle-intr' SIGINT

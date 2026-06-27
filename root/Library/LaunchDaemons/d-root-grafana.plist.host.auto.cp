@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>d-root-grafana</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/homebrew/bin/grafana</string>
+		<string>server</string>
+		<string>--homepath=/opt/homebrew/share/grafana</string>
+		<string>--config=/etc/grafana/grafana.ini</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/var/log/grafana/grafana.log</string>
+	<key>StandardOutPath</key>
+	<string>/var/log/grafana/grafana.log</string>
+	<key>ThrottleInterval</key>
+	<integer>5</integer>
+</dict>
+</plist>

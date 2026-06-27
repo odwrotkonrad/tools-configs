@@ -4,8 +4,8 @@ emulate -LR zsh
 setopt errexit pipefail
 autoload -Uz exit-with
 
-typeset vm=ko-macos-tahoe-vanilla-configs-local
-typeset user=$USER
+typeset vm=configs-macos-tahoe-vanilla-configs-local
+typeset user=user
 typeset key=~/.ssh/id_vm_access
 
 function read_state {

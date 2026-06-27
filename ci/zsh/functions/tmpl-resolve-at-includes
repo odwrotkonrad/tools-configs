@@ -1,4 +1,4 @@
-#[what] inline each '@path' stdin line as the contents of $1/<path>; '~/' -> root-ln/Users/ko/
+#[what] inline each '@path' stdin line as the contents of $1/<path>; '~/' -> root/HOME/
 
 function tmpl-resolve-at-includes {
   local base=$1
@@ -6,7 +6,7 @@ function tmpl-resolve-at-includes {
   while IFS= read -r line; do
     if [[ $line == '@'[^[:space:]]* && $line != *[[:space:]]* ]] {
       path=${line#@}
-      path=${path/#\~\//root-ln/Users/ko/} #[what] /# - anchor match to the front
+      path=${path/#\~\//root/HOME/} #[what] /# - anchor match to the front
       print -r -- "$(<$base/${path})"
     } else {
       print -r -- $line

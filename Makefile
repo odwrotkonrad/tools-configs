@@ -1,23 +1,23 @@
 #[what] Project's Makefile
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
 COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
-SCRIPTS := root-ln/usr/local/scripts
+SCRIPTS := root/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
-PRETTY := $(ZSH) with-sections with-sections
-VM_REPO := /Users/ko/projects/configs
+PRETTY := $(ZSH) annotate-with-sections annotate-with-sections
+VM_REPO := /Users/user/projects/configs
 IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
-MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
+MYPY := mypy --config-file root/HOME/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
 export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$(CURDIR)/ci/go/bin:$(PATH)
 export PYTHONPATH := $(CURDIR)/$(SCRIPTS)/python
 export MYPYPATH := $(CURDIR)/$(SCRIPTS)/python
-export GOMPLATE_CONFIG := $(CURDIR)/root-ln/etc/gomplate/gomplate.yaml
+export GOMPLATE_CONFIG := $(CURDIR)/root/etc/gomplate/gomplate.yaml
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
 ##[>] Wrappers [genai-include]
-run-sync: run-host-upsert-configs run-host-mk-dirs run-host-delete-broken-links run-repo-ci-prepare-hooks run-repo-ci-render-templates
+run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks run-repo-ci-render-templates
 #[why] run-host-render-templates is not quick
 run-sync-full: run-repo-ci-prepare-executables run-sync run-host-render-templates
 run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
@@ -41,7 +41,7 @@ run-host-render-templates:
 	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-host
 
 run-host-install-all:
-	@$(PRETTY) $(CI_SCRIPTS)/installs/s-rt-install-all
+	@$(PRETTY) $(CI_SCRIPTS)/installs/host-install-all
 
 #[what] reload running service launchagents
 run-host-restart-services:
@@ -61,8 +61,9 @@ run-repo-ci-tests:
 
 #[what] mypy typecheck
 run-repo-ci-typecheck:
-	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-rt-*
-	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/s_rt_scripts_lib
+	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-root-*
+	@$(PRETTY) $(MYPY) --scripts-are-modules ci/python/scripts/*
+	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/s_root_scripts_lib
 
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:
@@ -75,11 +76,11 @@ run-repo-ci-prepare-executables:
 ###[>] VM
 #[what] build vanilla base vm image
 run-repo-ci-vm-build-base:
-	@$(PRETTY) $(CI_SCRIPTS)/build-vm ko-macos-tahoe-vanilla
+	@$(PRETTY) $(CI_SCRIPTS)/build-vm configs-macos-tahoe-vanilla
 
 #[what] build configs-local vm image
 run-repo-ci-vm-build:
-	@$(PRETTY) $(CI_SCRIPTS)/build-vm ko-macos-tahoe-vanilla-configs-local
+	@$(PRETTY) $(CI_SCRIPTS)/build-vm configs-macos-tahoe-vanilla-configs-local
 
 #[what] ssh into the local vm
 run-repo-ci-vm-ssh:

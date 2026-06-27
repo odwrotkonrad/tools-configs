@@ -1,0 +1,15 @@
+plugins:
+  op:
+    cmd: op
+    args: [read, --no-newline]
+    timeout: 30s
+  readMarkdown:
+    cmd: read-markdown
+  readWithFrontmatter:
+    cmd: read-with-frontmatter
+  generateTree:
+    cmd: gen-dirs-tree
+  mergeUpsertEnv:
+    cmd: merge-upsert-env
+  generateMakefileDoc:
+    cmd: tmpl-gen-makefile-doc

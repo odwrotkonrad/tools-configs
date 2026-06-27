@@ -1,0 +1,238 @@
+#!/usr/bin/env python3.14
+"""usage: gen-dirs-tree
+       gen-dirs-tree --check <file>
+
+Print the plain directory tree of the cwd repo's tracked files:
+
+1. read the tracked paths from the git index at the cwd
+2. drop each path's file leaf and nest the remaining dirs
+3. print the sorted tree, 2-space indented, one dir per line
+
+With `--check <file>`, compare <file> against the freshly generated tree:
+exit 0 on match, or print a unified diff to stderr and exit 22 on mismatch.
+
+Examples:
+
+    $ gen-dirs-tree
+    $ gen-dirs-tree --check assets/data/repo-structure.md
+    $ gen-dirs-tree --help
+
+Upstream Interfaces with:
+- `> <file>` — intended consumer of the printed tree (e.g. assets/data/repo-structure.md)
+
+Downstream Interfaces with:
+- git repo at the cwd — its index supplies the tracked paths
+
+Exit Codes:
+- 21 cwd is not a git repo
+- 22 --check file differs from the generated tree
+- 11 invalid arguments
+- 13 --check file not found
+"""
+
+import difflib
+from pathlib import Path
+import sys
+from typing import ClassVar
+
+from pydantic import BaseModel
+from pydantic import field_validator
+import pygit2
+from s_root_scripts_lib import errors as lib_err
+from s_root_scripts_lib import input as lib_input
+from s_root_scripts_lib import options as lib_options
+from s_root_scripts_lib import parameters as lib_param
+
+
+##[>] 🤖🤖
+###[>] errors
+class Errors(lib_err.Errors):
+    """The script's exit-code contract: the `1x` band plus the `2x` domain."""
+
+    NOT_A_REPO = 21
+    DIFFERS = 22
+    MESSAGES = lib_err.Errors.MESSAGES | {
+        NOT_A_REPO: "not a git repo: {path}",
+        DIFFERS: "{diff}",
+    }
+
+
+###[<] errors
+
+
+###[>] types
+type DirPathStr = str
+"""a tracked file's path, relative to the repo root."""
+
+type TreeDict = dict[str, "TreeDict"]
+"""a nested directory map keyed by dir name."""
+
+type TreeTextStr = str
+"""a rendered plain directory tree."""
+
+type CheckPathStr = str
+"""a path to the file compared in `--check` mode."""
+
+
+###[<] types
+
+
+###[>] contract
+class Action(lib_param.BaseAction):
+    USAGE = lib_param.USAGE
+    GENERATE = "generate"
+    CHECK = "check"
+
+
+class Options(lib_options.ScriptBaseOptions):
+    check: bool = False
+
+
+class Arguments(BaseModel):
+    file: CheckPathStr
+
+    @field_validator("file")
+    @classmethod
+    def file_is_file(cls, value: CheckPathStr) -> CheckPathStr:
+        """Reject a `--check` path that is not an existing file."""
+        if not Path(value).is_file():
+            raise lib_err.Error(Errors.FILE_NOT_FOUND, path=value)
+        return value
+
+
+class Parameters(lib_param.BaseParameters):
+    action: Action
+    options: Options = Options()
+    arguments: Arguments = Arguments.model_construct()
+    ARGUMENTS: ClassVar[type[Arguments]] = Arguments
+    SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
+        *lib_param.BaseParameters.SYNOPSIS,
+        lib_param.Pattern(
+            options=frozenset(), args=(0, 0), action=Action.GENERATE
+        ),
+        lib_param.Pattern(
+            options=frozenset({"check"}), args=(1, 1), action=Action.CHECK
+        ),
+    ]
+
+
+class Input(lib_input.BaseInput):
+    PARAMS: ClassVar[type[Parameters]] = Parameters
+
+    params: Parameters
+    config: None = None
+
+
+###[<] contract
+
+
+###[>] implementation
+def tracked_dirs(
+    repo_path: str,
+) -> tuple[list[DirPathStr] | None, lib_err.Error | None]:
+    """Read the tracked paths from the git index at `repo_path`.
+
+    1. discover and open the repository at `repo_path`
+    2. return ERR_NOT_A_REPO when it is not a git repo
+    3. return each index entry's path
+
+    Interfaces with:
+      - git repo at `repo_path` — its index supplies the tracked paths
+    """
+    discovered = pygit2.discover_repository(repo_path)
+    if discovered is None:
+        return None, lib_err.Error(Errors.NOT_A_REPO, path=repo_path)
+    repo = pygit2.Repository(discovered)
+    return [entry.path for entry in repo.index], None
+
+
+def build_tree(paths: list[DirPathStr]) -> TreeDict:
+    """Nest each path's directory parts (dropping the file leaf) into a map."""
+    tree: TreeDict = {}
+    for path in paths:
+        node = tree
+        for part in Path(path).parts[:-1]:
+            node = node.setdefault(part, {})
+    return tree
+
+
+def render_tree(tree: TreeDict, depth: int = 0) -> TreeTextStr:
+    """Render the nested map as a sorted, 2-space-indented `name` tree."""
+    lines: list[str] = []
+    for name in sorted(tree):
+        lines.append("  " * depth + name)
+        child = render_tree(tree[name], depth + 1)
+        if child:
+            lines.append(child)
+    return "\n".join(lines)
+
+
+def generate(
+    repo_path: str,
+) -> tuple[TreeTextStr | None, lib_err.Error | None]:
+    """Compose tracked_dirs -> build_tree -> render_tree for `repo_path`."""
+    paths, error = tracked_dirs(repo_path)
+    if paths is None:
+        return None, error
+    return render_tree(build_tree(paths)) + "\n", None
+
+
+def check(
+    file: CheckPathStr, repo_path: str
+) -> tuple[TreeTextStr | None, lib_err.Error | None]:
+    """Compare `file` against the generated tree of `repo_path`.
+
+    1. generate the current tree
+    2. read `file` and return ("", None) when they match
+    3. else return ERR_DIFFERS carrying a unified diff
+
+    Interfaces with:
+      - files: the `--check` target file
+    """
+    tree, error = generate(repo_path)
+    if tree is None:
+        return None, error
+    current = Path(file).read_text()
+    if current == tree:
+        return "", None
+    diff = "".join(
+        difflib.unified_diff(
+            current.splitlines(keepends=True),
+            tree.splitlines(keepends=True),
+            fromfile=file,
+            tofile="gen-dirs-tree",
+        )
+    )
+    return None, lib_err.Error(Errors.DIFFERS, diff=diff)
+
+
+###[<] implementation
+
+
+###[>] main
+def main(
+    input: Input,
+) -> tuple[str | None, lib_err.Error | None]:
+    """[what] Dispatch the resolved action to its handler."""
+    match input.params.action:
+        case Action.USAGE:
+            return lib_input.usage(__doc__), None
+        case Action.GENERATE:
+            return generate(".")
+        case Action.CHECK:
+            return check(input.params.arguments.file, ".")
+
+
+if __name__ == "__main__":
+    match Input.validate_input(sys.argv[1:]):
+        case (None, error):
+            print(Errors.message(error), file=sys.stderr)
+            sys.exit(error.code)
+        case (input, None):
+            out, err = main(input)
+            if err is not None:
+                print(Errors.message(err), file=sys.stderr)
+                sys.exit(err.code)
+            print(out, end="")
+###[<] main
+##[<] 🤖🤖

@@ -1,106 +1,84 @@
 #!/bin/zsh
 #>[what]
 #   Load <configs> into the system root, mirroring directory structure.
-#   <configs>/root-ln files are symlinked (live, follow the repo).
-#   <configs>/root-cp files are copied as root
+#   <configs>/root files are symlinked by default (live, follow the repo).
+#   *.host.auto.cp files are copied (marker stripped); excluded from linking.
+#   *.auto.tmpl files are rendered by the template loader; excluded here.
 #/[what]
 
 emulate -LR zsh
 setopt errexit dotglob
 IFS= # do not split into multiple args on spaces e.g. 'Application Support'
-autoload -Uz log-msg
-configs=${1:-/Users/ko/projects/configs}
+autoload -Uz log-msg backup-before-overwrite
+configs=${1:-$HOME/projects/configs}
 
+: ${HOME:?HOME must be set} #[why] dest paths derive from the invoking user's home
 
 if (( EUID != 0 )) { print -u2 "must run as root"; exit 1 }
 
-function cp_owner {
-  local src=$1
-  local dest=$2
-  local owner=$(stat -f '%u:%g' -- $src)
+#[what] map a repo-relative path to its live dest: HOME or HOME/<rest> -> $HOME[/<rest>], else /<rest>
+function to_dest { [[ $1 == HOME || $1 == HOME/* ]] && print -r -- ${HOME}${1#HOME} || print -r -- /$1 }
 
-  # -h - change owner of the link
-  chown -h -- $owner $dest ; log-msg -t chown -- "$owner $dest"  #[what] -h: the link itself, not its target
+#[what] copied dests with explicit owner:perms; format 'owner:group mode'
+#[why] sole source of owner/perms; root-owned launchd daemons must be root:wheel 0644
+typeset -A perms=()
+for d ( dir-size-exporter grafana jaeger loki otelcol port-exporter prometheus ) {
+  perms[/Library/LaunchDaemons/d-root-$d.plist]='root:wheel 0644'
 }
 
-function cp_perms {
-  local src=$1
-  local dest=$2
-  local perms=$(stat -f '%Lp' -- $src)
+pushd "$configs/root"
 
-  # -h - change perms of the link
-  chmod -h -- $perms $dest ; log-msg -t chmod -- "$perms $dest"
-}
+typeset -a repo_files repo_dirs ex repo_files_ex copy_files
+typeset -aU repo_dirs_all
 
-##[>] symlinked tree
-pushd "$configs/root-ln"
+cp_ext='.host.auto.cp'
 
-typeset -a repo_files repo_dirs ex repo_files_ex
-
-# 1. get files from git
-ex=( **/*.auto.tmpl )
+# 1. get files from git; classify by extension
+ex=( **/*.auto.tmpl **/*${cp_ext} **/.gitkeep ) #[what] templates + copies + .gitkeep excluded from the link pass
 repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
-repo_files_ex=( ${repo_files:|ex} )
+repo_files_ex=( ${repo_files:|ex} ) #[what] link-pass set
+copy_files=( **/*${cp_ext} )        #[what] copy-pass set
 
 #[what] 🤖🤖 add every ancestor dir #[why] plain mkdir (no -p) needs each parent made + owned, not just the leaf
-typeset -aU repo_dirs_all #[what] 🤖🤖
+#[why] built from ALL repo files (links + copies) so parents exist for both passes
 for dir ( $repo_dirs ) { while [[ $dir == */* ]] { repo_dirs_all+=$dir; dir=$dir:h }; repo_dirs_all+=$dir } #[what] 🤖🤖
 
-# 2. create dirs (parents first), copying owner and file permissions #[what] 🤖🤖
+# 2. create dirs (parents first) #[what] 🤖🤖
+home_user=${SUDO_USER:-$(stat -f '%Su' -- $HOME)} #[why] root runs this; HOME-tree dirs belong to the invoking user (SUDO_USER), not root
 for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before children
-  if [[ ! -d /$dir ]] {
-    mkdir /$dir; log-msg -t mkdir -- /$dir  #[what] 🤖🤖 no -p
-    cp_owner $dir /$dir
-    cp_perms $dir /$dir
+  ddir=$(to_dest $dir)
+  if [[ -d $ddir ]] { continue }
+  if [[ $dir == HOME/* ]] {  #[what] 🤖🤖 HOME-tree: made as the user (user-owned, no chown), 0750 (group read, no world)
+    (umask 027; sudo -u $home_user mkdir $ddir); log-msg -t mkdir -- $ddir
+  } else {
+    (umask 022; mkdir $ddir); log-msg -t mkdir -- $ddir  #[what] 🤖🤖 root-tree: 0755 (world-readable); no -p
   }
 }
 
-# 3. create links, copying owner and file permissions
+##[>] link pass
 for file ( $repo_files_ex ) {
-  dest=/$file
+  dest=$(to_dest $file)
   if [[ ${dest:A} != ${file:A} ]] {
+    backup-before-overwrite --repo-root $configs $dest  #[what] keep any non-repo dest first
     ln -fws ${file:a} $dest ; log-msg -t ln -- $dest
-    cp_owner $file $dest
-    cp_perms $file $dest
   }
 }
-popd
-##[<] symlinked tree
+##[<] link pass
 
-
-##[>] copied tree
-pushd "$configs/root-cp"
-
-# 1. get files from git
-repo_files=( ${(f)$(git ls-files --exclude-standard)} )
-repo_dirs=( ${(u)repo_files:h} )
-repo_files_ex=( ${repo_files:|ex} )
-
-# 2. create dirs, copying file permissions, apply root ownership
-for dir ( $repo_dirs ) {
-  if [[ ! -d /$dir ]] {
-    mkdir -p /$dir; log-msg -t mkdir -- /$dir
-    cp_perms $dir /$dir
-  }
-}
-
-# 3. copy files if modified; modify perms and ownership if specified
-typeset -A perms=(
-  /etc/sudoers.d/configs  'root:wheel 0440'
-)
-
-for file ( $repo_files_ex ) {
-  if { ! cmp -s ${file:a} /$file } {
-    cp ${file:a} /$file; log-msg -t cp -- /$file
-    if [[ -n ${perms[/$file]} ]] {
-      perm=${perms[/$file]}
-      chown -- ${perm%% *} /$file; log-msg -t chown -- "${perm%% *} /$file"
-      chmod -- ${perm##* } /$file; log-msg -t chmod -- "${perm##* } /$file"
-    } else {
-      cp_perms $file /$file
+##[>] copy pass
+for file ( $copy_files ) {
+  dest=$(to_dest ${file%${cp_ext}}) #[what] strip marker -> live path
+  if { ! cmp -s ${file:a} $dest } {
+    backup-before-overwrite $dest  #[what] a real copied dest is never a repo-pointing symlink (no --repo-root)
+    if [[ ${file%${cp_ext}} == HOME/* ]] { (umask 027; cp ${file:a} $dest) } else { (umask 022; cp ${file:a} $dest) } #[what] 🤖🤖 HOME-tree 0640, root-tree 0644
+    log-msg -t cp -- $dest
+    if [[ -n ${perms[$dest]} ]] {
+      perm=${perms[$dest]}
+      chown -- ${perm%% *} $dest; log-msg -t chown -- "${perm%% *} $dest"
+      chmod -- ${perm##* } $dest; log-msg -t chmod -- "${perm##* } $dest"
     }
   }
 }
+##[<] copy pass
 popd
-##[<] copied tree

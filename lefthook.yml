@@ -1,6 +1,6 @@
 ##[>] 🤖
 extends:
-  - /Users/ko/.config/lefthook/lefthook.yml
+  - ~/.config/lefthook/lefthook.yml
 
 pre-commit:
   jobs:
@@ -8,20 +8,15 @@ pre-commit:
       run: make run-repo-ci-render-templates && git add assets/data/repo-structure.md assets/data/makefile.agents.md README.md CLAUDE.md AGENTS.md
 
     - name: ruff-scripts
-      glob: "root-ln/usr/local/scripts/python/s-*"
+      glob: "root/usr/local/scripts/python/s-*"
       run: /usr/local/bin/python3.14 -m ruff check --select I --fix {staged_files} && /usr/local/bin/python3.14 -m ruff format {staged_files} && git add {staged_files}
 
     - name: mypy
-      glob: "root-ln/usr/local/scripts/python/**"
+      glob: "root/usr/local/scripts/python/**"
       run: make run-repo-ci-typecheck
-
-post-commit:
-  jobs:
-    - name: reload-config
-      run: make run-sync
 
 pre-push:
   jobs:
-    - name: pytest
+    - name: tests
       run: make run-repo-ci-tests
 ##[<] 🤖

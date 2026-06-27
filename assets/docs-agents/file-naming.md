@@ -5,5 +5,5 @@ kebab-case all files.
 Executables: `<kind>-<space>-<descriptive-name>`.
 
 - kind: `s-` script · `fn-` function · `a-` alias · `d-` launchd
-- space: `rt` root/system (`root-ln/{etc,usr}`, `root-cp`) · `ko` user (`root-ln/Users/ko`)
+- space: `root` root/system (`root/{etc,usr,Library}`) · `user` user (`root/HOME`)
 - command override: bare name (`rm`, `prometheus`)

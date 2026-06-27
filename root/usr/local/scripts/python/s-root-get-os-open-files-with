@@ -1,0 +1,124 @@
+#!/usr/bin/env python3.14
+"""usage: s-root-get-os-open-files-with
+
+Print `<bundle> <uti> <role>` file-handler association lines:
+
+1. read the system config
+2. expand each app's role keys into `<bundle> <uti> <role>` lines
+3. print the lines to stdout
+
+Examples:
+
+    $ s-root-get-os-open-files-with
+    $ s-root-get-os-open-files-with --help
+
+Upstream Interfaces with:
+- `$ duti` — intended consumer of the printed lines
+
+Downstream Interfaces with:
+- files: os-open-files-with.yml
+
+Exit Codes:
+- 11 invalid arguments
+- 12 invalid config
+- 13 config not found
+"""
+
+import sys
+from typing import ClassVar
+
+from s_root_scripts_lib import config as lib_cfg
+from s_root_scripts_lib import errors as lib_err
+from s_root_scripts_lib import input as lib_input
+from s_root_scripts_lib import parameters as lib_param
+
+##[>] types
+type UtiStr = str
+"""a uniform type identifier (e.g. `public.python-script`, `com.adobe.pdf`)."""
+
+type RoleStr = str
+"""a duti handler role (e.g. `all`, `viewer`)."""
+
+type ApplicationStr = str
+"""an application bundle identifier (e.g. `com.microsoft.VSCode`, `com.apple.Preview`)."""
+
+type RolesDict = dict[RoleStr, list[UtiStr]]
+type AppsDict = dict[ApplicationStr, RolesDict]
+##[<] types
+
+
+##[>] contract
+class Action(lib_param.BaseAction):
+    USAGE = lib_param.USAGE
+    GET_OPEN_FILES_WITH = "get-open-files-with"
+
+
+class Config(lib_cfg.BaseConfig):
+    """The config read from /etc/custom: app bundle -> roles -> UTIs."""
+
+    NAME: ClassVar[str] = "os-open-files-with.yml"
+    data: AppsDict = {}
+
+
+class Parameters(lib_param.BaseParameters):
+    action: Action
+    SYNOPSIS: ClassVar[list[lib_param.Pattern]] = [
+        *lib_param.BaseParameters.SYNOPSIS,
+        lib_param.Pattern(
+            options=frozenset(), args=(0, 0), action=Action.GET_OPEN_FILES_WITH
+        ),
+    ]
+
+
+class Input(lib_input.BaseInput):
+    PARAMS: ClassVar[type[Parameters]] = Parameters
+    CONFIG: ClassVar[type[Config]] = Config
+
+    params: Parameters
+    config: Config = Config.model_construct()
+
+
+##[<] contract
+
+
+##[>] implementation
+def get_open_files_with(
+    apps: AppsDict,
+) -> tuple[str | None, lib_err.Error | None]:
+    """Render `<bundle> <uti> <role>` for each uti under each app's role keys."""
+    lines = [
+        f"{bundle} {uti} {role}"
+        for bundle, roles in apps.items()
+        for role, utis in roles.items()
+        for uti in utis
+    ]
+    return "\n".join(lines), None
+
+
+##[<] implementation
+
+
+##[>] main
+def main(
+    input: Input,
+) -> tuple[str | None, lib_err.Error | None]:
+    """[what] Dispatch the resolved action to its handler."""
+    match input.params.action:
+        case Action.USAGE:
+            return lib_input.usage(__doc__), None
+        case Action.GET_OPEN_FILES_WITH:
+            return get_open_files_with(input.config.data)
+
+
+if __name__ == "__main__":
+    match Input.validate_input(sys.argv[1:]):
+        case (None, error):
+            print(lib_err.Errors.message(error), file=sys.stderr)
+            sys.exit(error.code)
+        case (input, None):
+            out, err = main(input)
+            if err is not None:
+                print(lib_err.Errors.message(err), file=sys.stderr)
+                sys.exit(err.code)
+            print(out)
+##[<] main
