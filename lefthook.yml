@@ -15,13 +15,8 @@ pre-commit:
       glob: "root/usr/local/scripts/python/**"
       run: make run-repo-ci-typecheck
 
-post-commit:
-  jobs:
-    - name: reload-config
-      run: make run-sync
-
 pre-push:
   jobs:
-    - name: pytest
+    - name: tests
       run: make run-repo-ci-tests
 ##[<] 🤖
