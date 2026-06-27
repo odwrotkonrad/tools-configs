@@ -18,7 +18,7 @@ __pycache__/
 # rendered packer variables
 /ci/local/vm/templates/*.local.pkrvars.hcl
 
-# go binaries built on demand by run-repo-ci-prepare
+# go binaries built on demand by run-repo-ci-prepare-executables
 /ci/go/bin/
 
 # azure cli writes auth state + indexes into its config dir; track only config

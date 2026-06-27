@@ -96,8 +96,8 @@ vim: root-ln/Users/ko/.config/vim/vimrc
 
 ### Wrappers:
 
-`run-sync`: `run-host-upsert-configs -> run-host-mk-dirs -> run-host-delete-broken-links -> run-repo-ci-upsert-git-hooks -> run-repo-ci-render-templates`
-`run-sync-full`: `run-sync -> run-host-render-templates`
+`run-sync`: `run-host-upsert-configs -> run-host-mk-dirs -> run-host-delete-broken-links -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates`
+`run-sync-full`: `run-repo-ci-prepare-executables -> run-sync -> run-host-render-templates`
 `run-repo-ci-vm-all`: `run-repo-ci-vm-build-base -> run-repo-ci-vm-build`
 
 ### Onto Host:
@@ -114,8 +114,8 @@ vim: root-ln/Users/ko/.config/vim/vimrc
 `run-repo-ci-render-templates` render *.repo.auto.tmpl onto repo
 `run-repo-ci-tests` test pytest & go
 `run-repo-ci-typecheck` mypy typecheck
-`run-repo-ci-upsert-git-hooks` install lefthook git hooks
-`run-repo-ci-prepare` compile ci/go cmds into ci/go/bin
+`run-repo-ci-prepare-hooks` install lefthook git hooks
+`run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 
 #### VM:
 
