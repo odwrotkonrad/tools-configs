@@ -7,6 +7,11 @@ assets
   images
   recordings
 ci
+  go
+    src
+      cmd
+        tmpl-gen-makefile-doc
+          testdata
   local
     vm
       templates

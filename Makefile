@@ -1,6 +1,6 @@
 #[what] Project's Makefile
-WRAPPERS := run-sync-quick run-sync-full run-repo-build-vm-all
-COMMANDS := run-repo-tests run-repo-typecheck run-host-upsert-configs run-host-render-templates run-repo-render-templates run-repo-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-build-vm-base run-repo-build-vm run-repo-ssh-vm run-repo-test-vm
+WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
+COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-upsert-git-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-ci-prepare run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
 SCRIPTS := root-ln/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
@@ -10,44 +10,35 @@ IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root-ln/Users/ko/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
-export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$(PATH)
+export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$(CURDIR)/ci/go/bin:$(PATH)
 export PYTHONPATH := $(CURDIR)/$(SCRIPTS)/python
 export MYPYPATH := $(CURDIR)/$(SCRIPTS)/python
 export GOMPLATE_CONFIG := $(CURDIR)/root-ln/etc/gomplate/gomplate.yaml
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
-##[>] wrappers
-run-sync-quick: run-host-upsert-configs run-host-mk-dirs run-host-delete-broken-links run-repo-upsert-git-hooks run-repo-render-templates
-run-sync-full: run-sync-quick run-host-render-templates
-run-repo-build-vm-all: run-repo-build-vm-base run-repo-build-vm
-##[<] wrappers
+##[>] Wrappers [genai-include]
+run-sync: run-host-upsert-configs run-host-mk-dirs run-host-delete-broken-links run-repo-ci-upsert-git-hooks run-repo-ci-render-templates
+#[why] run-host-render-templates is not quick
+run-sync-full: run-sync run-host-render-templates
+run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
+##[<] Wrappers
 
-##[>] commands
+##[>] Onto Host [genai-include]
+#[what] load configs onto host
 run-host-upsert-configs:
 	@sudo $(PRETTY) upsert-configs
 
+#[what] prune broken symlinks
 run-host-delete-broken-links:
 	@sudo $(PRETTY) delete-broken-links
 
+#[what] required by configuration and tools dirs
 run-host-mk-dirs:
 	@sudo $(PRETTY) mk-dirs
 
+#[what] render *.host.auto.tmpl onto host
 run-host-render-templates:
 	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-host
-
-RENDER_LOCAL ?= --local
-run-repo-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-repo $(RENDER_LOCAL) $(CURDIR)
-
-run-repo-tests:
-	@$(PRETTY) pytest tests/scripts/python
-
-run-repo-typecheck:
-	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-rt-*
-	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/s_rt_scripts_lib
-
-run-repo-upsert-git-hooks:
-	@$(PRETTY) lefthook install --force
 
 run-host-install-all:
 	@$(PRETTY) $(CI_SCRIPTS)/installs/s-rt-install-all
@@ -55,21 +46,49 @@ run-host-install-all:
 #[what] reload running service launchagents
 run-host-restart-services:
 	@$(PRETTY) $(CI_SCRIPTS)/restart-services
+##[<] Onto Host
 
-##[>] vm
-run-repo-build-vm-base:
+##[>] Onto Repo (CI) [genai-include]
+RENDER_LOCAL ?= --local
+#[what] render *.repo.auto.tmpl onto repo
+run-repo-ci-render-templates: | run-repo-ci-prepare
+	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-repo $(RENDER_LOCAL) $(CURDIR)
+
+#[what] test pytest & go
+run-repo-ci-tests:
+	@$(PRETTY) pytest tests/scripts/python
+	@cd ci/go/src && $(PRETTY) go test ./...
+
+#[what] mypy typecheck
+run-repo-ci-typecheck:
+	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-rt-*
+	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/s_rt_scripts_lib
+
+#[what] install lefthook git hooks
+run-repo-ci-upsert-git-hooks:
+	@$(PRETTY) lefthook install --force
+
+#[what] compile ci/go cmds into ci/go/bin
+run-repo-ci-prepare:
+	@cd ci/go/src && $(PRETTY) go build -o ../bin/ ./cmd/...
+
+###[>] VM
+#[what] build vanilla base vm image
+run-repo-ci-vm-build-base:
 	@$(PRETTY) $(CI_SCRIPTS)/build-vm ko-macos-tahoe-vanilla
 
-run-repo-build-vm:
+#[what] build configs-local vm image
+run-repo-ci-vm-build:
 	@$(PRETTY) $(CI_SCRIPTS)/build-vm ko-macos-tahoe-vanilla-configs-local
 
-run-repo-ssh-vm:
+#[what] ssh into the local vm
+run-repo-ci-vm-ssh:
 	@./ci/local/vm/ssh-vm.zsh
 
-run-repo-test-vm: run-repo-build-vm
+#[what] build vm then run host upsert in it
+run-repo-ci-vm-test: run-repo-ci-vm-build
 	@$(IN_VM) run-host-upsert-configs
 	@$(IN_VM) run-host-mk-dirs
 	@$(IN_VM) run-host-install-all
-##[<] vm
-
-##[<] commands
+###[<] VM
+##[<] Onto Repo

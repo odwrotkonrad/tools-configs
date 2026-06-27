@@ -8,35 +8,44 @@ stages:
   - validate
   - test
 
-.base-python:
+.base:
   needs: []
   image: python:3.14-slim
+  ##[>] 🤖🤖
+  variables:
+    GO_VERSION: "1.26.3"
+  ##[<] 🤖🤖
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates
+    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang
     - pip install --no-cache-dir -r root-ln/etc/python/requirements.txt
     - curl -fsSL https://github.com/hairyhenderson/gomplate/releases/download/v5.1.0/gomplate_linux-amd64 -o /usr/local/bin/gomplate
     - chmod +x /usr/local/bin/gomplate
     - curl -fsSL https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64 -o /usr/local/bin/yq
     - chmod +x /usr/local/bin/yq
+    ##[>] 🤖🤖
+    - curl -fsSL https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz | tar -C /usr/local -xz
+    - export PATH=/usr/local/go/bin:$PATH
+    - export CC=clang
+    ##[<] 🤖🤖
 
 validate-docsgen:
-  extends: .base-python
+  extends: .base
   stage: validate
   script:
-    - make run-repo-render-templates RENDER_LOCAL=
+    - make run-repo-ci-render-templates RENDER_LOCAL=
     - git diff --exit-code
 
 validate-typecheck:
-  extends: .base-python
+  extends: .base
   stage: validate
   script:
-    - make run-repo-typecheck
+    - make run-repo-ci-typecheck
 
 test-scripts:
-  extends: .base-python
+  extends: .base
   stage: test
   script:
-    - make run-repo-tests
+    - make run-repo-ci-tests
 
 test-configs-e2e-macos:
   stage: test
