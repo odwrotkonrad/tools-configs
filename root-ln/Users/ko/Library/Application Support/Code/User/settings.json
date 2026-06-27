@@ -406,7 +406,7 @@
   "extensions.ignoreRecommendations": true,
   "extensions.allowOpenInModalEditor": true,
   "extensions.autoCheckUpdates": false,
-  "extensions.autoUpdate": false,
+  "extensions.autoUpdate": "off",
 
   "editorconfig.generateAuto": false,
   "editorconfig.showMenuEntry": false,

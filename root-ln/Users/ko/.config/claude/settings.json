@@ -19,6 +19,10 @@
     "OTEL_METRICS_INCLUDE_ENTRYPOINT": "1",
     "CLAUDE_CODE_ENHANCED_TELEMETRY_BETA": "1"
   },
+  "attribution": {
+    "commit": "Signed-off-by: konradodwrot odwrotkonrad@gmail.com",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(cd ./*)",
@@ -75,20 +79,23 @@
     ],
     "defaultMode": "default"
   },
-  "attribution": {
-    "commit": "Signed-off-by: konradodwrot odwrotkonrad@gmail.com",
-    "pr": ""
-  },
   "model": "opus",
   "availableModels": [
     "sonnet",
     "opus"
   ],
+  "statusLine": {
+    "type": "command",
+    "command": "ccstatusline",
+    "padding": 0,
+    "refreshInterval": 10
+  },
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -104,11 +111,5 @@
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto",
-  "statusLine": {
-    "type": "command",
-    "command": "ccstatusline",
-    "padding": 0,
-    "refreshInterval": 10
-  }
+  "theme": "auto"
 }

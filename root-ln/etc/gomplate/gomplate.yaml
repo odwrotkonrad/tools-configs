@@ -11,3 +11,5 @@ plugins:
     cmd: s-rt-generate-tree
   mergeUpsertEnv:
     cmd: s-rt-merge-upsert-env
+  generateMakefileDoc:
+    cmd: tmpl-gen-makefile-doc
