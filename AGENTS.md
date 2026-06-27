@@ -239,7 +239,6 @@ root
   usr
     local
       scripts
-        installs
         python
           s_root_scripts_lib
         shell

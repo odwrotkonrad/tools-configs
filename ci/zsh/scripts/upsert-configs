@@ -34,7 +34,7 @@ typeset -aU repo_dirs_all
 cp_ext='.host.auto.cp'
 
 # 1. get files from git; classify by extension
-ex=( **/*.auto.tmpl **/*${cp_ext} ) #[what] templates + copies excluded from the link pass
+ex=( **/*.auto.tmpl **/*${cp_ext} **/.gitkeep ) #[what] templates + copies + .gitkeep excluded from the link pass
 repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} ) #[what] link-pass set

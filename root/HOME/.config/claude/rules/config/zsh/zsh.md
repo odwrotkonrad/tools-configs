@@ -67,10 +67,6 @@ paths:
             functions/:
               fn-root-load-static-history:
       root/usr/local/scripts/:
-        installs/:
-          s-root-install-asdf:
-          s-root-install-kitty:
-          s-root-install-prometheus:
         shell/:
           s-root-load-defaults-config:
 ```

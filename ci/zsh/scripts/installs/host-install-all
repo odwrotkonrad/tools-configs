@@ -3,7 +3,10 @@
 emulate -LR zsh
 setopt errexit
 
+fpath=( ${0:h:h:h}/functions $fpath )
+autoload -Uz annotate-with-sections
+
 ##[>] 🤖🤖
 #[what] run numbered installers in order; gaps let you insert later. 00-brew bootstraps homebrew
-for installer ( ${0:h}/s-root-install-<->-*(n) ) $installer
+for installer ( ${0:h}/host-install-<->-*(n) ) annotate-with-sections $installer
 ##[<] 🤖🤖

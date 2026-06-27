@@ -41,7 +41,7 @@ run-host-render-templates:
 	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-host
 
 run-host-install-all:
-	@$(PRETTY) $(CI_SCRIPTS)/installs/s-root-install-all
+	@$(PRETTY) $(CI_SCRIPTS)/installs/host-install-all
 
 #[what] reload running service launchagents
 run-host-restart-services:

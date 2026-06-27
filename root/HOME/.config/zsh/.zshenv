@@ -25,7 +25,6 @@ typeset -a bins=(
     /usr/local/go/bin
     /usr/local/bin
     /usr/local/scripts/shell
-    /usr/local/scripts/installs
     /usr/local/scripts/python
     /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Support
     /opt/local/bin

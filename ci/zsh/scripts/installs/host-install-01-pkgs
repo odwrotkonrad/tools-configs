@@ -31,6 +31,8 @@ typeset -a vscode_exts=( ${(f)"$(entries vscode)"} )
 ###[>] taps, then casks, then formulae
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_AUTO_UPDATE=1
 for t ( $taps ) brew tap $t
 (( $#casks )) && brew install --cask $casks
 (( $#formulae )) && brew install $formulae

@@ -72,7 +72,7 @@ tools:
   - jaeger:
       files:
         root/etc/jaeger/config.yml:
-        root/usr/local/scripts/installs/s-root-install-jaeger:
+        ci/zsh/scripts/installs/host-install-20-jaeger:
         root/Library/LaunchDaemons/d-root-jaeger.plist.host.auto.cp:
 
   - kitty:
@@ -98,7 +98,7 @@ tools:
   - prometheus:
       files:
         root/etc/prometheus/prometheus.yml:
-        root/usr/local/scripts/installs/s-root-install-prometheus:
+        ci/zsh/scripts/installs/host-install-22-prometheus:
         root/Library/LaunchDaemons/d-root-prometheus.plist.host.auto.cp:
 
   - pyenv:
