@@ -1,0 +1,9 @@
+profiles:
+  virt:
+    mac-os-aarch64:
+a:
+  include-profiles: [b]
+b:
+  include-profiles: [a]
+virt/mac-os-aarch64:
+  include-profiles: [a]

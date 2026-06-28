@@ -1,0 +1,31 @@
+profiles:
+  bare-metal:
+    mac-os-aarch64:
+  virt:
+    mac-os-aarch64:
+    linux-aarch64:
+
+base-cli:
+  load-configuration:
+    etc/zshrc:
+    HOME/.config/zsh/**:
+  make-extra-dirs:
+    - HOME/.cache/zsh
+  install:
+    - ci/zsh/scripts/installs/mac/brew.zsh
+  services: [otelcol, port-exporter]
+
+base-desktop:
+  load-configuration:
+    etc/grafana/**:
+  make-extra-dirs:
+    - /var/log/grafana
+  install:
+    - ci/zsh/scripts/installs/mac/kitty.zsh
+  services: [grafana, prometheus]
+
+virt/mac-os-aarch64:
+  include-profiles: [base-cli]
+
+bare-metal/mac-os-aarch64:
+  include-profiles: [base-cli, base-desktop]

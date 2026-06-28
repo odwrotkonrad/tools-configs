@@ -12,4 +12,4 @@ plugins:
   mergeUpsertEnv:
     cmd: merge-upsert-env.zsh
   generateMakefileDoc:
-    cmd: tpl-gen-makefile-doc
+    cmd: gen-from-tpl-makefile

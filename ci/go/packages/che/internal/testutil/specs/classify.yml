@@ -1,0 +1,19 @@
+profiles:
+  virt:
+    mac-os-aarch64:
+  bare-metal:
+    mac-os-aarch64:
+base-cli:
+  load-configuration:
+    HOME/.config/zsh/**:
+    HOME/.config/git/**:
+    etc/zshrc:
+    etc/zsh/**:
+    Library/LaunchDaemons/otelcol.plist*:
+base-desktop:
+  load-configuration:
+    etc/grafana/**:
+virt/mac-os-aarch64:
+  include-profiles: [base-cli]
+bare-metal/mac-os-aarch64:
+  include-profiles: [base-cli, base-desktop]

@@ -23,7 +23,7 @@ function to_dest { [[ $1 == HOME || $1 == HOME/* ]] && print -r -- ${HOME}${1#HO
 #[why] sole source of owner/perms; root-owned launchd daemons must be root:wheel 0644
 typeset -A perms=()
 for d ( dir-size-exporter grafana jaeger loki otelcol port-exporter prometheus ) {
-  perms[/Library/LaunchDaemons/d-root-$d.plist]='root:wheel 0644'
+  perms[/Library/LaunchDaemons/$d.plist]='root:wheel 0644'
 }
 
 pushd "$configs/root"

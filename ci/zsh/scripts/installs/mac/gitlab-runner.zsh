@@ -9,7 +9,7 @@ autoload -Uz fn-log-msg
 ###[>] retire brew gitlab-runner service
 #>[what]
 #   retire brew's gitlab-runner service so our repo-owned
-#   d-user-gitlab-runner.plist supervises the runner instead
+#   gitlab-runner.plist supervises the runner instead
 #/[what]
 
 uid=$(id -u)

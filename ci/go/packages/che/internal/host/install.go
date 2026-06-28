@@ -1,0 +1,68 @@
+package host
+
+// [>] 🤖🤖
+
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+)
+
+// Install runs the profile's install units in spec-list order, each with the repo's
+// FPATH/PATH and CONFIGS_PROFILE/CONFIGS_SPACE exported. Fatal on first non-zero
+// exit. scripts are absolute (resolved by Host.ResolveInstall).
+func (h Host) Install(scripts []string) error {
+	env := h.installEnv()
+	for _, script := range scripts {
+		h.fs.Log("install", script)
+		if h.DryRun {
+			continue
+		}
+		c := exec.Command(script)
+		c.Env = env
+		c.Stdout, c.Stderr = os.Stdout, os.Stderr
+		if err := c.Run(); err != nil {
+			return fmt.Errorf("install unit failed: %s: %w", script, err)
+		}
+	}
+	return nil
+}
+
+// installEnv mirrors the Makefile $(ZSH) wrapper env + che's profile exports.
+func (h Host) installEnv() []string {
+	fns := filepath.Join(h.RepoRoot, "ci/zsh/functions")
+	scripts := filepath.Join(h.RepoRoot, "ci/zsh/scripts")
+	installs := filepath.Join(scripts, "installs")
+
+	env := os.Environ()
+	env = prepend(env, "FPATH", fns)
+	env = prepend(env, "PATH", fns+":"+scripts+":"+installs)
+	env = append(env,
+		"CONFIGS_PROFILE="+h.Profile,
+		"CONFIGS_SPACE="+h.Space,
+	)
+	return env
+}
+
+// prepend sets key=value:<existing> in a copy of env.
+func prepend(env []string, key, value string) []string {
+	prefix := key + "="
+	out := make([]string, 0, len(env)+1)
+	found := false
+	for _, kv := range env {
+		if rest, ok := strings.CutPrefix(kv, prefix); ok {
+			out = append(out, prefix+value+":"+rest)
+			found = true
+		} else {
+			out = append(out, kv)
+		}
+	}
+	if !found {
+		out = append(out, prefix+value)
+	}
+	return out
+}
+
+// [<] 🤖🤖

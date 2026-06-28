@@ -47,11 +47,17 @@ run-host-install-all: | run-repo-ci-prepare-executables
 
 #[what] preview every sync pass; prints actions, mutates nothing
 run-host-sync-dry-run: | run-repo-ci-prepare-executables
-	@$(PRETTY) che sync --dry-run
+	@$(PRETTY) che prune-links --dry-run
+	@$(PRETTY) che mk-dirs --dry-run
+	@$(PRETTY) che link --dry-run
+	@$(PRETTY) che copy --dry-run
+	@$(PRETTY) che render-templates --dry-run
 
 #[what] reload running service launchagents
-run-host-restart-services:
-	@$(PRETTY) $(CI_SCRIPTS)/restart-services.sh
+run-host-restart-services: | run-repo-ci-prepare-executables
+	@$(PRETTY) che services bootout
+	@$(PRETTY) che services bootin
+	@$(PRETTY) che services ensure
 ##[<] Onto Host
 
 ##[>] Onto Repo (CI) [genai-include]
@@ -63,7 +69,7 @@ run-repo-ci-render-templates: | run-repo-ci-prepare-executables
 #[what] test pytest & go
 run-repo-ci-tests:
 	@$(PRETTY) pytest tests/scripts/python
-	@cd ci/go/src && $(PRETTY) go test ./...
+	@cd ci/go && $(PRETTY) go test ./...
 
 #[what] mypy typecheck
 run-repo-ci-typecheck:
@@ -81,7 +87,7 @@ run-repo-ci-install-deps:
 
 #[what] compile ci/go cmds into ci/go/bin
 run-repo-ci-prepare-executables: | run-repo-ci-install-deps
-	@cd ci/go/src && $(PRETTY) go build -o ../bin/ ./cmd/...
+	@cd ci/go && $(PRETTY) go build -o bin/ ./packages/...
 
 ###[>] VM
 #[what] build vanilla base vm image

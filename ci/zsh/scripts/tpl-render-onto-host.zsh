@@ -21,8 +21,8 @@ typeset -A owner_custom=()
 #[what] root-owned dests: launchd plist must be 0644 root:wheel; sudoers 0440 root:wheel
 filemode_custom[/etc/sudoers.d/configs]=0440
 owner_custom[/etc/sudoers.d/configs]=root:wheel
-filemode_custom[/Library/LaunchAgents/d-user-gitlab-runner.plist]=0644
-owner_custom[/Library/LaunchAgents/d-user-gitlab-runner.plist]=root:wheel
+filemode_custom[/Library/LaunchAgents/gitlab-runner.plist]=0644
+owner_custom[/Library/LaunchAgents/gitlab-runner.plist]=root:wheel
 ##[<] 🤖🤖
 
 #[what] map a stripped template path to its live dest: HOME/<rest> -> $HOME/<rest>, else /<rest>

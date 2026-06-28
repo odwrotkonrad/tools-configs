@@ -9,15 +9,16 @@ profiles:
 
 base:
   load-configuration:
-    Library/LaunchDaemons/d-root-otelcol.plist*:
-    Library/LaunchDaemons/d-root-dir-size-exporter.plist*:
-    Library/LaunchDaemons/d-root-port-exporter.plist*:
+    Library/LaunchDaemons/otelcol.plist*:
+    Library/LaunchDaemons/dir-size-exporter.plist*:
+    Library/LaunchDaemons/port-exporter.plist*:
   make-extra-dirs:
     - /var/log/{otelcol,dir_size_exporter,port_exporter}
     - /var/custom/cache/dir_size_exporter
   install:
     - ci/zsh/scripts/installs/shared/golang.zsh
     - ci/zsh/scripts/installs/shared/otel-collector.zsh
+  services: [otelcol, dir-size-exporter, port-exporter]
 
 base-cli:
   include-profiles: [base]
@@ -69,8 +70,8 @@ base-desktop:
     HOME/.gitlab-runner/**:
     HOME/Library/**:
     etc/{grafana,prometheus,jaeger,loki}/**:
-    Library/LaunchDaemons/d-root-{grafana,prometheus,jaeger,loki}.plist*:
-    Library/LaunchAgents/d-user-gitlab-runner.plist*:
+    Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*:
+    Library/LaunchAgents/gitlab-runner.plist*:
   make-extra-dirs:
     - /var/log/{grafana,prometheus,jaeger,loki}
     - /usr/local/var/{grafana,prometheus}
@@ -81,6 +82,7 @@ base-desktop:
     - ci/zsh/scripts/installs/mac/jaeger.zsh
     - ci/zsh/scripts/installs/mac/prometheus.zsh
     - ci/zsh/scripts/installs/mac/gitlab-runner.zsh
+  services: [grafana, prometheus, jaeger, loki, gitlab-runner]
 
 virt/mac-os-aarch64:
   include-profiles: [base-macos-cli]

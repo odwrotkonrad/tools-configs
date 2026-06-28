@@ -140,13 +140,20 @@ assets
   recordings
 ci
   go
-    src
-      cmd
-        che
-          testdata
-            includes
-        tpl-gen-makefile-doc
-          testdata
+    packages
+      che
+        internal
+          cli
+          fsutil
+          host
+          log
+          render
+          spec
+          testutil
+            specs
+      gen-from-tpl-makefile
+        lib
+        testdata
   python
     scripts
   vm

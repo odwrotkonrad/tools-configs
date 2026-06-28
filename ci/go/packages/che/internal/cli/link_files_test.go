@@ -1,0 +1,30 @@
+package cli
+
+// [>] 🤖🤖
+
+import (
+	"testing"
+
+	"configs/ci/go/packages/che/internal/testutil"
+)
+
+// link: ensures the HOME config dirs, links the user zshrc into $HOME, and backs up
+// then links the root-tree /etc/zshrc.
+func TestLinkCmd(t *testing.T) {
+	home := testutil.MockRepoEnv(t)
+	dryRun = true
+	t.Cleanup(func() { dryRun = false })
+	if err := build(); err != nil {
+		t.Fatalf("build() errored: %v", err)
+	}
+
+	out := testutil.RunDry(t, LinkCmd, true)
+	testutil.WantLines(t, out,
+		"mkdir: "+home+"/.config/zsh [dry-run]",
+		"ln: "+home+"/.config/zsh/.zshrc [dry-run]",
+		"backup: /etc/zshrc.",
+		"ln: /etc/zshrc [dry-run]",
+	)
+}
+
+// [<] 🤖🤖

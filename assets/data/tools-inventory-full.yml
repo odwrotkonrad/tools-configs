@@ -49,7 +49,7 @@ tools:
         root/:
           etc/defaults.yml:
           usr/local/scripts/shell/load-defaults-config.zsh:
-          Users/ko/Library/LaunchAgents/d-user-load-defaults-config.plist:
+          Users/ko/Library/LaunchAgents/load-defaults-config.plist:
 
   - editorconfig:
       files:
@@ -73,7 +73,7 @@ tools:
       files:
         root/etc/jaeger/config.yml:
         ci/zsh/scripts/installs/mac/jaeger.zsh:
-        root/Library/LaunchDaemons/d-root-jaeger.plist.host.cp:
+        root/Library/LaunchDaemons/jaeger.plist.host.cp:
 
   - kitty:
       files:
@@ -99,7 +99,7 @@ tools:
       files:
         root/etc/prometheus/prometheus.yml:
         ci/zsh/scripts/installs/mac/prometheus.zsh:
-        root/Library/LaunchDaemons/d-root-prometheus.plist.host.cp:
+        root/Library/LaunchDaemons/prometheus.plist.host.cp:
 
   - pyenv:
 
