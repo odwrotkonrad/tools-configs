@@ -23,4 +23,5 @@ ssh -t -i $key \
   -o PreferredAuthentications=publickey \
   -o StrictHostKeyChecking=no \
   -o UserKnownHostsFile=/dev/null \
+  -o SendEnv=OP_SERVICE_ACCOUNT_TOKEN \
   $user@$(tart ip $vm) "$@"

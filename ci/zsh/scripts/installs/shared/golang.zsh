@@ -37,7 +37,8 @@ function install_go {
   sudo rm -rf "${goroot}"
   sudo tar -xzf "${archive}" -C "${prefix}"
 
-  #[what] expose the toolchain on PATH via /usr/local/bin
+  #[what] expose the toolchain on PATH via /usr/local/bin (dir may be absent on a fresh host)
+  sudo mkdir -p "${prefix}/bin"
   for bin ( go gofmt ) sudo ln -fs "${goroot}/bin/${bin}" "${prefix}/bin/${bin}"
 }
 

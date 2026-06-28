@@ -45,8 +45,6 @@ base-cli:
     - /var/root/.config
     - /var/root/.local/state/zsh/completions
   install:
-    - ci/zsh/scripts/installs/shared/aws-cli.zsh
-    - ci/zsh/scripts/installs/shared/gcloud-cli.zsh
     - ci/zsh/scripts/installs/shared/native-clis.zsh
 
 base-macos:
@@ -61,6 +59,8 @@ base-macos-cli:
     - ci/zsh/scripts/installs/mac/brew-packages.zsh
     - ci/zsh/scripts/installs/mac/asdf-tools.zsh
     - ci/zsh/scripts/installs/mac/pyenv-python.zsh
+    - ci/zsh/scripts/installs/shared/aws-cli.zsh
+    - ci/zsh/scripts/installs/shared/gcloud-cli.zsh
     - ci/zsh/scripts/installs/mac/lang-pkgs.zsh
     - ci/zsh/scripts/installs/shared/completions-zsh.zsh
 
@@ -77,7 +77,6 @@ base-desktop:
     - /usr/local/var/{grafana,prometheus}
   install:
     - ci/zsh/scripts/installs/mac/kitty.zsh
-    - ci/zsh/scripts/installs/mac/vscode-exts.zsh
     - ci/zsh/scripts/installs/shared/ollama.zsh
     - ci/zsh/scripts/installs/mac/jaeger.zsh
     - ci/zsh/scripts/installs/mac/prometheus.zsh

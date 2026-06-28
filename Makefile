@@ -10,7 +10,7 @@ IN_VM := $(CI_SCRIPTS)/vm-ssh.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root/HOME/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
-export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$(CURDIR)/ci/go/bin:$(PATH)
+export PATH := $(CURDIR)/ci/python/scripts:$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$(CURDIR)/ci/go/bin:/usr/local/bin:$(PATH)
 export PYTHONPATH := $(CURDIR)/$(SCRIPTS)/python
 export MYPYPATH := $(CURDIR)/$(SCRIPTS)/python
 export GOMPLATE_CONFIG := $(CURDIR)/root/etc/gomplate/gomplate.yaml
@@ -104,9 +104,9 @@ run-repo-ci-vm-ssh:
 
 #[what] build vm then run the che passes in it (virt/mac-os-aarch64 profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
-	@$(IN_VM) run-host-mk-dirs
 	@$(IN_VM) run-host-upsert-configs
-	@$(IN_VM) run-host-render-templates
+	@$(IN_VM) run-host-mk-dirs
 	@$(IN_VM) run-host-install-all
+	@$(IN_VM) run-host-render-templates
 ###[<] VM
 ##[<] Onto Repo

@@ -20,7 +20,6 @@ type Host struct {
 	Root     string // <configs>/root, the load passes' source subtree
 	Home     string
 	Profile  string // "<space>/<os>-<arch>"
-	Space    string // bare-metal | virt
 	DryRun   bool
 	fs       fsutil.FS
 }
@@ -34,7 +33,6 @@ func New(repoRoot, home, profile string, dryRun bool) Host {
 		Root:     root,
 		Home:     home,
 		Profile:  profile,
-		Space:    strings.SplitN(profile, "/", 2)[0],
 		DryRun:   dryRun,
 		fs:       fsutil.FS{Home: home, Root: root, DryRun: dryRun},
 	}

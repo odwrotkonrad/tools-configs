@@ -10,9 +10,7 @@ import (
 	"strings"
 )
 
-// Install runs the profile's install units in spec-list order, each with the repo's
-// FPATH/PATH and CONFIGS_PROFILE/CONFIGS_SPACE exported. Fatal on first non-zero
-// exit. scripts are absolute (resolved by Host.ResolveInstall).
+// Install runs the profile's install units in spec-list order
 func (h Host) Install(scripts []string) error {
 	env := h.installEnv()
 	for _, script := range scripts {
@@ -39,10 +37,7 @@ func (h Host) installEnv() []string {
 	env := os.Environ()
 	env = prepend(env, "FPATH", fns)
 	env = prepend(env, "PATH", fns+":"+scripts+":"+installs)
-	env = append(env,
-		"CONFIGS_PROFILE="+h.Profile,
-		"CONFIGS_SPACE="+h.Space,
-	)
+	env = append(env, "CONFIGS_PROFILE="+h.Profile)
 	return env
 }
 

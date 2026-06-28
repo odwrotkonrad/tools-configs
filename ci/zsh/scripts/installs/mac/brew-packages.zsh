@@ -1,53 +1,36 @@
 #!/bin/zsh
 #>[what]
-#   install Brewfile entries by type: taps, casks, formulae.
-#   parses /etc/homebrew/Brewfile by section-comment markers, reading only the
-#   sections valid for CONFIGS_SPACE (exported by che install-tools):
-#   always 'base'; plus 'bare-metal' when CONFIGS_SPACE=bare-metal.
-#   #[why] brew bundle can't order by type, can't section, ignores go/npm/vscode.
+#   brew bundle /etc/homebrew/Brewfile, one stage per call:
+#   tap -> formulae -> go -> npm -> cask -> vscode (taps first; cask/vscode last for code cli).
+#   Brewfile gates on HOMEBREW_STAGE + HOMEBREW_IS_VIRT.
+#   #[why] brew wipes env (bin/brew: env -i), keeps only an allowlist + HOMEBREW_*; gate
+#   vars must be HOMEBREW_-prefixed.
 #/[what]
 
 emulate -LR zsh
 setopt errexit pipefail
 
 ##[>] 🤖🤖
-###[>] select sections by space #[why] VM (virt) gets base only; host adds bare-metal
-typeset -a sections=( base )
-[[ ${CONFIGS_SPACE} == bare-metal ]] && sections+=( bare-metal )
-###[<]
+autoload -Uz fn-log-msg fn-is-virt
 
-###[>] read Brewfile, keep only lines inside a selected section #[why] zsh-native, no rg yet
-typeset brewfile=/etc/homebrew/Brewfile
-typeset -a brewfile_lines=( ${(f)"$(<$brewfile)"} )
-typeset -a active_lines
-typeset cur=""
-for line ( $brewfile_lines ) {
-  if [[ $line == '##[>] '* ]] { cur=${line#\#\#[>] }; continue }
-  if [[ $line == '##[<]'* ]]  { cur=""; continue }
-  (( ${sections[(I)$cur]} )) && active_lines+=$line
-}
-###[<]
-
-###[>] entries by type from the active lines
-entries() {
-  local l prefix="$1 \""
-  for l ( $active_lines ) {
-    [[ $l == ${prefix}* ]] || continue
-    print -r -- ${${l#$prefix}%%\"*}  #[what] strip `<type> "` prefix + trailing quote (+opts)
-  }
-}
-typeset -a taps=( ${(f)"$(entries tap)"} )
-typeset -a casks=( ${(f)"$(entries cask)"} )
-typeset -a formulae=( ${(f)"$(entries brew)"} )
-###[<]
-
-###[>] taps, then casks, then formulae
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
-for t ( $taps ) brew tap $t
-(( $#casks )) && brew install --cask $casks
-(( $#formulae )) && brew install $formulae
-###[<]
+#[what] gates the Brewfile virt? predicate; detected here, not threaded from che
+fn-is-virt && export HOMEBREW_IS_VIRT=true || export HOMEBREW_IS_VIRT=false
+
+#[why] parallel installs collide on shared-dep locks / cache races; bundle is
+#   idempotent, so retry 3x clears transient failures, then give up.
+function bundle_stage {
+  local stage=$1 attempt
+  for attempt ( 1 2 3 ) {
+    HOMEBREW_STAGE=$stage brew bundle install --jobs auto --no-upgrade --file=$brewfile && return 0
+    fn-log-msg -t brew -- "stage $stage failed (attempt $attempt/3), retrying"
+  }
+  return 1
+}
+
+typeset brewfile=/etc/homebrew/Brewfile
+for stage ( tap formulae go npm cask vscode ) bundle_stage $stage
 ##[<] 🤖🤖

@@ -26,19 +26,18 @@ prefix=/usr/local
 sdk="${prefix}/google-cloud-sdk"
 
 function install_gcloud {
-  #[what] download & verify in a scratch dir
   local tmp=$(mktemp -d)
   cd $tmp
   local archive="google-cloud-cli-${version}-${platform}.tar.gz"
   curl -fsSL -O "https://storage.googleapis.com/cloud-sdk-release/${archive}"
   shasum -a 256 -c <<< "${sha256}  ${archive}" || fn-exit-with 1 "checksum mismatch: ${archive}"
 
-  #[what] install the sdk tree to the prefix (idempotent)
+  #[what] install sdk tree (idempotent)
   sudo rm -rf "${sdk}"
   sudo tar -xzf "${archive}" -C "${prefix}"
   sudo "${sdk}/install.sh" --quiet --usage-reporting false --path-update false
 
-  #[what] expose the cli on PATH via /usr/local/bin
+  #[what] symlink the cli onto PATH
   for bin ( gcloud gsutil bq ) sudo ln -fs "${sdk}/bin/${bin}" "${prefix}/bin/${bin}"
 }
 
