@@ -1,6 +1,6 @@
 #[what] Project's Makefile
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
-COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
+COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-sync-dry-run run-host-mk-dirs run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
 SCRIPTS := root/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
@@ -24,24 +24,30 @@ run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
-#[what] load configs onto host
-run-host-upsert-configs:
-	@sudo $(PRETTY) upsert-configs
+#[what] load configs onto host (profile-selected symlink + copy passes)
+run-host-upsert-configs: | run-repo-ci-prepare-executables
+	@sudo $(PRETTY) che link
+	@sudo $(PRETTY) che copy
 
 #[what] prune broken symlinks
-run-host-delete-broken-links:
-	@sudo $(PRETTY) delete-broken-links
+run-host-delete-broken-links: | run-repo-ci-prepare-executables
+	@sudo $(PRETTY) che prune-links
 
 #[what] required by configuration and tools dirs
-run-host-mk-dirs:
-	@sudo $(PRETTY) mk-dirs
+run-host-mk-dirs: | run-repo-ci-prepare-executables
+	@sudo $(PRETTY) che mk-dirs
 
 #[what] render *.host.auto.tmpl onto host
-run-host-render-templates:
-	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-host
+run-host-render-templates: | run-repo-ci-prepare-executables
+	@$(PRETTY) che render-templates
 
-run-host-install-all:
-	@$(PRETTY) $(CI_SCRIPTS)/installs/host-install-all
+#[what] run the detected profile's install units
+run-host-install-all: | run-repo-ci-prepare-executables
+	@$(PRETTY) che install-tools
+
+#[what] preview every sync pass; prints actions, mutates nothing
+run-host-sync-dry-run: | run-repo-ci-prepare-executables
+	@$(PRETTY) che sync --dry-run
 
 #[what] reload running service launchagents
 run-host-restart-services:
@@ -86,10 +92,11 @@ run-repo-ci-vm-build:
 run-repo-ci-vm-ssh:
 	@./ci/local/vm/ssh-vm.zsh
 
-#[what] build vm then run host upsert in it
+#[what] build vm then run the che passes in it (virt/mac-os-aarch64 profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
-	@$(IN_VM) run-host-upsert-configs
 	@$(IN_VM) run-host-mk-dirs
+	@$(IN_VM) run-host-upsert-configs
+	@$(IN_VM) run-host-render-templates
 	@$(IN_VM) run-host-install-all
 ###[<] VM
 ##[<] Onto Repo

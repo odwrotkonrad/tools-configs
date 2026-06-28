@@ -10,6 +10,9 @@ ci
   go
     src
       cmd
+        che
+          testdata
+            includes
         tmpl-gen-makefile-doc
           testdata
   local
@@ -21,6 +24,8 @@ ci
     functions
     scripts
       installs
+        mac
+        shared
 root
   HOME
     .config

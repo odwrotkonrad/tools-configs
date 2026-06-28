@@ -1,5 +1,5 @@
+##[>] base
 tap "azure/azure-cli"
-tap "cirruslabs/cli"
 tap "hashicorp/tap"
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
@@ -37,8 +37,6 @@ brew "git"
 brew "glab"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
-# Gorgeous metric visualizations and dashboards for timeseries databases
-brew "grafana"
 # Improved top (interactive process viewer)
 brew "htop"
 # Lightweight and flexible command-line JSON processor
@@ -49,10 +47,6 @@ brew "sqlite"
 brew "python@3.14"
 # Generic library support script
 brew "libtool"
-# Run LogQL queries against a Loki server
-brew "logcli"
-# Horizontally-scalable, highly-available log aggregation system
-brew "loki"
 # Utility for directing compilation
 brew "make"
 # Port scanning utility for large networks
@@ -83,14 +77,6 @@ brew "shellcheck"
 brew "showkey"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
-# Create, run and manage macOS and Linux VMs on Apple Silicon
-brew "cirruslabs/cli/tart"
-# GitLab CI runner that runs jobs on this host
-brew "gitlab-runner"
-# GitLab runner custom executor that runs jobs inside ephemeral Tart VMs
-brew "cirruslabs/cli/gitlab-tart-executor"
-# Tool to build identical machine images for multiple platforms (bake the SIP-off vm base)
-brew "hashicorp/tap/packer"
 # Tool Command Language
 brew "tcl-tk"
 # Terminal multiplexer
@@ -108,8 +94,6 @@ brew "zlib"
 # Command-line interface for 1Password
 cask "1password-cli"
 cask "azure/azure-cli/azure-cli-preview"
-cask "font-jetbrains-mono"
-cask "visual-studio-code"
 go "github.com/hairyhenderson/gomplate/v4/cmd/gomplate"
 go "golang.org/x/tools/gopls"
 go "github.com/evilmartians/lefthook/v2"
@@ -119,6 +103,26 @@ npm "corepack"
 npm "pyright"
 npm "typescript-language-server"
 npm "typescript"
+##[<] base
+
+##[>] bare-metal
+tap "cirruslabs/cli"
+# Gorgeous metric visualizations and dashboards for timeseries databases
+brew "grafana"
+# Run LogQL queries against a Loki server
+brew "logcli"
+# Horizontally-scalable, highly-available log aggregation system
+brew "loki"
+# Create, run and manage macOS and Linux VMs on Apple Silicon
+brew "cirruslabs/cli/tart"
+# GitLab CI runner that runs jobs on this host
+brew "gitlab-runner"
+# GitLab runner custom executor that runs jobs inside ephemeral Tart VMs
+brew "cirruslabs/cli/gitlab-tart-executor"
+# Tool to build identical machine images for multiple platforms (bake the SIP-off vm base)
+brew "hashicorp/tap/packer"
+cask "font-jetbrains-mono"
+cask "visual-studio-code"
 vscode "anthropic.claude-code"
 vscode "charliermarsh.ruff"
 vscode "editorconfig.editorconfig"
@@ -133,3 +137,4 @@ vscode "ms-python.vscode-python-envs"
 vscode "openai.chatgpt"
 vscode "tamasfe.even-better-toml"
 vscode "yzhang.markdown-all-in-one"
+##[<] bare-metal

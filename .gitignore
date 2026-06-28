@@ -21,3 +21,5 @@ __pycache__/
 
 # go binaries built on demand by run-repo-ci-prepare-executables
 /ci/go/bin/
+# stray binary from `go build ./cmd/che` run inside ci/go/src
+/ci/go/src/che

@@ -9,7 +9,7 @@ interval=300
 
 size_floor=$((10 * 1024 * 1024))
 
-cache=/usr/local/var/dir_size_exporter/dir_sizes.prom
+cache=/var/custom/cache/dir_size_exporter/dir_sizes.prom
 
 walk_roots=(
   /opt

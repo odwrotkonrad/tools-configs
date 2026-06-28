@@ -9,11 +9,12 @@
 
 ### Onto Host:
 
-`run-host-upsert-configs` load configs onto host
+`run-host-upsert-configs` load configs onto host (profile-selected symlink + copy passes)
 `run-host-delete-broken-links` prune broken symlinks
 `run-host-mk-dirs` required by configuration and tools dirs
 `run-host-render-templates` render *.host.auto.tmpl onto host
-`run-host-install-all`
+`run-host-install-all` run the detected profile's install units
+`run-host-sync-dry-run` preview every sync pass; prints actions, mutates nothing
 `run-host-restart-services` reload running service launchagents
 
 ### Onto Repo (CI):
@@ -29,4 +30,4 @@
 `run-repo-ci-vm-build-base` build vanilla base vm image
 `run-repo-ci-vm-build` build configs-local vm image
 `run-repo-ci-vm-ssh` ssh into the local vm
-`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run host upsert in it
+`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run the che passes in it (virt/mac-os-aarch64 profile)
