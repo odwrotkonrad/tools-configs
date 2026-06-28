@@ -38,10 +38,10 @@ from typing import ClassVar
 from pydantic import BaseModel
 from pydantic import field_validator
 import pygit2
-from s_root_scripts_lib import errors as lib_err
-from s_root_scripts_lib import input as lib_input
-from s_root_scripts_lib import options as lib_options
-from s_root_scripts_lib import parameters as lib_param
+from root_scripts_lib import errors as lib_err
+from root_scripts_lib import input as lib_input
+from root_scripts_lib import options as lib_options
+from root_scripts_lib import parameters as lib_param
 
 
 ##[>] 🤖🤖

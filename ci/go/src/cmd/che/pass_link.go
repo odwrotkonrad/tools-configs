@@ -14,6 +14,9 @@ func (a *app) passLink() error {
 	if err != nil {
 		return err
 	}
+	if err := a.ensureConfigDirs(cs); err != nil {
+		return err
+	}
 	for _, rel := range cs.links {
 		src := filepath.Join(a.root, rel)
 		dest := a.toDest(rel)

@@ -9,7 +9,7 @@
 emulate -LR zsh
 setopt errexit dotglob
 IFS= # do not split into multiple args on spaces e.g. 'Application Support'
-autoload -Uz log-msg backup-before-overwrite
+autoload -Uz fn-log-msg fn-backup-before-overwrite
 configs=${1:-$HOME/projects/configs}
 
 : ${HOME:?HOME must be set} #[why] dest paths derive from the invoking user's home
@@ -50,9 +50,9 @@ for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before c
   ddir=$(to_dest $dir)
   if [[ -d $ddir ]] { continue }
   if [[ $dir == HOME/* ]] {  #[what] 🤖🤖 HOME-tree: made as the user (user-owned, no chown), 0750 (group read, no world)
-    (umask 027; sudo -u $home_user mkdir $ddir); log-msg -t mkdir -- $ddir
+    (umask 027; sudo -u $home_user mkdir $ddir); fn-log-msg -t mkdir -- $ddir
   } else {
-    (umask 022; mkdir $ddir); log-msg -t mkdir -- $ddir  #[what] 🤖🤖 root-tree: 0755 (world-readable); no -p
+    (umask 022; mkdir $ddir); fn-log-msg -t mkdir -- $ddir  #[what] 🤖🤖 root-tree: 0755 (world-readable); no -p
   }
 }
 
@@ -60,8 +60,8 @@ for dir ( ${(o)repo_dirs_all} ) {  #[what] 🤖🤖 (o) sort -> parents before c
 for file ( $repo_files_ex ) {
   dest=$(to_dest $file)
   if [[ ${dest:A} != ${file:A} ]] {
-    backup-before-overwrite --repo-root $configs $dest  #[what] keep any non-repo dest first
-    ln -fws ${file:a} $dest ; log-msg -t ln -- $dest
+    fn-backup-before-overwrite --repo-root $configs $dest  #[what] keep any non-repo dest first
+    ln -fws ${file:a} $dest ; fn-log-msg -t ln -- $dest
   }
 }
 ##[<] link pass
@@ -70,13 +70,13 @@ for file ( $repo_files_ex ) {
 for file ( $copy_files ) {
   dest=$(to_dest ${file%${cp_ext}}) #[what] strip marker -> live path
   if { ! cmp -s ${file:a} $dest } {
-    backup-before-overwrite $dest  #[what] a real copied dest is never a repo-pointing symlink (no --repo-root)
+    fn-backup-before-overwrite $dest  #[what] a real copied dest is never a repo-pointing symlink (no --repo-root)
     if [[ ${file%${cp_ext}} == HOME/* ]] { (umask 027; cp ${file:a} $dest) } else { (umask 022; cp ${file:a} $dest) } #[what] 🤖🤖 HOME-tree 0640, root-tree 0644
-    log-msg -t cp -- $dest
+    fn-log-msg -t cp -- $dest
     if [[ -n ${perms[$dest]} ]] {
       perm=${perms[$dest]}
-      chown -- ${perm%% *} $dest; log-msg -t chown -- "${perm%% *} $dest"
-      chmod -- ${perm##* } $dest; log-msg -t chmod -- "${perm##* } $dest"
+      chown -- ${perm%% *} $dest; fn-log-msg -t chown -- "${perm%% *} $dest"
+      chmod -- ${perm##* } $dest; fn-log-msg -t chmod -- "${perm##* } $dest"
     }
   }
 }

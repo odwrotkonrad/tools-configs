@@ -1,0 +1,18 @@
+function fn-ssh-generate-keys {
+  emulate -LR zsh
+
+  local email=$1
+  if [[ -z $email ]]; then
+      print -u2 "usage: ssh_generate_keys <email>"
+      return 1
+  fi
+
+  typeset -a ssh_keys=(
+      ~/.ssh/id_access
+      ~/.ssh/id_signing
+  )
+
+  for k in ${ssh_keys}; do
+      ssh-keygen -t ecdsa-sha2-nistp521 -b 521 -f ${k} -C $email
+  done
+}

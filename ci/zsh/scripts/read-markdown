@@ -5,7 +5,7 @@
 #   --strip-frontmatter: drop a leading --- ... --- block.
 #   --strip-comments: drop <!-- ... --> blocks (incl. multi-line).
 #   --increment-heading-levels [n]: demote every ATX heading n levels (default 1), capped at 6.
-#   Upstream: s-root-llm-git-* scripts. Downstream: <file>. Out: file content on stdout.
+#   Upstream: llm-git-* scripts. Downstream: <file>. Out: file content on stdout.
 #/[what]
 
 ##[>] 🤖🤖🤖

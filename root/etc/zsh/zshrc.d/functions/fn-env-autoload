@@ -1,0 +1,33 @@
+#>[what]
+#   1. find repo root with a top-level .env (else bail)
+#   2. trusted root: source .env (allexport)
+#   3. untrusted root: prompt y/N, on yes source + record trust
+#/[what]
+function fn-env-autoload {
+  emulate -LR zsh
+
+  function _env_source { setopt localoptions allexport; source $1/.env }
+
+  typeset repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
+  typeset trusted_paths=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/fn-root-env-autoload-trusted-paths
+  typeset -gA fn_root_env_autoload_user_declined_paths
+
+  [[ -f $repo_root/.env ]] || return 0
+
+  if [[ -f $trusted_paths ]] && rg --quiet --line-regexp --fixed-strings -- $repo_root $trusted_paths; then
+    _env_source $repo_root
+    return 0
+  fi
+
+  [[ -n ${fn_root_env_autoload_user_declined_paths[$repo_root]} ]] && return 0
+
+  [[ -t 0 ]] || return 0 #[what] stdin == tty
+
+  if ! read -q "?load + trust .env in $repo_root? [y/N] " </dev/tty; then
+    fn_root_env_autoload_user_declined_paths[$repo_root]=1
+    return 0
+  fi
+
+  _env_source $repo_root
+  >> $trusted_paths <<< $repo_root
+}

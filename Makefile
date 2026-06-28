@@ -1,10 +1,10 @@
 #[what] Project's Makefile
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
-COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-sync-dry-run run-host-mk-dirs run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
+COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-sync-dry-run run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
 SCRIPTS := root/usr/local/scripts
 CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
-PRETTY := $(ZSH) annotate-with-sections annotate-with-sections
+PRETTY := $(ZSH) fn-annotate-with-sections fn-annotate-with-sections
 VM_REPO := /Users/user/projects/configs
 IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root/HOME/.config/mypy/config
@@ -67,16 +67,20 @@ run-repo-ci-tests:
 
 #[what] mypy typecheck
 run-repo-ci-typecheck:
-	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/s-root-*
+	@$(PRETTY) $(MYPY) --scripts-are-modules $(SCRIPTS)/python/*
 	@$(PRETTY) $(MYPY) --scripts-are-modules ci/python/scripts/*
-	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/s_root_scripts_lib
+	@$(PRETTY) $(MYPY) $(SCRIPTS)/python/root_scripts_lib
 
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:
 	@$(PRETTY) lefthook install --force
 
+#[what] install build deps (go toolchain from go.dev)
+run-repo-ci-install-deps:
+	@$(PRETTY) $(CI_SCRIPTS)/installs/shared/golang
+
 #[what] compile ci/go cmds into ci/go/bin
-run-repo-ci-prepare-executables:
+run-repo-ci-prepare-executables: | run-repo-ci-install-deps
 	@cd ci/go/src && $(PRETTY) go build -o ../bin/ ./cmd/...
 
 ###[>] VM

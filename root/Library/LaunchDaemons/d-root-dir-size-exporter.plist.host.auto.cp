@@ -6,7 +6,7 @@
 	<string>d-root-dir-size-exporter</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/scripts/shell/s-root-export-dir-sizes</string>
+		<string>/usr/local/scripts/shell/export-dir-sizes</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

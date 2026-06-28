@@ -7,12 +7,12 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-autoload -Uz install-if-missing
+autoload -Uz fn-install-if-missing
 
 ##[>] 🤖
 function install_brew {
   export NONINTERACTIVE=1
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
-install-if-missing brew install_brew
+fn-install-if-missing brew install_brew
 ##[<]

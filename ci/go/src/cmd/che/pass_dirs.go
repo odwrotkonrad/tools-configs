@@ -9,16 +9,12 @@ import (
 	"strings"
 )
 
-// passDirs creates every repo-tree dir (parents first) plus the profile's
-// also-create-dirs. Ports mk-dirs + the dir half of upsert-configs.
-func (a *app) passDirs() error {
-	cs, err := a.resolveConfigs()
-	if err != nil {
-		return err
-	}
+// ensureConfigDirs creates every repo-tree ancestor dir for the resolved config
+// set (parents first), HOME-tree as the user umask 027 (0750), root-tree umask 022
+// (0755). Idempotent (skips existing). Called by mk-dirs and before link/copy so a
+// pass never fails on a missing parent dir.
+func (a *app) ensureConfigDirs(cs configSet) error {
 	user := a.invokingUser()
-
-	// repo-tree dirs: HOME-tree as the user umask 027 (0750), root-tree umask 022 (0755).
 	for _, rel := range cs.dirs {
 		dest := a.toDest(rel)
 		if isDir(dest) {
@@ -34,6 +30,20 @@ func (a *app) passDirs() error {
 			}
 		}
 	}
+	return nil
+}
+
+// passDirs creates every repo-tree dir (parents first) plus the profile's
+// also-create-dirs. Ports mk-dirs + the dir half of upsert-configs.
+func (a *app) passDirs() error {
+	cs, err := a.resolveConfigs()
+	if err != nil {
+		return err
+	}
+	if err := a.ensureConfigDirs(cs); err != nil {
+		return err
+	}
+	user := a.invokingUser()
 
 	// also-create-dirs: not in the repo tree. HOME-tree user-owned 0750; system dirs
 	// carry the special groups from mk-dirs (setgid 2775 / sticky 1777).
@@ -55,7 +65,7 @@ func (a *app) mkAlsoDir(rel, dest, user string) error {
 	switch {
 	case strings.HasPrefix(rel, "HOME/") || rel == "HOME":
 		return a.mkdirP(dest, user, 0750, "")
-	case rel == "var/custom/cache/s-root-get-term-open-files-with":
+	case rel == "var/custom/cache/get-term-open-files-with":
 		return a.mkdirP(dest, "", 0777, "1777") // sticky world-writable
 	case strings.HasPrefix(rel, "var/log/") ||
 		strings.HasPrefix(rel, "usr/local/var") ||

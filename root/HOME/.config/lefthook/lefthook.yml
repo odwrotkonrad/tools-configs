@@ -9,7 +9,7 @@ pre-commit:
   parallel: false
   jobs:
     - name: ssh-authenticate
-      run: /usr/local/scripts/shell/s-root-ssh-authenticate
+      run: /usr/local/scripts/shell/ssh-authenticate
 
     - name: validate-yml
       glob: "*.{yml,yaml}"
@@ -22,4 +22,4 @@ pre-commit:
 commit-msg:
   jobs:
     - name: conventional-prefix
-      run: /usr/local/scripts/shell/s-root-conventional-prefix {1}
+      run: /usr/local/scripts/shell/conventional-prefix {1}

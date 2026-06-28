@@ -3,7 +3,7 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-autoload -Uz install-if-missing
+autoload -Uz fn-install-if-missing
 
 prefix=/usr/local
 version=2.18.0
@@ -31,4 +31,4 @@ function install_jaeger {
   sudo install -m 0755 "$extracted/jaeger" "$prefix/bin/jaeger"
 }
 
-install-if-missing jaeger install_jaeger
+fn-install-if-missing jaeger install_jaeger

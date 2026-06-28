@@ -12,13 +12,13 @@
 emulate -LR zsh
 setopt err_return extended_glob
 
-autoload -Uz exit-with
+autoload -Uz fn-exit-with
 
 env=$1
 example=$2
 
-[[ -n $env && -n $example ]] || exit-with 11 "usage: ${0:t} <env> <example>"
-[[ -f $example ]] || exit-with 13 "file not found: $example"
+[[ -n $env && -n $example ]] || fn-exit-with 11 "usage: ${0:t} <env> <example>"
+[[ -f $example ]] || fn-exit-with 13 "file not found: $example"
 
 typeset -A merged
 

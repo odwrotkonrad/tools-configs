@@ -43,16 +43,18 @@ paths:
           zshenv.d/:                                        # loaded by /etc/zshenv (all shells)
             fn-loaders.zsh:                                 # autoload helpers
             auto.d/:                                        # sourced in name order
-              10-functions.zsh:                             # is-os, is-arch, is-terminal
               20-options.zsh:
               30-params.zsh:
             functions/:                                     # autoloaded
               rm:
-              exit-with:
-              print-with:
-              fn-root-load-os-open-files-with:
-              fn-root-ssh-generate-keys:
-              fn-root-ssh-test-git-connection:
+              fn-exit-with:
+              fn-print-with:
+              fn-is-os:                                     # predicate: mac|linux
+              fn-is-arch:                                    # predicate: arm|x86
+              fn-is-terminal:                               # predicate: kitty|vscode
+              fn-load-os-open-files-with:
+              fn-ssh-generate-keys:
+              fn-ssh-test-git-connection:
           zshrc.d/:                                         # loaded by /etc/zshrc (interactive)
             static-history:                                 # items loaded into each interactive shell
             auto.d/:
@@ -65,10 +67,10 @@ paths:
               90-keybindings.zsh:
             completions/:
             functions/:
-              fn-root-load-static-history:
+              fn-load-static-history:
       root/usr/local/scripts/:
         shell/:
-          s-root-load-defaults-config:
+          load-defaults-config:
 ```
 
 ### Startup Order

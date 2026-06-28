@@ -1,0 +1,11 @@
+#[what] true if the running OS matches the arg (mac|linux)
+
+fn-is-os() {
+  emulate -LR zsh
+  typeset os_name=$(uname -s)
+  case ${1} {
+    (mac)   [[ $os_name == Darwin ]] ;;
+    (linux) [[ $os_name == Linux ]] ;;
+    (*) return 2 ;;
+  }
+}

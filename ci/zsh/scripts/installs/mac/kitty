@@ -6,7 +6,7 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-autoload -Uz install-if-missing
+autoload -Uz fn-install-if-missing
 
 prefix=/usr/local
 kitty_app_contents=/Applications/kitty.app/Contents
@@ -32,4 +32,4 @@ function install_kitty {
   done
 }
 
-install-if-missing kitty install_kitty
+fn-install-if-missing kitty install_kitty

@@ -10,7 +10,7 @@ import (
 )
 
 // passInstall runs the profile's install units in spec-list order. Each unit runs
-// with the repo's FPATH/PATH (so is-os/is-arch/install-if-missing autoload) and
+// with the repo's FPATH/PATH (so fn-is-os/fn-is-arch/fn-install-if-missing autoload) and
 // CONFIGS_PROFILE/CONFIGS_SPACE exported (so a unit picks the right Brewfile
 // section). Fatal on the first non-zero exit. Replaces host-install-all.
 func (a *app) passInstall() error {

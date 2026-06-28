@@ -1,0 +1,10 @@
+#[what] true if the running terminal matches the arg (kitty|vscode)
+
+fn-is-terminal() {
+  emulate -LR zsh
+  case ${1} {
+    (kitty)  [[ ${TERM} == xterm-kitty ]] ;;
+    (vscode) [[ ${TERM_PROGRAM} == vscode ]] ;;
+    (*) return 2 ;;
+  }
+}

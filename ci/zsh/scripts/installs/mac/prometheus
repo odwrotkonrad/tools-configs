@@ -3,7 +3,7 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-autoload -Uz install-if-missing
+autoload -Uz fn-install-if-missing
 
 prefix=/usr/local
 version=3.5.3
@@ -32,4 +32,4 @@ function install_prometheus {
   sudo install -m 0755 "$extracted/promtool" "$prefix/bin/promtool"
 }
 
-install-if-missing prometheus install_prometheus
+fn-install-if-missing prometheus install_prometheus

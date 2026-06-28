@@ -32,6 +32,9 @@ func (a *app) passCopy() error {
 	if err != nil {
 		return err
 	}
+	if err := a.ensureConfigDirs(cs); err != nil {
+		return err
+	}
 	for _, rel := range cs.copies {
 		src := filepath.Join(a.root, rel)
 		destRel := strings.TrimSuffix(rel, cpExt)

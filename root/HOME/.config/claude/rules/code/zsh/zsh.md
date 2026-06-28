@@ -7,7 +7,7 @@ paths:
   - "**/zprofile"
   - "**/zlogout"
   - "**/*.zsh"
-  - "**/installs/s-root-*"
+  - "**/installs/*"
 ---
 
 ## ZSH Code

@@ -2,7 +2,7 @@
 
 emulate -LR zsh
 setopt errexit localtraps
-autoload -Uz log-msg
+autoload -Uz fn-log-msg
 
 : ${HOME:?HOME must be set}
 
@@ -19,9 +19,9 @@ function mk_dirs {
   for dir ( ${(o)@} ) {  #[what] 🤖🤖 (o) lexical sort -> parents before children
     if [[ ! -d $dir ]] {
       if (( $#opt_user )) { sudo -u $opt_user[2] mkdir $dir } else { mkdir $dir }  #[what] 🤖🤖 no -p; parents made first
-      log-msg -t mkdir -- $dir
-      if (( $#opt_chown )) { chown $opt_chown[2] $dir; log-msg -t chown -- "$dir $opt_chown[2]" }  #[what] 🤖🤖 no -R; per-dir; only for custom owner
-      if (( $#opt_chmod )) { chmod $opt_chmod[2] $dir; log-msg -t chmod -- "$dir $opt_chmod[2]" }
+      fn-log-msg -t mkdir -- $dir
+      if (( $#opt_chown )) { chown $opt_chown[2] $dir; fn-log-msg -t chown -- "$dir $opt_chown[2]" }  #[what] 🤖🤖 no -R; per-dir; only for custom owner
+      if (( $#opt_chmod )) { chmod $opt_chmod[2] $dir; fn-log-msg -t chmod -- "$dir $opt_chmod[2]" }
     }
   }
 }
@@ -50,7 +50,7 @@ dirs_system_space=(
 )
 
 dirs_system_space_world=(
-  /var/custom/cache/s-root-get-term-open-files-with
+  /var/custom/cache/get-term-open-files-with
 )
 
 

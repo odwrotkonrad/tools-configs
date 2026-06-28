@@ -3,7 +3,7 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-autoload -Uz install-if-missing
+autoload -Uz fn-install-if-missing
 
 prefix=/usr/local
 version=0.153.0
@@ -29,4 +29,4 @@ function install_otelcol {
   sudo install -m 0755 "$tmpdir/otelcol" "$prefix/bin/otelcol"
 }
 
-install-if-missing otelcol install_otelcol
+fn-install-if-missing otelcol install_otelcol

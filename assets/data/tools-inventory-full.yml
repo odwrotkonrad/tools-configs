@@ -48,7 +48,7 @@ tools:
       files:
         root/:
           etc/defaults.yml:
-          usr/local/scripts/shell/s-root-load-defaults-config:
+          usr/local/scripts/shell/load-defaults-config:
           Users/ko/Library/LaunchAgents/d-user-load-defaults-config.plist:
 
   - editorconfig:
@@ -63,7 +63,7 @@ tools:
           config:
           ignore:
           commit-template:
-        root/etc/zsh/functions/fn-root-ssh-test-git-connection:
+        root/etc/zsh/functions/fn-ssh-test-git-connection:
 
   - golang:
 
@@ -108,7 +108,7 @@ tools:
         root/etc/rg/:
           rgrc:
           rgignore:
-        root/etc/zsh/functions/fn-root-load-static-history:
+        root/etc/zsh/functions/fn-load-static-history:
 
   - ruff:
       files:
@@ -118,8 +118,8 @@ tools:
       files:
         root/HOME/.ssh/config:
         root/etc/zsh/functions/:
-          fn-root-ssh-generate-keys:
-          fn-root-ssh-test-git-connection:
+          fn-ssh-generate-keys:
+          fn-ssh-test-git-connection:
 
   - tmux:
       files:

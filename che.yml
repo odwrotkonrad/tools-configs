@@ -15,8 +15,9 @@ base:
   make-extra-dirs:
     - /var/log/{otelcol,dir_size_exporter,port_exporter}
     - /var/custom/cache/dir_size_exporter
-    - /var/custom/cache/s-root-get-term-open-files-with
+    - /var/custom/cache/get-term-open-files-with
   install:
+    - ci/zsh/scripts/installs/shared/golang
     - ci/zsh/scripts/installs/shared/otel-collector
 
 base-cli:

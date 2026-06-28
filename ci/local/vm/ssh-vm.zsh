@@ -2,7 +2,7 @@
 
 emulate -LR zsh
 setopt errexit pipefail
-autoload -Uz exit-with
+autoload -Uz fn-exit-with
 
 typeset vm=configs-macos-tahoe-vanilla-configs-local
 typeset user=user
@@ -15,7 +15,7 @@ function read_state {
 case $(read_state $vm) {
   (running) ;;
   (stopped) tart run --no-graphics $vm & ;;
-  (*) exit-with 1 "ssh-vm: $vm not found" ;;
+  (*) fn-exit-with 1 "ssh-vm: $vm not found" ;;
 }
 
 ssh -t -i $key \

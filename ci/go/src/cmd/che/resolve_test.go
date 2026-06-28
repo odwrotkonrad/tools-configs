@@ -41,7 +41,7 @@ func fixtureRepo(t *testing.T, profile string) *app {
 	for _, args := range [][]string{
 		{"init", "-q"},
 		{"-c", "core.excludesfile=", "add", "-Af"}, // -f: global ignore drops dotfiles
-		{"-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "x"},
+		{"-c", "user.email=t@t", "-c", "user.name=t", "-c", "commit.gpgsign=false", "commit", "-qm", "x"},
 	} {
 		c := exec.Command("git", args...)
 		c.Dir = dir

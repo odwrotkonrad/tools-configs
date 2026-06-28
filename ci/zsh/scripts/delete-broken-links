@@ -8,13 +8,13 @@
 emulate -LR zsh
 setopt errexit dotglob
 IFS=
-autoload -Uz log-msg
+autoload -Uz fn-log-msg
 configs=${1:-$HOME/projects/configs}
 
 : ${HOME:?HOME must be set}
 
 function delete_broken_links {
-  local root=$1 ; log-msg -t delete-broken-links -- $root
+  local root=$1 ; fn-log-msg -t delete-broken-links -- $root
 
   typeset -aU dirs broken
   # 1. 10 last refs -> all dirs
@@ -40,7 +40,7 @@ function delete_broken_links {
 
   # 5. broken links -> trash
 
-  if (( $#broken )) { rm $broken ; log-msg -t rm -- ${(j: :)broken} }
+  if (( $#broken )) { rm $broken ; fn-log-msg -t rm -- ${(j: :)broken} }
 }
 
 pushd $configs/root

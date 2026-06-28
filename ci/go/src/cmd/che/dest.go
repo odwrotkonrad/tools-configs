@@ -227,7 +227,7 @@ func (a *app) backupBeforeOverwrite(dest string, repoAware bool) error {
 	return nil
 }
 
-// logMsg prints 'HH:MM:SS.mmm: <title>: <msg>' to match the zsh log-msg format.
+// logMsg prints 'HH:MM:SS.mmm: <title>: <msg>' to match the zsh fn-log-msg format.
 func (a *app) logMsg(title, msg string) {
 	now := time.Now()
 	stamp := now.Format("15:04:05") + "." + fmt.Sprintf("%03d", now.Nanosecond()/1e6)

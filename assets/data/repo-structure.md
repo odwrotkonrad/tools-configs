@@ -116,7 +116,7 @@ root
     local
       scripts
         python
-          s_root_scripts_lib
+          root_scripts_lib
         shell
           lib
           templates-llm
@@ -129,7 +129,7 @@ tests
     python
       gen-dirs-tree
         fixture
-      s-root-get-os-open-files-with
-      s-root-get-term-open-files-with
+      get-os-open-files-with
+      get-term-open-files-with
         mock
-      s_root_scripts_test_lib
+      root_scripts_test_lib

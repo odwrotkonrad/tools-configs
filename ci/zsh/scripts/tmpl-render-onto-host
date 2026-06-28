@@ -7,7 +7,7 @@
 emulate -LR zsh
 IFS=
 setopt errexit pipefail
-autoload -Uz log-msg tmpl-strip-frontmatter-if-empty tmpl-resolve-at-includes tmpl-header backup-before-overwrite
+autoload -Uz fn-log-msg fn-tmpl-strip-frontmatter-if-empty fn-tmpl-resolve-at-includes fn-tmpl-header fn-backup-before-overwrite
 
 configs=${1:-$HOME/projects/configs}
 t_ext='.host.auto.tmpl'
@@ -38,9 +38,9 @@ function priv {
 function backup_dest {
   local dest=$1
   if [[ $dest == $HOME/* ]] {
-    backup-before-overwrite --repo-root $configs $dest
+    fn-backup-before-overwrite --repo-root $configs $dest
   } elif [[ -e $dest && ! -L $dest ]] {
-    sudo cp -p -- $dest $dest.$(date +%Y%m%dT%H%M%S).bk ; log-msg -t backup -- $dest.bk
+    sudo cp -p -- $dest $dest.$(date +%Y%m%dT%H%M%S).bk ; fn-log-msg -t backup -- $dest.bk
   }
 }
 
@@ -61,7 +61,7 @@ function render_template {
     local -a own_opt=() #[why] IFS= unset disables word-split; build flags as array so they pass as separate args
     [[ -n $owner ]] && own_opt=( -o ${owner%%:*} -g ${owner#*:} )
     priv $render_to install -m $filemode $own_opt $tmp $render_to
-    rm -f $tmp ; log-msg -t gomplate -- $render_to
+    rm -f $tmp ; fn-log-msg -t gomplate -- $render_to
     return
   }
 
@@ -72,21 +72,21 @@ function render_template {
   #[what] render body once to a temp, fan out per output
   local body=$(mktemp)
   yq -f process 'del(.render-to)' $template \
-    | tmpl-strip-frontmatter-if-empty \
+    | fn-tmpl-strip-frontmatter-if-empty \
     | gomplate > $body
 
   for render_to ( $render_tos ) {
     filemode=${filemode_custom[$render_to]:-$filemode_default}
-    backup-before-overwrite --repo-root $configs $render_to
+    fn-backup-before-overwrite --repo-root $configs $render_to
     #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
-    tmpl-header $render_to $template > $render_to
+    fn-tmpl-header $render_to $template > $render_to
     if [[ ${render_to:t} == *AGENTS* ]] {
-      tmpl-resolve-at-includes $configs < $body >> $render_to
+      fn-tmpl-resolve-at-includes $configs < $body >> $render_to
     } else {
       cat $body >> $render_to
     }
     chmod $filemode $render_to
-    log-msg -t gomplate -- $render_to
+    fn-log-msg -t gomplate -- $render_to
   }
   rm -f $body
   ##[<] 🤖🤖

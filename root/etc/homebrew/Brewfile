@@ -35,8 +35,6 @@ brew "pcre2"
 brew "git"
 # Open-source GitLab command-line tool
 brew "glab"
-# Open source programming language to build simple/reliable/efficient software
-brew "go"
 # Improved top (interactive process viewer)
 brew "htop"
 # Lightweight and flexible command-line JSON processor

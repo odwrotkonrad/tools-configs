@@ -3,11 +3,11 @@ from pathlib import Path
 
 import pygit2
 import pytest
-from s_root_scripts_test_lib.cases import cases
-from s_root_scripts_test_lib.cases import load_cases
-from s_root_scripts_test_lib.run import match_line
-from s_root_scripts_test_lib.run import run
-from s_root_scripts_test_lib.test_show_usage import test_show_usage  # noqa: F401
+from root_scripts_test_lib.cases import cases
+from root_scripts_test_lib.cases import load_cases
+from root_scripts_test_lib.run import match_line
+from root_scripts_test_lib.run import run
+from root_scripts_test_lib.test_show_usage import test_show_usage  # noqa: F401
 
 ##[>] 🤖🤖🤖
 FIXTURE = Path(__file__).parent / "fixture"

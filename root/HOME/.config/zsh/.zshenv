@@ -38,12 +38,12 @@ typeset -a bins=(
     /sbin
 )
 
-fn-root-insert path $bins
+fn-insert path $bins
 
 typeset -a funcs=(
     ${XDG_CONFIG_HOME}/zsh/zshenv.d/functions
 )
 
-fn-root-insert fpath $funcs
-fn-root-autoload-functions $funcs
-fn-root-source ${XDG_CONFIG_HOME}/zsh/zshenv.d/auto.d
+fn-insert fpath $funcs
+fn-autoload-functions $funcs
+fn-source ${XDG_CONFIG_HOME}/zsh/zshenv.d/auto.d

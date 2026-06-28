@@ -29,10 +29,11 @@ bar_a=1
 
 kebab-case all files.
 
-Executables: `<kind>-<space>-<descriptive-name>`.
+Executables by kind:
 
-- kind: `s-` script · `fn-` function · `a-` alias · `d-` launchd
-- space: `root` root/system (`root/{etc,usr,Library}`) · `user` user (`root/HOME`)
+- script: bare descriptive name (`export-dir-sizes`, `git-sync-onto-main`)
+- function: `fn-<name>` (`fn-log-msg`, `fn-is-os`); a bare name overrides a command (`rm`)
+- launchd: `d-<space>-<name>`, space = `root` (LaunchDaemons) · `user` (LaunchAgents)
 - command override: bare name (`rm`, `prometheus`)
 
 ## Repo Is
@@ -117,6 +118,7 @@ vim: root/HOME/.config/vim/vimrc
 `run-repo-ci-tests` test pytest & go
 `run-repo-ci-typecheck` mypy typecheck
 `run-repo-ci-prepare-hooks` install lefthook git hooks
+`run-repo-ci-install-deps` install build deps (go toolchain from go.dev)
 `run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 
 #### VM:
@@ -246,7 +248,7 @@ root
     local
       scripts
         python
-          s_root_scripts_lib
+          root_scripts_lib
         shell
           lib
           templates-llm
@@ -259,7 +261,7 @@ tests
     python
       gen-dirs-tree
         fixture
-      s-root-get-os-open-files-with
-      s-root-get-term-open-files-with
+      get-os-open-files-with
+      get-term-open-files-with
         mock
-      s_root_scripts_test_lib
+      root_scripts_test_lib
