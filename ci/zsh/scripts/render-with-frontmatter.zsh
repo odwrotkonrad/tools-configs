@@ -3,8 +3,8 @@
 #   Read a file with a leading --- YAML frontmatter block and print a YAML doc
 #   exposing both halves: `frontmatter:` (the parsed header, verbatim) and
 #   `body:` (the remaining content as a literal block scalar).
-#   Usage: read-with-frontmatter <file>
-#   Upstream: gomplate `readWithFrontmatter` plugin. Downstream: <file>.
+#   Usage: render-with-frontmatter <file>
+#   Upstream: gomplate `renderWithFrontmatter` plugin. Downstream: <file>.
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖

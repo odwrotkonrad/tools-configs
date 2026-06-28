@@ -1,6 +1,6 @@
 #[what] inline each '@path' stdin line as the contents of $1/<path>; '~/' -> root/HOME/
 
-function fn-tpl-resolve-at-includes {
+function fn-tpl-inline-includes {
   local base=$1
   local line path
   while IFS= read -r line; do

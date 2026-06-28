@@ -1,4 +1,4 @@
 ---
 render-to: .env
 ---
-{{ mergeUpsertEnv ".env" "templates/1-env/local.env.example" -}}
+{{ tplRenderMergeUpsertEnv ".env" "templates/1-env/local.env.example" -}}

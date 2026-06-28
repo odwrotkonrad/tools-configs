@@ -6,12 +6,12 @@ import (
 	"os/exec"
 	"strings"
 
-	"configs/ci/go/packages/gen-from-tpl-makefile/lib"
+	"configs/ci/go/packages/render-makefile-doc/lib"
 )
 
 // [>] 🤖🤖🤖
-const usage = `usage: gen-from-tpl-makefile <makefile-path>
-       gen-from-tpl-makefile --check <doc-file>
+const usage = `usage: render-makefile-doc <makefile-path>
+       render-makefile-doc --check <doc-file>
 
 Emit makefile.agents.md from a Makefile's [genai-include] sections (stdout).
 --check regenerates from ./Makefile and diffs against <doc-file>:

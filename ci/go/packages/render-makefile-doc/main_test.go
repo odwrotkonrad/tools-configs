@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"configs/ci/go/packages/gen-from-tpl-makefile/lib"
+	"configs/ci/go/packages/render-makefile-doc/lib"
 )
 
 // [>] 🤖🤖🤖

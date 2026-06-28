@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.14
-"""usage: gen-dirs-tree
-       gen-dirs-tree --check <file>
+"""usage: render-dirs-tree
+       render-dirs-tree --check <file>
 
 Print the plain directory tree of the cwd repo's tracked files:
 
@@ -13,9 +13,9 @@ exit 0 on match, or print a unified diff to stderr and exit 22 on mismatch.
 
 Examples:
 
-    $ gen-dirs-tree
-    $ gen-dirs-tree --check assets/data/repo-structure.md
-    $ gen-dirs-tree --help
+    $ render-dirs-tree
+    $ render-dirs-tree --check assets/data/repo-structure.md
+    $ render-dirs-tree --help
 
 Upstream Interfaces with:
 - `> <file>` — intended consumer of the printed tree (e.g. assets/data/repo-structure.md)
@@ -200,7 +200,7 @@ def check(
             current.splitlines(keepends=True),
             tree.splitlines(keepends=True),
             fromfile=file,
-            tofile="gen-dirs-tree",
+            tofile="render-dirs-tree",
         )
     )
     return None, lib_err.Error(Errors.DIFFERS, diff=diff)

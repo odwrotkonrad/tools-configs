@@ -4,8 +4,8 @@ import pytest
 ##[>] 🤖🤖🤖
 @pytest.fixture
 def tree_script(load_script):
-    """The gen-dirs-tree script loaded as a module."""
-    return load_script("gen-dirs-tree")
+    """The render-dirs-tree script loaded as a module."""
+    return load_script("render-dirs-tree")
 
 
 @pytest.fixture

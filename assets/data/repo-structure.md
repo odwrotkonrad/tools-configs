@@ -19,7 +19,7 @@ ci
           spec
           testutil
             specs
-      gen-from-tpl-makefile
+      render-makefile-doc
         lib
         testdata
   python
@@ -132,9 +132,9 @@ templates
 tests
   scripts
     python
-      gen-dirs-tree
-        fixture
       get-os-open-files-with
       get-term-open-files-with
         mock
+      render-dirs-tree
+        fixture
       root_scripts_test_lib

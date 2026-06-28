@@ -1,6 +1,6 @@
 #[what] drop a leading '---\n{}\n---' empty-frontmatter block from stdin
 
-function fn-tpl-strip-frontmatter-if-empty {
+function fn-tpl-strip-empty-frontmatter {
   local content=$(<&0)
   local -a lines=( "${(@f)content}" ) #[what] @f - split on \n, keep blanks
 

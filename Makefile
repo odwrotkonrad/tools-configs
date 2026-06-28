@@ -64,7 +64,7 @@ run-host-restart-services: | run-repo-ci-prepare-executables
 RENDER_LOCAL ?= --local
 #[what] render *.repo.tpl onto repo
 run-repo-ci-render-templates: | run-repo-ci-prepare-executables
-	@$(PRETTY) $(CI_SCRIPTS)/tpl-render-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
+	@$(PRETTY) $(CI_SCRIPTS)/tpl-gen-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
 
 #[what] test pytest & go
 run-repo-ci-tests:

@@ -1,7 +1,7 @@
 ---
 render-to: README.md
 ---
-{{- $inv := readWithFrontmatter "assets/data/tools-inventory-index.yml" | data.YAML -}}
+{{- $inv := renderWithFrontmatter "assets/data/tools-inventory-index.yml" | data.YAML -}}
 ## **Config**uration file**s**
 
 {{ file.Read "assets/docs-human/description.md" }}

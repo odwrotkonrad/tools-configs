@@ -11,7 +11,7 @@
 
 ## Style
 
-{{ readMarkdown "--strip-frontmatter" "--strip-comments" "--increment-heading-levels" (printf "%s/.config/claude/rules/docs/prose.md" (env.Getenv "HOME")) | strings.TrimSpace }}
+{{ renderMarkdown "--strip-frontmatter" "--strip-comments" "--increment-heading-levels" (printf "%s/.config/claude/rules/docs/prose.md" (env.Getenv "HOME")) | strings.TrimSpace }}
 
 ## Task
 

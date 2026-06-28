@@ -8,7 +8,7 @@
 emulate -LR zsh
 IFS=
 setopt errexit pipefail
-autoload -Uz fn-log-msg fn-tpl-strip-frontmatter-if-empty fn-tpl-resolve-at-includes fn-tpl-header
+autoload -Uz fn-log-msg fn-tpl-strip-empty-frontmatter fn-tpl-inline-includes fn-tpl-make-header
 
 ##[>] 🤖🤖
 zparseopts -D -F -- -local=local || exit 1
@@ -24,7 +24,7 @@ function render_template {
   #[what] no frontmatter: render next to the template, sans .repo.tpl
   if [[ $(head -1 $template) != '---' ]] {
     render_to=${template%.repo.tpl}
-    { fn-tpl-header $render_to $template; gomplate -f $template } > $configs/$render_to
+    { fn-tpl-make-header $render_to $template; gomplate -f $template } > $configs/$render_to
     chmod 0660 $configs/$render_to
     fn-log-msg -t gomplate -- $configs/$render_to
     return
@@ -36,14 +36,14 @@ function render_template {
   #[what] render body once to a temp, fan out per output
   local body=$(mktemp)
   yq -f process 'del(.render-to)' $template \
-    | fn-tpl-strip-frontmatter-if-empty \
+    | fn-tpl-strip-empty-frontmatter \
     | gomplate > $body
 
   for render_to ( $render_tos ) {
     #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
-    fn-tpl-header $render_to $template > $configs/$render_to
+    fn-tpl-make-header $render_to $template > $configs/$render_to
     if [[ ${render_to:t} == *AGENTS* ]] {
-      fn-tpl-resolve-at-includes $configs < $body >> $configs/$render_to
+      fn-tpl-inline-includes $configs < $body >> $configs/$render_to
     } else {
       cat $body >> $configs/$render_to
     }

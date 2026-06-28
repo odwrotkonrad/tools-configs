@@ -14,7 +14,7 @@ import (
 	"configs/ci/go/packages/che/internal/render"
 )
 
-// per-dest filemode/owner overrides (port of tpl-render-onto-host:18-25).
+// per-dest filemode/owner overrides for rendered host configs.
 const filemodeDefault os.FileMode = 0600
 
 type override struct {

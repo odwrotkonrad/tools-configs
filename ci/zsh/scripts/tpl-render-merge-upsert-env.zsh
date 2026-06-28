@@ -4,8 +4,8 @@
 #   start from <example> defaults, overlay <env> values (existing wins, and
 #   keys only in <env> are kept), then print sorted KEY=VALUE lines. blank and
 #   `#` comment lines are skipped. a missing <env> yields just the defaults.
-#   Usage: merge-upsert-env <env> <example>
-#   Upstream: gomplate `mergeUpsertEnv` plugin. Downstream: <env>, <example>.
+#   Usage: tpl-render-merge-upsert-env <env> <example>
+#   Upstream: gomplate `tplRenderMergeUpsertEnv` plugin. Downstream: <env>, <example>.
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖
