@@ -12,15 +12,15 @@ import (
 )
 
 const (
-	tmplExt = ".host.auto.tmpl"
-	cpExt   = ".host.auto.cp"
+	tmplExt = ".host.tpl"
+	cpExt   = ".host.cp"
 )
 
 // classified config files for the load passes, all repo-relative under root/.
 type configSet struct {
 	links     []string // link pass: regular files minus templates/copies/.gitkeep
-	copies    []string // copy pass: *.host.auto.cp
-	templates []string // render pass: *.host.auto.tmpl
+	copies    []string // copy pass: *.host.cp
+	templates []string // render pass: *.host.tpl
 	dirs      []string // every ancestor dir of links+copies+templates (repo-relative)
 }
 

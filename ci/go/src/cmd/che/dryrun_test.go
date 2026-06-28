@@ -37,12 +37,12 @@ func dryRunApp(t *testing.T) *app {
 	dir := t.TempDir()
 	home := filepath.Join(dir, "home")
 	files := map[string]string{
-		"root/etc/zshrc":                         "zshrc\n",
-		"root/etc/zsh/zshenv":                    "env\n",
-		"root/HOME/.config/zsh/.zshrc":           "user zshrc\n",
-		"root/HOME/.config/zsh/c.host.auto.cp":   "copyme\n",
-		"root/HOME/.config/zsh/t.host.auto.tmpl": "plain template\n",
-		"install/unit":                           "#!/bin/sh\necho ran\n",
+		"root/etc/zshrc":                   "zshrc\n",
+		"root/etc/zsh/zshenv":              "env\n",
+		"root/HOME/.config/zsh/.zshrc":     "user zshrc\n",
+		"root/HOME/.config/zsh/c.host.cp":  "copyme\n",
+		"root/HOME/.config/zsh/t.host.tpl": "plain template\n",
+		"install/unit":                     "#!/bin/sh\necho ran\n",
 	}
 	for rel, body := range files {
 		p := filepath.Join(dir, rel)

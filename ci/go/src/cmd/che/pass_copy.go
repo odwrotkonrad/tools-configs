@@ -25,7 +25,7 @@ func (a *app) copyPerms(dest string) (owner string, mode os.FileMode, ok bool) {
 	return "", 0, false
 }
 
-// passCopy copies each *.host.auto.cp to its live dest (marker stripped), only
+// passCopy copies each *.host.cp to its live dest (marker stripped), only
 // when contents differ; backs up first; applies the perms map. Ports the copy pass.
 func (a *app) passCopy() error {
 	cs, err := a.resolveConfigs()

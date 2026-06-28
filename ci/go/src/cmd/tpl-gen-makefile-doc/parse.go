@@ -4,8 +4,8 @@ import (
 	"strings"
 	"unsafe"
 
-	sitter "github.com/tree-sitter/go-tree-sitter"
 	tsmake "github.com/tree-sitter-grammars/tree-sitter-make/bindings/go"
+	sitter "github.com/tree-sitter/go-tree-sitter"
 )
 
 // [>] 🤖🤖🤖

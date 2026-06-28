@@ -1,16 +1,16 @@
 #!/bin/zsh
 #>[what]
-#   1. search for all *.host.auto.tmpl templates
+#   1. search for all *.host.tpl templates
 #   2. render it on the host
 #/[what]
 
 emulate -LR zsh
 IFS=
 setopt errexit pipefail
-autoload -Uz fn-log-msg fn-tmpl-strip-frontmatter-if-empty fn-tmpl-resolve-at-includes fn-tmpl-header fn-backup-before-overwrite
+autoload -Uz fn-log-msg fn-tpl-strip-frontmatter-if-empty fn-tpl-resolve-at-includes fn-tpl-header fn-backup-before-overwrite
 
 configs=${1:-$HOME/projects/configs}
-t_ext='.host.auto.tmpl'
+t_ext='.host.tpl'
 
 : ${HOME:?HOME must be set}
 
@@ -72,16 +72,16 @@ function render_template {
   #[what] render body once to a temp, fan out per output
   local body=$(mktemp)
   yq -f process 'del(.render-to)' $template \
-    | fn-tmpl-strip-frontmatter-if-empty \
+    | fn-tpl-strip-frontmatter-if-empty \
     | gomplate > $body
 
   for render_to ( $render_tos ) {
     filemode=${filemode_custom[$render_to]:-$filemode_default}
     fn-backup-before-overwrite --repo-root $configs $render_to
     #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
-    fn-tmpl-header $render_to $template > $render_to
+    fn-tpl-header $render_to $template > $render_to
     if [[ ${render_to:t} == *AGENTS* ]] {
-      fn-tmpl-resolve-at-includes $configs < $body >> $render_to
+      fn-tpl-resolve-at-includes $configs < $body >> $render_to
     } else {
       cat $body >> $render_to
     }

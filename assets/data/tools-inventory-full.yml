@@ -42,7 +42,7 @@ tools:
 
   - codex:
       files:
-        root/HOME/.config/codex/config.toml.host.auto.tmpl:
+        root/HOME/.config/codex/config.toml.host.tpl:
 
   - defaults:
       files:
@@ -73,7 +73,7 @@ tools:
       files:
         root/etc/jaeger/config.yml:
         ci/zsh/scripts/installs/mac/jaeger.zsh:
-        root/Library/LaunchDaemons/d-root-jaeger.plist.host.auto.cp:
+        root/Library/LaunchDaemons/d-root-jaeger.plist.host.cp:
 
   - kitty:
       files:
@@ -99,7 +99,7 @@ tools:
       files:
         root/etc/prometheus/prometheus.yml:
         ci/zsh/scripts/installs/mac/prometheus.zsh:
-        root/Library/LaunchDaemons/d-root-prometheus.plist.host.auto.cp:
+        root/Library/LaunchDaemons/d-root-prometheus.plist.host.cp:
 
   - pyenv:
 
@@ -131,7 +131,7 @@ tools:
 
   - vscode:
       files:
-        root/HOME/Library/Application Support/Code/User/settings.json.host.auto.tmpl:
+        root/HOME/Library/Application Support/Code/User/settings.json.host.tpl:
 
   - zsh:
       files:

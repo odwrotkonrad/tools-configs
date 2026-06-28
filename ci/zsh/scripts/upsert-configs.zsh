@@ -2,8 +2,8 @@
 #>[what]
 #   Load <configs> into the system root, mirroring directory structure.
 #   <configs>/root files are symlinked by default (live, follow the repo).
-#   *.host.auto.cp files are copied (marker stripped); excluded from linking.
-#   *.auto.tmpl files are rendered by the template loader; excluded here.
+#   *.host.cp files are copied (marker stripped); excluded from linking.
+#   *.tmpl files are rendered by the template loader; excluded here.
 #/[what]
 
 emulate -LR zsh
@@ -31,10 +31,10 @@ pushd "$configs/root"
 typeset -a repo_files repo_dirs ex repo_files_ex copy_files
 typeset -aU repo_dirs_all
 
-cp_ext='.host.auto.cp'
+cp_ext='.host.cp'
 
 # 1. get files from git; classify by extension
-ex=( **/*.auto.tmpl **/*${cp_ext} **/.gitkeep ) #[what] templates + copies + .gitkeep excluded from the link pass
+ex=( **/*.tmpl **/*${cp_ext} **/.gitkeep ) #[what] templates + copies + .gitkeep excluded from the link pass
 repo_files=( ${(f)$(git ls-files --exclude-standard)} )
 repo_dirs=( ${(u)repo_files:h} )
 repo_files_ex=( ${repo_files:|ex} ) #[what] link-pass set

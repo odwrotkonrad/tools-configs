@@ -16,15 +16,15 @@ func fixtureRepo(t *testing.T, profile string) *app {
 	t.Helper()
 	dir := t.TempDir()
 	files := map[string]string{
-		"root/etc/zshrc":                                               "zshrc\n",
-		"root/etc/zsh/zshenv":                                          "env\n",
-		"root/HOME/.config/zsh/.zshrc":                                 "user zshrc\n",
-		"root/HOME/.config/git/config":                                 "[user]\n",
-		"root/HOME/.config/zsh/x.host.auto.cp":                         "copyme\n",
-		"root/HOME/.config/zsh/y.host.auto.tmpl":                       "tmpl\n",
-		"root/HOME/.config/zsh/.gitkeep":                               "",
-		"root/etc/grafana/grafana.ini":                                 "ini\n", // host-only, excluded for vm
-		"root/Library/LaunchDaemons/d-root-otelcol.plist.host.auto.cp": "plist\n",
+		"root/etc/zshrc":                                          "zshrc\n",
+		"root/etc/zsh/zshenv":                                     "env\n",
+		"root/HOME/.config/zsh/.zshrc":                            "user zshrc\n",
+		"root/HOME/.config/git/config":                            "[user]\n",
+		"root/HOME/.config/zsh/x.host.cp":                         "copyme\n",
+		"root/HOME/.config/zsh/y.host.tpl":                        "tmpl\n",
+		"root/HOME/.config/zsh/.gitkeep":                          "",
+		"root/etc/grafana/grafana.ini":                            "ini\n", // host-only, excluded for vm
+		"root/Library/LaunchDaemons/d-root-otelcol.plist.host.cp": "plist\n",
 	}
 	for rel, body := range files {
 		p := filepath.Join(dir, rel)
@@ -98,12 +98,12 @@ func TestResolveConfigsClassify(t *testing.T) {
 		t.Errorf("links = %v, want %v", cs.links, wantLinks)
 	}
 	if !slices.Equal(cs.copies, []string{
-		"HOME/.config/zsh/x.host.auto.cp",
-		"Library/LaunchDaemons/d-root-otelcol.plist.host.auto.cp",
+		"HOME/.config/zsh/x.host.cp",
+		"Library/LaunchDaemons/d-root-otelcol.plist.host.cp",
 	}) {
 		t.Errorf("copies = %v", cs.copies)
 	}
-	if !slices.Equal(cs.templates, []string{"HOME/.config/zsh/y.host.auto.tmpl"}) {
+	if !slices.Equal(cs.templates, []string{"HOME/.config/zsh/y.host.tpl"}) {
 		t.Errorf("templates = %v", cs.templates)
 	}
 	// .gitkeep excluded everywhere

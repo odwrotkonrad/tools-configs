@@ -14,8 +14,8 @@ loads only the files/dirs/installs that profile selects.
 
 Commands:
   link              symlink pass (configs into system root)
-  copy              *.host.auto.cp copy pass
-  render-templates  *.host.auto.tmpl render pass
+  copy              *.host.cp copy pass
+  render-templates  *.host.tpl render pass
   mk-dirs           create repo-tree dirs + also-create-dirs
   prune-links       delete broken symlinks
   install-tools     run the profile's install units

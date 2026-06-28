@@ -10,8 +10,8 @@ import (
 // [>] 🤖🤖🤖
 const includeTag = "[genai-include]"
 
-const usage = `usage: tmpl-gen-makefile-doc <makefile-path>
-       tmpl-gen-makefile-doc --check <doc-file>
+const usage = `usage: tpl-gen-makefile-doc <makefile-path>
+       tpl-gen-makefile-doc --check <doc-file>
 
 Emit makefile.agents.md from a Makefile's [genai-include] sections (stdout).
 --check regenerates from ./Makefile and diffs against <doc-file>:

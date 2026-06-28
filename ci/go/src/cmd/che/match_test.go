@@ -17,7 +17,7 @@ func TestMatchGlob(t *testing.T) {
 		{"etc/zshrc", "etc/zshrc", true},
 		{"etc/zshrc", "etc/zshrc.d/auto.d/x", false},
 		{"Library/LaunchDaemons/d-root-otelcol.plist*", "Library/LaunchDaemons/d-root-otelcol.plist", true},
-		{"Library/LaunchDaemons/d-root-otelcol.plist*", "Library/LaunchDaemons/d-root-otelcol.plist.host.auto.cp", true},
+		{"Library/LaunchDaemons/d-root-otelcol.plist*", "Library/LaunchDaemons/d-root-otelcol.plist.host.cp", true},
 		{"Library/LaunchDaemons/d-root-otelcol.plist*", "Library/LaunchDaemons/d-root-grafana.plist", false},
 		{"etc/otelcol/**", "etc/otelcol/config.yml", true},
 	}

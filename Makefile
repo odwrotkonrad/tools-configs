@@ -37,7 +37,7 @@ run-host-delete-broken-links: | run-repo-ci-prepare-executables
 run-host-mk-dirs: | run-repo-ci-prepare-executables
 	@sudo $(PRETTY) che mk-dirs
 
-#[what] render *.host.auto.tmpl onto host
+#[what] render *.host.tpl onto host
 run-host-render-templates: | run-repo-ci-prepare-executables
 	@$(PRETTY) che render-templates
 
@@ -56,9 +56,9 @@ run-host-restart-services:
 
 ##[>] Onto Repo (CI) [genai-include]
 RENDER_LOCAL ?= --local
-#[what] render *.repo.auto.tmpl onto repo
+#[what] render *.repo.tpl onto repo
 run-repo-ci-render-templates: | run-repo-ci-prepare-executables
-	@$(PRETTY) $(CI_SCRIPTS)/tmpl-render-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
+	@$(PRETTY) $(CI_SCRIPTS)/tpl-render-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
 
 #[what] test pytest & go
 run-repo-ci-tests:

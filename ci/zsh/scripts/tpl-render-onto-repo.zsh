@@ -1,6 +1,6 @@
 #!/bin/zsh
 #>[what]
-#   1. search for all *.repo.auto.tmpl templates under templates/ and ci/
+#   1. search for all *.repo.tpl templates under templates/ and ci/
 #   2. render it to the repo path in its render-to: frontmatter
 #   --local: also render local templates (*local* in name); off by default
 #/[what]
@@ -8,7 +8,7 @@
 emulate -LR zsh
 IFS=
 setopt errexit pipefail
-autoload -Uz fn-log-msg fn-tmpl-strip-frontmatter-if-empty fn-tmpl-resolve-at-includes fn-tmpl-header
+autoload -Uz fn-log-msg fn-tpl-strip-frontmatter-if-empty fn-tpl-resolve-at-includes fn-tpl-header
 
 ##[>] 🤖🤖
 zparseopts -D -F -- -local=local || exit 1
@@ -21,10 +21,10 @@ function render_template {
   local render_to
 
   ##[>] 🤖🤖
-  #[what] no frontmatter: render next to the template, sans .repo.auto.tmpl
+  #[what] no frontmatter: render next to the template, sans .repo.tpl
   if [[ $(head -1 $template) != '---' ]] {
-    render_to=${template%.repo.auto.tmpl}
-    { fn-tmpl-header $render_to $template; gomplate -f $template } > $configs/$render_to
+    render_to=${template%.repo.tpl}
+    { fn-tpl-header $render_to $template; gomplate -f $template } > $configs/$render_to
     chmod 0660 $configs/$render_to
     fn-log-msg -t gomplate -- $configs/$render_to
     return
@@ -36,14 +36,14 @@ function render_template {
   #[what] render body once to a temp, fan out per output
   local body=$(mktemp)
   yq -f process 'del(.render-to)' $template \
-    | fn-tmpl-strip-frontmatter-if-empty \
+    | fn-tpl-strip-frontmatter-if-empty \
     | gomplate > $body
 
   for render_to ( $render_tos ) {
     #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
-    fn-tmpl-header $render_to $template > $configs/$render_to
+    fn-tpl-header $render_to $template > $configs/$render_to
     if [[ ${render_to:t} == *AGENTS* ]] {
-      fn-tmpl-resolve-at-includes $configs < $body >> $configs/$render_to
+      fn-tpl-resolve-at-includes $configs < $body >> $configs/$render_to
     } else {
       cat $body >> $configs/$render_to
     }
@@ -56,7 +56,7 @@ function render_template {
 
 pushd $configs
 #[what] . - regular files, D - GLOB_DOT opt (search hidden)
-for template ( {templates,ci}/**/*.repo.auto.tmpl(.D) ) {
+for template ( {templates,ci}/**/*.repo.tpl(.D) ) {
   #[what] skip local templates unless --local 🤖🤖
   if (( ! $#local )) && [[ ${template:t} == ${~local_glob} ]] continue
   render_template $template
