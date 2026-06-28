@@ -4,12 +4,12 @@ plugins:
     args: [read, --no-newline]
     timeout: 30s
   readMarkdown:
-    cmd: read-markdown
+    cmd: read-markdown.zsh
   readWithFrontmatter:
-    cmd: read-with-frontmatter
+    cmd: read-with-frontmatter.zsh
   generateTree:
     cmd: gen-dirs-tree
   mergeUpsertEnv:
-    cmd: merge-upsert-env
+    cmd: merge-upsert-env.zsh
   generateMakefileDoc:
     cmd: tmpl-gen-makefile-doc

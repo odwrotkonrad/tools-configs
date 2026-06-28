@@ -9,7 +9,7 @@
 
 set -e
 
-source "${0:A:h}/lib/llm-lib"
+source "${0:A:h}/lib/llm-lib.zsh"
 read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load "${0:t}")"
 lib-llm-env-export "${0:t}"
 

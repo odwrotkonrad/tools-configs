@@ -46,7 +46,8 @@ import yaml
 CACHE_DIR = Path(
     os.environ.get(
         "LINGUIST_CACHE_DIR",
-        "/var/custom/cache/get-term-open-files-with",
+        Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
+        / "get-term-open-files-with",
     )
 )
 LANGUAGES_URL = (

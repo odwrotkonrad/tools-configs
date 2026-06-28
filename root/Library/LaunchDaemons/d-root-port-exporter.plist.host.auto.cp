@@ -6,7 +6,7 @@
 	<string>d-root-port-exporter</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/scripts/shell/export-listening-ports</string>
+		<string>/usr/local/scripts/shell/export-listening-ports.bash</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

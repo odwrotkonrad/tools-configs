@@ -25,7 +25,7 @@ base-cli:
   make-extra-dirs:
     - HOME/.cache/zsh
   install:
-    - ci/zsh/scripts/installs/mac/brew
+    - ci/zsh/scripts/installs/mac/brew.zsh
 
 base-desktop:
   load-configuration:
@@ -33,7 +33,7 @@ base-desktop:
   make-extra-dirs:
     - /var/log/grafana
   install:
-    - ci/zsh/scripts/installs/mac/kitty
+    - ci/zsh/scripts/installs/mac/kitty.zsh
 
 virt/mac-os-aarch64:
   include-profiles: [base-cli]
@@ -65,8 +65,8 @@ func TestResolveEffectiveMerge(t *testing.T) {
 		t.Fatal(err)
 	}
 	wantInstall := []string{
-		"ci/zsh/scripts/installs/mac/brew",
-		"ci/zsh/scripts/installs/mac/kitty",
+		"ci/zsh/scripts/installs/mac/brew.zsh",
+		"ci/zsh/scripts/installs/mac/kitty.zsh",
 	}
 	if !reflect.DeepEqual(host.install, wantInstall) {
 		t.Errorf("host install order = %v, want %v", host.install, wantInstall)
@@ -80,7 +80,7 @@ func TestResolveEffectiveMerge(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(vm.install) != 1 || vm.install[0] != "ci/zsh/scripts/installs/mac/brew" {
+	if len(vm.install) != 1 || vm.install[0] != "ci/zsh/scripts/installs/mac/brew.zsh" {
 		t.Errorf("vm install = %v, want base only", vm.install)
 	}
 	if contains(vm.dirs, "/var/log/grafana") {
@@ -132,7 +132,7 @@ base-cli:
     etc/zshrc:
     etc/zsh/**:
   install:
-    - ci/zsh/scripts/installs/mac/brew
+    - ci/zsh/scripts/installs/mac/brew.zsh
 extra:
   load-configuration:
     HOME/.config/extra/**:
@@ -148,7 +148,7 @@ virt/mac-os-aarch64:
     load-configuration:
       - etc/zsh/**
     install:
-      - ci/zsh/scripts/installs/mac/brew
+      - ci/zsh/scripts/installs/mac/brew.zsh
 `
 	dir := t.TempDir()
 	p := filepath.Join(dir, "che.yml")
@@ -186,7 +186,7 @@ virt/mac-os-aarch64:
 		t.Errorf("exclude.load-configuration not recorded: %v", eff.globOps)
 	}
 	// exclude.install subtracts exactly
-	if slices.Contains(eff.install, "ci/zsh/scripts/installs/mac/brew") {
+	if slices.Contains(eff.install, "ci/zsh/scripts/installs/mac/brew.zsh") {
 		t.Errorf("exclude.install not removed: %v", eff.install)
 	}
 	// untouched include survives

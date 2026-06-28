@@ -1,6 +1,6 @@
 providers:
   claude-code:
-    script: llm-run-claude-code
+    script: llm-run-claude-code.zsh
     model: haiku
     env:
       CLAUDE_CODE_SIMPLE: "1"
@@ -9,7 +9,7 @@ providers:
       CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1"
       MAX_THINKING_TOKENS: "0"
   ollama:
-    script: llm-run-ollama
+    script: llm-run-ollama.zsh
     model: gemma4:e4b-mlx
     think: false
     options:
@@ -18,19 +18,19 @@ providers:
     env: {}
 
 scripts:
-  llm-git-branch-name-suggest:
+  llm-git-branch-name-suggest.zsh:
     provider:
       id: claude-code
       config: {}
     template: git-branch-name-suggest.tmpl.md
     env: {}
-  llm-git-commit-msg-suggest:
+  llm-git-commit-msg-suggest.zsh:
     provider:
       id: claude-code
       config: {}
     template: git-commit-msg-suggest.tmpl.md
     env: {}
-  llm-git-mr-text-suggest:
+  llm-git-mr-text-suggest.zsh:
     provider:
       id: claude-code
       config: {}

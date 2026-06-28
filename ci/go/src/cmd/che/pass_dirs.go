@@ -65,8 +65,6 @@ func (a *app) mkAlsoDir(rel, dest, user string) error {
 	switch {
 	case strings.HasPrefix(rel, "HOME/") || rel == "HOME":
 		return a.mkdirP(dest, user, 0750, "")
-	case rel == "var/custom/cache/get-term-open-files-with":
-		return a.mkdirP(dest, "", 0777, "1777") // sticky world-writable
 	case strings.HasPrefix(rel, "var/log/") ||
 		strings.HasPrefix(rel, "usr/local/var") ||
 		rel == "var/custom/cache/dir_size_exporter":
