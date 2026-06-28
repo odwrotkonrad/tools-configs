@@ -147,11 +147,9 @@ ci
             includes
         tmpl-gen-makefile-doc
           testdata
-  local
-    vm
-      templates
   python
     scripts
+  vm
   zsh
     functions
     scripts

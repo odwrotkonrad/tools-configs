@@ -5,7 +5,7 @@ setopt errexit pipefail
 
 ##[>] 🤖🤖
 typeset repo_root=$(git -C ${0:A:h} rev-parse --show-toplevel)
-typeset templates=$repo_root/ci/local/vm/templates
+typeset templates=$repo_root/ci/vm
 typeset key=~/.ssh/id_vm_access
 
 typeset name=$1
@@ -17,7 +17,7 @@ function build_args {
   )
   packer_args=( ${var_files[@]/#/-var-file=} )
 
-  if [[ $name == configs-macos-tahoe-vanilla-configs-local ]] {
+  if [[ $name == macos-tahoe-vanilla-configs ]] {
     local bundle=$(mktemp -t configs.git.bundle)
     git -C $repo_root bundle create $bundle --all
     packer_args+=(-var bundle_path=$bundle)
@@ -37,7 +37,7 @@ function build_vm {
 build_args
 build_vm
 
-if [[ $name == configs-macos-tahoe-vanilla-configs-local ]] {
+if [[ $name == macos-tahoe-vanilla-configs ]] {
   tart run --no-graphics $name &
 }
 ##[<] 🤖🤖

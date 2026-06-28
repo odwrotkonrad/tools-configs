@@ -6,7 +6,7 @@ CI_SCRIPTS := ./ci/zsh/scripts
 ZSH := FPATH=$(CURDIR)/ci/zsh/functions:$$FPATH PATH=$(CURDIR)/ci/zsh/scripts:$(CURDIR)/ci/zsh/scripts/installs:$$PATH zsh -c 'autoload -Uz $(CURDIR)/ci/zsh/functions/*(:t); "$$@"'
 PRETTY := $(ZSH) fn-annotate-with-sections fn-annotate-with-sections
 VM_REPO := /Users/user/projects/configs
-IN_VM := ./ci/local/vm/ssh-vm.zsh cd $(VM_REPO) '&&' make
+IN_VM := $(CI_SCRIPTS)/vm-ssh cd $(VM_REPO) '&&' make
 MYPY := mypy --config-file root/HOME/.config/mypy/config
 
 export FPATH := $(CURDIR)/ci/zsh/functions:$(FPATH)
@@ -86,15 +86,15 @@ run-repo-ci-prepare-executables: | run-repo-ci-install-deps
 ###[>] VM
 #[what] build vanilla base vm image
 run-repo-ci-vm-build-base:
-	@$(PRETTY) $(CI_SCRIPTS)/build-vm configs-macos-tahoe-vanilla
+	@$(PRETTY) $(CI_SCRIPTS)/vm-build macos-tahoe-vanilla-base
 
 #[what] build configs-local vm image
 run-repo-ci-vm-build:
-	@$(PRETTY) $(CI_SCRIPTS)/build-vm configs-macos-tahoe-vanilla-configs-local
+	@$(PRETTY) $(CI_SCRIPTS)/vm-build macos-tahoe-vanilla-configs
 
 #[what] ssh into the local vm
 run-repo-ci-vm-ssh:
-	@./ci/local/vm/ssh-vm.zsh
+	@$(PRETTY) $(CI_SCRIPTS)/vm-ssh
 
 #[what] build vm then run the che passes in it (virt/mac-os-aarch64 profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
