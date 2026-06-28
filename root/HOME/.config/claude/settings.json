@@ -111,5 +111,6 @@
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto"
+  "theme": "auto",
+  "skipWorkflowUsageWarning": true
 }
