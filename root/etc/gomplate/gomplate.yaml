@@ -3,13 +3,13 @@ plugins:
     cmd: op
     args: [read, --no-newline]
     timeout: 30s
-  readMarkdown:
-    cmd: read-markdown
-  readWithFrontmatter:
-    cmd: read-with-frontmatter
-  generateTree:
-    cmd: gen-dirs-tree
-  mergeUpsertEnv:
-    cmd: merge-upsert-env
-  generateMakefileDoc:
-    cmd: tmpl-gen-makefile-doc
+  renderMarkdown:
+    cmd: render-markdown.zsh
+  renderWithFrontmatter:
+    cmd: render-with-frontmatter.zsh
+  renderDirsTree:
+    cmd: render-dirs-tree
+  tplRenderMergeUpsertEnv:
+    cmd: tpl-render-merge-upsert-env.zsh
+  renderMakefileDoc:
+    cmd: render-makefile-doc

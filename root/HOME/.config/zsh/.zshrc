@@ -5,9 +5,9 @@ typeset -a funcs=(
     ${XDG_STATE_HOME}/zsh/completions
 )
 
-fn-root-insert fpath $funcs
-fn-root-autoload-functions $funcs
-fn-root-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
+fn-insert fpath $funcs
+fn-autoload-functions $funcs
+fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
 
 emulate zsh -LRc "autoload -Uz compinit" && compinit
 

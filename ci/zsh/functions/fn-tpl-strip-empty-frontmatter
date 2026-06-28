@@ -1,0 +1,12 @@
+#[what] drop a leading '---\n{}\n---' empty-frontmatter block from stdin
+
+function fn-tpl-strip-empty-frontmatter {
+  local content=$(<&0)
+  local -a lines=( "${(@f)content}" ) #[what] @f - split on \n, keep blanks
+
+  local empty_frontmatter=$'---\n{}\n---'
+  local head=${(F)lines[1,3]} #[what] F - replace \n with newlines
+
+  if [[ $head == $empty_frontmatter ]] content=${(F)lines[4,-1]}
+  print -r -- $content
+}

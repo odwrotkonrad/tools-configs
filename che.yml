@@ -1,0 +1,91 @@
+##[>] 🤖🤖
+profiles:
+  bare-metal:
+    mac-os-aarch64:
+  virt:
+    mac-os-aarch64:
+    linux-aarch64:
+    linux-x86:
+
+base:
+  load-configuration:
+    Library/LaunchDaemons/otelcol.plist*:
+    Library/LaunchDaemons/dir-size-exporter.plist*:
+    Library/LaunchDaemons/port-exporter.plist*:
+  make-extra-dirs:
+    - /var/log/{otelcol,dir_size_exporter,port_exporter}
+    - /var/custom/cache/dir_size_exporter
+  install:
+    - ci/zsh/scripts/installs/shared/golang.zsh
+    - ci/zsh/scripts/installs/shared/otel-collector.zsh
+  services: [otelcol, dir-size-exporter, port-exporter]
+
+base-cli:
+  include-profiles: [base]
+  load-configuration:
+    HOME/**:
+    etc/**:
+    usr/**:
+  exclude:
+    load-configuration:
+      - HOME/.gitlab-runner/**
+      - HOME/Library/**
+      - etc/defaults.yml
+      - etc/grafana/**
+      - etc/prometheus/**
+      - etc/jaeger/**
+      - etc/loki/**
+  make-extra-dirs:
+    - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
+    - HOME/.config/codex
+    - HOME/.local/{bin,share}
+    - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
+    - HOME/ScreenCapture
+    - /var/root/.cache/zsh
+    - /var/root/.config
+    - /var/root/.local/state/zsh/completions
+  install:
+    - ci/zsh/scripts/installs/shared/native-clis.zsh
+
+base-macos:
+  include-profiles: [base-cli]
+  load-configuration:
+    etc/defaults.yml:
+
+base-macos-cli:
+  include-profiles: [base-macos]
+  install:
+    - ci/zsh/scripts/installs/mac/brew.zsh
+    - ci/zsh/scripts/installs/mac/brew-packages.zsh
+    - ci/zsh/scripts/installs/mac/asdf-tools.zsh
+    - ci/zsh/scripts/installs/mac/pyenv-python.zsh
+    - ci/zsh/scripts/installs/shared/aws-cli.zsh
+    - ci/zsh/scripts/installs/shared/gcloud-cli.zsh
+    - ci/zsh/scripts/installs/mac/lang-pkgs.zsh
+    - ci/zsh/scripts/installs/shared/completions-zsh.zsh
+
+base-desktop:
+  include-profiles: [base-macos-cli]
+  load-configuration:
+    HOME/.gitlab-runner/**:
+    HOME/Library/**:
+    etc/{grafana,prometheus,jaeger,loki}/**:
+    Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*:
+    Library/LaunchAgents/gitlab-runner.plist*:
+  make-extra-dirs:
+    - /var/log/{grafana,prometheus,jaeger,loki}
+    - /usr/local/var/{grafana,prometheus}
+  install:
+    - ci/zsh/scripts/installs/mac/kitty.zsh
+    - ci/zsh/scripts/installs/shared/ollama.zsh
+    - ci/zsh/scripts/installs/mac/jaeger.zsh
+    - ci/zsh/scripts/installs/mac/prometheus.zsh
+    - ci/zsh/scripts/installs/mac/gitlab-runner.zsh
+  services: [grafana, prometheus, jaeger, loki, gitlab-runner]
+
+virt/mac-os-aarch64:
+  include-profiles: [base-macos-cli]
+
+bare-metal/mac-os-aarch64:
+  include-profiles: [base-desktop]
+##[<] 🤖🤖

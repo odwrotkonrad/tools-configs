@@ -42,14 +42,14 @@ tools:
 
   - codex:
       files:
-        root/HOME/.config/codex/config.toml.host.auto.tmpl:
+        root/HOME/.config/codex/config.toml.host.tpl:
 
   - defaults:
       files:
         root/:
           etc/defaults.yml:
-          usr/local/scripts/shell/s-root-load-defaults-config:
-          Users/ko/Library/LaunchAgents/d-user-load-defaults-config.plist:
+          usr/local/scripts/shell/load-defaults-config.zsh:
+          Users/ko/Library/LaunchAgents/load-defaults-config.plist:
 
   - editorconfig:
       files:
@@ -63,7 +63,7 @@ tools:
           config:
           ignore:
           commit-template:
-        root/etc/zsh/functions/fn-root-ssh-test-git-connection:
+        root/etc/zsh/functions/fn-ssh-test-git-connection:
 
   - golang:
 
@@ -72,8 +72,8 @@ tools:
   - jaeger:
       files:
         root/etc/jaeger/config.yml:
-        ci/zsh/scripts/installs/host-install-20-jaeger:
-        root/Library/LaunchDaemons/d-root-jaeger.plist.host.auto.cp:
+        ci/zsh/scripts/installs/mac/jaeger.zsh:
+        root/Library/LaunchDaemons/jaeger.plist.host.cp:
 
   - kitty:
       files:
@@ -98,8 +98,8 @@ tools:
   - prometheus:
       files:
         root/etc/prometheus/prometheus.yml:
-        ci/zsh/scripts/installs/host-install-22-prometheus:
-        root/Library/LaunchDaemons/d-root-prometheus.plist.host.auto.cp:
+        ci/zsh/scripts/installs/mac/prometheus.zsh:
+        root/Library/LaunchDaemons/prometheus.plist.host.cp:
 
   - pyenv:
 
@@ -108,7 +108,7 @@ tools:
         root/etc/rg/:
           rgrc:
           rgignore:
-        root/etc/zsh/functions/fn-root-load-static-history:
+        root/etc/zsh/functions/fn-load-static-history:
 
   - ruff:
       files:
@@ -118,8 +118,8 @@ tools:
       files:
         root/HOME/.ssh/config:
         root/etc/zsh/functions/:
-          fn-root-ssh-generate-keys:
-          fn-root-ssh-test-git-connection:
+          fn-ssh-generate-keys:
+          fn-ssh-test-git-connection:
 
   - tmux:
       files:
@@ -131,7 +131,7 @@ tools:
 
   - vscode:
       files:
-        root/HOME/Library/Application Support/Code/User/settings.json.host.auto.tmpl:
+        root/HOME/Library/Application Support/Code/User/settings.json.host.tpl:
 
   - zsh:
       files:

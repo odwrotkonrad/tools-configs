@@ -39,7 +39,7 @@ paths:
 ### Errors
 
 - Treat exit codes as the contract, banded by origin.
-- Reuse `1x` lib codes from `s_root_scripts_lib/errors.py`: `Errors.ARGS`, `Errors.CONFIG`, `Errors.FILE_NOT_FOUND`, `Errors.NETWORK`.
+- Reuse `1x` lib codes from `root_scripts_lib/errors.py`: `Errors.ARGS`, `Errors.CONFIG`, `Errors.FILE_NOT_FOUND`, `Errors.NETWORK`.
 - Define domain errors in the `2x` band, numbering each script from `21`.
 - List every code under `Exit Codes:`.
 - Declare a local `Errors(lib_err.Errors)`: add `2x` codes, extend `MESSAGES` as `lib_err.Errors.MESSAGES | {domain codes}` (own entries win); keep `lib_err.Errors.MESSAGES` untouched.
@@ -49,7 +49,7 @@ paths:
 
 ### Structure
 
-- Reuse `s_root_scripts_lib`: `BaseInput`/`usage`, `BaseParameters`/`BaseAction`/`Pattern`, `ScriptBaseOptions`, `BaseConfig`.
+- Reuse `root_scripts_lib`: `BaseInput`/`usage`, `BaseParameters`/`BaseAction`/`Pattern`, `ScriptBaseOptions`, `BaseConfig`.
 - Divide body into labeled `##[>] name` / `##[<]` sections, in order:
   1. `##[>] errors` — domain codes + `MESSAGES` (omit if none).
   2. `##[>] types` — `type X = base` aliases.
@@ -66,7 +66,7 @@ paths:
 ## Example - Script
 
 ```python
-"""usage: s-root-get <group> <entry>
+"""usage: get <group> <entry>
 
 Get one entry's value from the config:
 
@@ -76,8 +76,8 @@ Get one entry's value from the config:
 
 Examples:
 
-    $ s-root-get colors background
-    $ s-root-get --help
+    $ get colors background
+    $ get --help
 
 Upstream Interfaces with:
 - `$ export` — intended consumer of the printed value
@@ -95,10 +95,10 @@ from typing import ClassVar
 
 from pydantic import BaseModel
 from pydantic import field_validator
-from s_root_scripts_lib import config as lib_cfg
-from s_root_scripts_lib import errors as lib_err
-from s_root_scripts_lib import input as lib_input
-from s_root_scripts_lib import parameters as lib_param
+from root_scripts_lib import config as lib_cfg
+from root_scripts_lib import errors as lib_err
+from root_scripts_lib import input as lib_input
+from root_scripts_lib import parameters as lib_param
 
 ##[>] errors
 class Errors(lib_err.Errors):
@@ -192,7 +192,7 @@ if __name__ == "__main__":
 - Declare cases as data in a sibling `cases.yml`: `name`, `input`/`args`, expected `exit`, expected `stdout` (fixture filename) or `stderr`.
 - Group cases into `##[>] positive` / `##[>] error` sections.
 - Load with `load_cases`, drive one parametrized `test_case` via `@cases(...)` (ids from `name`).
-- Reuse `s_root_scripts_test_lib`: `load_cases`/`cases`, `run`, `match_line`.
+- Reuse `root_scripts_test_lib`: `load_cases`/`cases`, `run`, `match_line`.
 - Reuse shared `test_show_usage` (asserts `--help`/`-h` prints docstring, exits `0`).
 - Wrap expected `stderr`/`stdout` in `/.../ ` for regex (via `match_line`); bare string matches exactly.
 - Prefer fixture files under `fixture/` (staged into `tmp_path` per case).

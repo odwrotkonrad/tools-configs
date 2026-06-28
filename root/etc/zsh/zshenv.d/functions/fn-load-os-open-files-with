@@ -1,0 +1,7 @@
+function fn-load-os-open-files-with {
+  emulate -LR zsh -o err_return -o pipe_fail
+
+  get-os-open-files-with | while read -r bundle uti role; do
+    duti -s "$bundle" "$uti" "$role"
+  done
+}

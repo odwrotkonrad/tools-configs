@@ -1,0 +1,22 @@
+#[what] pretty-print a header and terminator around the command
+#[why] when running commands one after another, distinguishes which output is whose
+
+function fn-annotate-with-sections {
+  emulate -LR zsh
+  autoload -Uz fn-print-with
+
+  ##[>] 🤖🤖 label: command line (skip leading sudo), basename of argv[1], capped at 25 chars
+  local -a words=( "$@" )
+  [[ ${words[1]} == sudo ]] && shift words
+  words[1]=${words[1]:t}
+  local label=${(j: :)words}
+  (( ${#label} > 25 )) && label="${label[1,22]}..."  #[what] 22 + '...' = 25
+  label=${(r:25:)label}  #[what] right-pad to 25 so every BEGIN/END starts at the same column
+  ##[<]
+
+  #[what] 🤖🤖 keyword padded to 6 (len of 'BEGIN ') so labels align across BEGIN/END
+  fn-print-with title "$(printf '%-6s' BEGIN)${label}"
+  "$@"; local rc=$?
+  fn-print-with title "$(printf '%-6s' END)${label}"
+  return $rc
+}

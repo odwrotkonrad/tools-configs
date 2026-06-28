@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>loki</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/homebrew/opt/loki/bin/loki</string>
+		<string>-config.file=/etc/loki/config.yml</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/var/log/loki/loki.log</string>
+	<key>StandardOutPath</key>
+	<string>/var/log/loki/loki.log</string>
+	<key>ThrottleInterval</key>
+	<integer>5</integer>
+</dict>
+</plist>

@@ -33,12 +33,12 @@
       "Bash(glab mr update *)",
       "Bash(man *)",
       "Bash(rg *)",
-      "Bash(s-root-llm-git-branch-name-suggest *)",
-      "Bash(s-root-llm-git-branch-name-suggest)",
-      "Bash(s-root-llm-git-commit-msg-suggest *)",
-      "Bash(s-root-llm-git-commit-msg-suggest)",
-      "Bash(s-root-llm-git-mr-text-suggest *)",
-      "Bash(s-root-llm-git-mr-text-suggest)",
+      "Bash(llm-git-branch-name-suggest.zsh *)",
+      "Bash(llm-git-branch-name-suggest.zsh)",
+      "Bash(llm-git-commit-msg-suggest.zsh *)",
+      "Bash(llm-git-commit-msg-suggest.zsh)",
+      "Bash(llm-git-mr-text-suggest.zsh *)",
+      "Bash(llm-git-mr-text-suggest.zsh)",
       "Bash(* --help)",
       "Bash(* -h)",
       "Edit(**/*)",
@@ -111,5 +111,6 @@
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "disableAutoMode": "disable",
-  "theme": "auto"
+  "theme": "auto",
+  "skipWorkflowUsageWarning": true
 }

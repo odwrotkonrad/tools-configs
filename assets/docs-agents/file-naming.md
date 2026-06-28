@@ -2,8 +2,9 @@
 
 kebab-case all files.
 
-Executables: `<kind>-<space>-<descriptive-name>`.
+Executables by kind:
 
-- kind: `s-` script · `fn-` function · `a-` alias · `d-` launchd
-- space: `root` root/system (`root/{etc,usr,Library}`) · `user` user (`root/HOME`)
+- script: bare descriptive name (`export-dir-sizes`, `git-sync-onto-main`)
+- function: `fn-<name>` (`fn-log-msg`, `fn-is-os`); a bare name overrides a command (`rm`)
+- launchd: `d-<space>-<name>`, space = `root` (LaunchDaemons) · `user` (LaunchAgents)
 - command override: bare name (`rm`, `prometheus`)

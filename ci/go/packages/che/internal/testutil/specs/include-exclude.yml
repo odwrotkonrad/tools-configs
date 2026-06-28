@@ -1,0 +1,28 @@
+profiles:
+  virt:
+    mac-os-aarch64:
+base-cli:
+  load-configuration:
+    etc/zshrc:
+    etc/zsh/**:
+  install:
+    - ci/zsh/scripts/installs/mac/brew.zsh
+  services: [otelcol]
+extra:
+  load-configuration:
+    HOME/.config/extra/**:
+virt/mac-os-aarch64:
+  include-profiles: [base-cli]
+  include:
+    profiles: [extra]
+    load-configuration:
+      - HOME/.config/oneoff/**
+    install:
+      - ci/zsh/scripts/installs/mac/oneoff
+    services: [grafana]
+  exclude:
+    load-configuration:
+      - etc/zsh/**
+    install:
+      - ci/zsh/scripts/installs/mac/brew.zsh
+    services: [otelcol]

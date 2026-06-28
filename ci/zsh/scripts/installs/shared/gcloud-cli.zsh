@@ -1,0 +1,44 @@
+#!/bin/zsh
+#[where] https://docs.cloud.google.com/sdk/docs/downloads-versioned-archives
+
+emulate -LR zsh
+setopt errexit
+
+autoload -Uz fn-install-if-missing fn-exit-with fn-is-os fn-is-arch
+
+version=572.0.0
+
+if { fn-is-os mac && fn-is-arch arm } {
+    platform=darwin-arm
+    sha256=4220b398420f5a71ddbfc41a576a1a7fe02501d394feeb0e80f13108972ba4ab
+}
+if { fn-is-os linux && fn-is-arch x86 } {
+    platform=linux-x86_64
+    sha256=66e8eaa273cc9f7ed540b53a9479992311b972c4e0a819e69c262d73d6391b2d
+}
+if { fn-is-os linux && fn-is-arch arm } {
+    platform=linux-arm
+    sha256=676c4bf2e7abfda3308c2e233fa509e8e2b3956f2c02fa890610ca45b5ab2b83
+}
+(( ${+platform} )) || fn-exit-with 1 "unsupported os/arch: $(uname -s)/$(uname -m)"
+
+prefix=/usr/local
+sdk="${prefix}/google-cloud-sdk"
+
+function install_gcloud {
+  local tmp=$(mktemp -d)
+  cd $tmp
+  local archive="google-cloud-cli-${version}-${platform}.tar.gz"
+  curl -fsSL -O "https://storage.googleapis.com/cloud-sdk-release/${archive}"
+  shasum -a 256 -c <<< "${sha256}  ${archive}" || fn-exit-with 1 "checksum mismatch: ${archive}"
+
+  #[why] rm first: clean reinstall, idempotent
+  sudo rm -rf "${sdk}"
+  sudo tar -xzf "${archive}" -C "${prefix}"
+  sudo "${sdk}/install.sh" --quiet --usage-reporting false --path-update false
+
+  #[what] symlink onto PATH
+  for bin ( gcloud gsutil bq ) sudo ln -fs "${sdk}/bin/${bin}" "${prefix}/bin/${bin}"
+}
+
+fn-install-if-missing gcloud install_gcloud

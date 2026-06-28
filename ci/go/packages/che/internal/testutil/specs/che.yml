@@ -1,0 +1,15 @@
+profiles:
+  virt:
+    mac-os-aarch64:
+base-cli:
+  load-configuration:
+    HOME/.config/zsh/**:
+    etc/zshrc:
+    Library/LaunchDaemons/otelcol.plist*:
+  make-extra-dirs:
+    - HOME/.cache/zsh
+  install:
+    - install/unit
+  services: [otelcol]
+virt/mac-os-aarch64:
+  include-profiles: [base-cli]

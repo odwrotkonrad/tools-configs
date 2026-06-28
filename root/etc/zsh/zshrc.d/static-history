@@ -61,19 +61,19 @@ kitten themes                   #[what] interactive theme selection
 
 ##[>] launchctl [what] Interfaces with launchd
 #[what] -k - if service is running remove it and start again
-launchctl bootstrap gui/$(id -u) $HOME/Library/LaunchAgents/d-user-load-defaults-config.plist  #[what] load service
-launchctl bootout gui/$(id -u)/d-user-load-defaults-config                                         #[what] unload service
-launchctl kickstart -k gui/$(id -u)/d-user-load-defaults-config                                    #[what] run service
+launchctl bootstrap gui/$(id -u) $HOME/Library/LaunchAgents/load-defaults-config.plist  #[what] load service
+launchctl bootout gui/$(id -u)/load-defaults-config                                         #[what] unload service
+launchctl kickstart -k gui/$(id -u)/load-defaults-config                                    #[what] run service
 launchctl list                                                                                      #[what] list all services
-launchctl print gui/$(id -u)/d-user-load-defaults-config                                           #[what] show details of a service
+launchctl print gui/$(id -u)/load-defaults-config                                           #[what] show details of a service
 ##[<] launchctl
 
 ##[>] plutil [what] property list utility
 #[what] -p - pretty print
-plutil -p  $HOME/Library/LaunchAgents/d-user-load-defaults-config.plist                        #[what] print plist
-plutil -lint  $HOME/Library/LaunchAgents/d-user-load-defaults-config.plist                     #[what] lint plist
-plutil -convert json $HOME/Library/LaunchAgents/d-user-load-defaults-config.plist              #[what] plist to json
-plutil -convert xml1 $HOME/Library/LaunchAgents/d-user-load-defaults-config.plist              #[what] plist to xml (from various formats)
+plutil -p  $HOME/Library/LaunchAgents/load-defaults-config.plist                        #[what] print plist
+plutil -lint  $HOME/Library/LaunchAgents/load-defaults-config.plist                     #[what] lint plist
+plutil -convert json $HOME/Library/LaunchAgents/load-defaults-config.plist              #[what] plist to json
+plutil -convert xml1 $HOME/Library/LaunchAgents/load-defaults-config.plist              #[what] plist to xml (from various formats)
 ##[<] plutil
 
 ##[>] zsh builtins

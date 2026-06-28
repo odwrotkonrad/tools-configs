@@ -1,0 +1,11 @@
+#[what] true if the running CPU arch matches the arg (arm|x86)
+
+fn-is-arch() {
+  emulate -LR zsh
+  typeset hw_platform=$(uname -m)
+  case ${1} {
+    (arm) [[ $hw_platform == (arm64|aarch64) ]] ;;
+    (x86) [[ $hw_platform == (x86_64|amd64) ]] ;;
+    (*) return 2 ;;
+  }
+}
