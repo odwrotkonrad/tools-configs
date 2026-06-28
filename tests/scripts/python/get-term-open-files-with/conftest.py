@@ -33,5 +33,5 @@ def script(term_script):
 
 @pytest.fixture(autouse=True)
 def mock_fetch(mocker):
-    """Patch linguist fetch for every test; fetch-specific tests re-patch to override."""
+    """Patch linguist fetch for every test, fetch-specific tests re-patch to override."""
     return mocker.patch("requests.get", side_effect=fake_response)

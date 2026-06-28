@@ -11,8 +11,8 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// fixtureRepo builds a committed git repo from files plus the named che.yml fixture
-// (testutil/specs/<spec>.yml), returns its dir.
+// fixtureRepo commits a git repo from files plus che.yml fixture
+// (testutil/specs/<spec>.yml), returns dir.
 func fixtureRepo(t *testing.T, spec string, files map[string]string) string {
 	t.Helper()
 	files = maps.Clone(files)

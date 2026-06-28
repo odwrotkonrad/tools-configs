@@ -1,8 +1,7 @@
 #!/bin/zsh
 #>[what]
-#   Load macOS defaults from a YAML config on stdin.
-#   Applies each domain/key via `defaults write` typed by YAML tag,
-#   then restarts apps listed under `.apps`.
+#   Load macOS defaults from YAML on stdin.
+#   Each domain/key via `defaults write` typed by YAML tag, then restart `.apps`.
 #/[what]
 
 set -o pipefail
@@ -26,5 +25,5 @@ done < <($yq -r '
   [$d, .key, (.value | tag), (.value | tostring)] | @tsv
 ' <<<"$yaml")
 
-#[what] restart affected apps
+#[what] restart apps
 xargs -n1 killall || true < <($yq -r '.apps[]' <<<"$yaml")

@@ -49,7 +49,7 @@ def assert_output(actual_lines, expected_lines):
 
 
 def stage_config(script, mocker, tmp_path, case):
-    """Point the script's custom_paths at a tmp file holding the case config."""
+    """Point script.custom_paths at a tmp file holding the case config."""
     custom = tmp_path / "custom"
     custom.mkdir(parents=True, exist_ok=True)
     cfg = custom / script.Config.NAME

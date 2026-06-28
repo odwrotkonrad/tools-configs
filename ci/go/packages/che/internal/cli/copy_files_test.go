@@ -8,8 +8,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// copy: copies the *.host.cp into $HOME (marker stripped), and backs up + copies the
-// root-owned daemon plist, then chowns it root:wheel.
+// copy: *.host.cp into $HOME (marker stripped); backup, copy, chown root:wheel the daemon plist.
 func TestCopyCmd(t *testing.T) {
 	home := testutil.MockRepoEnv(t)
 	dryRun = true

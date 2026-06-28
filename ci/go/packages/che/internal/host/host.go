@@ -13,8 +13,8 @@ import (
 	"configs/ci/go/packages/che/internal/fsutil"
 )
 
-// Host is the live system the load passes act on: the repo tree it sources from,
-// the invoking identity, the detected profile, and the mutating filesystem.
+// Host is the live system the load passes act on: repo source tree, invoking
+// identity, detected profile, mutating filesystem.
 type Host struct {
 	RepoRoot string // <configs> dir (contains che.yml, ci/, templates/)
 	Root     string // <configs>/root, the load passes' source subtree
@@ -24,8 +24,7 @@ type Host struct {
 	fs       fsutil.FS
 }
 
-// New builds a Host from the repo root + identity + profile, wiring an fsutil.FS
-// that honors dryRun and escalates priv per-dest.
+// New builds a Host, wiring an fsutil.FS that honors dryRun, escalates priv per-dest.
 func New(repoRoot, home, profile string, dryRun bool) Host {
 	root := filepath.Join(repoRoot, "root")
 	return Host{
@@ -45,7 +44,7 @@ func (h Host) Src(rel string) string { return filepath.Join(h.Root, rel) }
 func (h Host) TrackedFiles() ([]string, error) { return fsutil.TrackedFiles(h.Root) }
 
 // ResolveInstall expands the install list IN SPEC ORDER (no sort). Each entry must
-// resolve to >=1 script (catches typos/renames). Trailing-* globs expand in place.
+// resolve to >=1 script ([why] catches typos/renames). Globs expand in place.
 func (h Host) ResolveInstall(installs []string) ([]string, error) {
 	var out []string
 	for _, entry := range installs {

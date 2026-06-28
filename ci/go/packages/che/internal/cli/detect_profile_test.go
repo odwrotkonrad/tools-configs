@@ -9,7 +9,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// detect prints exactly the resolved profile, no dry-run lines.
+// detect prints only the resolved profile, no dry-run lines.
 func TestDetectCmd(t *testing.T) {
 	testutil.MockRepoEnv(t)
 	dryRun = true

@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
 #>[what]
-#   Headless Claude Code -p wrapper for llm-* scripts.
+#   Headless claude -p wrapper for llm-* scripts.
 #   Usage: <prompt-on-stdin> | llm-run-claude-code --model <model> --schema <schema> [--api-key-uri <uri>]
-#   Sets ANTHROPIC_MODEL/API_KEY; caller-exported env (e.g. CLAUDE_CODE_*) wins.
+#   Sets ANTHROPIC_MODEL/API_KEY, caller-exported env (e.g. CLAUDE_CODE_*) wins.
 #   Key URI (op read) from --api-key-uri, default ProgrammaticAccess ref.
 #   Upstream: llm-git-* scripts. Downstream: prompt on stdin, --model, --schema.
-#   Out: the structured output object.
+#   Out: structured output object.
 #/[what]
 
 

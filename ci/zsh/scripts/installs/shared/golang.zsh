@@ -26,18 +26,16 @@ prefix=/usr/local
 goroot="${prefix}/go"
 
 function install_go {
-  #[what] download & verify in a scratch dir
   local tmp=$(mktemp -d)
   cd $tmp
   local archive="go${version}.${platform}.tar.gz"
   curl -fsSL -O "https://go.dev/dl/${archive}"
   shasum -a 256 -c <<< "${sha256}  ${archive}" || fn-exit-with 1 "checksum mismatch: ${archive}"
 
-  #[what] install the go tree to the prefix (idempotent)
   sudo rm -rf "${goroot}"
   sudo tar -xzf "${archive}" -C "${prefix}"
 
-  #[what] expose the toolchain on PATH via /usr/local/bin (dir may be absent on a fresh host)
+  #[why] mkdir: /usr/local/bin may be absent on a fresh host
   sudo mkdir -p "${prefix}/bin"
   for bin ( go gofmt ) sudo ln -fs "${goroot}/bin/${bin}" "${prefix}/bin/${bin}"
 }

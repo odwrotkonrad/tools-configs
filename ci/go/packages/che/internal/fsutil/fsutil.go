@@ -15,8 +15,8 @@ import (
 	"configs/ci/go/packages/che/internal/log"
 )
 
-// FS runs mutating filesystem ops, honoring DryRun and escalating priv per-dest
-// (sudo iff the dest is outside the invoking user's Home).
+// FS runs mutating fs ops, honoring DryRun, escalating priv per-dest (sudo iff
+// dest outside invoking user's Home).
 type FS struct {
 	Home   string
 	Root   string // repo root/ tree; repo-aware backups skip links into it
@@ -25,16 +25,16 @@ type FS struct {
 
 func (f FS) logMsg(title, msg string) { log.Msg(title, msg, f.DryRun) }
 
-// Log emits a log line through the dry-run gate.
+// Log emits a line through the dry-run gate.
 func (f FS) Log(title, msg string) { f.logMsg(title, msg) }
 
-// UnderHome reports whether dest is the user-owned Home tree (no sudo needed).
+// UnderHome reports dest in user-owned Home tree (no sudo).
 func (f FS) UnderHome(dest string) bool {
 	return dest == f.Home || strings.HasPrefix(dest, f.Home+"/")
 }
 
-// mutate logs (verb: logArg) then, unless dry-run, runs argv with per-dest priv
-// escalation. Every mutating op funnels through here for one dry-run+log gate.
+// mutate logs (verb: logArg), then unless dry-run runs argv with per-dest priv.
+// One dry-run+log gate for every mutating op.
 func (f FS) mutate(verb, logArg, dest string, argv ...string) error {
 	if !f.DryRun {
 		if err := f.Priv(dest, argv...); err != nil {
@@ -45,8 +45,8 @@ func (f FS) mutate(verb, logArg, dest string, argv ...string) error {
 	return nil
 }
 
-// Mkdir makes a single dir with mode. asUser, when set under root, creates it owned
-// by that user. parents adds -p.
+// Mkdir makes one dir with mode. asUser (set, under root): owned by that user.
+// parents adds -p.
 func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 	if f.DryRun {
 		f.logMsg("mkdir", dest)
@@ -60,9 +60,8 @@ func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 	return nil
 }
 
-// MkdirArgv builds a mkdir command, escalating per the dest/asUser rules:
-// asUser -> sudo -u <user> (create owned by the invoking user); root-tree -> sudo
-// unless already root; HOME-tree -> direct. parents adds -p.
+// MkdirArgv builds a mkdir argv, escalating per dest/asUser: asUser -> sudo -u
+// <user>, root-tree -> sudo unless root, HOME-tree -> direct. parents adds -p.
 func (f FS) MkdirArgv(dest, asUser, mode string, parents bool) []string {
 	base := []string{"mkdir"}
 	if parents {
@@ -79,7 +78,7 @@ func (f FS) MkdirArgv(dest, asUser, mode string, parents bool) []string {
 	}
 }
 
-// Chmod applies an explicit mode arg (setgid/sticky bits not honored by mkdir mode).
+// Chmod applies explicit mode arg (setgid/sticky bits, not honored by mkdir mode).
 func (f FS) Chmod(chmodArg, dest string) error {
 	return f.mutate("chmod", chmodArg+" "+dest, dest, "chmod", chmodArg, dest)
 }
@@ -100,8 +99,8 @@ func (f FS) Chown(owner, dest string) error {
 	return f.mutate("chown", owner+" "+dest, dest, "chown", owner, dest)
 }
 
-// Install writes body to a temp then installs it at dest with mode/owner, escalating
-// priv iff dest is outside Home. owner "" -> no -o/-g. Honors dry-run.
+// Install writes body to a temp, installs at dest with mode/owner, sudo iff dest
+// outside Home. owner "" -> no -o/-g. Honors dry-run.
 func (f FS) Install(dest string, body []byte, mode os.FileMode, owner string) error {
 	if f.DryRun {
 		f.logMsg("render", dest)
@@ -126,7 +125,7 @@ func (f FS) Install(dest string, body []byte, mode os.FileMode, owner string) er
 	return f.mutate("render", dest, dest, argv...)
 }
 
-// Priv runs argv as root unless dest is under Home (user-owned).
+// Priv runs argv as root unless dest under Home (user-owned).
 func (f FS) Priv(dest string, argv ...string) error {
 	if !f.UnderHome(dest) && os.Geteuid() != 0 {
 		argv = append([]string{"sudo"}, argv...)
@@ -134,8 +133,8 @@ func (f FS) Priv(dest string, argv ...string) error {
 	return run(exec.Command(argv[0], argv[1:]...))
 }
 
-// BackupBeforeOverwrite copies an existing dest -> dest.<ts>.bk before clobber.
-// repoAware: skip symlinks already resolving into the repo root (links we made).
+// BackupBeforeOverwrite copies existing dest -> dest.<ts>.bk before clobber.
+// repoAware: skip symlinks resolving into repo root (links we made).
 func (f FS) BackupBeforeOverwrite(dest string, repoAware bool) error {
 	fi, err := os.Lstat(dest)
 	if err != nil {
@@ -177,8 +176,8 @@ func IsDir(p string) bool {
 	return err == nil && fi.IsDir()
 }
 
-// openRepo opens the git repo containing dir (walking up for .git) and returns it
-// plus the worktree root.
+// openRepo opens the git repo containing dir (walking up for .git), returns it
+// plus worktree root.
 func openRepo(dir string) (*git.Repository, string, error) {
 	repo, err := git.PlainOpenWithOptions(dir, &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
@@ -195,14 +194,14 @@ func openRepo(dir string) (*git.Repository, string, error) {
 	return repo, root, nil
 }
 
-// RepoRoot returns the git toplevel for dir (the repo working-tree root).
+// RepoRoot returns the git toplevel for dir (working-tree root).
 func RepoRoot(dir string) (string, error) {
 	_, root, err := openRepo(dir)
 	return root, err
 }
 
-// TrackedFiles lists git-tracked files under root, repo-relative to root. root may
-// be a subtree of the repo; only entries within it are returned, prefix-stripped.
+// TrackedFiles lists git-tracked files under root, relative to root. root may be
+// a repo subtree: only entries within it returned, prefix-stripped.
 func TrackedFiles(root string) ([]string, error) {
 	repo, repoRoot, err := openRepo(root)
 	if err != nil {

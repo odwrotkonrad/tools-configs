@@ -1,8 +1,6 @@
 #!/bin/zsh
 #>[what]
-#   1. collect dirs from the last 10 commits,
-#   2. search for broken links within dirs
-#   3. remove broken links
+#   collect dirs from last 10 commits, find broken links, remove them
 #/[what]
 
 emulate -LR zsh
@@ -17,13 +15,13 @@ function delete_broken_links {
   local root=$1 ; fn-log-msg -t delete-broken-links -- $root
 
   typeset -aU dirs broken
-  # 1. 10 last refs -> all dirs
+  # 1. 10 last refs -> dirs
   for ref ( ${(@f)$(git rev-list -10 HEAD)} ) {
     dirs+=( ${(@f)$(git ls-tree -dr --name-only $ref)} )
   }
 
-  # 2. dirs -> dirs with at least 2 parts #[why] reducing search radius
-  dirs=( ${(M)dirs:#*/?*} ) # [what] (M) keep matches, pattern: path with atleast one non trailing slash
+  # 2. dirs -> dirs with >=2 parts #[why] reduce search radius
+  dirs=( ${(M)dirs:#*/?*} ) #[what] (M) keep matches, path with non-trailing slash
 
   # 3. dirs -> OS dirs; HOME/<rest> -> $HOME/<rest>, else /<rest>
   local -a os_dirs
@@ -32,14 +30,13 @@ function delete_broken_links {
   }
   dirs=( $os_dirs )
 
-  # 4. dirs -> broken links (ignore our *.bk backups)
+  # 4. dirs -> broken links (ignore *.bk backups)
   for dir ( $dirs ) {
     broken+=( $dir/*(-@N) )
   }
   broken=( ${broken:#*.bk} )
 
-  # 5. broken links -> trash
-
+  # 5. broken links -> rm
   if (( $#broken )) { rm $broken ; fn-log-msg -t rm -- ${(j: :)broken} }
 }
 

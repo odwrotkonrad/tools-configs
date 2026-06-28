@@ -1,5 +1,5 @@
 ##[>] 🤖🤖
-#[what] autoload every function file in each given dir (defined inline, cannot itself be autoloaded)
+#[what] autoload function files in each dir (inline, cannot self-autoload)
 fn-autoload-functions() {
   local d f
   for d; do
@@ -9,7 +9,7 @@ fn-autoload-functions() {
   done
 }
 
-#[what] source every regular file (incl. symlinks) in each given dir, name order, skip *.tmpl
+#[what] source regular files in each dir, name order, skip *.tmpl
 fn-source() {
   for d; do
     for rc in ${d}/*(Non); {
@@ -20,7 +20,7 @@ fn-source() {
   done
 }
 
-#[what] prepend args to the named array, keeping first occurrence unique: fn-insert <array> item...
+#[what] prepend args to named array, first occurrence unique: fn-insert <array> item...
 fn-insert() {
   local name=$1; shift
   set -A $name "$@" "${(@P)name}"

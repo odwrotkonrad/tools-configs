@@ -2,7 +2,7 @@
 #>[what]
 #   LLM driven change request (MR/PR) generation
 #   Usage: <extra-instructions-on-stdin> | llm-git-mr-text-suggest [--range <range>]
-#   extra-instructions: optional, read from stdin when piped.
+#   extra-instructions: optional, from stdin when piped.
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
 #   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
 #   Out: { "title": ..., "description": ... }.
@@ -34,7 +34,7 @@ typeset -A template_input=(
 )
 ##[<] template input 🤖
 
-# if there are no changes return
+# no commits: error
 [[ -n "$(git log --format=%h "$script_input[opt_range]")" ]] || { echo "error: no commits in $script_input[opt_range]" >&2; exit 1 }
 
 

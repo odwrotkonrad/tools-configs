@@ -1,8 +1,7 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
-#   Read a file with a leading --- YAML frontmatter block and print a YAML doc
-#   exposing both halves: `frontmatter:` (the parsed header, verbatim) and
-#   `body:` (the remaining content as a literal block scalar).
+#   Split leading --- YAML frontmatter from body, emit YAML doc:
+#   `frontmatter:` (header verbatim), `body:` (literal block scalar).
 #   Usage: render-with-frontmatter <file>
 #   Upstream: gomplate `renderWithFrontmatter` plugin. Downstream: <file>.
 #/[what] 🤖🤖

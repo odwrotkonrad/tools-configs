@@ -4,14 +4,14 @@
 #   provider = providers[script.provider.id] merged with script.provider.config.
 #   Usage: source ${0:A:h}/lib/llm-lib.zsh
 #     read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load <script-name>)"
-#     lib-llm-env-export <script-name>                    # exports provider env <- script env
-#     prompt=$(lib-llm-prompt-fill <template> <assoc-name>) # fill template with assoc vars
+#     lib-llm-env-export <script-name>
+#     prompt=$(lib-llm-prompt-fill <template> <assoc-name>)
 #/[what]
 
 lib_llm_config=/etc/custom/llm.yml
 
 ##[>] lib-llm-config-load 🤖🤖
-#[what] print script, model, template (space-separated)
+#[what] print script, model, template, space-separated
 lib-llm-config-load() {
   local name=$1
   name=$name yq '
@@ -23,7 +23,7 @@ lib-llm-config-load() {
 ##[<] lib-llm-config-load 🤖🤖
 
 ##[>] lib-llm-env-export 🤖🤖
-#[what] export provider env <- script env; preset caller env wins (no override)
+#[what] export provider env <- script env. [why] preset caller env wins, no override
 lib-llm-env-export() {
   local name=$1 kv key
   for kv in "${(@f)$(name=$name yq '

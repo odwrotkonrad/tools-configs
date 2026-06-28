@@ -1,5 +1,4 @@
-// Package testutil holds shared fixtures for che's package tests: writing a file
-// tree, turning it into a committed git repo, and capturing stdout.
+// Package testutil holds shared che test fixtures: file tree, committed git repo, stdout capture.
 package testutil
 
 // [>] 🤖🤖
@@ -16,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// specsFS holds the checked-in che.yml fixtures shared across package tests.
+// specsFS holds the checked-in che.yml fixtures.
 //
 //go:embed specs/*.yml
 var specsFS embed.FS
@@ -61,7 +60,7 @@ func GitRepo(t *testing.T, dir string) {
 	}
 }
 
-// Repo builds a temp dir holding files, committed as a git repo, and returns it.
+// Repo returns a temp dir of files, committed as a git repo.
 func Repo(t *testing.T, files map[string]string) string {
 	t.Helper()
 	dir := t.TempDir()
@@ -70,12 +69,11 @@ func Repo(t *testing.T, files map[string]string) string {
 	return dir
 }
 
-// CheProfile is the profile the canonical che.yml fixture (specs/che.yml) resolves
-// under.
+// CheProfile is the profile specs/che.yml resolves under.
 const CheProfile = "virt/mac-os-aarch64"
 
-// CheRepo builds a committed mock che repo (specs/che.yml + a root/ tree covering
-// every pass) plus an on-disk HOME, and returns (repoDir, homeDir).
+// CheRepo builds a committed mock che repo (specs/che.yml + root/ tree covering every pass)
+// plus an on-disk HOME. Returns (repoDir, homeDir).
 func CheRepo(t *testing.T) (string, string) {
 	t.Helper()
 	dir := Repo(t, map[string]string{
@@ -94,9 +92,9 @@ func CheRepo(t *testing.T) (string, string) {
 	return dir, home
 }
 
-// MockRepoEnv builds the canonical mock che repo, chdir's into it, and exports
-// CHE_FORCE_PROFILE + HOME so che's build() resolves against the mock. Returns the
-// HOME dir (for asserting ~/ dest paths). Skips as root (build resolves $HOME).
+// MockRepoEnv builds the mock che repo, chdirs in, exports CHE_FORCE_PROFILE + HOME so
+// build() resolves against it. Returns HOME (for asserting ~/ dest paths). Skips as root
+// (build resolves $HOME).
 func MockRepoEnv(t *testing.T) string {
 	t.Helper()
 	if os.Geteuid() == 0 {
@@ -109,9 +107,9 @@ func MockRepoEnv(t *testing.T) string {
 	return home
 }
 
-// RunDry runs a subcommand's RunE (the caller has already built the dry-run state),
-// captures its stdout, and asserts every printed line carries the [dry-run] marker.
-// dryRunLines=false skips that check (e.g. detect, which prints the bare profile).
+// RunDry runs a subcommand's RunE (caller already built dry-run state), captures stdout,
+// asserts every printed line carries the [dry-run] marker. dryRunLines=false skips that
+// check (e.g. detect, prints bare profile).
 func RunDry(t *testing.T, cmd *cobra.Command, dryRunLines bool) string {
 	t.Helper()
 	out, err := CaptureStdout(t, func() error { return cmd.RunE(cmd, nil) })
@@ -146,8 +144,7 @@ func NotLine(t *testing.T, out, fragment string) {
 	}
 }
 
-// CaptureStdout runs fn with os.Stdout redirected to a pipe and returns what it
-// printed plus fn's error.
+// CaptureStdout runs fn with os.Stdout piped. Returns printed output plus fn's error.
 func CaptureStdout(t *testing.T, fn func() error) (string, error) {
 	t.Helper()
 	orig := os.Stdout

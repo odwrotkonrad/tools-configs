@@ -1,6 +1,6 @@
 ##[>] 🤖🤖
 class Error(Exception):
-    """An error carrying its exit code and context; returned or raised."""
+    """Exit code plus context, returned or raised."""
 
     def __init__(self, code: int, **context: object) -> None:
         super().__init__()
@@ -9,7 +9,7 @@ class Error(Exception):
 
 
 class Errors:
-    """The exit-code contract: codes and their templated messages."""
+    """Exit-code contract: codes, templated messages."""
 
     ARGS = 11
     CONFIG = 12

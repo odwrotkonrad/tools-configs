@@ -8,7 +8,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// render-templates: renders the *.host.tpl into $HOME (marker stripped).
+// renders *.host.tpl into $HOME, marker stripped.
 func TestRenderCmd(t *testing.T) {
 	home := testutil.MockRepoEnv(t)
 	dryRun = true

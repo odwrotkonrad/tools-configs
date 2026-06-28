@@ -8,8 +8,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// link: ensures the HOME config dirs, links the user zshrc into $HOME, and backs up
-// then links the root-tree /etc/zshrc.
+// link: mkdir HOME config, link user zshrc into $HOME, backup then link /etc/zshrc.
 func TestLinkCmd(t *testing.T) {
 	home := testutil.MockRepoEnv(t)
 	dryRun = true

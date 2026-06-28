@@ -1,6 +1,6 @@
 #!/bin/zsh
 #>[what]
-#   install aws cli v2 per os/arch via fn-is-os/fn-is-arch predicates
+#   install aws cli v2, per os/arch.
 #/[what]
 
 emulate -LR zsh

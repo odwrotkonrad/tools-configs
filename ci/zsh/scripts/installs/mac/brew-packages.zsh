@@ -3,7 +3,7 @@
 #   brew bundle /etc/homebrew/Brewfile, one stage per call:
 #   tap -> formulae -> go -> npm -> cask -> vscode (taps first; cask/vscode last for code cli).
 #   Brewfile gates on HOMEBREW_STAGE + HOMEBREW_IS_VIRT.
-#   #[why] brew wipes env (bin/brew: env -i), keeps only an allowlist + HOMEBREW_*; gate
+#   #[why] brew wipes env (bin/brew: env -i), keeps allowlist + HOMEBREW_*. gate
 #   vars must be HOMEBREW_-prefixed.
 #/[what]
 
@@ -17,11 +17,11 @@ export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
-#[what] gates the Brewfile virt? predicate; detected here, not threaded from che
+#[why] gates Brewfile virt? predicate, detected here not threaded from che
 fn-is-virt && export HOMEBREW_IS_VIRT=true || export HOMEBREW_IS_VIRT=false
 
-#[why] parallel installs collide on shared-dep locks / cache races; bundle is
-#   idempotent, so retry 3x clears transient failures, then give up.
+#[why] parallel installs collide on shared-dep locks, cache races. bundle
+#   idempotent, retry 3x clears transient failures, then give up.
 function bundle_stage {
   local stage=$1 attempt
   for attempt ( 1 2 3 ) {

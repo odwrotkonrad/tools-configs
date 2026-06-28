@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Msg prints 'HH:MM:SS.mmm: <title>: <msg>' to match the zsh fn-log-msg format.
+// Msg prints 'HH:MM:SS.mmm: <title>: <msg>', matching zsh fn-log-msg.
 func Msg(title, msg string, dryRun bool) {
 	now := time.Now()
 	stamp := now.Format("15:04:05") + "." + fmt.Sprintf("%03d", now.Nanosecond()/1e6)

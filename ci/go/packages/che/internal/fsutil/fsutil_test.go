@@ -68,8 +68,7 @@ func TestExpandAll(t *testing.T) {
 	}
 }
 
-// TestTrackedFiles: our subtree filtering + untracked exclusion. The untracked
-// file (committed-tree absent) must not appear; a nested subdir resolves correctly.
+// TestTrackedFiles: subtree filtering + untracked exclusion.
 func TestTrackedFiles(t *testing.T) {
 	dir := testutil.Repo(t, map[string]string{"a.txt": "x", "sub/b.txt": "x"})
 	if err := os.WriteFile(filepath.Join(dir, "untracked"), []byte("x"), 0o644); err != nil {
@@ -84,7 +83,7 @@ func TestTrackedFiles(t *testing.T) {
 		t.Errorf("TrackedFiles = %v, want %v (untracked must be excluded)", got, want)
 	}
 
-	// from a subtree: only entries under it, prefix-stripped
+	// subtree: only entries under it, prefix-stripped
 	sub, err := TrackedFiles(filepath.Join(dir, "sub"))
 	if err != nil {
 		t.Fatal(err)
@@ -94,12 +93,11 @@ func TestTrackedFiles(t *testing.T) {
 	}
 }
 
-// TestTrackedFilesMatchesCLI guards byte-parity between our go-git index walk and
-// `git ls-files --exclude-standard` on a mock repo's root/ subtree (hidden files,
-// .gitkeep, marker extensions, nesting). No dependency on the live checkout.
+// TestTrackedFilesMatchesCLI: byte-parity, go-git index walk vs `git ls-files
+// --exclude-standard` on a mock root/ subtree (hidden, .gitkeep, markers, nesting).
 func TestTrackedFilesMatchesCLI(t *testing.T) {
 	dir := testutil.Repo(t, map[string]string{
-		"che.yml":                                    "profiles:\n", // outside root/, must be excluded
+		"che.yml":                                    "profiles:\n", // outside root/, excluded
 		"root/etc/zshrc":                             "z\n",
 		"root/etc/zsh/zshenv":                        "e\n",
 		"root/HOME/.config/zsh/.zshrc":               "hidden\n",
@@ -125,8 +123,8 @@ func TestTrackedFilesMatchesCLI(t *testing.T) {
 	}
 }
 
-// MkdirArgv: priv escalation depends on euid; assert the structural shape that is
-// euid-independent (the mkdir + mode + dest tail) and the asUser case at euid 0.
+// TestMkdirArgv: priv escalation depends on euid, assert the euid-independent
+// shape (mkdir + mode + dest tail) and the asUser case at euid 0.
 func TestMkdirArgv(t *testing.T) {
 	f := FS{Home: "/Users/x"}
 	argv := f.MkdirArgv("/Users/x/.config", "", "0750", true)

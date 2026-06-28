@@ -1,11 +1,8 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
-#   Merge-upsert a dotenv file from an example-defaults file and print it:
-#   start from <example> defaults, overlay <env> values (existing wins, and
-#   keys only in <env> are kept), then print sorted KEY=VALUE lines. blank and
-#   `#` comment lines are skipped. a missing <env> yields just the defaults.
+#   Merge <example> defaults with <env> overlay (env wins), print sorted KEY=VALUE. Skips blank, `#` lines. Missing <env>: defaults only.
 #   Usage: tpl-render-merge-upsert-env <env> <example>
-#   Upstream: gomplate `tplRenderMergeUpsertEnv` plugin. Downstream: <env>, <example>.
+#   Upstream: gomplate `tplRenderMergeUpsertEnv`. Downstream: <env>, <example>.
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖

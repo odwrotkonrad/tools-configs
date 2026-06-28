@@ -14,13 +14,13 @@ typeset -a dirs_user_space dirs_root_space dirs_system_space dirs_system_space_w
 function mk_dirs {
   local -a opt_user opt_chown opt_chmod opt_umask
   local dir
-  zparseopts -D -E -user:=opt_user -owner:=opt_chown -perms:=opt_chmod -umask:=opt_umask  #[what] 🤖🤖 --user: create as this user (owned at birth, no chown); --umask: scope creation mode
+  zparseopts -D -E -user:=opt_user -owner:=opt_chown -perms:=opt_chmod -umask:=opt_umask  #[what] 🤖🤖 --user: created owned at birth (no chown). --umask: scopes creation mode
   if (( $#opt_umask )) { local saved=$(umask); umask $opt_umask[2]; trap "umask $saved" EXIT }  #[what] 🤖🤖 localtraps restores on return
-  for dir ( ${(o)@} ) {  #[what] 🤖🤖 (o) lexical sort -> parents before children
+  for dir ( ${(o)@} ) {  #[what] 🤖🤖 (o) lexical sort: parents before children
     if [[ ! -d $dir ]] {
-      if (( $#opt_user )) { sudo -u $opt_user[2] mkdir $dir } else { mkdir $dir }  #[what] 🤖🤖 no -p; parents made first
+      if (( $#opt_user )) { sudo -u $opt_user[2] mkdir $dir } else { mkdir $dir }  #[what] 🤖🤖 no -p, parents made first
       fn-log-msg -t mkdir -- $dir
-      if (( $#opt_chown )) { chown $opt_chown[2] $dir; fn-log-msg -t chown -- "$dir $opt_chown[2]" }  #[what] 🤖🤖 no -R; per-dir; only for custom owner
+      if (( $#opt_chown )) { chown $opt_chown[2] $dir; fn-log-msg -t chown -- "$dir $opt_chown[2]" }  #[what] 🤖🤖 no -R, per-dir, custom owner only
       if (( $#opt_chmod )) { chmod $opt_chmod[2] $dir; fn-log-msg -t chmod -- "$dir $opt_chmod[2]" }
     }
   }
@@ -28,10 +28,10 @@ function mk_dirs {
 
 configs=${1:-$HOME/projects/configs}
 configs_owner=$(stat -f '%Su:%Sg' -- $configs)
-configs_user=${SUDO_USER:-${configs_owner%%:*}} #[what] 🤖🤖 invoking user; user-space dirs created under this identity
+configs_user=${SUDO_USER:-${configs_owner%%:*}} #[what] 🤖🤖 invoking user, owns user-space dirs
 home=$HOME
 
-#[what] 🤖🤖 braces enumerate parents+children; empty element {,..} keeps the parent dir itself
+#[what] 🤖🤖 braces enumerate parents+children, empty element {,..} keeps parent itself
 #[why] mk_dirs sorts (o) so parents precede children for plain mkdir (no -p)
 dirs_user_space=(
   .cache{,/homebrew,/zsh}
@@ -54,8 +54,7 @@ dirs_system_space_world=(
 )
 
 
-# create dirs
-mk_dirs --umask 027 --user $configs_user $dirs_user_space                          #[what] 🤖🤖 user-owned at birth; 0750 (group read, no world)
-mk_dirs --umask 022 $dirs_root_space                                               #[what] 🤖🤖 root:wheel default; 0755 (world-readable)
-mk_dirs --owner root:${configs_owner#*:} --perms 2775 $dirs_system_space #[what] custom group + setgid; chmod sets mode (umask moot)
-mk_dirs --perms 1777 $dirs_system_space_world                          #[what] custom sticky world-writable; chmod sets mode (umask moot)
+mk_dirs --umask 027 --user $configs_user $dirs_user_space                          #[what] 🤖🤖 user-owned at birth, 0750 (group read, no world)
+mk_dirs --umask 022 $dirs_root_space                                               #[what] 🤖🤖 root:wheel default, 0755 (world-readable)
+mk_dirs --owner root:${configs_owner#*:} --perms 2775 $dirs_system_space #[what] custom group + setgid, chmod sets mode (umask moot)
+mk_dirs --perms 1777 $dirs_system_space_world                          #[what] sticky world-writable, chmod sets mode (umask moot)

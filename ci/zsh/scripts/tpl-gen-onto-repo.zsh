@@ -1,8 +1,7 @@
 #!/bin/zsh
 #>[what]
-#   1. search for all *.repo.tpl templates under templates/ and ci/
-#   2. render it to the repo path in its render-to: frontmatter
-#   --local: also render local templates (*local* in name); off by default
+#   render *.repo.tpl under templates/ and ci/ to render-to: frontmatter path
+#   --local: also render *local* templates (off by default)
 #/[what]
 
 emulate -LR zsh
@@ -30,17 +29,17 @@ function render_template {
     return
   }
 
-  #[what] read render-to as a list (scalar back-compat via flatten)
+  #[what] render-to as list (scalar back-compat via flatten)
   local -a render_tos=( ${(f)"$(yq -f extract '[.render-to] | flatten | .[]' $template)"} )
 
-  #[what] render body once to a temp, fan out per output
+  #[what] render body once, fan out per output
   local body=$(mktemp)
   yq -f process 'del(.render-to)' $template \
     | fn-tpl-strip-empty-frontmatter \
     | gomplate > $body
 
   for render_to ( $render_tos ) {
-    #[what] AGENTS-style outputs inline @-includes; CLAUDE keeps them as links
+    #[what] AGENTS inlines @-includes, CLAUDE keeps links
     fn-tpl-make-header $render_to $template > $configs/$render_to
     if [[ ${render_to:t} == *AGENTS* ]] {
       fn-tpl-inline-includes $configs < $body >> $configs/$render_to

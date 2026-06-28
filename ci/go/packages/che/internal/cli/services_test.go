@@ -10,8 +10,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// each services subcommand resolves the profile's services (the fixture has one,
-// otelcol, a system daemon) then dispatches; in dry-run each logs the full target.
+// each services subcommand resolves profile services (fixture: one, otelcol, a system daemon) then dispatches. dry-run logs the full target.
 func TestServicesSubcommands(t *testing.T) {
 	cases := map[string]string{
 		"bootout": "bootout: system/otelcol [dry-run]",

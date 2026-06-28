@@ -14,7 +14,7 @@ import (
 	"configs/ci/go/packages/che/internal/render"
 )
 
-// per-dest filemode/owner overrides for rendered host configs.
+// per-dest filemode/owner overrides.
 const filemodeDefault os.FileMode = 0600
 
 type override struct {
@@ -43,7 +43,7 @@ func (h Host) RenderTemplates(templateRels []string) error {
 	return nil
 }
 
-// renderTemplate dispatches on frontmatter presence.
+// renderTemplate: dispatch on frontmatter presence.
 func (h Host) renderTemplate(tmplPath string) error {
 	src, err := os.ReadFile(tmplPath)
 	if err != nil {
@@ -55,7 +55,7 @@ func (h Host) renderTemplate(tmplPath string) error {
 	return h.renderFrontmatter(tmplPath, src)
 }
 
-// placeFile backs up dest (repo-aware) then installs body with the per-dest override.
+// placeFile: back up dest, install body with per-dest override.
 func (h Host) placeFile(dest string, body []byte) error {
 	if err := h.fs.BackupBeforeOverwrite(dest, true); err != nil {
 		return err
@@ -74,8 +74,7 @@ func (h Host) renderPlain(tmplPath string, src []byte) error {
 	return h.placeFile(h.ToDest(rel), body)
 }
 
-// renderFrontmatter: parse render-to (list of live paths), render the body once,
-// fan out per output; AGENTS-style outputs inline @-includes.
+// renderFrontmatter: render body once, fan out per render-to dest. AGENTS dests inline @-includes.
 func (h Host) renderFrontmatter(tmplPath string, src []byte) error {
 	fm, body := render.SplitFrontmatter(src)
 	var meta struct {

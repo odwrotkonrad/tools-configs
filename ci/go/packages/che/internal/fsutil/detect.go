@@ -64,7 +64,7 @@ func Virtualized() bool {
 	}
 }
 
-// UserHome looks up the named user's home dir from passwd.
+// UserHome: named user's home from passwd.
 func UserHome(name string) (string, error) {
 	u, err := user.Lookup(name)
 	if err != nil {

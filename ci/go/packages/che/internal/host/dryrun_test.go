@@ -13,8 +13,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// setupHost builds the canonical mock che repo (HOME + a tree covering every pass),
-// then returns a dry-run Host + resolved spec + the repo dir.
+// setupHost: mock che repo, returns dry-run Host, resolved spec, repo dir.
 func setupHost(t *testing.T) (Host, spec.Resolved, string) {
 	t.Helper()
 	dir, home := testutil.CheRepo(t)
@@ -30,8 +29,7 @@ func setupHost(t *testing.T) (Host, spec.Resolved, string) {
 	return h, res, dir
 }
 
-// snapshotTree records every path + content under dir (sorted), so a before/after
-// comparison can prove a dry-run mutated nothing.
+// snapshotTree: sorted path + content under dir. [why] prove dry-run mutates nothing.
 func snapshotTree(t *testing.T, dir string) string {
 	t.Helper()
 	var lines []string
@@ -59,7 +57,7 @@ func snapshotTree(t *testing.T, dir string) string {
 	return strings.Join(lines, "\n")
 }
 
-// each pass's dry-run: prints actions, mutates nothing.
+// each pass dry-run: prints actions, mutates nothing.
 func TestDryRunPasses(t *testing.T) {
 	cases := []struct {
 		name    string

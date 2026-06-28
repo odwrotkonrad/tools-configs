@@ -14,15 +14,15 @@ import (
 	"configs/ci/go/packages/che/internal/spec"
 )
 
-// package vars: built once by the root PersistentPreRunE, read by each RunE.
+// Built once in PersistentPreRunE, read by each RunE.
 var (
 	dryRun   bool
 	theHost  host.Host
 	resolved spec.Resolved
 )
 
-// RootCmd is che's root command. It detects+resolves the profile (build) before
-// any subcommand runs; subcommands are attached by the command package.
+// RootCmd is che's root command. Resolves the profile (build) before any
+// subcommand runs. Subcommands attached by the command package.
 var RootCmd = &cobra.Command{
 	Use:   "che",
 	Short: "Spec-driven config loader",
@@ -40,8 +40,8 @@ func init() {
 		"print mutating actions instead of executing them")
 }
 
-// build detects -> loads spec -> resolves -> wires the host. Run by the root
-// command's PersistentPreRunE before any subcommand RunE.
+// build detects -> loads spec -> resolves -> wires the host. Run in
+// PersistentPreRunE before any subcommand RunE.
 func build() error {
 	repoRoot, err := findRepoRoot()
 	if err != nil {
@@ -51,7 +51,7 @@ func build() error {
 	if err != nil {
 		return err
 	}
-	// CHE_FORCE_PROFILE overrides detection (test/VM hook); detect lazily otherwise.
+	// CHE_FORCE_PROFILE overrides detection (test/VM hook).
 	profile := os.Getenv("CHE_FORCE_PROFILE")
 	if profile == "" {
 		profile = fsutil.DetectProfile()
@@ -70,8 +70,8 @@ func build() error {
 	return nil
 }
 
-// findRepoRoot resolves the repo root from the git toplevel of cwd, then verifies
-// che.yml lives there (che's defining marker).
+// findRepoRoot resolves repo root from git toplevel of cwd, verifies che.yml
+// lives there (che's defining marker).
 func findRepoRoot() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -87,9 +87,9 @@ func findRepoRoot() (string, error) {
 	return root, nil
 }
 
-// invokingHome resolves the invoking user's home. Running as root via sudo (EUID 0,
-// SUDO_USER set), it looks up that user's home from passwd so dest paths derive from
-// the real user, not /var/root. Otherwise it uses $HOME.
+// invokingHome resolves the invoking user's home. Under sudo (EUID 0,
+// SUDO_USER set), looks up that user's home from passwd so dest paths derive
+// from the real user, not /var/root. Otherwise uses $HOME.
 func invokingHome() (string, error) {
 	if os.Geteuid() == 0 {
 		if name := os.Getenv("SUDO_USER"); name != "" {

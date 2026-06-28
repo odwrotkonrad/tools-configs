@@ -1,7 +1,7 @@
 #!/bin/zsh
 #>[what]
-#   install Homebrew (the package manager). packages come from 01-pkgs,
-#   which runs as a fresh shell that picks up /opt/homebrew/bin via zshenv.
+#   install Homebrew. packages come from 01-pkgs, a fresh shell picking up
+#   /opt/homebrew/bin via zshenv.
 #/[what]
 
 emulate -LR zsh

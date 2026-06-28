@@ -9,12 +9,12 @@ from root_scripts_lib import errors as err
 from root_scripts_lib.options import ScriptBaseOptions
 
 USAGE = "usage"
-"""the base usage action value, shared by every script's Action."""
+"""base usage action value, shared by every script's Action."""
 
 
 ##[>] 🤖🤖
 class BaseAction(StrEnum):
-    """The action base; each script's Action extends it with its own members."""
+    """Action base; each script's Action extends with own members."""
 
 
 class Pattern(BaseModel):
@@ -30,7 +30,7 @@ class Pattern(BaseModel):
 
 
 class BaseParameters(BaseModel):
-    """The invocation validated from argv; subclasses add `arguments`/`SYNOPSIS`."""
+    """Invocation validated from argv; subclasses add `arguments`/`SYNOPSIS`."""
 
     action: BaseAction
     options: ScriptBaseOptions = ScriptBaseOptions()
@@ -42,7 +42,7 @@ class BaseParameters(BaseModel):
 
     @classmethod
     def action_for(cls, options: frozenset[str], nargs: int) -> str | None:
-        """The action of the first SYNOPSIS pattern matching options + arg count."""
+        """Action of first SYNOPSIS pattern matching options + arg count."""
         for pattern in cls.SYNOPSIS:
             if pattern.matches(options, nargs):
                 return pattern.action
@@ -50,7 +50,7 @@ class BaseParameters(BaseModel):
 
     @staticmethod
     def _split_argv(argv: list[str]) -> tuple[set[str], list[str]]:
-        """Bucket argv into an options set and a positional argument list."""
+        """Bucket argv into options set and positional arg list."""
         options: set[str] = set()
         args: list[str] = []
         for tok in argv:

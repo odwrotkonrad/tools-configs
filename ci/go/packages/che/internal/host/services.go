@@ -15,32 +15,29 @@ import (
 	"configs/ci/go/packages/che/internal/log"
 )
 
-// settleSeconds: wait before the post-bootstrap pid check; services take time to
-// spawn a process.
+// settleSeconds: wait before post-bootstrap pid check, services take time to spawn.
 const settleSeconds = 15
 
-// Service is one resolved launchd job: its label (plist basename), the live plist
-// path, the domain target it loads into, and whether it needs sudo + has a lasting
-// process.
+// Service is one resolved launchd job.
 type Service struct {
 	Name        string // label == plist basename
 	Plist       string // live dest plist path
 	Domain      string // "system" or "gui/<uid>"
 	Sudo        bool   // system domain only
-	LongRunning bool   // KeepAlive -> expect a live pid after bootstrap
+	LongRunning bool   // KeepAlive, expect a live pid after bootstrap
 }
 
 func (s Service) target() string { return s.Domain + "/" + s.Name }
 
-// plistSource is one candidate template path under root/ + its marker + domain.
+// plistSource is one candidate template path under root/.
 type plistSource struct {
 	rel    string // repo-relative under root/, with marker
 	marker string // ".host.cp" or ".host.tpl"
-	system bool   // LaunchDaemons -> system; LaunchAgents -> gui
+	system bool   // LaunchDaemons -> system, LaunchAgents -> gui
 }
 
-// ResolveServices maps each name to its live Service by locating the plist under
-// root/. Unknown name -> error. All current services are KeepAlive (LongRunning).
+// ResolveServices maps each name to its live Service via the plist under root/.
+// Unknown name -> error. All current services are KeepAlive (LongRunning).
 func (h Host) ResolveServices(names []string) ([]Service, error) {
 	guiDomain := fmt.Sprintf("gui/%d", os.Getuid())
 	out := make([]Service, 0, len(names))
@@ -63,7 +60,7 @@ func (h Host) ResolveServices(names []string) ([]Service, error) {
 	return out, nil
 }
 
-// locate finds the candidate plist for name in the three known dirs (first hit).
+// locate finds name's plist in the three known dirs (first hit).
 func (h Host) locate(name string) (plistSource, bool) {
 	cands := []plistSource{
 		{"Library/LaunchDaemons/" + name + ".plist.host.cp", ".host.cp", true},
@@ -78,8 +75,8 @@ func (h Host) locate(name string) (plistSource, bool) {
 	return plistSource{}, false
 }
 
-// lctl builds a launchctl argv, prefixing sudo iff the service needs it and we are
-// not already root. Explicit argv (avoids the zsh empty-runner word-split bug).
+// lctl builds a launchctl argv, prefixing sudo iff needed and not already root.
+// Explicit argv (avoids the zsh empty-runner word-split bug).
 func (s Service) lctl(args ...string) *exec.Cmd {
 	argv := append([]string{"launchctl"}, args...)
 	if s.Sudo && os.Geteuid() != 0 {
@@ -88,7 +85,7 @@ func (s Service) lctl(args ...string) *exec.Cmd {
 	return exec.Command(argv[0], argv[1:]...)
 }
 
-// loaded reports whether the service is currently registered in its domain.
+// loaded reports whether the service is registered in its domain.
 func (s Service) loaded() bool {
 	return s.lctl("print", s.target()).Run() == nil
 }
@@ -104,13 +101,13 @@ func (h Host) Bootout(services []Service) error {
 			continue
 		}
 		log.Msg("bootout", s.target(), false)
-		_ = s.lctl("bootout", s.target()).Run() // async; ignore exit
+		_ = s.lctl("bootout", s.target()).Run() // async, ignore exit
 		s.waitGone()
 	}
 	return nil
 }
 
-// waitGone blocks until the service is no longer registered (bootout is async).
+// waitGone blocks until the service is gone (bootout is async).
 func (s Service) waitGone() {
 	for i := 0; s.loaded(); i++ {
 		if i >= 50 {
@@ -138,8 +135,8 @@ func (h Host) Bootin(services []Service) error {
 	return nil
 }
 
-// Ensure settles, then verifies each long-running service has a live pid. Reports
-// per-service; returns an error if any long-running service is missing. No mutation.
+// Ensure settles, then verifies each long-running service has a live pid.
+// Errors if any is missing. No mutation.
 func (h Host) Ensure(services []Service) error {
 	if h.DryRun {
 		log.Msg("settle", fmt.Sprintf("%ds before pid check", settleSeconds), true)

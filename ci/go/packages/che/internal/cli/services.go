@@ -21,8 +21,7 @@ func init() {
 	)
 }
 
-// serviceCmd builds a launchd subcommand that resolves the profile's services then
-// runs the given host action over them.
+// serviceCmd builds a launchd subcommand: resolve profile services, run action over them.
 func serviceCmd(use, short string, action func(host.Host, []host.Service) error) *cobra.Command {
 	return &cobra.Command{
 		Use:   use,

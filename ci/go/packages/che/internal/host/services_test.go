@@ -36,7 +36,7 @@ func TestResolveDomains(t *testing.T) {
 	if svcs[0].Plist != "/Library/LaunchDaemons/otelcol.plist" {
 		t.Errorf("otelcol plist = %q", svcs[0].Plist)
 	}
-	// system-level launch agent (root/Library/LaunchAgents)
+	// system launch agent (root/Library/LaunchAgents)
 	if svcs[1].Domain != gui || svcs[1].Sudo {
 		t.Errorf("gitlab-runner = %+v, want %s no-sudo", svcs[1], gui)
 	}

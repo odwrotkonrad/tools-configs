@@ -8,8 +8,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// install-tools: runs the profile's install units; in dry-run it logs each unit's
-// absolute path without executing it.
+// install-tools: dry-run logs each unit's abs path, no exec.
 func TestInstallCmd(t *testing.T) {
 	testutil.MockRepoEnv(t)
 	dryRun = true

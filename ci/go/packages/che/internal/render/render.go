@@ -14,8 +14,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Exec runs body through text/template with the host+repo FuncMap. name is used
-// only for error messages.
+// Exec runs body through text/template with host+repo FuncMap. name: error messages only.
 func Exec(name string, body []byte) ([]byte, error) {
 	t, err := template.New(filepath.Base(name)).
 		Option("missingkey=error").
@@ -31,7 +30,7 @@ func Exec(name string, body []byte) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// funcMap reproduces the gomplate namespaces the host templates call (env/op).
+// funcMap: gomplate namespaces host templates call (env/op).
 func funcMap() template.FuncMap {
 	return template.FuncMap{
 		"env": func() envNS { return envNS{} },
@@ -43,7 +42,7 @@ type envNS struct{}
 
 func (envNS) Getenv(key string) string { return os.Getenv(key) }
 
-// opRead shells to `op read --no-newline <ref>` (same as the gomplate op plugin).
+// opRead shells `op read --no-newline <ref>` (like gomplate op plugin).
 func opRead(ref string) (string, error) {
 	out, err := exec.Command("op", "read", "--no-newline", ref).Output()
 	if err != nil {
@@ -52,8 +51,7 @@ func opRead(ref string) (string, error) {
 	return string(out), nil
 }
 
-// ResolveAtIncludes inlines '@path' lines as the contents of repoRoot/<path>;
-// '~/' -> root/HOME/. Port of fn-tpl-inline-includes.
+// ResolveAtIncludes inlines '@path' lines as repoRoot/<path> contents, '~/' -> root/HOME/. Port of fn-tpl-inline-includes.
 func ResolveAtIncludes(repoRoot string, body []byte) []byte {
 	var out bytes.Buffer
 	for line := range strings.Lines(string(body)) {
@@ -75,7 +73,7 @@ func ResolveAtIncludes(repoRoot string, body []byte) []byte {
 	return out.Bytes()
 }
 
-// IsAtInclude: a line that is exactly '@<no-space>' with no whitespace.
+// IsAtInclude: line is exactly '@<no-space>', no whitespace.
 func IsAtInclude(line string) bool {
 	if !strings.HasPrefix(line, "@") || len(line) < 2 {
 		return false
@@ -103,7 +101,7 @@ func SplitFrontmatter(src []byte) (fm, body []byte) {
 	return nil, src
 }
 
-// FlexList unmarshals a YAML scalar or sequence into []string (render-to flatten).
+// FlexList unmarshals a YAML scalar or sequence into []string.
 type FlexList []string
 
 func (f *FlexList) UnmarshalYAML(value *yaml.Node) error {

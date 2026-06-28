@@ -8,8 +8,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// prune-links: logs the root it scans for broken symlinks (nothing to remove in the
-// fresh fixture).
+// prune-links: logs scanned root, fresh fixture has nothing to remove.
 func TestPruneCmd(t *testing.T) {
 	testutil.MockRepoEnv(t)
 	dryRun = true

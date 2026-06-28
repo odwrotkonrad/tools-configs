@@ -32,12 +32,12 @@ function install_gcloud {
   curl -fsSL -O "https://storage.googleapis.com/cloud-sdk-release/${archive}"
   shasum -a 256 -c <<< "${sha256}  ${archive}" || fn-exit-with 1 "checksum mismatch: ${archive}"
 
-  #[what] install sdk tree (idempotent)
+  #[why] rm first: clean reinstall, idempotent
   sudo rm -rf "${sdk}"
   sudo tar -xzf "${archive}" -C "${prefix}"
   sudo "${sdk}/install.sh" --quiet --usage-reporting false --path-update false
 
-  #[what] symlink the cli onto PATH
+  #[what] symlink onto PATH
   for bin ( gcloud gsutil bq ) sudo ln -fs "${sdk}/bin/${bin}" "${prefix}/bin/${bin}"
 }
 

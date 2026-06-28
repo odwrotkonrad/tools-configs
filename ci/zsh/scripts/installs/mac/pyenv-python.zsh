@@ -1,6 +1,6 @@
 #!/bin/zsh
 #>[what]
-#   install python via pyenv (provides pip), set it global, activate shims
+#   install python via pyenv (pip), set global, activate shims
 #/[what]
 
 emulate -LR zsh

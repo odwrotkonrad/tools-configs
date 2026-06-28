@@ -16,18 +16,15 @@ function install_jaeger {
   tmpdir=$(mktemp -d)
   trap 'rm -rf "$tmpdir"' EXIT
 
-  #[what] 1. download release archive
   curl -L -o "$tmpdir/$archive" "$url"
 
-  #[what] 2. extract archive
   tar -xzf "$tmpdir/$archive" -C "$tmpdir"
 
   extracted=$tmpdir/jaeger-${version}-${arch}
 
-  #[what] 3. verify checksum #∵ jaeger ships per-file sums, not an archive sum
+  #[why] jaeger ships per-file sums, not an archive sum
   echo "$sha256  $extracted/jaeger" | shasum -a 256 -c -
 
-  #[what] 4. install binary to standard PATH location
   sudo install -m 0755 "$extracted/jaeger" "$prefix/bin/jaeger"
 }
 

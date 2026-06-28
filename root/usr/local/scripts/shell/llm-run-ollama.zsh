@@ -2,11 +2,11 @@
 #>[what]
 #   Headless ollama /api/chat wrapper for llm-* scripts.
 #   Usage: <prompt-on-stdin> | llm-run-ollama --model <model> [--schema <schema>]
-#   Schema, when given, is set as the request `format` to constrain output.
-#   think and options (temperature, num_ctx, ...) read from llm.yml providers.ollama.
-#   Host overridable via OLLAMA_HOST (default 127.0.0.1:11434).
+#   --schema sets request `format`, constrains output.
+#   think, options (temperature, num_ctx, ...) from llm.yml providers.ollama.
+#   Host via OLLAMA_HOST (default 127.0.0.1:11434).
 #   Upstream: llm-* scripts. Downstream: prompt on stdin, --model, --schema.
-#   Out: the structured output object.
+#   Out: structured output object.
 #/[what]
 
 
@@ -49,7 +49,7 @@ response=$(jq -n \
 content=$(jq -r '.message.content
   | sub("^```(json)?\\n?"; "") | sub("\\n?```$"; "")' <<< "$response")
 
-#[what] pretty-print json when valid, else emit raw model output
+#[what] pretty-print json if valid, else raw
 if jq -e . <<< "$content" >/dev/null 2>&1; then
   jq <<< "$content"
 else

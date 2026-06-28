@@ -9,7 +9,7 @@ import (
 	"configs/ci/go/packages/che/internal/cli"
 )
 
-// init() must attach every subcommand to the root command.
+// init() wires every subcommand to root.
 func TestSubcommandsWired(t *testing.T) {
 	var got []string
 	for _, c := range cli.RootCmd.Commands() {

@@ -26,12 +26,12 @@ func TestToDest(t *testing.T) {
 }
 
 func TestPrepend(t *testing.T) {
-	// existing var -> value prepended with ':'
+	// existing: value prepended with ':'
 	env := prepend([]string{"PATH=foo", "OTHER=x"}, "PATH", "bar")
 	if !slices.Contains(env, "PATH=bar:foo") {
 		t.Errorf("prepend existing: got %v, want PATH=bar:foo", env)
 	}
-	// absent var -> appended bare
+	// absent: appended bare
 	env = prepend([]string{"OTHER=x"}, "PATH", "bar")
 	if !slices.Contains(env, "PATH=bar") {
 		t.Errorf("prepend absent: got %v, want PATH=bar", env)
@@ -45,8 +45,7 @@ func TestSrc(t *testing.T) {
 	}
 }
 
-// TestResolveInstall: spec order preserved, trailing-* glob expands sorted, missing
-// entry errors.
+// TestResolveInstall: spec order kept, glob expands sorted, missing errors.
 func TestResolveInstall(t *testing.T) {
 	dir := t.TempDir()
 	scripts := []string{
@@ -65,7 +64,7 @@ func TestResolveInstall(t *testing.T) {
 	}
 	h := New(dir, "/Users/x", "virt/mac-os-aarch64", false)
 
-	// explicit entries keep spec order; glob expands in place, sorted
+	// explicit keep spec order, glob expands in place sorted
 	got, err := h.ResolveInstall([]string{
 		"ci/zsh/scripts/installs/shared/golang.zsh",
 		"ci/zsh/scripts/installs/mac/*.zsh",
@@ -82,7 +81,6 @@ func TestResolveInstall(t *testing.T) {
 		t.Errorf("ResolveInstall = %v, want %v", got, want)
 	}
 
-	// missing script errors
 	if _, err := h.ResolveInstall([]string{"ci/zsh/scripts/installs/mac/absent.zsh"}); err == nil {
 		t.Error("ResolveInstall must error on a missing script")
 	}

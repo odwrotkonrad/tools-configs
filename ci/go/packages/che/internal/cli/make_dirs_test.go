@@ -8,8 +8,7 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-// mk-dirs: creates the repo-tree config dirs plus the profile's extra-dir, all under
-// $HOME for this fixture.
+// mk-dirs: repo-tree config dirs plus profile extra-dir, under $HOME.
 func TestDirsCmd(t *testing.T) {
 	home := testutil.MockRepoEnv(t)
 	dryRun = true

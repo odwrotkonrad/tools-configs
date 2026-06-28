@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-// MatchGlob matches a path against a pattern where ** spans path separators,
-// * spans a single segment, and a literal prefix may end in * (suffix glob).
+// MatchGlob matches path against pattern. ** spans separators, * one segment, prefix may end in * (suffix glob).
 func MatchGlob(pattern, path string) bool {
 	if base, ok := strings.CutSuffix(pattern, "/**"); ok {
 		return path == base || strings.HasPrefix(path, base+"/")
@@ -20,7 +19,7 @@ func MatchGlob(pattern, path string) bool {
 	return err == nil && ok
 }
 
-// doublestar handles patterns with an interior **.
+// doublestar matches an interior **.
 func doublestar(pattern, path string) bool {
 	parts := strings.SplitN(pattern, "**", 2)
 	pre, post := parts[0], strings.TrimPrefix(parts[1], "/")
@@ -39,9 +38,8 @@ func doublestar(pattern, path string) bool {
 	return ok
 }
 
-// ExpandBraces expands one or more {a,b,c} groups in a pattern into the cartesian
-// product of alternatives (zsh-style), e.g. "x/{a,b}/y" -> ["x/a/y","x/b/y"].
-// Patterns without braces return themselves.
+// ExpandBraces expands {a,b,c} groups into the cartesian product (zsh-style), e.g. "x/{a,b}/y" -> ["x/a/y","x/b/y"].
+// No braces returns the pattern unchanged.
 func ExpandBraces(pattern string) []string {
 	open := strings.IndexByte(pattern, '{')
 	if open < 0 {
@@ -60,7 +58,7 @@ func ExpandBraces(pattern string) []string {
 		}
 	}
 	if closeAt < 0 {
-		return []string{pattern} // unbalanced; leave as-is
+		return []string{pattern} // unbalanced, leave as-is
 	}
 	pre, body, post := pattern[:open], pattern[open+1:closeAt], pattern[closeAt+1:]
 	var out []string
@@ -70,7 +68,7 @@ func ExpandBraces(pattern string) []string {
 	return out
 }
 
-// splitTopLevel splits a brace body on commas not nested in inner braces.
+// splitTopLevel splits a brace body on top-level commas.
 func splitTopLevel(body string) []string {
 	var parts []string
 	depth, start := 0, 0
@@ -90,7 +88,7 @@ func splitTopLevel(body string) []string {
 	return append(parts, body[start:])
 }
 
-// ExpandAll brace-expands every pattern in xs, flattening the result.
+// ExpandAll brace-expands every pattern in xs, flattened.
 func ExpandAll(xs []string) []string {
 	var out []string
 	for _, x := range xs {

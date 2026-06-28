@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 #>[what]
-#   LLM driven commit message generation
+#   Suggest commit message via LLM.
 #   Usage: <extra-instructions-on-stdin> | llm-git-commit-msg-suggest
-#   extra-instructions: optional, read from stdin when piped.
-#   provider, model, template, env resolved from /etc/custom/llm.yml.
+#   stdin: optional extra instructions.
+#   provider, model, template, env from /etc/custom/llm.yml.
 #   Upstream: git-commit skill. Out: { "subject": ..., "description": ... }.
 #/[what]
 
@@ -36,7 +36,6 @@ typeset -A template_input=(
 ##[<] template input 🤖
 
 
-# if there are no changes return
 [[ -n $template_input[DIFF_FULL] ]] || { echo "error: nothing staged" >&2; exit 1 }
 
 ##[>] fill template 🤖

@@ -11,8 +11,7 @@ import (
 	"configs/ci/go/packages/che/internal/spec"
 )
 
-// MkDirs creates every repo-tree ancestor dir (parents first) plus the profile's
-// extra-dirs. Ports mk-dirs + the dir half of upsert-configs.
+// MkDirs creates repo-tree ancestor dirs (parents first) plus profile extra-dirs.
 func (h Host) MkDirs(dirRels, extraDirs []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
@@ -30,8 +29,7 @@ func (h Host) MkDirs(dirRels, extraDirs []string) error {
 	return nil
 }
 
-// ensureConfigDirs creates every repo-tree ancestor dir for the resolved config set
-// (parents first), HOME-tree as the user 0750, root-tree 0755. Idempotent.
+// ensureConfigDirs creates repo-tree ancestor dirs (parents first): HOME-tree user 0750, root-tree 0755. Idempotent.
 func (h Host) ensureConfigDirs(dirRels []string) error {
 	user := h.InvokingUser()
 	for _, rel := range dirRels {
@@ -50,11 +48,10 @@ func (h Host) ensureConfigDirs(dirRels []string) error {
 	return nil
 }
 
-// isHome reports whether a repo-relative path is in the HOME tree.
+// isHome reports whether a repo-relative path is in HOME tree.
 func isHome(rel string) bool { return rel == "HOME" || strings.HasPrefix(rel, "HOME/") }
 
-// mkExtraDir creates one extra-dir with -p (ancestors may be absent), then applies
-// the special owner/mode classes from mk-dirs.
+// mkExtraDir creates one extra-dir with -p, then applies special owner/mode classes.
 func (h Host) mkExtraDir(rel, dest, user string) error {
 	switch {
 	case isHome(rel):
@@ -71,8 +68,7 @@ func (h Host) mkExtraDir(rel, dest, user string) error {
 	}
 }
 
-// MkLinks symlinks each config file into its live dest (ln -fhs), backing up any
-// non-repo dest first and skipping links that already point into the repo.
+// MkLinks symlinks each config into its live dest (ln -fhs), backing up non-repo dests, skipping links already pointing into the repo.
 func (h Host) MkLinks(links, dirRels []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
@@ -95,9 +91,7 @@ func (h Host) MkLinks(links, dirRels []string) error {
 	return nil
 }
 
-// copyServices: copied dests with explicit owner:perms. Root-owned launchd daemons
-// must be root:wheel 0644. Only fires for dests actually loaded, so the VM (which
-// never loads these) skips them.
+// copyServices: copied dests with explicit owner:perms. [why] root launchd daemons must be root:wheel 0644. Only loaded dests, so the VM skips them.
 var copyServices = []string{
 	"dir-size-exporter", "grafana", "jaeger", "loki",
 	"otelcol", "port-exporter", "prometheus",
@@ -112,8 +106,7 @@ func copyPerms(dest string) (owner string, mode os.FileMode, ok bool) {
 	return "", 0, false
 }
 
-// MkCopies copies each *.host.cp to its live dest (marker stripped), only when
-// contents differ; backs up first; applies the perms map.
+// MkCopies copies each *.host.cp to its live dest (marker stripped) when contents differ, backing up first, applying the perms map.
 func (h Host) MkCopies(copies, dirRels []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
@@ -159,8 +152,7 @@ func sameContent(a, b string) bool {
 	return string(x) == string(y)
 }
 
-// PruneBrokenLinks removes broken symlinks within the dirs of the resolved config
-// set (live dests), skipping our *.bk backups.
+// PruneBrokenLinks removes broken symlinks in config-set dirs (live dests), skipping *.bk backups.
 func (h Host) PruneBrokenLinks(dirRels []string) error {
 	h.fs.Log("prune-links", h.Root)
 	seen := map[string]bool{}
@@ -172,7 +164,7 @@ func (h Host) PruneBrokenLinks(dirRels []string) error {
 		seen[dest] = true
 		entries, derr := os.ReadDir(dest)
 		if derr != nil {
-			continue // dir may not exist on host yet
+			continue // [why] dir may not exist on host yet
 		}
 		for _, e := range entries {
 			name := e.Name()
@@ -184,7 +176,7 @@ func (h Host) PruneBrokenLinks(dirRels []string) error {
 			if lerr != nil || fi.Mode()&os.ModeSymlink == 0 {
 				continue
 			}
-			if _, serr := os.Stat(p); serr != nil { // broken: target gone
+			if _, serr := os.Stat(p); serr != nil { // [what] broken: target gone
 				if err := h.fs.Remove(p); err != nil {
 					return err
 				}

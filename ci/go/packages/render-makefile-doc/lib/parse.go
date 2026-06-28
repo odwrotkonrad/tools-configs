@@ -70,7 +70,7 @@ func parse(src []byte) ([]section, error) {
 		return &stack[len(stack)-1]
 	}
 
-	var buf [][]target // parallel to stack: buffered targets per open frame
+	var buf [][]target // parallel to stack, buffered targets per frame
 
 	for i := uint(0); i < root.NamedChildCount(); i++ {
 		node := root.NamedChild(i)

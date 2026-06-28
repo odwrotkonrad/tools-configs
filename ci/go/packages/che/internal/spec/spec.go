@@ -20,18 +20,17 @@ const (
 	CpExt   = ".host.cp"
 )
 
-// Raw mirrors che.yml. Profiles is the enum tree (declared detectable leaves);
-// the remaining top-level keys hold defined blocks: leaf profiles
-// ("bare-metal/mac-os-aarch64", ...) and included profiles ("base-cli", ...).
+// Raw mirrors che.yml. Profiles is the enum tree of declared leaves; other
+// top-level keys are defined blocks: leaf profiles and included profiles.
 type Raw struct {
 	Profiles map[string]any         `yaml:"profiles"`
 	profiles map[string]profileSpec // every defined block, keyed by name
 }
 
-// profileSpec is one block. A leaf names include-profiles (merged in order); an
-// included profile carries the actual config sections. Both may carry inline
-// sections, appended after the includes. include/exclude add/remove whole sections
-// after composition (exclude wins, applied last).
+// profileSpec is one block. A leaf names include-profiles (merged in order), an
+// included profile carries config sections. Both may carry inline sections,
+// appended after includes. include/exclude add/remove sections post-composition
+// (exclude wins, applied last).
 type profileSpec struct {
 	IncludeProfiles   []string       `yaml:"include-profiles"`
 	LoadConfiguration map[string]any `yaml:"load-configuration"`
@@ -42,8 +41,8 @@ type profileSpec struct {
 	Exclude           sectionSet     `yaml:"exclude"`
 }
 
-// sectionSet is the include/exclude payload: extra profiles to compose plus
-// per-section path/unit lists.
+// sectionSet is the include/exclude payload: extra profiles plus per-section
+// path/unit lists.
 type sectionSet struct {
 	Profiles          []string `yaml:"profiles"`
 	LoadConfiguration []string `yaml:"load-configuration"`
@@ -52,10 +51,9 @@ type sectionSet struct {
 	Services          []string `yaml:"services"`
 }
 
-// effective is the detected profile's composed selection before file classification.
-// globOps is an ordered op list (include +/exclude −) in composition order; a file
-// is selected iff the LAST op matching it is an include. Dirs/Install/Services are
-// exact-subtracted as they merge.
+// effective is the composed selection before file classification. globOps is
+// ordered (include +/exclude −) in composition order, a file is selected iff its
+// LAST matching op is an include. Dirs/Install/Services exact-subtract on merge.
 type effective struct {
 	globOps  []globOp // ordered include/exclude globs (relative to root/)
 	dirs     []string // make-extra-dirs
@@ -68,8 +66,8 @@ type globOp struct {
 	include bool // true = include, false = exclude
 }
 
-// Resolved is the classified, repo-relative selection the host/repo passes consume.
-// Links/Copies/Templates/Dirs are under root/; Installs/Services are spec lists.
+// Resolved is the classified, repo-relative selection the passes consume.
+// Links/Copies/Templates/Dirs are under root/, Installs/Services are spec lists.
 type Resolved struct {
 	Links     []string // link pass: regular files minus templates/copies/.gitkeep
 	Copies    []string // copy pass: *.host.cp
@@ -80,8 +78,8 @@ type Resolved struct {
 	Installs  []string // install unit entries in spec order
 }
 
-// Load parses che.yml: the `profiles:` enum, plus every other top-level key as a
-// defined block (leaf profiles and included profiles alike).
+// Load parses che.yml: the `profiles:` enum plus every other top-level key as a
+// defined block.
 func Load(path string) (*Raw, error) {
 	b, err := os.ReadFile(path)
 	if err != nil {
@@ -108,9 +106,9 @@ func Load(path string) (*Raw, error) {
 	return s, nil
 }
 
-// Resolve validates the detected profile is defined, composes its include-profiles
-// and inline sections, then classifies the git-tracked files under root into
-// Links/Copies/Templates/Dirs. Output is repo-relative; host/repo map to dest.
+// Resolve validates the profile is defined, composes its include-profiles and
+// inline sections, then classifies git-tracked files under root into
+// Links/Copies/Templates/Dirs. Output is repo-relative.
 func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 	if !r.isDetectable(profile) {
 		return Resolved{}, fmt.Errorf(
@@ -121,7 +119,7 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 	if err := r.mergeInto(&eff, profile, nil); err != nil {
 		return Resolved{}, err
 	}
-	// brace-expand all path/glob lists (zsh-style {a,b}); ops keep their order
+	// brace-expand path/glob lists (zsh-style {a,b}), ops keep order
 	eff.globOps = expandOps(eff.globOps)
 	res := Resolved{
 		ExtraDirs: fsutil.ExpandAll(eff.dirs),
@@ -134,8 +132,8 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 	return res, nil
 }
 
-// classify expands the load-configuration ops against the git-tracked files under
-// root and buckets them into Links/Copies/Templates + their ancestor Dirs.
+// classify applies the load-configuration ops to git-tracked files under root,
+// bucketing them into Links/Copies/Templates plus ancestor Dirs.
 func classify(root string, ops []globOp, res *Resolved) error {
 	tracked, err := fsutil.TrackedFiles(root)
 	if err != nil {
@@ -164,12 +162,11 @@ func classify(root string, ops []globOp, res *Resolved) error {
 	slices.Sort(res.Links)
 	slices.Sort(res.Copies)
 	slices.Sort(res.Templates)
-	slices.Sort(res.Dirs) // lexical -> parents before children
+	slices.Sort(res.Dirs) // lexical, parents before children
 	return nil
 }
 
-// selected applies the ordered load-configuration ops: a file is selected iff the
-// LAST op whose glob matches it is an include. Unmatched files are not selected.
+// selected: a file is selected iff its LAST matching op is an include.
 func selected(ops []globOp, rel string) bool {
 	sel := false
 	for _, op := range ops {
@@ -191,9 +188,9 @@ func expandOps(ops []globOp) []globOp {
 	return out
 }
 
-// mergeInto composes name into eff: its include-profiles (depth-first, in order),
-// its inline sections, then its own include (additive) and exclude (subtractive
-// for dirs/install/services; exclude globs accumulate for file-time filtering).
+// mergeInto composes name into eff: include-profiles (depth-first), inline
+// sections, then its include (additive) and exclude (subtractive for
+// dirs/install/services, exclude globs accumulate for file-time filtering).
 // seen tracks the active chain to catch cycles.
 func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 	if slices.Contains(seen, name) {
@@ -214,8 +211,8 @@ func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 			return err
 		}
 	}
-	// load-configuration as ordered ops: this block's includes (+), then its
-	// excludes (−). Appended in composition order so later profiles override earlier.
+	// load-configuration ops: includes (+) then excludes (−), in composition
+	// order so later profiles override earlier
 	for _, g := range sortedKeys(ps.LoadConfiguration) {
 		eff.globOps = append(eff.globOps, globOp{g, true})
 	}

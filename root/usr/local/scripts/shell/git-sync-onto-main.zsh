@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
-#   Sync the working branch with main. Autostashes a dirty tree.
+#   Sync working branch with main. Autostash dirty tree.
 #   on main: fast-forward from origin.
 #   on a branch:
 #     1. fast-forward local main from origin

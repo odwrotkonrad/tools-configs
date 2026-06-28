@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// Install runs the profile's install units in spec-list order
+// Install runs profile install units in spec order.
 func (h Host) Install(scripts []string) error {
 	env := h.installEnv()
 	for _, script := range scripts {
@@ -28,7 +28,7 @@ func (h Host) Install(scripts []string) error {
 	return nil
 }
 
-// installEnv mirrors the Makefile $(ZSH) wrapper env + che's profile exports.
+// installEnv mirrors Makefile $(ZSH) wrapper env, che profile exports.
 func (h Host) installEnv() []string {
 	fns := filepath.Join(h.RepoRoot, "ci/zsh/functions")
 	scripts := filepath.Join(h.RepoRoot, "ci/zsh/scripts")
@@ -41,7 +41,7 @@ func (h Host) installEnv() []string {
 	return env
 }
 
-// prepend sets key=value:<existing> in a copy of env.
+// prepend sets key=value:<existing> in env copy.
 func prepend(env []string, key, value string) []string {
 	prefix := key + "="
 	out := make([]string, 0, len(env)+1)

@@ -24,10 +24,10 @@ class BaseInput(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def from_argv(cls, data: object) -> object:
-        """Build `params` from argv, and `config` only when the action needs it.
+        """Build `params` from argv, `config` only when the action needs it.
 
         Interfaces with:
-          - files: the /etc/custom config (read by `BaseConfig.fill`)
+          - files: /etc/custom config (via `BaseConfig.fill`)
         """
         if not isinstance(data, list):
             return data
@@ -41,7 +41,7 @@ class BaseInput(BaseModel):
     def validate_input(
         cls, argv: list[str]
     ) -> "tuple[Self, None] | tuple[None, err.Error]":
-        """Validate argv into the Input model, returning (input, None) or (None, error)."""
+        """Validate argv into Input: (input, None) or (None, error)."""
         try:
             return cls.model_validate(argv), None
         except err.Error as error:

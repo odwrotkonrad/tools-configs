@@ -46,7 +46,7 @@ typeset -A template_input=(
 )
 ##[<] template input 🤖
 
-#[what] skip llm if there is no diff
+#[what] no diff, skip llm
 if [[ -z $template_input[LATEST_COMMIT] && -z $template_input[DIFF_FULL] ]]; then
   jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
   exit 0

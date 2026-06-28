@@ -7,10 +7,9 @@ setopt errexit pipefail
 autoload -Uz fn-log-msg
 
 ###[>] retire brew gitlab-runner service
-#>[what]
-#   retire brew's gitlab-runner service so our repo-owned
-#   gitlab-runner.plist supervises the runner instead
-#/[what]
+#>[why]
+#   repo-owned gitlab-runner.plist supervises instead
+#/[why]
 
 uid=$(id -u)
 brew_plist="$HOME/Library/LaunchAgents/homebrew.mxcl.gitlab-runner.plist"
