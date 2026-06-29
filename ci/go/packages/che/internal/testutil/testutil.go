@@ -104,6 +104,7 @@ func MockRepoEnv(t *testing.T) string {
 	t.Chdir(dir)
 	t.Setenv("CHE_FORCE_PROFILE", CheProfile)
 	t.Setenv("HOME", home)
+	t.Setenv("XDG_DATA_HOME", filepath.Join(home, ".local/share"))
 	return home
 }
 

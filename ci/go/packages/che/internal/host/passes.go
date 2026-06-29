@@ -7,10 +7,22 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"configs/ci/go/packages/che/internal/fsutil"
 	"configs/ci/go/packages/che/internal/spec"
 )
+
+// Bin is che's binary name, carried in per-run backup archive filenames.
+const Bin = "che"
+
+// archiveBefore snapshots every existing dest into one per-run .tar.bz2 under
+// the XDG backups dir before a mutating pass runs (sub = pass identity).
+func (h Host) archiveBefore(sub string, dests []string) error {
+	ts := time.Now().Format(fsutil.TsLayout)
+	path := fsutil.BackupArchivePath(h.Home, Bin, sub, ts)
+	return h.fs.ArchiveDests(path, dests)
+}
 
 // MkDirs creates repo-tree ancestor dirs (parents first) plus profile extra-dirs.
 func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
@@ -72,9 +84,17 @@ func (h Host) mkExtraDir(item spec.FileItem, dest string) error {
 	return nil
 }
 
-// MkLinks symlinks each config into its live dest (ln -fhs), backing up non-repo dests, skipping links already pointing into the repo.
+// MkLinks symlinks each config into its live dest (ln -fhs), archiving existing
+// dests upfront, skipping links already pointing into the repo.
 func (h Host) MkLinks(links []spec.FileItem, dirRels []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
+		return err
+	}
+	dests := make([]string, len(links))
+	for i, item := range links {
+		dests[i] = h.ToDest(item.Rel)
+	}
+	if err := h.archiveBefore("link", dests); err != nil {
 		return err
 	}
 	for _, item := range links {
@@ -86,9 +106,6 @@ func (h Host) MkLinks(links []spec.FileItem, dirRels []string) error {
 				continue
 			}
 		}
-		if err := h.fs.BackupBeforeOverwrite(dest, true); err != nil {
-			return err
-		}
 		if err := h.fs.Symlink(src, dest); err != nil {
 			return err
 		}
@@ -97,9 +114,17 @@ func (h Host) MkLinks(links []spec.FileItem, dirRels []string) error {
 }
 
 // MkCopies copies each *.host.cp to its dest(s) (marker stripped, or explicit
-// dest) when contents differ, backing up first, applying spec perms (else default).
+// dest) when contents differ, archiving existing dests upfront, applying spec
+// perms (else default).
 func (h Host) MkCopies(copies []spec.FileItem, dirRels []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
+		return err
+	}
+	var dests []string
+	for _, item := range copies {
+		dests = append(dests, h.copyDests(item)...)
+	}
+	if err := h.archiveBefore("copy", dests); err != nil {
 		return err
 	}
 	for _, item := range copies {
@@ -107,9 +132,6 @@ func (h Host) MkCopies(copies []spec.FileItem, dirRels []string) error {
 		for _, dest := range h.copyDests(item) {
 			if sameContent(src, dest) {
 				continue
-			}
-			if err := h.fs.BackupBeforeOverwrite(dest, false); err != nil {
-				return err
 			}
 			mode, _ := parseMode(item.Chmod)
 			if err := h.fs.Copy(src, dest, mode); err != nil {
@@ -181,7 +203,7 @@ func sameContent(a, b string) bool {
 	return string(x) == string(y)
 }
 
-// PruneBrokenLinks removes broken symlinks in config-set dirs (live dests), skipping *.bk backups.
+// PruneBrokenLinks removes broken symlinks in config-set dirs (live dests).
 func (h Host) PruneBrokenLinks(dirRels []string) error {
 	h.fs.Log("prune-links", h.Root)
 	seen := map[string]bool{}
@@ -196,11 +218,7 @@ func (h Host) PruneBrokenLinks(dirRels []string) error {
 			continue // [why] dir may not exist on host yet
 		}
 		for _, e := range entries {
-			name := e.Name()
-			if strings.HasSuffix(name, ".bk") {
-				continue
-			}
-			p := filepath.Join(dest, name)
+			p := filepath.Join(dest, e.Name())
 			fi, lerr := os.Lstat(p)
 			if lerr != nil || fi.Mode()&os.ModeSymlink == 0 {
 				continue

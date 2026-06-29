@@ -33,7 +33,7 @@ func New(repoRoot, home, profile string, dryRun bool) Host {
 		Home:     home,
 		Profile:  profile,
 		DryRun:   dryRun,
-		fs:       fsutil.FS{Home: home, Root: root, DryRun: dryRun},
+		fs:       fsutil.FS{Home: home, DryRun: dryRun},
 	}
 }
 

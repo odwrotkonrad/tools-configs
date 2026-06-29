@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/go-git/go-git/v5"
 
@@ -19,7 +18,6 @@ import (
 // dest outside invoking user's Home).
 type FS struct {
 	Home   string
-	Root   string // repo root/ tree; repo-aware backups skip links into it
 	DryRun bool
 }
 
@@ -136,35 +134,6 @@ func (f FS) Priv(dest string, argv ...string) error {
 		argv = append([]string{"sudo"}, argv...)
 	}
 	return run(exec.Command(argv[0], argv[1:]...))
-}
-
-// BackupBeforeOverwrite copies existing dest -> dest.<ts>.bk before clobber.
-// repoAware: skip symlinks resolving into repo root (links we made).
-func (f FS) BackupBeforeOverwrite(dest string, repoAware bool) error {
-	fi, err := os.Lstat(dest)
-	if err != nil {
-		return nil // nothing to preserve
-	}
-	if fi.Mode()&os.ModeSymlink != 0 {
-		target, terr := os.Readlink(dest)
-		if terr == nil {
-			if _, serr := os.Stat(dest); serr != nil {
-				return nil // broken link: nothing to preserve
-			}
-			if repoAware {
-				abs := target
-				if !filepath.IsAbs(abs) {
-					abs = filepath.Join(filepath.Dir(dest), target)
-				}
-				if resolved, rerr := filepath.EvalSymlinks(abs); rerr == nil &&
-					strings.HasPrefix(resolved, f.Root+"/") {
-					return nil // a link we own
-				}
-			}
-		}
-	}
-	bk := dest + "." + time.Now().Format("20060102T150405") + ".bk"
-	return f.mutate("backup", bk, dest, "cp", "-p", dest, bk)
 }
 
 func run(c *exec.Cmd) error {

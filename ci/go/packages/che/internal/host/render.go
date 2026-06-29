@@ -15,12 +15,32 @@ import (
 // Glob-form items (no explicit dest) render to the derived live path; rich items
 // fan out across their dests, inlining @-includes per RenderReferencedFiles.
 func (h Host) RenderTemplates(templates []spec.FileItem) error {
+	var dests []string
+	for _, item := range templates {
+		dests = append(dests, h.templateDests(item)...)
+	}
+	if err := h.archiveBefore("render", dests); err != nil {
+		return err
+	}
 	for _, item := range templates {
 		if err := h.renderTemplate(item); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// templateDests returns an item's live dests: derived path (glob-form, no
+// explicit dest) else its expanded dests.
+func (h Host) templateDests(item spec.FileItem) []string {
+	if len(item.Dests) == 0 {
+		return []string{h.ToDest(strings.TrimSuffix(item.Rel, spec.TmplExt))}
+	}
+	out := make([]string, len(item.Dests))
+	for i, d := range item.Dests {
+		out[i] = h.expandHome(d.Path)
+	}
+	return out
 }
 
 func (h Host) renderTemplate(item spec.FileItem) error {
@@ -54,11 +74,8 @@ func (h Host) renderTemplate(item spec.FileItem) error {
 	return nil
 }
 
-// placeFile backs up dest, installs body with spec perms (mode 0 -> install default, no chown).
+// placeFile installs body with spec perms (mode 0 -> install default, no chown).
 func (h Host) placeFile(dest string, body []byte, item spec.FileItem) error {
-	if err := h.fs.BackupBeforeOverwrite(dest, true); err != nil {
-		return err
-	}
 	mode, _ := parseMode(item.Chmod)
 	return h.fs.Install(dest, body, mode, ownerSpec(item))
 }

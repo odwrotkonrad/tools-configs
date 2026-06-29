@@ -4,6 +4,7 @@ go 1.26.3
 
 require (
 	github.com/1password/onepassword-sdk-go v0.4.0
+	github.com/dsnet/compress v0.0.1
 	github.com/go-git/go-git/v5 v5.19.1
 	github.com/hairyhenderson/gomplate/v4 v4.3.3
 	github.com/spf13/cobra v1.10.2
