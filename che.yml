@@ -83,6 +83,10 @@ base:
       - HOME/.local/{bin,share}
       - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
       - HOME/ScreenCapture
+      - dest: [{path: /etc/zsh/zshrc.d/completions}]
+        owner: root
+        owner-group: wheel
+        chmod: "0755"
       - /var/root/.cache/zsh
       - /var/root/.config
       - /var/root/.local/state/zsh/completions

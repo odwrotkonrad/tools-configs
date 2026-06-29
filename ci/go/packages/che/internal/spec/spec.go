@@ -37,12 +37,12 @@ type profileSpec struct {
 // includeSet is the additive payload: link globs, copy/template/mkdirs entries
 // (glob-string OR rich object), install globs, service names.
 type includeSet struct {
-	Link     []string    `yaml:"link"`
-	Copy     []copyEntry `yaml:"copy"`
-	Template []tmplEntry `yaml:"template"`
-	Mkdirs   []dirEntry  `yaml:"mkdirs"`
-	Install  []string    `yaml:"install"`
-	Services []string    `yaml:"services"`
+	Link     []string `yaml:"link"`
+	Copy     []entry  `yaml:"copy"`
+	Template []entry  `yaml:"template"`
+	Mkdirs   []entry  `yaml:"mkdirs"`
+	Install  []string `yaml:"install"`
+	Services []string `yaml:"services"`
 }
 
 // excludeSet is the subtractive payload: every key a flat glob-string list, a
@@ -56,45 +56,30 @@ type excludeSet struct {
 	Services []string `yaml:"services"`
 }
 
-// destOpt is a parsed dest entry: a path plus per-dest options.
-type destOpt struct {
+// DestSpec is one dest path plus per-dest template option.
+type DestSpec struct {
 	Path                  string `yaml:"path"`
 	RenderReferencedFiles bool   `yaml:"render-referenced-files"`
 }
 
-// copyEntry / tmplEntry / dirEntry are a YAML union: a bare glob string, or a
-// rich object carrying explicit dest(s) + perms. glob reports the glob form.
-type copyEntry struct {
+// entry is a copy/template/mkdirs YAML union: a bare glob string, or a rich
+// object carrying explicit dest(s) + perms. glob is set iff the glob form.
+type entry struct {
 	glob       string
-	Source     string    `yaml:"source"`
-	Dest       []destOpt `yaml:"dest"`
-	Owner      string    `yaml:"owner"`
-	OwnerGroup string    `yaml:"owner-group"`
-	Chmod      string    `yaml:"chmod"`
+	Source     string     `yaml:"source"`
+	Dest       []DestSpec `yaml:"dest"`
+	Owner      string     `yaml:"owner"`
+	OwnerGroup string     `yaml:"owner-group"`
+	Chmod      string     `yaml:"chmod"`
 }
 
-type tmplEntry copyEntry
-type dirEntry copyEntry
-
-func unmarshalEntry(value *yaml.Node, glob *string, rich any) error {
+func (e *entry) UnmarshalYAML(value *yaml.Node) error {
 	if value.Kind == yaml.ScalarNode {
-		*glob = value.Value
+		e.glob = value.Value
 		return nil
 	}
-	return value.Decode(rich)
-}
-
-func (e *copyEntry) UnmarshalYAML(value *yaml.Node) error {
-	type alias copyEntry
-	return unmarshalEntry(value, &e.glob, (*alias)(e))
-}
-func (e *tmplEntry) UnmarshalYAML(value *yaml.Node) error {
-	type alias tmplEntry
-	return unmarshalEntry(value, &e.glob, (*alias)(e))
-}
-func (e *dirEntry) UnmarshalYAML(value *yaml.Node) error {
-	type alias dirEntry
-	return unmarshalEntry(value, &e.glob, (*alias)(e))
+	type alias entry
+	return value.Decode((*alias)(e))
 }
 
 // FileItem is one resolved file: repo-relative source (under root/), explicit
@@ -105,12 +90,6 @@ type FileItem struct {
 	Owner      string
 	OwnerGroup string
 	Chmod      string
-}
-
-// DestSpec is one resolved dest path plus per-dest template option.
-type DestSpec struct {
-	Path                  string
-	RenderReferencedFiles bool
 }
 
 // Resolved is the classified, repo-relative selection the passes consume.
@@ -124,22 +103,19 @@ type Resolved struct {
 	Installs  []string   // install unit entries in spec order
 }
 
-// globPerms carries the perms an include glob confers on its classified files.
-type globPerms struct {
-	owner, ownerGroup, chmod string
-}
-
 // effective is the composed additive selection before classification + exclude.
+// Glob forms are bare strings (a YAML scalar carries no perms); only rich
+// entries carry perms, so glob-classified files never have any.
 type effective struct {
-	linkGlobs []string             // link-pass globs (repo-relative under root/)
-	copyGlobs []string             // copy-pass globs
-	tmplGlobs []string             // template-pass globs
-	perms     map[string]globPerms // glob -> perms (copy/template glob forms)
-	richCopy  []FileItem           // rich-form copy entries
-	richTmpl  []FileItem           // rich-form template entries
-	dirs      []FileItem           // mkdirs (glob + rich), one FileItem per entry, path in Dests
-	install   []string             // install unit paths (order = run order)
-	services  []string             // service names
+	linkGlobs []string   // link-pass globs (repo-relative under root/)
+	copyGlobs []string   // copy-pass globs
+	tmplGlobs []string   // template-pass globs
+	richCopy  []FileItem // rich-form copy entries
+	richTmpl  []FileItem // rich-form template entries
+	dirs      []FileItem // mkdirs: glob forms expanded to one item per path, rich carry perms
+	install   []string   // install unit paths (order = run order)
+	services  []string   // service names
+	exclude   excludeSet // accumulated exclude globs (applied last, wins)
 }
 
 // Load parses che.yml: the `profiles:` enum plus every other top-level key as a
@@ -179,12 +155,12 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 			"detected profile %q is not defined in che.yml (defined: %v)",
 			profile, r.detectableLeaves())
 	}
-	eff := effective{perms: map[string]globPerms{}}
+	var eff effective
 	if err := r.mergeInto(&eff, profile, nil); err != nil {
 		return Resolved{}, err
 	}
 	res := Resolved{
-		ExtraDirs: expandDirs(eff.dirs),
+		ExtraDirs: eff.dirs,
 		Installs:  fsutil.ExpandAll(eff.install),
 		Services:  fsutil.ExpandAll(eff.services),
 		Copies:    eff.richCopy,
@@ -193,7 +169,7 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 	if err := classify(root, eff, &res); err != nil {
 		return Resolved{}, err
 	}
-	r.applyExcludes(profile, &res)
+	applyExcludes(eff.exclude, &res)
 	return res, nil
 }
 
@@ -215,9 +191,9 @@ func classify(root string, eff effective, res *Resolved) error {
 		}
 		switch {
 		case matchAny(tmpls, rel) && strings.HasSuffix(rel, TmplExt):
-			res.Templates = append(res.Templates, fileItem(rel, eff, tmpls))
+			res.Templates = append(res.Templates, FileItem{Rel: rel})
 		case matchAny(copies, rel) && strings.HasSuffix(rel, CpExt):
-			res.Copies = append(res.Copies, fileItem(rel, eff, copies))
+			res.Copies = append(res.Copies, FileItem{Rel: rel})
 		case filepath.Base(rel) == ".gitkeep":
 			// excluded from every pass
 		case matchAny(links, rel):
@@ -238,20 +214,6 @@ func richRels(eff effective) map[string]bool {
 		m[it.Rel] = true
 	}
 	return m
-}
-
-// fileItem builds a glob-derived FileItem (no explicit dest), inheriting the
-// perms of the last matching glob.
-func fileItem(rel string, eff effective, globs []string) FileItem {
-	fi := FileItem{Rel: rel}
-	for _, g := range globs {
-		if fsutil.MatchGlob(strings.TrimSuffix(g, "/"), rel) {
-			if p, ok := eff.perms[g]; ok {
-				fi.Owner, fi.OwnerGroup, fi.Chmod = p.owner, p.ownerGroup, p.chmod
-			}
-		}
-	}
-	return fi
 }
 
 // collectDirs derives every ancestor dir of the file items into res.Dirs.
@@ -287,10 +249,7 @@ func matchAny(globs []string, rel string) bool {
 
 // applyExcludes drops items matching any exclude glob across all keys. Excludes
 // win over everything, including rich include entries.
-func (r *Raw) applyExcludes(profile string, res *Resolved) {
-	var ex excludeSet
-	r.collectExcludes(profile, nil, &ex)
-
+func applyExcludes(ex excludeSet, res *Resolved) {
 	link := fsutil.ExpandAll(ex.Link)
 	copyG := fsutil.ExpandAll(ex.Copy)
 	tmplG := fsutil.ExpandAll(ex.Template)
@@ -308,27 +267,6 @@ func (r *Raw) applyExcludes(profile string, res *Resolved) {
 	res.Dirs = nil
 	collectDirs(res)
 	res.Dirs = dropStrings(res.Dirs, dirG)
-}
-
-// collectExcludes accumulates every mixin's exclude globs (composition order).
-func (r *Raw) collectExcludes(name string, seen []string, ex *excludeSet) {
-	if slices.Contains(seen, name) {
-		return
-	}
-	ps, ok := r.profiles[name]
-	if !ok {
-		return
-	}
-	child := append(slices.Clone(seen), name)
-	for _, m := range ps.MixinProfiles {
-		r.collectExcludes(m, child, ex)
-	}
-	ex.Link = append(ex.Link, ps.Exclude.Link...)
-	ex.Copy = append(ex.Copy, ps.Exclude.Copy...)
-	ex.Template = append(ex.Template, ps.Exclude.Template...)
-	ex.Mkdirs = append(ex.Mkdirs, ps.Exclude.Mkdirs...)
-	ex.Install = append(ex.Install, ps.Exclude.Install...)
-	ex.Services = append(ex.Services, ps.Exclude.Services...)
 }
 
 // dropFiles drops any FileItem whose rel or any dest matches an exclude glob.
@@ -376,104 +314,57 @@ func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 	}
 	in := ps.Include
 	eff.linkGlobs = append(eff.linkGlobs, in.Link...)
-	addEntries(eff, copyKind, in.Copy)
-	addEntries(eff, tmplKind, asCopy(in.Template))
-	addDirs(eff, in.Mkdirs)
+	splitEntries(in.Copy, &eff.copyGlobs, &eff.richCopy)
+	splitEntries(in.Template, &eff.tmplGlobs, &eff.richTmpl)
+	for _, e := range in.Mkdirs {
+		eff.dirs = append(eff.dirs, dirItems(e)...)
+	}
 	eff.install = append(eff.install, in.Install...)
 	eff.services = append(eff.services, in.Services...)
+	eff.exclude.append(ps.Exclude)
 	return nil
 }
 
-type kind int
-
-const (
-	copyKind kind = iota
-	tmplKind
-)
-
-func asCopy(ts []tmplEntry) []copyEntry {
-	out := make([]copyEntry, len(ts))
-	for i, t := range ts {
-		out[i] = copyEntry(t)
-	}
-	return out
+// append accumulates another profile's exclude globs (composition order).
+func (ex *excludeSet) append(o excludeSet) {
+	ex.Link = append(ex.Link, o.Link...)
+	ex.Copy = append(ex.Copy, o.Copy...)
+	ex.Template = append(ex.Template, o.Template...)
+	ex.Mkdirs = append(ex.Mkdirs, o.Mkdirs...)
+	ex.Install = append(ex.Install, o.Install...)
+	ex.Services = append(ex.Services, o.Services...)
 }
 
-// addEntries routes copy/template entries: glob form -> glob list (+perms),
-// rich form -> FileItem.
-func addEntries(eff *effective, k kind, entries []copyEntry) {
+// splitEntries routes each entry to globs (glob form) or rich FileItems (rich form).
+func splitEntries(entries []entry, globs *[]string, rich *[]FileItem) {
 	for _, e := range entries {
 		if e.glob != "" {
-			if k == tmplKind {
-				eff.tmplGlobs = append(eff.tmplGlobs, e.glob)
-			} else {
-				eff.copyGlobs = append(eff.copyGlobs, e.glob)
-			}
-			if e.Owner != "" || e.OwnerGroup != "" || e.Chmod != "" {
-				eff.perms[e.glob] = globPerms{e.Owner, e.OwnerGroup, e.Chmod}
-			}
-			continue
-		}
-		fi := FileItem{
-			Rel:        e.Source,
-			Dests:      dests(e.Dest),
-			Owner:      e.Owner,
-			OwnerGroup: e.OwnerGroup,
-			Chmod:      e.Chmod,
-		}
-		if k == tmplKind {
-			eff.richTmpl = append(eff.richTmpl, fi)
+			*globs = append(*globs, e.glob)
 		} else {
-			eff.richCopy = append(eff.richCopy, fi)
+			*rich = append(*rich, e.item(e.Source, e.Dest))
 		}
 	}
 }
 
-// addDirs routes mkdirs entries: glob form -> FileItem with one dest, no perms;
-// rich form -> FileItem with its dests + perms.
-func addDirs(eff *effective, entries []dirEntry) {
-	for _, e := range entries {
-		if e.glob != "" {
-			eff.dirs = append(eff.dirs, FileItem{Dests: []DestSpec{{Path: e.glob}}})
-			continue
-		}
-		eff.dirs = append(eff.dirs, FileItem{
-			Dests:      dests(e.Dest),
-			Owner:      e.Owner,
-			OwnerGroup: e.OwnerGroup,
-			Chmod:      e.Chmod,
-		})
+// dirItems expands a mkdirs entry into one FileItem per brace-expanded dest path,
+// each carrying the entry's perms (path in Dests[0]).
+func dirItems(e entry) []FileItem {
+	paths := e.Dest
+	if e.glob != "" {
+		paths = []DestSpec{{Path: e.glob}}
 	}
-}
-
-// expandDirs brace-expands each dir entry's dest paths into one FileItem per
-// resulting path, carrying the entry's perms. Path lives in Dests[0].
-func expandDirs(entries []FileItem) []FileItem {
 	var out []FileItem
-	for _, e := range entries {
-		for _, d := range e.Dests {
-			for _, p := range fsutil.ExpandBraces(d.Path) {
-				out = append(out, FileItem{
-					Dests:      []DestSpec{{Path: p}},
-					Owner:      e.Owner,
-					OwnerGroup: e.OwnerGroup,
-					Chmod:      e.Chmod,
-				})
-			}
+	for _, d := range paths {
+		for _, p := range fsutil.ExpandBraces(d.Path) {
+			out = append(out, e.item("", []DestSpec{{Path: p}}))
 		}
 	}
 	return out
 }
 
-func dests(opts []destOpt) []DestSpec {
-	if len(opts) == 0 {
-		return nil
-	}
-	out := make([]DestSpec, len(opts))
-	for i, o := range opts {
-		out[i] = DestSpec{Path: o.Path, RenderReferencedFiles: o.RenderReferencedFiles}
-	}
-	return out
+// item builds a FileItem carrying the entry's perms.
+func (e entry) item(rel string, dests []DestSpec) FileItem {
+	return FileItem{Rel: rel, Dests: dests, Owner: e.Owner, OwnerGroup: e.OwnerGroup, Chmod: e.Chmod}
 }
 
 // isDetectable reports whether profile is both declared in the enum and defined.

@@ -61,8 +61,9 @@ func (h Host) mkExtraDir(item spec.FileItem, rel, dest, user string) error {
 	if m, ok := parseMode(item.Chmod); ok {
 		mode = m
 	}
-	if owner := ownerSpec(item); owner != "" {
-		asUser = "" // explicit owner set below via chown, not via mkdir -u
+	owner := ownerSpec(item)
+	if owner != "" {
+		asUser = "" // explicit owner applied via chown below, not mkdir -u
 	}
 	if err := h.fs.Mkdir(dest, asUser, mode, true); err != nil {
 		return err
@@ -72,7 +73,7 @@ func (h Host) mkExtraDir(item spec.FileItem, rel, dest, user string) error {
 			return err
 		}
 	}
-	if owner := ownerSpec(item); owner != "" {
+	if owner != "" {
 		return h.fs.Chown(owner, dest)
 	}
 	return nil

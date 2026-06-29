@@ -147,9 +147,7 @@ func dirPaths(items []FileItem) []string {
 }
 
 // hasDir reports whether res.ExtraDirs carries the given path.
-func hasDir(res Resolved, path string) bool {
-	return slices.Contains(dirPaths(res.ExtraDirs), path)
-}
+func hasDir(res Resolved, path string) bool { return findDir(res, path) != nil }
 
 // findDir returns the dir FileItem with the given dest path, or nil.
 func findDir(res Resolved, path string) *FileItem {
