@@ -228,18 +228,32 @@ func (h Host) PruneBrokenLinks(dirRels []string) error {
 		}
 		for _, e := range entries {
 			p := filepath.Join(dest, e.Name())
-			fi, lerr := os.Lstat(p)
-			if lerr != nil || fi.Mode()&os.ModeSymlink == 0 {
+			if !h.brokenRepoLink(p) {
 				continue
 			}
-			if _, serr := os.Stat(p); serr != nil { // [what] broken: target gone
-				if err := h.fs.Remove(p); err != nil {
-					return err
-				}
+			if err := h.fs.Remove(p); err != nil {
+				return err
 			}
 		}
 	}
 	return nil
+}
+
+// brokenRepoLink: chech if p is a symlink into root/ whose target is gone.
+func (h Host) brokenRepoLink(p string) bool {
+	target, err := os.Readlink(p) // [what] non-symlink -> err
+	if err != nil {
+		return false
+	}
+	if !filepath.IsAbs(target) {
+		target = filepath.Join(filepath.Dir(p), target)
+	}
+	target = filepath.Clean(target)
+	if target != h.Root && !strings.HasPrefix(target, h.Root+"/") {
+		return false
+	}
+	_, err = os.Stat(p) // [what] broken
+	return err != nil
 }
 
 // [<] 🤖🤖

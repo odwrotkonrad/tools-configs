@@ -6,6 +6,7 @@ workflow:
 
 stages:
   - validate
+  - dry-run
   - test
 
 .base:
@@ -14,6 +15,15 @@ stages:
   ##[>] 🤖🤖
   variables:
     GO_VERSION: "1.26.3"
+    GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
+    GOCACHE: $CI_PROJECT_DIR/.cache/go-build
+  cache:
+    key:
+      files:
+        - ci/go/go.sum
+    paths:
+      - .cache/go-mod
+      - .cache/go-build
   ##[<] 🤖🤖
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang
@@ -41,27 +51,45 @@ validate-typecheck:
   script:
     - make run-repo-ci-typecheck
 
+dry-run-sync:
+  extends: .base
+  stage: dry-run
+  parallel:
+    matrix:
+      - CHE_FORCE_PROFILE: [desktop/macos, cli/macos, cli/linux]
+  script:
+    - MK_DRY_RUN=all make run-sync-full
+
 test-scripts:
   extends: .base
   stage: test
   script:
     - make run-repo-ci-tests
 
-test-configs-e2e-macos:
-  stage: test
+.e2e-macos:
+  #[why] macos remote vms have minimum lease time of 24h, I don't need 24/7 instance running so my local machine polls gitlab pipeline, executes the job and sends results back
+  tags: [local]
+  image: macos-tahoe-vanilla-base
+  resource_group: macos-local-vm
+  interruptible: true  #[what] new commits will cancel this job to free up resource 🤖
+  variables:
+    GIT_CLONE_PATH: $CI_BUILDS_DIR/configs
+
+dry-run-sync-desktop-macos-local-vm:
+  extends: .e2e-macos
+  stage: dry-run
   needs: []
+  script:
+    - MK_DRY_RUN=all make run-sync
+
+
+sync-macos-local-vm:
+  extends: .e2e-macos
+  stage: test
+  needs: [dry-run-sync-desktop-macos-local-vm]
   rules:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
     - when: on_success
-  #[why] macos remote vms have minimum lease time of 24h, I don't need 24/7 instance running so my local machine polls gitlab pipeline, executes the job and sends results back
-  tags: [local]
-  image: macos-tahoe-vanilla-base
-  resource_group: local-macos
-  interruptible: true  #[what] new commits will cancel this job to free up resource 🤖
-  variables:
-    GIT_CLONE_PATH: $CI_BUILDS_DIR/configs
   script:
-    - make run-host-upsert-configs
-    - make run-host-mk-dirs
-    - make run-host-install-all
+    - make run-sync

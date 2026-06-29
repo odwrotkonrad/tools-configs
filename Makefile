@@ -74,11 +74,11 @@ run-repo-ci-prepare-hooks:
 
 #[what] install build deps (go toolchain from go.dev)
 run-repo-ci-install-deps:
-	@10-golang.zsh
+	@10-golang.zsh $@
 
 #[what] compile ci/go cmds into ci/go/bin
 run-repo-ci-prepare-executables: | run-repo-ci-install-deps
-	@go build -C ci/go -o bin/ ./packages/...
+	@go build -C ci/go -o bin/ ./packages/... $@
 
 ###[>] VM
 #[what] build vanilla base vm image
@@ -95,9 +95,7 @@ run-repo-ci-vm-ssh:
 
 #[what] build vm then run the che ops in it (cli/macos profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
-	@$(IN_VM) 'make run-host-upsert-configs'
-	@$(IN_VM) 'make run-host-mk-dirs'
-	@$(IN_VM) 'make run-host-install-all'
-	@$(IN_VM) 'make run-host-render-templates'
+	@$(IN_VM) 'make run-sync-full'
+
 ###[<] VM
 ##[<] Onto Repo
