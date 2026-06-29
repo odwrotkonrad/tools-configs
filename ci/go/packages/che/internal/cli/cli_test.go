@@ -31,8 +31,8 @@ func TestBuildDryRunEnvFallback(t *testing.T) {
 	if err := build(); err != nil {
 		t.Fatalf("build() errored: %v", err)
 	}
-	if !theHost.DryRun {
-		t.Fatal("DryRun = false, want true (CHE_DRY_RUN=all from env)")
+	if !theHost.DryRunAll() {
+		t.Fatal("DryRunAll() = false, want true (CHE_DRY_RUN=all from env)")
 	}
 }
 

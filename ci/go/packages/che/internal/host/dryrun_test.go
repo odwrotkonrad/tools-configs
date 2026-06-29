@@ -132,7 +132,7 @@ func TestDryRunAllReportsSettledDests(t *testing.T) {
 	}
 }
 
-// each pass dry-run: prints actions, mutates nothing.
+// each op dry-run: prints actions, mutates nothing.
 func TestDryRunPasses(t *testing.T) {
 	cases := []struct {
 		name    string

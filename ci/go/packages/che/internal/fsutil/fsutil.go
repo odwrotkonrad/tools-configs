@@ -49,7 +49,7 @@ func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 		f.Log("mkdir", dest)
 		return nil
 	}
-	argv := f.MkdirArgv(dest, asUser, modeArgOpt(mode), parents)
+	argv := f.MkdirArgv(dest, asUser, mode, parents)
 	if err := run(exec.Command(argv[0], argv[1:]...)); err != nil {
 		return err
 	}
@@ -59,15 +59,13 @@ func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 
 // MkdirArgv builds a mkdir argv, escalating per dest/asUser: asUser -> sudo -u
 // <user>, root-tree -> sudo unless root, HOME-tree -> direct. parents adds -p.
-// mode "" -> no -m (mkdir honors umask).
-func (f FS) MkdirArgv(dest, asUser, mode string, parents bool) []string {
+// mode 0 -> no -m (mkdir honors umask).
+func (f FS) MkdirArgv(dest, asUser string, mode os.FileMode, parents bool) []string {
 	base := []string{"mkdir"}
 	if parents {
 		base = append(base, "-p")
 	}
-	if mode != "" {
-		base = append(base, "-m", mode)
-	}
+	base = append(base, modeFlag(mode)...)
 	base = append(base, dest)
 	switch {
 	case asUser != "" && os.Geteuid() == 0:
@@ -144,15 +142,7 @@ func run(c *exec.Cmd) error {
 // ModeArg renders an octal mode for install/mkdir/chmod argv.
 func ModeArg(m os.FileMode) string { return fmt.Sprintf("%04o", m) }
 
-// modeArgOpt is ModeArg for a set mode, "" when unset (0) -> argv omits -m.
-func modeArgOpt(m os.FileMode) string {
-	if m == 0 {
-		return ""
-	}
-	return ModeArg(m)
-}
-
-// modeFlag is ["-m", <mode>] for a set mode, empty when unset (0).
+// modeFlag is ["-m", <mode>] for a set mode, nil when unset (0).
 func modeFlag(m os.FileMode) []string {
 	if m == 0 {
 		return nil

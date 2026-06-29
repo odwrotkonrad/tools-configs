@@ -3,6 +3,7 @@ package spec
 // [>] 🤖🤖
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -111,18 +112,18 @@ type FileItem struct {
 	Perms
 }
 
-// Resolved is the classified, repo-relative selection the passes consume.
+// Resolved is the classified, repo-relative selection the ops consume.
 type Resolved struct {
-	Links     []FileItem // link pass: regular files minus templates/copies/.gitkeep
-	Copies    []FileItem // copy pass: *.host.cp
-	Templates []FileItem // render pass: *.host.tpl
+	Links     []FileItem // link op: regular files minus templates/copies/.gitkeep
+	Copies    []FileItem // copy op: *.host.cp
+	Templates []FileItem // render op: *.host.tpl
 	Dirs      []string   // every ancestor dir of links+copies+templates, plus mkdirs
 	ExtraDirs []FileItem // mkdirs only (live dest entries), one per path, carrying perms
 	Services  []string   // service names
 	Installs  []string   // install unit entries in spec order
 }
 
-// globSet is an ordered list of pass globs, each carrying its group's perms
+// globSet is an ordered list of op globs, each carrying its group's perms
 // (zero Perms if none). Globs are brace-expanded on add.
 type globSet []globPerm
 
@@ -138,24 +139,27 @@ func (gs *globSet) add(glob string, perms Perms) {
 }
 
 // match returns the perms of the last glob matching rel, and whether any did.
-func (gs globSet) match(rel string) (Perms, bool) {
-	var p Perms
-	hit := false
+func (gs globSet) match(rel string) (perms Perms, hit bool) {
 	for _, g := range gs {
-		if fsutil.MatchGlob(strings.TrimSuffix(g.glob, "/"), rel) {
-			p, hit = g.perms, true
+		if globMatch(g.glob, rel) {
+			perms, hit = g.perms, true
 		}
 	}
-	return p, hit
+	return perms, hit
+}
+
+// globMatch matches rel against an op glob, ignoring a trailing slash.
+func globMatch(glob, rel string) bool {
+	return fsutil.MatchGlob(strings.TrimSuffix(glob, "/"), rel)
 }
 
 // effective is the composed additive selection before classification + exclude.
-// Each pass's globs carry their group's perms; classify stamps matched files
+// Each op's globs carry their group's perms; classify stamps matched files
 // with them (last match wins).
 type effective struct {
-	linkGlobs globSet    // link-pass globs (repo-relative under root/)
-	copyGlobs globSet    // copy-pass globs
-	tmplGlobs globSet    // template-pass globs
+	linkGlobs globSet    // link-op globs (repo-relative under root/)
+	copyGlobs globSet    // copy-op globs
+	tmplGlobs globSet    // template-op globs
 	richCopy  []FileItem // rich-form copy entries
 	richTmpl  []FileItem // rich-form template entries
 	dirs      []FileItem // mkdirs: glob forms expanded to one item per path, rich carry perms
@@ -236,7 +240,7 @@ func classify(root string, eff effective, res *Resolved) error {
 		case strings.HasSuffix(rel, TmplExt) && hit(eff.tmplGlobs, rel, &res.Templates):
 		case strings.HasSuffix(rel, CpExt) && hit(eff.copyGlobs, rel, &res.Copies):
 		case filepath.Base(rel) == ".gitkeep":
-			// excluded from every pass
+			// excluded from every op
 		case hit(eff.linkGlobs, rel, &res.Links):
 		}
 	}
@@ -286,15 +290,10 @@ func collectDirs(res *Resolved) {
 	slices.Sort(res.Dirs) // lexical, parents before children
 }
 
-func byRel(a, b FileItem) int { return strings.Compare(a.Rel, b.Rel) }
+func byRel(a, b FileItem) int { return cmp.Compare(a.Rel, b.Rel) }
 
 func matchAny(globs []string, rel string) bool {
-	for _, g := range globs {
-		if fsutil.MatchGlob(strings.TrimSuffix(g, "/"), rel) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(globs, func(g string) bool { return globMatch(g, rel) })
 }
 
 // applyExcludes drops items matching any exclude glob across all keys. Excludes

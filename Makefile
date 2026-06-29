@@ -3,6 +3,7 @@ SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
 COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
+IN_VM := $(CURDIR)/ci/zsh/scripts/run-in-vm.zsh -c
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -20,7 +21,7 @@ run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
-#[what] load configs onto host (profile-selected symlink + copy passes)
+#[what] load configs onto host (profile-selected symlink + copy ops)
 run-host-upsert-configs: | run-repo-ci-prepare-executables
 	@che link
 	@che copy
@@ -90,14 +91,13 @@ run-repo-ci-vm-build:
 
 #[what] ssh into the local vm
 run-repo-ci-vm-ssh:
-	@make-run-in-vm.zsh
+	@run-in-vm.zsh
 
-#[what] build vm then run the che passes in it (cli/macos profile)
-run-repo-ci-vm-test: SHELL := $(CURDIR)/ci/zsh/scripts/make-run-in-vm.zsh
+#[what] build vm then run the che ops in it (cli/macos profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
-	@make run-host-upsert-configs
-	@make run-host-mk-dirs
-	@make run-host-install-all
-	@make run-host-render-templates
+	@$(IN_VM) 'make run-host-upsert-configs'
+	@$(IN_VM) 'make run-host-mk-dirs'
+	@$(IN_VM) 'make run-host-install-all'
+	@$(IN_VM) 'make run-host-render-templates'
 ###[<] VM
 ##[<] Onto Repo

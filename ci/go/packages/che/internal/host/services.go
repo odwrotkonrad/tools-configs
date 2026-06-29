@@ -93,7 +93,7 @@ func (s Service) loaded() bool {
 // Bootout unloads each loaded service, then polls until it is gone.
 func (h Host) Bootout(services []Service) error {
 	for _, s := range services {
-		if h.DryRun {
+		if h.DryRun() {
 			log.Msg("bootout", s.target(), true)
 			continue
 		}
@@ -121,7 +121,7 @@ func (s Service) waitGone() {
 // Bootin bootstraps each service fresh from its plist. Does NOT auto-bootout.
 func (h Host) Bootin(services []Service) error {
 	for _, s := range services {
-		if h.DryRun {
+		if h.DryRun() {
 			log.Msg("bootstrap", s.target(), true)
 			continue
 		}
@@ -138,7 +138,7 @@ func (h Host) Bootin(services []Service) error {
 // Ensure settles, then verifies each long-running service has a live pid.
 // Errors if any is missing. No mutation.
 func (h Host) Ensure(services []Service) error {
-	if h.DryRun {
+	if h.DryRun() {
 		log.Msg("settle", fmt.Sprintf("%ds before pid check", settleSeconds), true)
 		for _, s := range services {
 			if s.LongRunning {

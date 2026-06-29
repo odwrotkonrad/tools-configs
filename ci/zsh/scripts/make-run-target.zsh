@@ -24,5 +24,5 @@ if [[ -n $MK_DRY_RUN && ${line%% *} != che ]] {
 }
 
 typeset -a words=( ${(z)line} )
-fn-annotate-with-sections ${~words}
+fn-annotate-with-sections ${~${(Q)words}}
 ##[<] 🤖🤖

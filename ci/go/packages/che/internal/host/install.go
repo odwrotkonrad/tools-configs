@@ -15,7 +15,7 @@ func (h Host) Install(scripts []string) error {
 	env := h.installEnv()
 	for _, script := range scripts {
 		h.fs.Log("install", script)
-		if h.DryRun {
+		if h.DryRun() {
 			continue
 		}
 		c := exec.Command(script)

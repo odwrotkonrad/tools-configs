@@ -17,7 +17,7 @@ import (
 const Bin = "che"
 
 // archiveBefore snapshots every existing dest into one per-run .tar.bz2 under
-// the XDG backups dir before a mutating pass runs (sub = pass identity).
+// the XDG backups dir before a mutating op runs (sub = op identity).
 func (h Host) archiveBefore(sub string, dests []string) error {
 	ts := time.Now().Format(fsutil.TsLayout)
 	path := fsutil.BackupArchivePath(h.Home, Bin, sub, ts)
@@ -30,9 +30,8 @@ func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
 		return err
 	}
 	for _, item := range extraDirs {
-		rel := item.Dests[0].Path
-		dest := h.ToDest(rel)
-		if !h.DryRunAll() && fsutil.IsDir(dest) {
+		dest := h.ToDest(item.Dests[0].Path)
+		if h.dirSettled(dest) {
 			continue
 		}
 		if err := h.mkExtraDir(item, dest); err != nil {
@@ -47,7 +46,7 @@ func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
 func (h Host) ensureConfigDirs(dirRels []string) error {
 	for _, rel := range dirRels {
 		dest := h.ToDest(rel)
-		if !h.DryRunAll() && fsutil.IsDir(dest) {
+		if h.dirSettled(dest) {
 			continue
 		}
 		if err := h.fs.Mkdir(dest, "", 0, false); err != nil {
@@ -57,28 +56,26 @@ func (h Host) ensureConfigDirs(dirRels []string) error {
 	return nil
 }
 
-// mkExtraDir creates one extra-dir with -p. Mode/owner from spec when set, else
-// mkdir runs with no -m (umask). A chmod with set-bits (>0777) reapplied via
-// chmod so the special bits stick.
+// dirSettled reports whether dest already exists as a dir and may be skipped
+// (DryRunAll forces every dest to report, so it never skips).
+func (h Host) dirSettled(dest string) bool {
+	return !h.DryRunAll() && fsutil.IsDir(dest)
+}
+
+// mkExtraDir creates one extra-dir with -p. Owner applied via chown (not mkdir
+// -u). Mode 0 -> umask. Set-bits (>0777) reapplied via chmod since mkdir -m may
+// drop them.
 func (h Host) mkExtraDir(item spec.FileItem, dest string) error {
-	var mode os.FileMode
-	asUser := ""
-	if m, ok := parseMode(item.Chmod); ok {
-		mode = m
-	}
-	owner := ownerSpec(item)
-	if owner != "" {
-		asUser = "" // explicit owner applied via chown below, not mkdir -u
-	}
-	if err := h.fs.Mkdir(dest, asUser, mode, true); err != nil {
+	mode, _ := parseMode(item.Chmod)
+	if err := h.fs.Mkdir(dest, "", mode, true); err != nil {
 		return err
 	}
-	if mode > 0777 { // set-uid/gid/sticky: mkdir -m may drop it, reapply
+	if mode > 0o777 {
 		if err := h.fs.Chmod(fsutil.ModeArg(mode), dest); err != nil {
 			return err
 		}
 	}
-	if owner != "" {
+	if owner := ownerSpec(item); owner != "" {
 		return h.fs.Chown(owner, dest)
 	}
 	return nil
@@ -98,21 +95,30 @@ func (h Host) MkLinks(links []spec.FileItem, dirRels []string) error {
 		return err
 	}
 	for _, item := range links {
-		rel := item.Rel
-		src := h.Src(rel)
-		dest := h.ToDest(rel)
-		if !h.DryRunAll() {
-			if resolved, rerr := filepath.EvalSymlinks(dest); rerr == nil {
-				if srcResolved, serr := filepath.EvalSymlinks(src); serr == nil && resolved == srcResolved {
-					continue
-				}
-			}
+		src := h.Src(item.Rel)
+		dest := h.ToDest(item.Rel)
+		if h.linkSettled(src, dest) {
+			continue
 		}
 		if err := h.fs.Symlink(src, dest); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// linkSettled reports whether dest already resolves to src (skippable). DryRunAll
+// forces every dest to report, so it never skips.
+func (h Host) linkSettled(src, dest string) bool {
+	if h.DryRunAll() {
+		return false
+	}
+	destResolved, err := filepath.EvalSymlinks(dest)
+	if err != nil {
+		return false
+	}
+	srcResolved, err := filepath.EvalSymlinks(src)
+	return err == nil && destResolved == srcResolved
 }
 
 // MkCopies copies each *.host.cp to its dest(s) (marker stripped, or explicit
@@ -131,15 +137,16 @@ func (h Host) MkCopies(copies []spec.FileItem, dirRels []string) error {
 	}
 	for _, item := range copies {
 		src := h.Src(item.Rel)
+		mode, _ := parseMode(item.Chmod)
+		owner := ownerSpec(item)
 		for _, dest := range h.copyDests(item) {
 			if !h.DryRunAll() && sameContent(src, dest) {
 				continue
 			}
-			mode, _ := parseMode(item.Chmod)
 			if err := h.fs.Copy(src, dest, mode); err != nil {
 				return err
 			}
-			if owner := ownerSpec(item); owner != "" {
+			if owner != "" {
 				if err := h.fs.Chown(owner, dest); err != nil {
 					return err
 				}

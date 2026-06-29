@@ -13,7 +13,7 @@
 
 ### Onto Host:
 
-`run-host-upsert-configs` load configs onto host (profile-selected symlink + copy passes)
+`run-host-upsert-configs` load configs onto host (profile-selected symlink + copy ops)
 `run-host-delete-broken-links` prune broken symlinks
 `run-host-mk-dirs` required by configuration and tools dirs
 `run-host-render-templates` render *.host.tpl onto host
@@ -35,5 +35,4 @@
 `run-repo-ci-vm-build-base` build vanilla base vm image
 `run-repo-ci-vm-build` build configs-local vm image
 `run-repo-ci-vm-ssh` ssh into the local vm
-`run-repo-ci-vm-test` build vm then run the che passes in it (cli/macos profile)
-`run-repo-ci-vm-test`: `run-repo-ci-vm-build`
+`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run the che ops in it (cli/macos profile)

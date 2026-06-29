@@ -127,20 +127,20 @@ func TestTrackedFilesMatchesCLI(t *testing.T) {
 // shape (mkdir + mode + dest tail) and the asUser case at euid 0.
 func TestMkdirArgv(t *testing.T) {
 	f := FS{Home: "/Users/x"}
-	argv := f.MkdirArgv("/Users/x/.config", "", "0750", true)
+	argv := f.MkdirArgv("/Users/x/.config", "", 0o750, true)
 	want := []string{"mkdir", "-p", "-m", "0750", "/Users/x/.config"}
 	if !slices.Equal(argv, want) {
 		t.Errorf("MkdirArgv(home dest) = %v, want %v", argv, want)
 	}
 	// no -p when parents is false
-	argv = f.MkdirArgv("/Users/x/.config", "", "0750", false)
+	argv = f.MkdirArgv("/Users/x/.config", "", 0o750, false)
 	if slices.Contains(argv, "-p") {
 		t.Errorf("MkdirArgv(parents=false) included -p: %v", argv)
 	}
-	// no -m when mode is "" (umask honored)
-	argv = f.MkdirArgv("/Users/x/.config", "", "", true)
+	// no -m when mode is 0 (umask honored)
+	argv = f.MkdirArgv("/Users/x/.config", "", 0, true)
 	if want := []string{"mkdir", "-p", "/Users/x/.config"}; !slices.Equal(argv, want) {
-		t.Errorf("MkdirArgv(empty mode) = %v, want %v", argv, want)
+		t.Errorf("MkdirArgv(zero mode) = %v, want %v", argv, want)
 	}
 }
 
