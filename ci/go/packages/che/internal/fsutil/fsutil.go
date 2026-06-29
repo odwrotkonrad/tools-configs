@@ -23,10 +23,8 @@ type FS struct {
 	DryRun bool
 }
 
-func (f FS) logMsg(title, msg string) { log.Msg(title, msg, f.DryRun) }
-
 // Log emits a line through the dry-run gate.
-func (f FS) Log(title, msg string) { f.logMsg(title, msg) }
+func (f FS) Log(title, msg string) { log.Msg(title, msg, f.DryRun) }
 
 // UnderHome reports dest in user-owned Home tree (no sudo).
 func (f FS) UnderHome(dest string) bool {
@@ -41,22 +39,23 @@ func (f FS) mutate(verb, logArg, dest string, argv ...string) error {
 			return err
 		}
 	}
-	f.logMsg(verb, logArg)
+	f.Log(verb, logArg)
 	return nil
 }
 
 // Mkdir makes one dir with mode. asUser (set, under root): owned by that user.
-// parents adds -p.
+// parents adds -p. mkdir builds its own priv-escalated argv, so it runs the
+// command directly rather than through Priv.
 func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 	if f.DryRun {
-		f.logMsg("mkdir", dest)
+		f.Log("mkdir", dest)
 		return nil
 	}
 	argv := f.MkdirArgv(dest, asUser, ModeArg(mode), parents)
 	if err := run(exec.Command(argv[0], argv[1:]...)); err != nil {
 		return err
 	}
-	f.logMsg("mkdir", dest)
+	f.Log("mkdir", dest)
 	return nil
 }
 
@@ -103,7 +102,7 @@ func (f FS) Chown(owner, dest string) error {
 // outside Home. owner "" -> no -o/-g. Honors dry-run.
 func (f FS) Install(dest string, body []byte, mode os.FileMode, owner string) error {
 	if f.DryRun {
-		f.logMsg("render", dest)
+		f.Log("render", dest)
 		return nil
 	}
 	tmp, err := os.CreateTemp("", "che-tmpl-*")

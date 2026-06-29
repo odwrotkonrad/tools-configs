@@ -39,10 +39,7 @@ func (h Host) ensureConfigDirs(dirRels []string) error {
 		if fsutil.IsDir(dest) {
 			continue
 		}
-		asUser, mode := "", os.FileMode(0755)
-		if isHome(rel) {
-			asUser, mode = user, 0750
-		}
+		asUser, mode := dirDefault(rel, user)
 		if err := h.fs.Mkdir(dest, asUser, mode, false); err != nil {
 			return err
 		}

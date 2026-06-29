@@ -5,8 +5,6 @@ package cli
 import (
 	"testing"
 
-	"github.com/spf13/cobra"
-
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
@@ -19,21 +17,10 @@ func TestServicesSubcommands(t *testing.T) {
 	}
 	for name, want := range cases {
 		t.Run(name, func(t *testing.T) {
-			testutil.MockRepoEnv(t)
-			dryRun = true
-			t.Cleanup(func() { dryRun = false })
-			if err := build(); err != nil {
-				t.Fatalf("build() errored: %v", err)
-			}
-
-			var sub *cobra.Command
-			for _, c := range ServicesCmd.Commands() {
-				if c.Name() == name {
-					sub = c
-				}
-			}
-			if sub == nil {
-				t.Fatalf("services subcommand %q not found", name)
+			setupDryRun(t)
+			sub, _, err := ServicesCmd.Find([]string{name})
+			if err != nil || sub == ServicesCmd {
+				t.Fatalf("services subcommand %q not found: %v", name, err)
 			}
 			out := testutil.RunDry(t, sub, true)
 			testutil.WantLines(t, out, want)

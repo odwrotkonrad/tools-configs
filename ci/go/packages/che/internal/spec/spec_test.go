@@ -33,6 +33,16 @@ func resolve(t *testing.T, dir, profile string) Resolved {
 	return res
 }
 
+// resolveErr asserts Resolve(profile) fails for the given spec fixture.
+func resolveErr(t *testing.T, spec, profile string) {
+	t.Helper()
+	dir := fixtureRepo(t, spec, map[string]string{"root/.gitkeep": ""})
+	s, _ := Load(filepath.Join(dir, "che.yml"))
+	if _, err := s.Resolve(profile, filepath.Join(dir, "root")); err == nil {
+		t.Fatalf("%s/%s: expected error", spec, profile)
+	}
+}
+
 var mergeFiles = map[string]string{
 	"root/etc/zshrc":                                   "zshrc\n",
 	"root/HOME/.config/zsh/.zshrc":                     "user zshrc\n",
@@ -183,11 +193,7 @@ func TestResolveUndefinedFails(t *testing.T) {
 }
 
 func TestMixinProfilesCycle(t *testing.T) {
-	dir := fixtureRepo(t, "cycle", map[string]string{"root/.gitkeep": ""})
-	s, _ := Load(filepath.Join(dir, "che.yml"))
-	if _, err := s.Resolve("cli/macos", filepath.Join(dir, "root")); err == nil {
-		t.Fatal("expected cycle error")
-	}
+	resolveErr(t, "cycle", "cli/macos")
 }
 
 // TestIncludeExcludeSections: exclude wins over explicit include across every
@@ -230,11 +236,7 @@ func TestIncludeExcludeSections(t *testing.T) {
 }
 
 func TestMixinProfilesUndefined(t *testing.T) {
-	dir := fixtureRepo(t, "undefined-include", map[string]string{"root/.gitkeep": ""})
-	s, _ := Load(filepath.Join(dir, "che.yml"))
-	if _, err := s.Resolve("cli/macos", filepath.Join(dir, "root")); err == nil {
-		t.Fatal("expected undefined-include error")
-	}
+	resolveErr(t, "undefined-include", "cli/macos")
 }
 
 // [<] 🤖🤖

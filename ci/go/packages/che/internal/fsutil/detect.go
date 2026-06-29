@@ -20,12 +20,10 @@ func DetectProfile() string {
 }
 
 func NormalizeOS(goos string) string {
-	switch goos {
-	case "darwin":
+	if goos == "darwin" {
 		return "macos"
-	default:
-		return goos
 	}
+	return goos
 }
 
 // Virtualized: mac via kern.hv_vmm_present==1 (Apple VZ guest); linux via systemd-detect-virt / container markers.

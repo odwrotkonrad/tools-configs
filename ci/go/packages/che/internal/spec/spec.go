@@ -79,8 +79,6 @@ type Perms struct {
 	Chmod      string `yaml:"chmod"`
 }
 
-func (p Perms) set() bool { return p != Perms{} }
-
 // entry is a copy/template/mkdirs perm-group: optional perms cascading to every
 // item in Files (globs included).
 type entry struct {
@@ -124,20 +122,46 @@ type Resolved struct {
 	Installs  []string   // install unit entries in spec order
 }
 
+// globSet is an ordered list of pass globs, each carrying its group's perms
+// (zero Perms if none). Globs are brace-expanded on add.
+type globSet []globPerm
+
+type globPerm struct {
+	glob  string
+	perms Perms
+}
+
+func (gs *globSet) add(glob string, perms Perms) {
+	for _, g := range fsutil.ExpandBraces(glob) {
+		*gs = append(*gs, globPerm{glob: g, perms: perms})
+	}
+}
+
+// match returns the perms of the last glob matching rel, and whether any did.
+func (gs globSet) match(rel string) (Perms, bool) {
+	var p Perms
+	hit := false
+	for _, g := range gs {
+		if fsutil.MatchGlob(strings.TrimSuffix(g.glob, "/"), rel) {
+			p, hit = g.perms, true
+		}
+	}
+	return p, hit
+}
+
 // effective is the composed additive selection before classification + exclude.
-// A glob in a perm-bearing group records its perms in perms[glob]; classify
-// stamps matched files with them (last match wins).
+// Each pass's globs carry their group's perms; classify stamps matched files
+// with them (last match wins).
 type effective struct {
-	linkGlobs []string         // link-pass globs (repo-relative under root/)
-	copyGlobs []string         // copy-pass globs
-	tmplGlobs []string         // template-pass globs
-	richCopy  []FileItem       // rich-form copy entries
-	richTmpl  []FileItem       // rich-form template entries
-	dirs      []FileItem       // mkdirs: glob forms expanded to one item per path, rich carry perms
-	perms     map[string]Perms // glob -> group perms (copy/template glob items)
-	install   []string         // install unit paths (order = run order)
-	services  []string         // service names
-	exclude   excludeSet       // accumulated exclude globs (applied last, wins)
+	linkGlobs globSet    // link-pass globs (repo-relative under root/)
+	copyGlobs globSet    // copy-pass globs
+	tmplGlobs globSet    // template-pass globs
+	richCopy  []FileItem // rich-form copy entries
+	richTmpl  []FileItem // rich-form template entries
+	dirs      []FileItem // mkdirs: glob forms expanded to one item per path, rich carry perms
+	install   []string   // install unit paths (order = run order)
+	services  []string   // service names
+	exclude   excludeSet // accumulated exclude globs (applied last, wins)
 }
 
 // Load parses che.yml: the `profiles:` enum plus every other top-level key as a
@@ -177,7 +201,7 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 			"detected profile %q is not defined in che.yml (defined: %v)",
 			profile, r.detectableLeaves())
 	}
-	eff := effective{perms: map[string]Perms{}}
+	var eff effective
 	if err := r.mergeInto(&eff, profile, nil); err != nil {
 		return Resolved{}, err
 	}
@@ -203,27 +227,31 @@ func classify(root string, eff effective, res *Resolved) error {
 	if err != nil {
 		return err
 	}
-	links := fsutil.ExpandAll(eff.linkGlobs)
-	copies := fsutil.ExpandAll(eff.copyGlobs)
-	tmpls := fsutil.ExpandAll(eff.tmplGlobs)
 	rich := richRels(eff) // rich entries win: skip their glob twins
 	for _, rel := range tracked {
 		if rich[rel] {
 			continue
 		}
 		switch {
-		case matchAny(tmpls, rel) && strings.HasSuffix(rel, TmplExt):
-			res.Templates = append(res.Templates, FileItem{Rel: rel, Perms: permsFor(eff.perms, tmpls, rel)})
-		case matchAny(copies, rel) && strings.HasSuffix(rel, CpExt):
-			res.Copies = append(res.Copies, FileItem{Rel: rel, Perms: permsFor(eff.perms, copies, rel)})
+		case strings.HasSuffix(rel, TmplExt) && hit(eff.tmplGlobs, rel, &res.Templates):
+		case strings.HasSuffix(rel, CpExt) && hit(eff.copyGlobs, rel, &res.Copies):
 		case filepath.Base(rel) == ".gitkeep":
 			// excluded from every pass
-		case matchAny(links, rel):
-			res.Links = append(res.Links, FileItem{Rel: rel, Perms: permsFor(eff.perms, links, rel)})
+		case hit(eff.linkGlobs, rel, &res.Links):
 		}
 	}
 	collectDirs(res)
 	return nil
+}
+
+// hit appends rel (with its matched perms) to items if any glob in gs matches,
+// reporting whether it did.
+func hit(gs globSet, rel string, items *[]FileItem) bool {
+	perms, ok := gs.match(rel)
+	if ok {
+		*items = append(*items, FileItem{Rel: rel, Perms: perms})
+	}
+	return ok
 }
 
 // richRels is the set of source rels claimed by rich copy/template entries.
@@ -335,9 +363,11 @@ func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 		}
 	}
 	in := ps.Include
-	eff.linkGlobs = append(eff.linkGlobs, in.Link...)
-	splitEntries(in.Copy, &eff.copyGlobs, &eff.richCopy, eff.perms)
-	splitEntries(in.Template, &eff.tmplGlobs, &eff.richTmpl, eff.perms)
+	for _, g := range in.Link {
+		eff.linkGlobs.add(g, Perms{})
+	}
+	splitEntries(in.Copy, &eff.copyGlobs, &eff.richCopy)
+	splitEntries(in.Template, &eff.tmplGlobs, &eff.richTmpl)
 	for _, e := range in.Mkdirs {
 		eff.dirs = append(eff.dirs, dirItems(e)...)
 	}
@@ -357,17 +387,13 @@ func (ex *excludeSet) append(o excludeSet) {
 	ex.Services = append(ex.Services, o.Services...)
 }
 
-// splitEntries walks each perm-group's Files: glob items go to globs (recording
-// group perms in perms when set), {source,dest} items become rich FileItems
-// carrying the group's perms.
-func splitEntries(entries []entry, globs *[]string, rich *[]FileItem, perms map[string]Perms) {
+// splitEntries walks each perm-group's Files: glob items go to globs carrying
+// the group's perms, {source,dest} items become rich FileItems carrying them.
+func splitEntries(entries []entry, globs *globSet, rich *[]FileItem) {
 	for _, e := range entries {
 		for _, f := range e.Files {
 			if f.glob != "" {
-				*globs = append(*globs, f.glob)
-				if e.set() {
-					perms[f.glob] = e.Perms
-				}
+				globs.add(f.glob, e.Perms)
 				continue
 			}
 			*rich = append(*rich, FileItem{Rel: f.Source, Dests: f.Dest, Perms: e.Perms})
@@ -391,17 +417,6 @@ func dirItems(e entry) []FileItem {
 		}
 	}
 	return out
-}
-
-// permsFor returns the perms of the last glob in globs that matches rel.
-func permsFor(perms map[string]Perms, globs []string, rel string) Perms {
-	var p Perms
-	for _, g := range globs {
-		if hit, ok := perms[g]; ok && fsutil.MatchGlob(strings.TrimSuffix(g, "/"), rel) {
-			p = hit
-		}
-	}
-	return p
 }
 
 // isDetectable reports whether profile is both declared in the enum and defined.
