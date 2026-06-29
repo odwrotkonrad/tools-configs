@@ -6,11 +6,9 @@ import (
 	"testing"
 
 	git "github.com/go-git/go-git/v5"
-
-	"configs/ci/go/packages/render-dirs-tree/lib"
 )
 
-// [>] 🤖🤖🤖
+// [>] 🤖🤖
 func initRepo(t *testing.T, files []string) string {
 	t.Helper()
 	dir := t.TempDir()
@@ -44,7 +42,7 @@ func TestGenerateGolden(t *testing.T) {
 		"docs/data/x",
 		"src/lib/y",
 	})
-	got, err := lib.Generate(dir)
+	got, err := Generate(dir)
 	if err != nil {
 		t.Fatalf("generate: %v", err)
 	}
@@ -58,14 +56,14 @@ func TestGenerateGolden(t *testing.T) {
 }
 
 func TestGenerateMissing(t *testing.T) {
-	if _, err := lib.Generate(t.TempDir()); err == nil {
+	if _, err := Generate(t.TempDir()); err == nil {
 		t.Fatal("expected error outside a git repo")
 	}
 }
 
-func TestCheck(t *testing.T) {
+func TestRunCheck(t *testing.T) {
 	dir := initRepo(t, []string{"top", ".hidden/file", "docs/data/x", "src/lib/y"})
-	tree, err := lib.Generate(dir)
+	tree, err := Generate(dir)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -78,15 +76,21 @@ func TestCheck(t *testing.T) {
 	defer os.Chdir(wd)
 	os.Chdir(dir)
 
-	if code := check(good); code != 0 {
-		t.Errorf("check(good) = %d, want 0", code)
+	cases := map[string]struct {
+		path string
+		want int
+	}{
+		"match":  {good, 0},
+		"differ": {stale, 22},
+		"absent": {filepath.Join(dir, "absent.tree"), 13},
 	}
-	if code := check(stale); code != 22 {
-		t.Errorf("check(stale) = %d, want 22", code)
-	}
-	if code := check(filepath.Join(dir, "absent.tree")); code != 13 {
-		t.Errorf("check(absent) = %d, want 13", code)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			if code := tool.Run([]string{"--check", c.path}); code != c.want {
+				t.Errorf("Run(--check %s) = %d, want %d", name, code, c.want)
+			}
+		})
 	}
 }
 
-//[<] 🤖🤖🤖
+//[<] 🤖🤖

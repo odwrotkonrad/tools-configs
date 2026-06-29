@@ -8,7 +8,7 @@ import (
 	"configs/ci/go/packages/render-makefile-doc/lib"
 )
 
-// [>] 🤖🤖🤖
+// [>] 🤖🤖
 func TestGenerateGolden(t *testing.T) {
 	got, err := lib.Generate("testdata/Makefile")
 	if err != nil {
@@ -48,15 +48,21 @@ func TestCheck(t *testing.T) {
 	defer os.Chdir(wd)
 	os.Chdir(dir)
 
-	if code := check(good); code != 0 {
-		t.Errorf("check(good) = %d, want 0", code)
+	cases := map[string]struct {
+		path string
+		want int
+	}{
+		"match":  {good, 0},
+		"differ": {stale, 22},
+		"absent": {filepath.Join(dir, "absent.md"), 13},
 	}
-	if code := check(stale); code != 22 {
-		t.Errorf("check(stale) = %d, want 22", code)
-	}
-	if code := check(filepath.Join(dir, "absent.md")); code != 13 {
-		t.Errorf("check(absent) = %d, want 13", code)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			if code := tool.Run([]string{"--check", c.path}); code != c.want {
+				t.Errorf("Run(--check %s) = %d, want %d", name, code, c.want)
+			}
+		})
 	}
 }
 
-//[<] 🤖🤖🤖
+//[<] 🤖🤖

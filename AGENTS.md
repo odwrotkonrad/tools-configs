@@ -118,10 +118,7 @@ vim: root/HOME/.config/vim/vimrc
 ### Onto Repo (CI):
 
 `run-repo-ci-render-templates` render *.repo.tpl onto repo
-`run-repo-ci-tests-python` test pytest
 `run-repo-ci-tests-go` test go
-`run-repo-ci-typecheck` mypy typecheck
-`run-repo-ci-typecheck`
 `run-repo-ci-prepare-hooks` install lefthook git hooks
 `run-repo-ci-install-deps`
 `run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
@@ -156,8 +153,8 @@ ci
           spec
           testutil
             specs
+      checkcmd
       render-dirs-tree
-        lib
         testdata
       render-makefile-doc
         lib
@@ -227,6 +224,13 @@ root
           User
             .exported
       LaunchAgents
+    projects
+      go
+        get-os-open-files-with
+          lib
+        get-term-open-files-with
+          lib
+          testdata
   Library
     LaunchAgents
     LaunchDaemons
@@ -257,8 +261,6 @@ root
   usr
     local
       scripts
-        python
-          root_scripts_lib
         shell
           lib
           templates-llm
@@ -266,10 +268,3 @@ templates
   1-env
   2-docs
   3-agents
-tests
-  scripts
-    python
-      get-os-open-files-with
-      get-term-open-files-with
-        mock
-      root_scripts_test_lib

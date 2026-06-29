@@ -107,10 +107,10 @@
   },
   "outputStyle": "Interactive Code",
   "alwaysThinkingEnabled": false,
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
+  "skipWorkflowUsageWarning": true,
   "disableAutoMode": "disable",
-  "theme": "auto",
-  "skipWorkflowUsageWarning": true
+  "theme": "auto"
 }

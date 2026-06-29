@@ -1,18 +1,19 @@
-package lib
+// [>] 🤖🤖
+package main
 
 import (
 	"fmt"
+	"maps"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 
 	git "github.com/go-git/go-git/v5"
 )
 
-// [>] 🤖🤖🤖
 type treeNode map[string]treeNode
 
-func TrackedFiles(repoPath string) ([]string, error) {
+func trackedFiles(repoPath string) ([]string, error) {
 	repo, err := git.PlainOpenWithOptions(repoPath, &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
 		return nil, fmt.Errorf("not a git repo: %s: %w", repoPath, err)
@@ -21,9 +22,9 @@ func TrackedFiles(repoPath string) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("read git index at %s: %w", repoPath, err)
 	}
-	files := make([]string, 0, len(idx.Entries))
-	for _, e := range idx.Entries {
-		files = append(files, e.Name)
+	files := make([]string, len(idx.Entries))
+	for i, e := range idx.Entries {
+		files[i] = e.Name
 	}
 	return files, nil
 }
@@ -31,11 +32,11 @@ func TrackedFiles(repoPath string) ([]string, error) {
 func buildTree(paths []string) treeNode {
 	root := treeNode{}
 	for _, path := range paths {
-		node := root
 		dir := filepath.Dir(path)
 		if dir == "." {
 			continue
 		}
+		node := root
 		for part := range strings.SplitSeq(dir, string(filepath.Separator)) {
 			child, ok := node[part]
 			if !ok {
@@ -49,27 +50,20 @@ func buildTree(paths []string) treeNode {
 }
 
 func renderTree(tree treeNode, depth int) string {
-	names := make([]string, 0, len(tree))
-	for name := range tree {
-		names = append(names, name)
+	var b strings.Builder
+	for _, name := range slices.Sorted(maps.Keys(tree)) {
+		fmt.Fprintf(&b, "%s%s\n", strings.Repeat("  ", depth), name)
+		b.WriteString(renderTree(tree[name], depth+1))
 	}
-	sort.Strings(names)
-	var lines []string
-	for _, name := range names {
-		lines = append(lines, strings.Repeat("  ", depth)+name)
-		if child := renderTree(tree[name], depth+1); child != "" {
-			lines = append(lines, child)
-		}
-	}
-	return strings.Join(lines, "\n")
+	return b.String()
 }
 
 func Generate(repoPath string) (string, error) {
-	paths, err := TrackedFiles(repoPath)
+	paths, err := trackedFiles(repoPath)
 	if err != nil {
 		return "", err
 	}
-	return renderTree(buildTree(paths), 0) + "\n", nil
+	return renderTree(buildTree(paths), 0), nil
 }
 
-//[<] 🤖🤖🤖
+//[<] 🤖🤖

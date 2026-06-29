@@ -11,11 +11,12 @@ stages:
 
 .base:
   needs: []
-  image: python:3.14-slim
+  image: debian:bookworm-slim
   ##[>] 🤖🤖
   variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
+    CC: clang
   cache:
     key:
       files:
@@ -26,12 +27,6 @@ stages:
   ##[<] 🤖🤖
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
-    - pip install --no-cache-dir -r root/etc/python/requirements.txt
-    ##[>] 🤖
-    #[why] go toolchain + gomplate, yq, lefthook installed by run-repo-ci-install-deps (00-ci-deps.zsh)
-    - export PATH=/usr/local/go/bin:$PATH
-    - export CC=clang
-    ##[<] 🤖
 
 validate-docsgen:
   extends: .base
@@ -40,26 +35,17 @@ validate-docsgen:
     - make run-repo-ci-render-templates RENDER_LOCAL=
     - git diff --exit-code
 
-validate-typecheck:
-  extends: .base
-  stage: validate
-  script:
-    - make run-repo-ci-typecheck
-
 dry-run-apply-sync:
   extends: .base
   stage: dry-run-apply
+  variables:
+    MK_DRY_RUN: all
   parallel:
     matrix:
       - CHE_FORCE_PROFILE: [desktop/macos, cli/macos, cli/linux]
   script:
-    - MK_DRY_RUN=all make run-sync-full
-
-test-python:
-  extends: .base
-  stage: test
-  script:
-    - make run-repo-ci-tests-python
+    - make run-sync-full
+    - make run-host-install-all
 
 test-go:
   extends: .base
@@ -79,10 +65,12 @@ test-go:
 dry-run-apply-macos-desktop:
   extends: .e2e-macos
   stage: dry-run-apply
+  variables:
+    MK_DRY_RUN: all
   needs: []
   script:
-    - MK_DRY_RUN=all make run-sync
-
+    - make run-sync
+    - make run-host-install-all
 
 apply-macos-desktop:
   extends: .e2e-macos
@@ -94,3 +82,4 @@ apply-macos-desktop:
     - when: on_success
   script:
     - make run-sync
+    - make run-host-install-all

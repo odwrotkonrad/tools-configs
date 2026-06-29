@@ -10,10 +10,37 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+	"time"
 
 	onepassword "github.com/1password/onepassword-sdk-go"
 	"github.com/hairyhenderson/gomplate/v4"
 )
+
+// opRetryDelays: backoff between op-resolve attempts that hit a vault rate limit.
+var opRetryDelays = []time.Duration{
+	500 * time.Millisecond,
+	1 * time.Second,
+	2 * time.Second,
+}
+
+// isRateLimit: 1Password SDK surfaces vault rate limiting only in the error text.
+func isRateLimit(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "rate limit exceeded")
+}
+
+// retry runs op, re-running while shouldRetry(err) holds, sleeping the matching
+// delay before each retry. Stops after len(delays) retries or first non-retryable result.
+func retry[T any](delays []time.Duration, sleep func(time.Duration), shouldRetry func(error) bool, op func() (T, error)) (T, error) {
+	v, err := op()
+	for _, d := range delays {
+		if !shouldRetry(err) {
+			break
+		}
+		sleep(d)
+		v, err = op()
+	}
+	return v, err
+}
 
 // Exec renders body via the gomplate library. env is a gomplate built-in; op resolves
 // op:// references through the 1Password Go SDK (service-account token). name: error messages only.
@@ -30,6 +57,7 @@ func Exec(name string, body []byte) ([]byte, error) {
 
 // opResolver returns an op(ref) template func that lazily inits one 1Password client
 // (OP_SERVICE_ACCOUNT_TOKEN) on first use and reuses it for the render's references.
+// Resolves retry on vault rate-limit errors.
 func opResolver(ctx context.Context) func(string) (string, error) {
 	var client *onepassword.Client
 	return func(ref string) (string, error) {
@@ -47,7 +75,9 @@ func opResolver(ctx context.Context) func(string) (string, error) {
 			}
 			client = c
 		}
-		secret, err := client.Secrets().Resolve(ctx, ref)
+		secret, err := retry(opRetryDelays, time.Sleep, isRateLimit, func() (string, error) {
+			return client.Secrets().Resolve(ctx, ref)
+		})
 		if err != nil {
 			return "", fmt.Errorf("op resolve %q: %w", ref, err)
 		}
