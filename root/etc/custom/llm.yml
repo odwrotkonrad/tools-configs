@@ -3,8 +3,6 @@ providers:
     script: llm-run-claude-code.zsh
     model: haiku
     env:
-      CLAUDE_CODE_SIMPLE: "1"
-      CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT: "1"
       CLAUDE_CODE_DISABLE_THINKING: "1"
       CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1"
       MAX_THINKING_TOKENS: "0"

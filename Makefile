@@ -60,7 +60,7 @@ run-repo-ci-tests-python:
 	@pytest tests/scripts/python
 
 #[what] test go
-run-repo-ci-tests-go:
+run-repo-ci-tests-go: | run-repo-ci-install-deps
 	@go test -C ci/go ./...
 
 #[what] mypy typecheck

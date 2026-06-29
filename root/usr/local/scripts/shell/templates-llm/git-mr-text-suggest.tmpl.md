@@ -18,6 +18,8 @@
 Write an MR/PR title and description from the net diff against main. Fill `title` and `description`.
 The net diff is the source of truth: describe only what it changes, not what the commit says.
 Terse, specific, exhaustive: every change in the diff appears, trim words, never changes.
+One line per bullet. No prose, no wrap-around. Drop nothing.
+State what changed. Never why. Never explain, justify, or guess. Only what the diff shows.
 
 - derive everything from the net diff, the latest commit is secondary context for intent only
 - a change absent from the net diff MUST NOT appear, even if mentioned in the commit
