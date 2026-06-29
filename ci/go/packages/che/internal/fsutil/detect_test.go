@@ -5,16 +5,10 @@ package fsutil
 import "testing"
 
 func TestNormalize(t *testing.T) {
-	osCases := map[string]string{"darwin": "mac-os", "linux": "linux"}
+	osCases := map[string]string{"darwin": "macos", "linux": "linux"}
 	for in, want := range osCases {
 		if got := NormalizeOS(in); got != want {
 			t.Errorf("NormalizeOS(%q) = %q, want %q", in, got, want)
-		}
-	}
-	archCases := map[string]string{"arm64": "aarch64", "amd64": "x86"}
-	for in, want := range archCases {
-		if got := NormalizeArch(in); got != want {
-			t.Errorf("NormalizeArch(%q) = %q, want %q", in, got, want)
 		}
 	}
 }

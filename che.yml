@@ -1,91 +1,102 @@
 ##[>] 🤖🤖
 profiles:
-  bare-metal:
-    mac-os-aarch64:
-  virt:
-    mac-os-aarch64:
-    linux-aarch64:
-    linux-x86:
+  desktop:
+    macos:
+  cli:
+    macos:
+    linux:
 
 base:
-  load-configuration:
-    Library/LaunchDaemons/otelcol.plist*:
-    Library/LaunchDaemons/dir-size-exporter.plist*:
-    Library/LaunchDaemons/port-exporter.plist*:
-  make-extra-dirs:
-    - /var/log/{otelcol,dir_size_exporter,port_exporter}
-    - /var/custom/cache/dir_size_exporter
-  install:
-    - ci/zsh/scripts/installs/shared/golang.zsh
-    - ci/zsh/scripts/installs/shared/otel-collector.zsh
-  services: [otelcol, dir-size-exporter, port-exporter]
+  include:
+    link:
+      - HOME/**
+      - etc/**
+      - usr/**
+    copy:
+      - files: [HOME/**, etc/**, usr/**]
+      - owner: root
+        owner-group: wheel
+        chmod: "0644"
+        files:
+          - {source: Library/LaunchDaemons/otelcol.plist.host.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
+          - {source: Library/LaunchDaemons/dir-size-exporter.plist.host.cp, dest: [/Library/LaunchDaemons/dir-size-exporter.plist]}
+          - {source: Library/LaunchDaemons/port-exporter.plist.host.cp, dest: [/Library/LaunchDaemons/port-exporter.plist]}
+          - {source: Library/LaunchDaemons/grafana.plist.host.cp, dest: [/Library/LaunchDaemons/grafana.plist]}
+          - {source: Library/LaunchDaemons/prometheus.plist.host.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
+          - {source: Library/LaunchDaemons/jaeger.plist.host.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
+          - {source: Library/LaunchDaemons/loki.plist.host.cp, dest: [/Library/LaunchDaemons/loki.plist]}
+    template:
+      - files: [HOME/**, etc/**, usr/**]
+      - owner: root
+        owner-group: wheel
+        chmod: "0440"
+        files:
+          - {source: etc/sudoers.d/configs.host.tpl, dest: [/etc/sudoers.d/configs]}
+      - owner: root
+        owner-group: wheel
+        chmod: "0644"
+        files:
+          - {source: Library/LaunchAgents/gitlab-runner.plist.host.tpl, dest: [/Library/LaunchAgents/gitlab-runner.plist]}
+      - files:
+          - source: HOME/.config/agents/templates/AGENTS.md.host.tpl
+            dest:
+              - ~/.config/claude/CLAUDE.md
+              - {path: ~/.config/codex/AGENTS.md, render-referenced-files: true}
+    mkdirs:
+      - files:
+          - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
+          - HOME/.config/codex
+          - HOME/.local/{bin,share}
+          - HOME/.local/share/che/backups
+          - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
+          - HOME/ScreenCapture
+          - /var/root/.cache/zsh
+          - /var/root/.config
+          - /var/root/.local/state/zsh/completions
+      - chmod: "2775"
+        files:
+          - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
+          - {dest: ["/var/custom/cache/dir_size_exporter"]}
+          - {dest: ["/var/log/{grafana,prometheus,jaeger,loki}"]}
+          - {dest: ["/usr/local/var/{grafana,prometheus}"]}
+      - owner: root
+        owner-group: wheel
+        chmod: "0755"
+        files:
+          - {dest: [/etc/zsh/zshrc.d/completions]}
+    install:
+      - ci/zsh/scripts/installs/*.zsh
+      - ci/zsh/scripts/bootstrap/*.zsh
+    services: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]
 
-base-cli:
-  include-profiles: [base]
-  load-configuration:
-    HOME/**:
-    etc/**:
-    usr/**:
+base-exclude-desktop:
   exclude:
-    load-configuration:
+    link:
       - HOME/.gitlab-runner/**
       - HOME/Library/**
+      - etc/{grafana,prometheus,jaeger,loki}/**
+    copy:
+      - Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*
+    template:
+      - HOME/.gitlab-runner/**
+      - HOME/Library/**
+      - Library/LaunchAgents/gitlab-runner.plist*
+    mkdirs:
+      - /var/log/{grafana,prometheus,jaeger,loki}
+      - /usr/local/var/{grafana,prometheus}
+    services: [grafana, prometheus, jaeger, loki, gitlab-runner]
+
+base-exclude-macos:
+  exclude:
+    link:
       - etc/defaults.yml
-      - etc/grafana/**
-      - etc/prometheus/**
-      - etc/jaeger/**
-      - etc/loki/**
-  make-extra-dirs:
-    - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
-    - HOME/.config/codex
-    - HOME/.local/{bin,share}
-    - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
-    - HOME/ScreenCapture
-    - /var/root/.cache/zsh
-    - /var/root/.config
-    - /var/root/.local/state/zsh/completions
-  install:
-    - ci/zsh/scripts/installs/shared/native-clis.zsh
 
-base-macos:
-  include-profiles: [base-cli]
-  load-configuration:
-    etc/defaults.yml:
+desktop/macos:
+  mixin-profiles: [base]
 
-base-macos-cli:
-  include-profiles: [base-macos]
-  install:
-    - ci/zsh/scripts/installs/mac/brew.zsh
-    - ci/zsh/scripts/installs/mac/brew-packages.zsh
-    - ci/zsh/scripts/installs/mac/asdf-tools.zsh
-    - ci/zsh/scripts/installs/mac/pyenv-python.zsh
-    - ci/zsh/scripts/installs/shared/aws-cli.zsh
-    - ci/zsh/scripts/installs/shared/gcloud-cli.zsh
-    - ci/zsh/scripts/installs/mac/lang-pkgs.zsh
-    - ci/zsh/scripts/installs/shared/completions-zsh.zsh
+cli/macos:
+  mixin-profiles: [base, base-exclude-desktop]
 
-base-desktop:
-  include-profiles: [base-macos-cli]
-  load-configuration:
-    HOME/.gitlab-runner/**:
-    HOME/Library/**:
-    etc/{grafana,prometheus,jaeger,loki}/**:
-    Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*:
-    Library/LaunchAgents/gitlab-runner.plist*:
-  make-extra-dirs:
-    - /var/log/{grafana,prometheus,jaeger,loki}
-    - /usr/local/var/{grafana,prometheus}
-  install:
-    - ci/zsh/scripts/installs/mac/kitty.zsh
-    - ci/zsh/scripts/installs/shared/ollama.zsh
-    - ci/zsh/scripts/installs/mac/jaeger.zsh
-    - ci/zsh/scripts/installs/mac/prometheus.zsh
-    - ci/zsh/scripts/installs/mac/gitlab-runner.zsh
-  services: [grafana, prometheus, jaeger, loki, gitlab-runner]
-
-virt/mac-os-aarch64:
-  include-profiles: [base-macos-cli]
-
-bare-metal/mac-os-aarch64:
-  include-profiles: [base-desktop]
+cli/linux:
+  mixin-profiles: [base, base-exclude-macos, base-exclude-desktop]
 ##[<] 🤖🤖

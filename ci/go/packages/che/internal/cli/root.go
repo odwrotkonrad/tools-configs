@@ -16,10 +16,17 @@ import (
 
 // Built once in PersistentPreRunE, read by each RunE.
 var (
-	dryRun   bool
-	theHost  host.Host
-	resolved spec.Resolved
+	dryRunMode string
+	theHost    host.Host
+	resolved   spec.Resolved
 )
+
+// dryRunModes maps the --dry-run flag value to a host.DryRunMode.
+var dryRunModes = map[string]host.DryRunMode{
+	"":      host.DryRunOff,
+	"delta": host.DryRunDelta,
+	"all":   host.DryRunAll,
+}
 
 // RootCmd is che's root command. Resolves the profile (build) before any
 // subcommand runs. Subcommands attached by the command package.
@@ -36,8 +43,9 @@ files/dirs/installs/services that profile selects.`,
 }
 
 func init() {
-	RootCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false,
-		"print mutating actions instead of executing them")
+	RootCmd.PersistentFlags().StringVar(&dryRunMode, "dry-run", "",
+		"print mutating actions instead of executing them: delta (changed dests) | all (every dest)")
+	RootCmd.PersistentFlags().Lookup("dry-run").NoOptDefVal = "delta"
 }
 
 // build detects -> loads spec -> resolves -> wires the host. Run in
@@ -56,7 +64,14 @@ func build() error {
 	if profile == "" {
 		profile = fsutil.DetectProfile()
 	}
-	h := host.New(repoRoot, home, profile, dryRun)
+	if dryRunMode == "" {
+		dryRunMode = os.Getenv("CHE_DRY_RUN")
+	}
+	mode, ok := dryRunModes[dryRunMode]
+	if !ok {
+		return fmt.Errorf("invalid --dry-run mode %q: want delta or all", dryRunMode)
+	}
+	h := host.New(repoRoot, home, profile, mode)
 	sp, err := spec.Load(filepath.Join(repoRoot, "che.yml"))
 	if err != nil {
 		return err

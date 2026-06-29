@@ -1,5 +1,5 @@
 profiles:
-  virt:
-    mac-os-aarch64:
-virt/mac-os-aarch64:
-  include-profiles: [nonexistent]
+  cli:
+    macos:
+cli/macos:
+  mixin-profiles: [nonexistent]

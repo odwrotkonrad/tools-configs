@@ -13,29 +13,43 @@ import (
 	"configs/ci/go/packages/che/internal/fsutil"
 )
 
-// Host is the live system the load passes act on: repo source tree, invoking
+// DryRunMode selects how a dry run reports: off (real run), delta (only dests
+// that would change), all (every dest, as if nothing existed at the destination).
+type DryRunMode int
+
+const (
+	DryRunOff DryRunMode = iota
+	DryRunDelta
+	DryRunAll
+)
+
+// Host is the live system the load ops act on: repo source tree, invoking
 // identity, detected profile, mutating filesystem.
 type Host struct {
 	RepoRoot string // <configs> dir (contains che.yml, ci/, templates/)
-	Root     string // <configs>/root, the load passes' source subtree
+	Root     string // <configs>/root, the load ops' source subtree
 	Home     string
 	Profile  string // "<space>/<os>-<arch>"
-	DryRun   bool
+	mode     DryRunMode
 	fs       fsutil.FS
 }
 
-// New builds a Host, wiring an fsutil.FS that honors dryRun, escalates priv per-dest.
-func New(repoRoot, home, profile string, dryRun bool) Host {
-	root := filepath.Join(repoRoot, "root")
+func New(repoRoot, home, profile string, mode DryRunMode) Host {
 	return Host{
 		RepoRoot: repoRoot,
-		Root:     root,
+		Root:     filepath.Join(repoRoot, "root"),
 		Home:     home,
 		Profile:  profile,
-		DryRun:   dryRun,
-		fs:       fsutil.FS{Home: home, Root: root, DryRun: dryRun},
+		mode:     mode,
+		fs:       fsutil.FS{Home: home, DryRun: mode != DryRunOff},
 	}
 }
+
+// DryRun reports whether this is any dry run (delta or all).
+func (h Host) DryRun() bool { return h.mode != DryRunOff }
+
+// DryRunAll reports the full-insert-set dry run, bypassing "already settled" skips.
+func (h Host) DryRunAll() bool { return h.mode == DryRunAll }
 
 // Src maps a repo-relative path (under root/) to its absolute source path.
 func (h Host) Src(rel string) string { return filepath.Join(h.Root, rel) }
@@ -87,7 +101,7 @@ func (h Host) ToDest(rel string) string {
 // UnderHome reports whether dest is the user-owned $HOME tree (no sudo needed).
 func (h Host) UnderHome(dest string) bool { return h.fs.UnderHome(dest) }
 
-// InvokingUser: root runs the passes; HOME-tree dirs belong to the invoking user.
+// InvokingUser: root runs the ops; HOME-tree dirs belong to the invoking user.
 func (h Host) InvokingUser() string {
 	if u := os.Getenv("SUDO_USER"); u != "" {
 		return u

@@ -9,13 +9,12 @@ import (
 
 // Msg prints 'HH:MM:SS.mmm: <title>: <msg>', matching zsh fn-log-msg.
 func Msg(title, msg string, dryRun bool) {
-	now := time.Now()
-	stamp := now.Format("15:04:05") + "." + fmt.Sprintf("%03d", now.Nanosecond()/1e6)
+	stamp := time.Now().Format("15:04:05.000")
+	suffix := ""
 	if dryRun {
-		fmt.Printf("%s: %s: %s [dry-run]\n", stamp, title, msg)
-		return
+		suffix = " [dry-run]"
 	}
-	fmt.Printf("%s: %s: %s\n", stamp, title, msg)
+	fmt.Printf("%s: %s: %s%s\n", stamp, title, msg, suffix)
 }
 
 // [<] 🤖🤖

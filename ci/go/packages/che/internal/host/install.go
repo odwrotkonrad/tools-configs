@@ -15,7 +15,7 @@ func (h Host) Install(scripts []string) error {
 	env := h.installEnv()
 	for _, script := range scripts {
 		h.fs.Log("install", script)
-		if h.DryRun {
+		if h.DryRun() {
 			continue
 		}
 		c := exec.Command(script)
@@ -33,10 +33,11 @@ func (h Host) installEnv() []string {
 	fns := filepath.Join(h.RepoRoot, "ci/zsh/functions")
 	scripts := filepath.Join(h.RepoRoot, "ci/zsh/scripts")
 	installs := filepath.Join(scripts, "installs")
+	bootstrap := filepath.Join(scripts, "bootstrap")
 
 	env := os.Environ()
 	env = prepend(env, "FPATH", fns)
-	env = prepend(env, "PATH", fns+":"+scripts+":"+installs)
+	env = prepend(env, "PATH", fns+":"+scripts+":"+installs+":"+bootstrap)
 	env = append(env, "CONFIGS_PROFILE="+h.Profile)
 	return env
 }

@@ -70,9 +70,9 @@ func Repo(t *testing.T, files map[string]string) string {
 }
 
 // CheProfile is the profile specs/che.yml resolves under.
-const CheProfile = "virt/mac-os-aarch64"
+const CheProfile = "cli/macos"
 
-// CheRepo builds a committed mock che repo (specs/che.yml + root/ tree covering every pass)
+// CheRepo builds a committed mock che repo (specs/che.yml + root/ tree covering every op)
 // plus an on-disk HOME. Returns (repoDir, homeDir).
 func CheRepo(t *testing.T) (string, string) {
 	t.Helper()
@@ -104,6 +104,7 @@ func MockRepoEnv(t *testing.T) string {
 	t.Chdir(dir)
 	t.Setenv("CHE_FORCE_PROFILE", CheProfile)
 	t.Setenv("HOME", home)
+	t.Setenv("XDG_DATA_HOME", filepath.Join(home, ".local/share"))
 	return home
 }
 

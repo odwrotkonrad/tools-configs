@@ -1,8 +1,3 @@
----
-render-to:
-  - ~/.config/claude/CLAUDE.md
-  - ~/.config/codex/AGENTS.md
----
 @~/.config/agents/docs/comments.md
 
 ## Available Tools

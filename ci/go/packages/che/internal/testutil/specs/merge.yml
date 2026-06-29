@@ -1,31 +1,41 @@
 profiles:
-  bare-metal:
-    mac-os-aarch64:
-  virt:
-    mac-os-aarch64:
-    linux-aarch64:
+  desktop:
+    macos:
+  cli:
+    macos:
+    linux:
 
-base-cli:
-  load-configuration:
-    etc/zshrc:
-    HOME/.config/zsh/**:
-  make-extra-dirs:
-    - HOME/.cache/zsh
-  install:
-    - ci/zsh/scripts/installs/mac/brew.zsh
-  services: [otelcol, port-exporter]
+base:
+  include:
+    link:
+      - etc/zshrc
+      - HOME/.config/zsh/**
+      - etc/grafana/**
+    copy:
+      - chmod: "0600"
+        files: [Library/LaunchDaemons/**]
+    mkdirs:
+      - files: [HOME/.cache/zsh]
+      - chmod: "2775"
+        files:
+          - {dest: [/var/log/grafana]}
+    install:
+      - ci/zsh/scripts/installs/10-brew.zsh
+      - ci/zsh/scripts/installs/20-kitty.zsh
+    services: [otelcol, port-exporter, grafana, prometheus]
 
-base-desktop:
-  load-configuration:
-    etc/grafana/**:
-  make-extra-dirs:
-    - /var/log/grafana
-  install:
-    - ci/zsh/scripts/installs/mac/kitty.zsh
-  services: [grafana, prometheus]
+base-exclude-desktop:
+  exclude:
+    link:
+      - etc/grafana/**
+    mkdirs:
+      - /var/log/grafana
+    install:
+      - ci/zsh/scripts/installs/20-kitty.zsh
+    services: [grafana, prometheus]
 
-virt/mac-os-aarch64:
-  include-profiles: [base-cli]
+desktop/macos:
+  mixin-profiles: [base]
 
-bare-metal/mac-os-aarch64:
-  include-profiles: [base-cli, base-desktop]
+cli/macos:
+  mixin-profiles: [base, base-exclude-desktop]

@@ -10,17 +10,13 @@ import (
 
 // mk-dirs: repo-tree config dirs plus profile extra-dir, under $HOME.
 func TestDirsCmd(t *testing.T) {
-	home := testutil.MockRepoEnv(t)
-	dryRun = true
-	t.Cleanup(func() { dryRun = false })
-	if err := build(); err != nil {
-		t.Fatalf("build() errored: %v", err)
-	}
-
+	home := setupDryRun(t)
 	out := testutil.RunDry(t, DirsCmd, true)
 	testutil.WantLines(t, out,
 		"mkdir: "+home+"/.config/zsh [dry-run]",
-		"mkdir: "+home+"/.cache/zsh [dry-run]", // make-extra-dirs entry
+		"mkdir: "+home+"/.cache/zsh [dry-run]",           // mkdirs entry
+		"mkdir: /var/log/che-test-setgid [dry-run]",      // setgid mkdirs entry
+		"chmod: 2775 /var/log/che-test-setgid [dry-run]", // spec chmod reapplied for setgid bit
 	)
 }
 

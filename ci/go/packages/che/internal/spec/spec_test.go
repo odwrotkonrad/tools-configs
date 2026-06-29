@@ -33,48 +33,87 @@ func resolve(t *testing.T, dir, profile string) Resolved {
 	return res
 }
 
+// resolveErr asserts Resolve(profile) fails for the given spec fixture.
+func resolveErr(t *testing.T, spec, profile string) {
+	t.Helper()
+	dir := fixtureRepo(t, spec, map[string]string{"root/.gitkeep": ""})
+	s, _ := Load(filepath.Join(dir, "che.yml"))
+	if _, err := s.Resolve(profile, filepath.Join(dir, "root")); err == nil {
+		t.Fatalf("%s/%s: expected error", spec, profile)
+	}
+}
+
 var mergeFiles = map[string]string{
-	"root/etc/zshrc":               "zshrc\n",
-	"root/HOME/.config/zsh/.zshrc": "user zshrc\n",
-	"root/etc/grafana/grafana.ini": "ini\n",
+	"root/etc/zshrc":                                   "zshrc\n",
+	"root/HOME/.config/zsh/.zshrc":                     "user zshrc\n",
+	"root/etc/grafana/grafana.ini":                     "ini\n",
+	"root/Library/LaunchDaemons/otelcol.plist.host.cp": "plist\n",
+}
+
+// find returns a pointer to the first item satisfying pred, or nil.
+func find(items []FileItem, pred func(FileItem) bool) *FileItem {
+	if i := slices.IndexFunc(items, pred); i >= 0 {
+		return &items[i]
+	}
+	return nil
+}
+
+func relIs(rel string) func(FileItem) bool {
+	return func(it FileItem) bool { return it.Rel == rel }
+}
+
+func destIs(path string) func(FileItem) bool {
+	return func(it FileItem) bool { return it.Dests[0].Path == path }
+}
+
+// hasLink reports whether res.Links carries a file with the given rel.
+func hasLink(res Resolved, rel string) bool {
+	return find(res.Links, relIs(rel)) != nil
 }
 
 func TestResolveMerge(t *testing.T) {
 	dir := fixtureRepo(t, "merge", mergeFiles)
 
-	// host: base + leaf appended.
-	host := resolve(t, dir, "bare-metal/mac-os-aarch64")
+	// desktop: base, everything present.
+	host := resolve(t, dir, "desktop/macos")
 	wantInstall := []string{
-		"ci/zsh/scripts/installs/mac/brew.zsh",
-		"ci/zsh/scripts/installs/mac/kitty.zsh",
+		"ci/zsh/scripts/installs/10-brew.zsh",
+		"ci/zsh/scripts/installs/20-kitty.zsh",
 	}
 	if !slices.Equal(host.Installs, wantInstall) {
 		t.Errorf("host install order = %v, want %v", host.Installs, wantInstall)
 	}
-	if !slices.Contains(host.ExtraDirs, "/var/log/grafana") || !slices.Contains(host.ExtraDirs, "HOME/.cache/zsh") {
-		t.Errorf("host dirs missing merge: %v", host.ExtraDirs)
+	if !hasDir(host, "/var/log/grafana") || !hasDir(host, "HOME/.cache/zsh") {
+		t.Errorf("host dirs missing merge: %v", dirPaths(host.ExtraDirs))
+	}
+	if d := findDir(host, "/var/log/grafana"); d == nil || d.Chmod != "2775" {
+		t.Errorf("grafana dir lost spec chmod: %+v", d)
 	}
 	wantServices := []string{"otelcol", "port-exporter", "grafana", "prometheus"}
 	if !slices.Equal(host.Services, wantServices) {
 		t.Errorf("host services = %v, want %v", host.Services, wantServices)
 	}
-	if !slices.Contains(host.Links, "etc/grafana/grafana.ini") {
+	if !hasLink(host, "etc/grafana/grafana.ini") {
 		t.Errorf("host missing grafana link: %v", host.Links)
 	}
-
-	// vm: empty leaf -> exactly base-cli.
-	vm := resolve(t, dir, "virt/mac-os-aarch64")
-	if len(vm.Installs) != 1 || vm.Installs[0] != "ci/zsh/scripts/installs/mac/brew.zsh" {
-		t.Errorf("vm install = %v, want base only", vm.Installs)
+	// glob in a perm-bearing copy group stamps perms on matched files.
+	if c := find(host.Copies, relIs("Library/LaunchDaemons/otelcol.plist.host.cp")); c == nil || c.Chmod != "0600" {
+		t.Errorf("perm-group glob did not stamp copy chmod: %+v", c)
 	}
-	if slices.Contains(vm.ExtraDirs, "/var/log/grafana") {
-		t.Errorf("vm must not inherit host dirs: %v", vm.ExtraDirs)
+
+	// cli: base minus exclude-desktop.
+	vm := resolve(t, dir, "cli/macos")
+	if !slices.Equal(vm.Installs, []string{"ci/zsh/scripts/installs/10-brew.zsh"}) {
+		t.Errorf("vm install = %v, want brew only", vm.Installs)
+	}
+	if hasDir(vm, "/var/log/grafana") {
+		t.Errorf("vm must not keep desktop dirs: %v", dirPaths(vm.ExtraDirs))
 	}
 	if !slices.Equal(vm.Services, []string{"otelcol", "port-exporter"}) {
-		t.Errorf("vm services = %v, want base-cli only", vm.Services)
+		t.Errorf("vm services = %v, want desktop excluded: %v", vm.Services, vm.Services)
 	}
-	if slices.Contains(vm.Links, "etc/grafana/grafana.ini") {
-		t.Errorf("vm picked host-only grafana: %v", vm.Links)
+	if hasLink(vm, "etc/grafana/grafana.ini") {
+		t.Errorf("vm kept desktop-only grafana: %v", vm.Links)
 	}
 }
 
@@ -91,26 +130,26 @@ func TestResolveClassify(t *testing.T) {
 		"root/Library/LaunchDaemons/otelcol.plist.host.cp": "plist\n",
 	}
 	dir := fixtureRepo(t, "classify", files)
-	cs := resolve(t, dir, "virt/mac-os-aarch64")
+	cs := resolve(t, dir, "cli/macos")
 	wantLinks := []string{
 		"HOME/.config/git/config",
 		"HOME/.config/zsh/.zshrc",
 		"etc/zsh/zshenv",
 		"etc/zshrc",
 	}
-	if !slices.Equal(cs.Links, wantLinks) {
-		t.Errorf("links = %v, want %v", cs.Links, wantLinks)
+	if !slices.Equal(rels(cs.Links), wantLinks) {
+		t.Errorf("links = %v, want %v", rels(cs.Links), wantLinks)
 	}
-	if !slices.Equal(cs.Copies, []string{
+	if !slices.Equal(rels(cs.Copies), []string{
 		"HOME/.config/zsh/x.host.cp",
 		"Library/LaunchDaemons/otelcol.plist.host.cp",
 	}) {
-		t.Errorf("copies = %v", cs.Copies)
+		t.Errorf("copies = %v", rels(cs.Copies))
 	}
-	if !slices.Equal(cs.Templates, []string{"HOME/.config/zsh/y.host.tpl"}) {
-		t.Errorf("templates = %v", cs.Templates)
+	if !slices.Equal(rels(cs.Templates), []string{"HOME/.config/zsh/y.host.tpl"}) {
+		t.Errorf("templates = %v", rels(cs.Templates))
 	}
-	for _, l := range cs.Links {
+	for _, l := range rels(cs.Links) {
 		if filepath.Base(l) == ".gitkeep" {
 			t.Errorf(".gitkeep leaked into links")
 		}
@@ -120,64 +159,84 @@ func TestResolveClassify(t *testing.T) {
 	}
 }
 
+// rels extracts the Rel of each FileItem.
+func rels(items []FileItem) []string {
+	return mapItems(items, func(it FileItem) string { return it.Rel })
+}
+
+// dirPaths extracts the first dest path of each dir FileItem.
+func dirPaths(items []FileItem) []string {
+	return mapItems(items, func(it FileItem) string { return it.Dests[0].Path })
+}
+
+// mapItems projects each FileItem through fn.
+func mapItems[T any](items []FileItem, fn func(FileItem) T) []T {
+	out := make([]T, len(items))
+	for i, it := range items {
+		out[i] = fn(it)
+	}
+	return out
+}
+
+// findDir returns the dir FileItem with the given dest path, or nil.
+func findDir(res Resolved, path string) *FileItem { return find(res.ExtraDirs, destIs(path)) }
+
+// hasDir reports whether res.ExtraDirs carries the given path.
+func hasDir(res Resolved, path string) bool { return findDir(res, path) != nil }
+
 func TestResolveUndefinedFails(t *testing.T) {
 	dir := fixtureRepo(t, "merge", mergeFiles)
 	s, _ := Load(filepath.Join(dir, "che.yml"))
-	if _, err := s.Resolve("virt/linux-aarch64", filepath.Join(dir, "root")); err == nil {
+	if _, err := s.Resolve("cli/linux", filepath.Join(dir, "root")); err == nil {
 		t.Fatal("expected error for declared-but-undefined profile")
 	}
 }
 
-func TestIncludeProfilesCycle(t *testing.T) {
-	dir := fixtureRepo(t, "cycle", map[string]string{"root/.gitkeep": ""})
-	s, _ := Load(filepath.Join(dir, "che.yml"))
-	if _, err := s.Resolve("virt/mac-os-aarch64", filepath.Join(dir, "root")); err == nil {
-		t.Fatal("expected cycle error")
-	}
+func TestMixinProfilesCycle(t *testing.T) {
+	resolveErr(t, "cycle", "cli/macos")
 }
 
+// TestIncludeExcludeSections: exclude wins over explicit include across every
+// key (glob match, not exact), including rich {source,dest} entries.
 func TestIncludeExcludeSections(t *testing.T) {
 	files := map[string]string{
-		"root/etc/zshrc":             "z\n",
-		"root/etc/zsh/zshenv":        "e\n", // excluded -> must not link
-		"root/HOME/.config/extra/x":  "x\n", // via include.profiles
-		"root/HOME/.config/oneoff/y": "y\n", // via include.load-configuration
+		"root/etc/zshrc":                  "z\n",
+		"root/etc/zsh/zshenv":             "e\n", // excluded -> must not link
+		"root/HOME/.config/extra/x":       "x\n",
+		"root/HOME/.config/oneoff/y":      "y\n",
+		"root/HOME/.config/zsh/c.host.cp": "c\n", // rich copy, excluded by glob
 	}
 	dir := fixtureRepo(t, "include-exclude", files)
-	res := resolve(t, dir, "virt/mac-os-aarch64")
+	res := resolve(t, dir, "cli/macos")
 
-	if !slices.Contains(res.Links, "HOME/.config/extra/x") {
-		t.Errorf("include.profiles not merged: %v", res.Links)
+	if !hasLink(res, "HOME/.config/extra/x") {
+		t.Errorf("include.link extra not merged: %v", rels(res.Links))
 	}
-	if !slices.Contains(res.Links, "HOME/.config/oneoff/y") {
-		t.Errorf("include.load-configuration not added: %v", res.Links)
+	if !hasLink(res, "etc/zshrc") {
+		t.Errorf("etc/zshrc include missing: %v", rels(res.Links))
 	}
-	if !slices.Contains(res.Links, "etc/zshrc") {
-		t.Errorf("etc/zshrc include missing: %v", res.Links)
+	if hasLink(res, "etc/zsh/zshenv") {
+		t.Errorf("exclude.link glob not applied: %v", rels(res.Links))
 	}
-	if slices.Contains(res.Links, "etc/zsh/zshenv") {
-		t.Errorf("exclude.load-configuration not applied: %v", res.Links)
+	if find(res.Copies, relIs("HOME/.config/zsh/c.host.cp")) != nil {
+		t.Errorf("exclude.copy glob did not drop rich entry: %v", rels(res.Copies))
 	}
-	if !slices.Contains(res.Installs, "ci/zsh/scripts/installs/mac/oneoff") {
-		t.Errorf("include.install not added: %v", res.Installs)
+	if !slices.Contains(res.Installs, "ci/zsh/scripts/installs/10-brew.zsh") {
+		t.Errorf("include.install brew missing: %v", res.Installs)
 	}
-	if slices.Contains(res.Installs, "ci/zsh/scripts/installs/mac/brew.zsh") {
-		t.Errorf("exclude.install not removed: %v", res.Installs)
+	if slices.Contains(res.Installs, "ci/zsh/scripts/installs/20-foo.zsh") {
+		t.Errorf("exclude.install did not remove foo: %v", res.Installs)
 	}
-	if !slices.Contains(res.Services, "grafana") {
-		t.Errorf("include.services not added: %v", res.Services)
+	if slices.Contains(res.Services, "grafana") {
+		t.Errorf("exclude.services glob did not remove grafana: %v", res.Services)
 	}
-	if slices.Contains(res.Services, "otelcol") {
-		t.Errorf("exclude.services not removed: %v", res.Services)
+	if !slices.Contains(res.Services, "otelcol") {
+		t.Errorf("otelcol service missing: %v", res.Services)
 	}
 }
 
-func TestIncludeProfilesUndefined(t *testing.T) {
-	dir := fixtureRepo(t, "undefined-include", map[string]string{"root/.gitkeep": ""})
-	s, _ := Load(filepath.Join(dir, "che.yml"))
-	if _, err := s.Resolve("virt/mac-os-aarch64", filepath.Join(dir, "root")); err == nil {
-		t.Fatal("expected undefined-include error")
-	}
+func TestMixinProfilesUndefined(t *testing.T) {
+	resolveErr(t, "undefined-include", "cli/macos")
 }
 
 // [<] 🤖🤖

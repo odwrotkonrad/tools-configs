@@ -29,6 +29,7 @@ func Generate(path string) (string, error) {
 type target struct {
 	name  string
 	what  string
+	vals  string // parameter accepted-values hint, rendered as name=vals
 	chain []string
 }
 
@@ -56,6 +57,7 @@ func parse(src []byte) ([]section, error) {
 	var out []section
 	var stack []frame
 	var pendingWhat string
+	var pendingVals string
 
 	emit := func(f frame, ts []target) {
 		if f.kept && len(ts) > 0 {
@@ -93,6 +95,7 @@ func parse(src []byte) ([]section, error) {
 				})
 				buf = append(buf, nil)
 				pendingWhat = ""
+				pendingVals = ""
 			} else if depth, ok := sectionClose(text); ok {
 				for len(stack) > 0 && stack[len(stack)-1].depth >= depth {
 					emit(stack[len(stack)-1], buf[len(buf)-1])
@@ -100,10 +103,14 @@ func parse(src []byte) ([]section, error) {
 					buf = buf[:len(buf)-1]
 				}
 				pendingWhat = ""
+				pendingVals = ""
 			} else if what, ok := whatComment(text); ok {
 				pendingWhat = what
+			} else if vals, ok := valsComment(text); ok {
+				pendingVals = vals
 			} else {
 				pendingWhat = ""
+				pendingVals = ""
 			}
 		case "rule":
 			if c := cur(); c != nil && c.kept {
@@ -112,8 +119,18 @@ func parse(src []byte) ([]section, error) {
 				}
 			}
 			pendingWhat = ""
+			pendingVals = ""
+		case "variable_assignment", "export_directive":
+			if c := cur(); c != nil && c.kept && pendingWhat != "" {
+				if t, ok := paramTarget(node, src, pendingWhat, pendingVals); ok {
+					buf[len(buf)-1] = append(buf[len(buf)-1], t)
+				}
+			}
+			pendingWhat = ""
+			pendingVals = ""
 		default:
 			pendingWhat = ""
+			pendingVals = ""
 		}
 	}
 	for len(stack) > 0 {

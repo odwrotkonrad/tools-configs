@@ -19,18 +19,18 @@ ci
           spec
           testutil
             specs
+      checkcmd
+      render-dirs-tree
+        testdata
       render-makefile-doc
         lib
         testdata
-  python
-    scripts
   vm
   zsh
     functions
     scripts
+      bootstrap
       installs
-        mac
-        shared
 root
   HOME
     .config
@@ -90,6 +90,13 @@ root
           User
             .exported
       LaunchAgents
+    projects
+      go
+        get-os-open-files-with
+          lib
+        get-term-open-files-with
+          lib
+          testdata
   Library
     LaunchAgents
     LaunchDaemons
@@ -120,8 +127,6 @@ root
   usr
     local
       scripts
-        python
-          root_scripts_lib
         shell
           lib
           templates-llm
@@ -129,12 +134,3 @@ templates
   1-env
   2-docs
   3-agents
-tests
-  scripts
-    python
-      get-os-open-files-with
-      get-term-open-files-with
-        mock
-      render-dirs-tree
-        fixture
-      root_scripts_test_lib

@@ -49,4 +49,14 @@ func whatComment(text string) (string, bool) {
 	return strings.TrimSpace(strings.TrimPrefix(text, p)), true
 }
 
+// valsComment parses a #[vals] line: a parameter's accepted-values hint,
+// rendered as <name>=<vals>.
+func valsComment(text string) (string, bool) {
+	const p = "#[vals]"
+	if !strings.HasPrefix(text, p) {
+		return "", false
+	}
+	return strings.TrimSpace(strings.TrimPrefix(text, p)), true
+}
+
 //[<] 🤖🤖🤖

@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 #>[what]
 #   Headless claude -p wrapper for llm-* scripts.
-#   Usage: <prompt-on-stdin> | llm-run-claude-code --model <model> --schema <schema> [--api-key-uri <uri>]
-#   Sets ANTHROPIC_MODEL/API_KEY, caller-exported env (e.g. CLAUDE_CODE_*) wins.
-#   Key URI (op read) from --api-key-uri, default ProgrammaticAccess ref.
+#   Usage: <prompt-on-stdin> | llm-run-claude-code --model <model> --schema <schema>
+#   Sets ANTHROPIC_MODEL, caller-exported env (e.g. CLAUDE_CODE_*) wins.
+#   Auth: default claude.ai login (no ANTHROPIC_API_KEY).
 #   Upstream: llm-git-* scripts. Downstream: prompt on stdin, --model, --schema.
 #   Out: structured output object.
 #/[what]
@@ -12,27 +12,16 @@
 set -e
 
 ##[>] script input
-zparseopts -D -E -- -model:=opt_model -schema:=opt_schema -api-key-uri:=opt_api_key_uri
+zparseopts -D -E -- -model:=opt_model -schema:=opt_schema
 typeset -A script_input=(
   in_instructions "$(<&0)"
 
   opt_model "${opt_model[2]}"
   opt_schema "${opt_schema[2]}"
-  opt_api_key_uri "${opt_api_key_uri[2]:-op://ProgrammaticAccess/claude/api_key}"
 )
 ##[<] script input
 
-env=(
-  "ANTHROPIC_MODEL:=$script_input[opt_model]"
-  #[why] claude with CLAUDE_CODE_SIMPLE must use API Key auth
-  'ANTHROPIC_API_KEY:=$(op read "$script_input[opt_api_key_uri]")'
-)
-
-##[>] 🤖
-for kv in $env; do
-  eval "export ${kv%%:=*}=\${$kv}"
-done
-##[<] 🤖
+export ANTHROPIC_MODEL="$script_input[opt_model]"
 
 <<< "$script_input[in_instructions]" claude -p \
   --system-prompt '' \

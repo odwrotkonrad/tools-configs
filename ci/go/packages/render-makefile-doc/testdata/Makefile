@@ -1,6 +1,17 @@
 #[what] fixture makefile
 FOO := bar
 
+##[>] Parameters [genai-include]
+#[what] mode with values
+#[vals] delta|all
+DRY_RUN ?=
+#[what] plain param no vals
+VERBOSE ?=
+#[what] bare export, read from env
+export EXPORTED
+UNDOCUMENTED := internal
+##[<] Parameters
+
 ##[>] Wrappers [genai-include]
 #[what] do quick sync
 run-sync-quick: run-host-thing run-repo-thing

@@ -3,8 +3,8 @@ package spec
 // [>] 🤖🤖
 
 import (
+	"cmp"
 	"fmt"
-	"maps"
 	"os"
 	"path/filepath"
 	"slices"
@@ -21,61 +21,151 @@ const (
 )
 
 // Raw mirrors che.yml. Profiles is the enum tree of declared leaves; other
-// top-level keys are defined blocks: leaf profiles and included profiles.
+// top-level keys are defined blocks: leaf profiles and mixin profiles.
 type Raw struct {
 	Profiles map[string]any         `yaml:"profiles"`
 	profiles map[string]profileSpec // every defined block, keyed by name
 }
 
-// profileSpec is one block. A leaf names include-profiles (merged in order), an
-// included profile carries config sections. Both may carry inline sections,
-// appended after includes. include/exclude add/remove sections post-composition
-// (exclude wins, applied last).
+// profileSpec is one block: mixin-profiles composed in order, then include
+// (additive) and exclude (subtractive glob filter, applied last, wins).
 type profileSpec struct {
-	IncludeProfiles   []string       `yaml:"include-profiles"`
-	LoadConfiguration map[string]any `yaml:"load-configuration"`
-	MakeExtraDirs     []string       `yaml:"make-extra-dirs"`
-	Install           []string       `yaml:"install"`
-	Services          []string       `yaml:"services"`
-	Include           sectionSet     `yaml:"include"`
-	Exclude           sectionSet     `yaml:"exclude"`
+	MixinProfiles []string   `yaml:"mixin-profiles"`
+	Include       includeSet `yaml:"include"`
+	Exclude       excludeSet `yaml:"exclude"`
 }
 
-// sectionSet is the include/exclude payload: extra profiles plus per-section
-// path/unit lists.
-type sectionSet struct {
-	Profiles          []string `yaml:"profiles"`
-	LoadConfiguration []string `yaml:"load-configuration"`
-	MakeExtraDirs     []string `yaml:"make-extra-dirs"`
-	Install           []string `yaml:"install"`
-	Services          []string `yaml:"services"`
+// includeSet is the additive payload: link globs, copy/template/mkdirs entries
+// (glob-string OR rich object), install globs, service names.
+type includeSet struct {
+	Link     []string `yaml:"link"`
+	Copy     []entry  `yaml:"copy"`
+	Template []entry  `yaml:"template"`
+	Mkdirs   []entry  `yaml:"mkdirs"`
+	Install  []string `yaml:"install"`
+	Services []string `yaml:"services"`
 }
 
-// effective is the composed selection before file classification. globOps is
-// ordered (include +/exclude −) in composition order, a file is selected iff its
-// LAST matching op is an include. Dirs/Install/Services exact-subtract on merge.
-type effective struct {
-	globOps  []globOp // ordered include/exclude globs (relative to root/)
-	dirs     []string // make-extra-dirs
-	install  []string // install unit paths relative to repo root (order = run order)
-	services []string // service names (compositional like install)
+// excludeSet is the subtractive payload: every key a flat glob-string list, a
+// match drops the item.
+type excludeSet struct {
+	Link     []string `yaml:"link"`
+	Copy     []string `yaml:"copy"`
+	Template []string `yaml:"template"`
+	Mkdirs   []string `yaml:"mkdirs"`
+	Install  []string `yaml:"install"`
+	Services []string `yaml:"services"`
 }
 
-type globOp struct {
-	pattern string
-	include bool // true = include, false = exclude
+// DestSpec is one dest path plus per-dest template option: a scalar path, or a
+// mapping carrying the render option.
+type DestSpec struct {
+	Path                  string `yaml:"path"`
+	RenderReferencedFiles bool   `yaml:"render-referenced-files"`
 }
 
-// Resolved is the classified, repo-relative selection the passes consume.
-// Links/Copies/Templates/Dirs are under root/, Installs/Services are spec lists.
+func (d *DestSpec) UnmarshalYAML(value *yaml.Node) error {
+	if value.Kind == yaml.ScalarNode {
+		d.Path = value.Value
+		return nil
+	}
+	type alias DestSpec
+	return value.Decode((*alias)(d))
+}
+
+// Perms is shared ownership/mode: empty fields mean "use the code default".
+type Perms struct {
+	Owner      string `yaml:"owner"`
+	OwnerGroup string `yaml:"owner-group"`
+	Chmod      string `yaml:"chmod"`
+}
+
+// entry is a copy/template/mkdirs perm-group: optional perms cascading to every
+// item in Files (globs included).
+type entry struct {
+	Perms `yaml:",inline"`
+	Files []fileSpec `yaml:"files"`
+}
+
+// fileSpec is one item in a perm-group's Files list: a bare glob string, or a
+// {source, dest} object. glob is set iff the glob form.
+type fileSpec struct {
+	glob   string
+	Source string     `yaml:"source"`
+	Dest   []DestSpec `yaml:"dest"`
+}
+
+func (f *fileSpec) UnmarshalYAML(value *yaml.Node) error {
+	if value.Kind == yaml.ScalarNode {
+		f.glob = value.Value
+		return nil
+	}
+	type alias fileSpec
+	return value.Decode((*alias)(f))
+}
+
+// FileItem is one resolved file: repo-relative source (under root/), explicit
+// dests (nil -> derived in host), optional perms.
+type FileItem struct {
+	Rel   string
+	Dests []DestSpec
+	Perms
+}
+
+// Resolved is the classified, repo-relative selection the ops consume.
 type Resolved struct {
-	Links     []string // link pass: regular files minus templates/copies/.gitkeep
-	Copies    []string // copy pass: *.host.cp
-	Templates []string // render pass: *.host.tpl
-	Dirs      []string // every ancestor dir of links+copies+templates, plus make-extra-dirs
-	ExtraDirs []string // make-extra-dirs only (live dest entries)
-	Services  []string // service names (compositional)
-	Installs  []string // install unit entries in spec order
+	Links     []FileItem // link op: regular files minus templates/copies/.gitkeep
+	Copies    []FileItem // copy op: *.host.cp
+	Templates []FileItem // render op: *.host.tpl
+	Dirs      []string   // every ancestor dir of links+copies+templates, plus mkdirs
+	ExtraDirs []FileItem // mkdirs only (live dest entries), one per path, carrying perms
+	Services  []string   // service names
+	Installs  []string   // install unit entries in spec order
+}
+
+// globSet is an ordered list of op globs, each carrying its group's perms
+// (zero Perms if none). Globs are brace-expanded on add.
+type globSet []globPerm
+
+type globPerm struct {
+	glob  string
+	perms Perms
+}
+
+func (gs *globSet) add(glob string, perms Perms) {
+	for _, g := range fsutil.ExpandBraces(glob) {
+		*gs = append(*gs, globPerm{glob: g, perms: perms})
+	}
+}
+
+// match returns the perms of the last glob matching rel, and whether any did.
+func (gs globSet) match(rel string) (perms Perms, hit bool) {
+	for _, g := range gs {
+		if globMatch(g.glob, rel) {
+			perms, hit = g.perms, true
+		}
+	}
+	return perms, hit
+}
+
+// globMatch matches rel against an op glob, ignoring a trailing slash.
+func globMatch(glob, rel string) bool {
+	return fsutil.MatchGlob(strings.TrimSuffix(glob, "/"), rel)
+}
+
+// effective is the composed additive selection before classification + exclude.
+// Each op's globs carry their group's perms; classify stamps matched files
+// with them (last match wins).
+type effective struct {
+	linkGlobs globSet    // link-op globs (repo-relative under root/)
+	copyGlobs globSet    // copy-op globs
+	tmplGlobs globSet    // template-op globs
+	richCopy  []FileItem // rich-form copy entries
+	richTmpl  []FileItem // rich-form template entries
+	dirs      []FileItem // mkdirs: glob forms expanded to one item per path, rich carry perms
+	install   []string   // install unit paths (order = run order)
+	services  []string   // service names
+	exclude   excludeSet // accumulated exclude globs (applied last, wins)
 }
 
 // Load parses che.yml: the `profiles:` enum plus every other top-level key as a
@@ -106,136 +196,226 @@ func Load(path string) (*Raw, error) {
 	return s, nil
 }
 
-// Resolve validates the profile is defined, composes its include-profiles and
-// inline sections, then classifies git-tracked files under root into
-// Links/Copies/Templates/Dirs. Output is repo-relative.
+// Resolve validates the profile is defined, composes its mixin-profiles and
+// includes, classifies git-tracked files, then applies excludes as a final glob
+// filter. Output is repo-relative.
 func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 	if !r.isDetectable(profile) {
 		return Resolved{}, fmt.Errorf(
 			"detected profile %q is not defined in che.yml (defined: %v)",
 			profile, r.detectableLeaves())
 	}
-	eff := effective{}
+	var eff effective
 	if err := r.mergeInto(&eff, profile, nil); err != nil {
 		return Resolved{}, err
 	}
-	// brace-expand path/glob lists (zsh-style {a,b}), ops keep order
-	eff.globOps = expandOps(eff.globOps)
 	res := Resolved{
-		ExtraDirs: fsutil.ExpandAll(eff.dirs),
+		ExtraDirs: eff.dirs,
 		Installs:  fsutil.ExpandAll(eff.install),
 		Services:  fsutil.ExpandAll(eff.services),
+		Copies:    eff.richCopy,
+		Templates: eff.richTmpl,
 	}
-	if err := classify(root, eff.globOps, &res); err != nil {
+	if err := classify(root, eff, &res); err != nil {
 		return Resolved{}, err
 	}
+	applyExcludes(eff.exclude, &res)
 	return res, nil
 }
 
-// classify applies the load-configuration ops to git-tracked files under root,
-// bucketing them into Links/Copies/Templates plus ancestor Dirs.
-func classify(root string, ops []globOp, res *Resolved) error {
+// classify applies the glob-form ops to git-tracked files under root, bucketing
+// them into Links/Copies/Templates plus ancestor Dirs. Glob copy/template files
+// inherit the matching glob's perms.
+func classify(root string, eff effective, res *Resolved) error {
 	tracked, err := fsutil.TrackedFiles(root)
 	if err != nil {
 		return err
 	}
-	dirSeen := map[string]bool{}
+	rich := richRels(eff) // rich entries win: skip their glob twins
 	for _, rel := range tracked {
-		if !selected(ops, rel) {
+		if rich[rel] {
 			continue
 		}
 		switch {
-		case strings.HasSuffix(rel, TmplExt):
-			res.Templates = append(res.Templates, rel)
-		case strings.HasSuffix(rel, CpExt):
-			res.Copies = append(res.Copies, rel)
+		case strings.HasSuffix(rel, TmplExt) && hit(eff.tmplGlobs, rel, &res.Templates):
+		case strings.HasSuffix(rel, CpExt) && hit(eff.copyGlobs, rel, &res.Copies):
 		case filepath.Base(rel) == ".gitkeep":
-			// excluded from every pass
-		default:
-			res.Links = append(res.Links, rel)
-		}
-		for d := filepath.Dir(rel); d != "." && !dirSeen[d]; d = filepath.Dir(d) {
-			dirSeen[d] = true
-			res.Dirs = append(res.Dirs, d)
+			// excluded from every op
+		case hit(eff.linkGlobs, rel, &res.Links):
 		}
 	}
-	slices.Sort(res.Links)
-	slices.Sort(res.Copies)
-	slices.Sort(res.Templates)
-	slices.Sort(res.Dirs) // lexical, parents before children
+	collectDirs(res)
 	return nil
 }
 
-// selected: a file is selected iff its LAST matching op is an include.
-func selected(ops []globOp, rel string) bool {
-	sel := false
-	for _, op := range ops {
-		if fsutil.MatchGlob(strings.TrimSuffix(op.pattern, "/"), rel) {
-			sel = op.include
-		}
+// hit appends rel (with its matched perms) to items if any glob in gs matches,
+// reporting whether it did.
+func hit(gs globSet, rel string, items *[]FileItem) bool {
+	perms, ok := gs.match(rel)
+	if ok {
+		*items = append(*items, FileItem{Rel: rel, Perms: perms})
 	}
-	return sel
+	return ok
 }
 
-// expandOps brace-expands each op's pattern, preserving op order and include flag.
-func expandOps(ops []globOp) []globOp {
-	var out []globOp
-	for _, op := range ops {
-		for _, p := range fsutil.ExpandBraces(op.pattern) {
-			out = append(out, globOp{pattern: p, include: op.include})
-		}
+// richRels is the set of source rels claimed by rich copy/template entries.
+func richRels(eff effective) map[string]bool {
+	m := map[string]bool{}
+	for _, it := range eff.richCopy {
+		m[it.Rel] = true
 	}
-	return out
+	for _, it := range eff.richTmpl {
+		m[it.Rel] = true
+	}
+	return m
 }
 
-// mergeInto composes name into eff: include-profiles (depth-first), inline
-// sections, then its include (additive) and exclude (subtractive for
-// dirs/install/services, exclude globs accumulate for file-time filtering).
-// seen tracks the active chain to catch cycles.
+// collectDirs derives every ancestor dir of the file items into res.Dirs.
+func collectDirs(res *Resolved) {
+	dirSeen := map[string]bool{}
+	add := func(items []FileItem) {
+		for _, it := range items {
+			for d := filepath.Dir(it.Rel); d != "." && !dirSeen[d]; d = filepath.Dir(d) {
+				dirSeen[d] = true
+				res.Dirs = append(res.Dirs, d)
+			}
+		}
+	}
+	add(res.Links)
+	add(res.Copies)
+	add(res.Templates)
+	slices.SortFunc(res.Links, byRel)
+	slices.SortFunc(res.Copies, byRel)
+	slices.SortFunc(res.Templates, byRel)
+	slices.Sort(res.Dirs) // lexical, parents before children
+}
+
+func byRel(a, b FileItem) int { return cmp.Compare(a.Rel, b.Rel) }
+
+func matchAny(globs []string, rel string) bool {
+	return slices.ContainsFunc(globs, func(g string) bool { return globMatch(g, rel) })
+}
+
+// applyExcludes drops items matching any exclude glob across all keys. Excludes
+// win over everything, including rich include entries.
+func applyExcludes(ex excludeSet, res *Resolved) {
+	link := fsutil.ExpandAll(ex.Link)
+	copyG := fsutil.ExpandAll(ex.Copy)
+	tmplG := fsutil.ExpandAll(ex.Template)
+	dirG := fsutil.ExpandAll(ex.Mkdirs)
+	instG := fsutil.ExpandAll(ex.Install)
+	svcG := fsutil.ExpandAll(ex.Services)
+
+	res.Links = dropFiles(res.Links, link)
+	res.Copies = dropFiles(res.Copies, copyG)
+	res.Templates = dropFiles(res.Templates, tmplG)
+	res.ExtraDirs = dropFiles(res.ExtraDirs, dirG)
+	res.Installs = dropStrings(res.Installs, instG)
+	res.Services = dropStrings(res.Services, svcG)
+
+	res.Dirs = nil
+	collectDirs(res)
+	res.Dirs = dropStrings(res.Dirs, dirG)
+}
+
+// dropFiles drops any FileItem whose rel or any dest matches an exclude glob.
+func dropFiles(items []FileItem, globs []string) []FileItem {
+	if len(globs) == 0 {
+		return items
+	}
+	return slices.DeleteFunc(items, func(it FileItem) bool {
+		if matchAny(globs, it.Rel) {
+			return true
+		}
+		for _, d := range it.Dests {
+			if matchAny(globs, d.Path) {
+				return true
+			}
+		}
+		return false
+	})
+}
+
+// dropStrings drops any entry matching an exclude glob.
+func dropStrings(xs, globs []string) []string {
+	if len(globs) == 0 {
+		return xs
+	}
+	return slices.DeleteFunc(xs, func(x string) bool { return matchAny(globs, x) })
+}
+
+// mergeInto composes name into eff: mixin-profiles depth-first, then this
+// profile's include sections (additive). Excludes are handled separately
+// (applyExcludes). seen catches cycles.
 func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 	if slices.Contains(seen, name) {
-		return fmt.Errorf("include-profiles cycle: %v -> %s", seen, name)
+		return fmt.Errorf("mixin-profiles cycle: %v -> %s", seen, name)
 	}
 	ps, ok := r.profiles[name]
 	if !ok {
-		return fmt.Errorf("include-profiles names undefined profile %q (from %v)", name, seen)
+		return fmt.Errorf("mixin-profiles names undefined profile %q (from %v)", name, seen)
 	}
 	child := append(slices.Clone(seen), name)
-	for _, inc := range ps.IncludeProfiles {
-		if err := r.mergeInto(eff, inc, child); err != nil {
+	for _, m := range ps.MixinProfiles {
+		if err := r.mergeInto(eff, m, child); err != nil {
 			return err
 		}
 	}
-	for _, inc := range ps.Include.Profiles {
-		if err := r.mergeInto(eff, inc, child); err != nil {
-			return err
-		}
+	in := ps.Include
+	for _, g := range in.Link {
+		eff.linkGlobs.add(g, Perms{})
 	}
-	// load-configuration ops: includes (+) then excludes (−), in composition
-	// order so later profiles override earlier
-	for _, g := range sortedKeys(ps.LoadConfiguration) {
-		eff.globOps = append(eff.globOps, globOp{g, true})
+	splitEntries(in.Copy, &eff.copyGlobs, &eff.richCopy)
+	splitEntries(in.Template, &eff.tmplGlobs, &eff.richTmpl)
+	for _, e := range in.Mkdirs {
+		eff.dirs = append(eff.dirs, dirItems(e)...)
 	}
-	for _, g := range ps.Include.LoadConfiguration {
-		eff.globOps = append(eff.globOps, globOp{g, true})
-	}
-	for _, g := range ps.Exclude.LoadConfiguration {
-		eff.globOps = append(eff.globOps, globOp{g, false})
-	}
-	// dirs/install/services: additive include, subtractive exclude (exact match)
-	eff.dirs = mergeList(eff.dirs, ps.MakeExtraDirs, ps.Include.MakeExtraDirs, ps.Exclude.MakeExtraDirs)
-	eff.install = mergeList(eff.install, ps.Install, ps.Include.Install, ps.Exclude.Install)
-	eff.services = mergeList(eff.services, ps.Services, ps.Include.Services, ps.Exclude.Services)
+	eff.install = append(eff.install, in.Install...)
+	eff.services = append(eff.services, in.Services...)
+	eff.exclude.append(ps.Exclude)
 	return nil
 }
 
-// mergeList appends inline + include entries to xs, then drops every exclude entry.
-func mergeList(xs, inline, include, exclude []string) []string {
-	xs = append(append(xs, inline...), include...)
-	if len(exclude) == 0 {
-		return xs
+// append accumulates another profile's exclude globs (composition order).
+func (ex *excludeSet) append(o excludeSet) {
+	ex.Link = append(ex.Link, o.Link...)
+	ex.Copy = append(ex.Copy, o.Copy...)
+	ex.Template = append(ex.Template, o.Template...)
+	ex.Mkdirs = append(ex.Mkdirs, o.Mkdirs...)
+	ex.Install = append(ex.Install, o.Install...)
+	ex.Services = append(ex.Services, o.Services...)
+}
+
+// splitEntries walks each perm-group's Files: glob items go to globs carrying
+// the group's perms, {source,dest} items become rich FileItems carrying them.
+func splitEntries(entries []entry, globs *globSet, rich *[]FileItem) {
+	for _, e := range entries {
+		for _, f := range e.Files {
+			if f.glob != "" {
+				globs.add(f.glob, e.Perms)
+				continue
+			}
+			*rich = append(*rich, FileItem{Rel: f.Source, Dests: f.Dest, Perms: e.Perms})
+		}
 	}
-	return slices.DeleteFunc(xs, func(x string) bool { return slices.Contains(exclude, x) })
+}
+
+// dirItems expands each mkdirs perm-group item into one FileItem per
+// brace-expanded dest path, carrying the group's perms (path in Dests[0]).
+func dirItems(e entry) []FileItem {
+	var out []FileItem
+	for _, f := range e.Files {
+		paths := f.Dest
+		if f.glob != "" {
+			paths = []DestSpec{{Path: f.glob}}
+		}
+		for _, d := range paths {
+			for _, p := range fsutil.ExpandBraces(d.Path) {
+				out = append(out, FileItem{Dests: []DestSpec{{Path: p}}, Perms: e.Perms})
+			}
+		}
+	}
+	return out
 }
 
 // isDetectable reports whether profile is both declared in the enum and defined.
@@ -244,7 +424,7 @@ func (r *Raw) isDetectable(profile string) bool {
 	return defined && r.declared(profile)
 }
 
-// declared walks the profiles enum tree for the "<space>/<os>-<arch>" leaf.
+// declared walks the profiles enum tree for the "<space>/<os>" leaf.
 func (r *Raw) declared(profile string) bool {
 	space, leaf, ok := strings.Cut(profile, "/")
 	if !ok {
@@ -274,10 +454,6 @@ func (r *Raw) detectableLeaves() []string {
 		}
 	}
 	return slices.Sorted(slices.Values(out))
-}
-
-func sortedKeys(m map[string]any) []string {
-	return slices.Sorted(maps.Keys(m))
 }
 
 // [<] 🤖🤖
