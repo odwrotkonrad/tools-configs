@@ -4,49 +4,55 @@ package render
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	onepassword "github.com/1password/onepassword-sdk-go"
+	"github.com/hairyhenderson/gomplate/v4"
 )
 
-// Exec runs body through text/template with host+repo FuncMap. name: error messages only.
+// Exec renders body via the gomplate library. env is a gomplate built-in; op resolves
+// op:// references through the 1Password Go SDK (service-account token). name: error messages only.
 func Exec(name string, body []byte) ([]byte, error) {
-	t, err := template.New(filepath.Base(name)).
-		Option("missingkey=error").
-		Funcs(funcMap()).
-		Parse(string(body))
-	if err != nil {
-		return nil, fmt.Errorf("parse template %s: %w", name, err)
-	}
+	ctx := context.Background()
+	funcs := template.FuncMap{"op": opResolver(ctx)}
+	r := gomplate.NewRenderer(gomplate.RenderOptions{Funcs: funcs, MissingKey: "error"})
 	var buf bytes.Buffer
-	if err := t.Execute(&buf, nil); err != nil {
+	if err := r.Render(ctx, filepath.Base(name), string(body), &buf); err != nil {
 		return nil, fmt.Errorf("render template %s: %w", name, err)
 	}
 	return buf.Bytes(), nil
 }
 
-// funcMap: gomplate namespaces host templates call (env/op).
-func funcMap() template.FuncMap {
-	return template.FuncMap{
-		"env": func() envNS { return envNS{} },
-		"op":  opRead,
+// opResolver returns an op(ref) template func that lazily inits one 1Password client
+// (OP_SERVICE_ACCOUNT_TOKEN) on first use and reuses it for the render's references.
+func opResolver(ctx context.Context) func(string) (string, error) {
+	var client *onepassword.Client
+	return func(ref string) (string, error) {
+		if client == nil {
+			token := os.Getenv("OP_SERVICE_ACCOUNT_TOKEN")
+			if token == "" {
+				return "", fmt.Errorf("op %q: OP_SERVICE_ACCOUNT_TOKEN unset", ref)
+			}
+			c, err := onepassword.NewClient(ctx,
+				onepassword.WithServiceAccountToken(token),
+				onepassword.WithIntegrationInfo("che", "1.0.0"),
+			)
+			if err != nil {
+				return "", fmt.Errorf("op client: %w", err)
+			}
+			client = c
+		}
+		secret, err := client.Secrets().Resolve(ctx, ref)
+		if err != nil {
+			return "", fmt.Errorf("op resolve %q: %w", ref, err)
+		}
+		return secret, nil
 	}
-}
-
-type envNS struct{}
-
-func (envNS) Getenv(key string) string { return os.Getenv(key) }
-
-// opRead shells `op read --no-newline <ref>` (like gomplate op plugin).
-func opRead(ref string) (string, error) {
-	out, err := exec.Command("op", "read", "--no-newline", ref).Output()
-	if err != nil {
-		return "", fmt.Errorf("op read %q: %w", ref, err)
-	}
-	return string(out), nil
 }
 
 // ResolveAtIncludes inlines '@path' lines as repoRoot/<path> contents, '~/' -> root/HOME/. Port of fn-tpl-inline-includes.
