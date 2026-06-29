@@ -137,6 +137,11 @@ func TestMkdirArgv(t *testing.T) {
 	if slices.Contains(argv, "-p") {
 		t.Errorf("MkdirArgv(parents=false) included -p: %v", argv)
 	}
+	// no -m when mode is "" (umask honored)
+	argv = f.MkdirArgv("/Users/x/.config", "", "", true)
+	if want := []string{"mkdir", "-p", "/Users/x/.config"}; !slices.Equal(argv, want) {
+		t.Errorf("MkdirArgv(empty mode) = %v, want %v", argv, want)
+	}
 }
 
 // [<] 🤖🤖

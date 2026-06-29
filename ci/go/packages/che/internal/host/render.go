@@ -11,9 +11,6 @@ import (
 	"configs/ci/go/packages/che/internal/spec"
 )
 
-// filemodeDefault is the template install mode when the spec sets no chmod.
-const filemodeDefault os.FileMode = 0600
-
 // RenderTemplates renders each *.host.tpl in the resolved set onto the host.
 // Glob-form items (no explicit dest) render to the derived live path; rich items
 // fan out across their dests, inlining @-includes per RenderReferencedFiles.
@@ -57,15 +54,12 @@ func (h Host) renderTemplate(item spec.FileItem) error {
 	return nil
 }
 
-// placeFile backs up dest, installs body with spec perms (else default 0600, no chown).
+// placeFile backs up dest, installs body with spec perms (mode 0 -> install default, no chown).
 func (h Host) placeFile(dest string, body []byte, item spec.FileItem) error {
 	if err := h.fs.BackupBeforeOverwrite(dest, true); err != nil {
 		return err
 	}
-	mode := filemodeDefault
-	if m, ok := parseMode(item.Chmod); ok {
-		mode = m
-	}
+	mode, _ := parseMode(item.Chmod)
 	return h.fs.Install(dest, body, mode, ownerSpec(item))
 }
 

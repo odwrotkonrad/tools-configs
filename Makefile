@@ -26,16 +26,16 @@ run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
 ##[>] Onto Host [genai-include]
 #[what] load configs onto host (profile-selected symlink + copy passes)
 run-host-upsert-configs: | run-repo-ci-prepare-executables
-	@sudo $(PRETTY) che link
-	@sudo $(PRETTY) che copy
+	@$(PRETTY) che link
+	@$(PRETTY) che copy
 
 #[what] prune broken symlinks
 run-host-delete-broken-links: | run-repo-ci-prepare-executables
-	@sudo $(PRETTY) che prune-links
+	@$(PRETTY) che prune-links
 
 #[what] required by configuration and tools dirs
 run-host-mk-dirs: | run-repo-ci-prepare-executables
-	@sudo $(PRETTY) che mk-dirs
+	@$(PRETTY) che mk-dirs
 
 #[what] render *.host.tpl onto host
 run-host-render-templates: | run-repo-ci-prepare-executables

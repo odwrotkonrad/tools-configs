@@ -17,44 +17,40 @@ func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
 	}
-	user := h.InvokingUser()
 	for _, item := range extraDirs {
 		rel := item.Dests[0].Path
 		dest := h.ToDest(rel)
 		if fsutil.IsDir(dest) {
 			continue
 		}
-		if err := h.mkExtraDir(item, rel, dest, user); err != nil {
+		if err := h.mkExtraDir(item, dest); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-// ensureConfigDirs creates repo-tree ancestor dirs (parents first): HOME-tree user 0750, root-tree 0755. Idempotent.
+// ensureConfigDirs creates repo-tree ancestor dirs (parents first), no spec
+// perms: mode 0 -> mkdir honors umask. Idempotent.
 func (h Host) ensureConfigDirs(dirRels []string) error {
-	user := h.InvokingUser()
 	for _, rel := range dirRels {
 		dest := h.ToDest(rel)
 		if fsutil.IsDir(dest) {
 			continue
 		}
-		asUser, mode := dirDefault(rel, user)
-		if err := h.fs.Mkdir(dest, asUser, mode, false); err != nil {
+		if err := h.fs.Mkdir(dest, "", 0, false); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-// isHome reports whether a repo-relative path is in HOME tree.
-func isHome(rel string) bool { return rel == "HOME" || strings.HasPrefix(rel, "HOME/") }
-
-// mkExtraDir creates one extra-dir with -p, perms from spec else defaults
-// (HOME-tree user 0750, else 0755). Owner/group from spec when set; a chmod
-// with set-bits (>0777) reapplied via chmod so the special bits stick.
-func (h Host) mkExtraDir(item spec.FileItem, rel, dest, user string) error {
-	asUser, mode := dirDefault(rel, user)
+// mkExtraDir creates one extra-dir with -p. Mode/owner from spec when set, else
+// mkdir runs with no -m (umask). A chmod with set-bits (>0777) reapplied via
+// chmod so the special bits stick.
+func (h Host) mkExtraDir(item spec.FileItem, dest string) error {
+	var mode os.FileMode
+	asUser := ""
 	if m, ok := parseMode(item.Chmod); ok {
 		mode = m
 	}
@@ -74,14 +70,6 @@ func (h Host) mkExtraDir(item spec.FileItem, rel, dest, user string) error {
 		return h.fs.Chown(owner, dest)
 	}
 	return nil
-}
-
-// dirDefault returns the default (owner, mode) for an extra-dir by tree.
-func dirDefault(rel, user string) (string, os.FileMode) {
-	if isHome(rel) {
-		return user, 0750
-	}
-	return "", 0755
 }
 
 // MkLinks symlinks each config into its live dest (ln -fhs), backing up non-repo dests, skipping links already pointing into the repo.
@@ -123,7 +111,7 @@ func (h Host) MkCopies(copies []spec.FileItem, dirRels []string) error {
 			if err := h.fs.BackupBeforeOverwrite(dest, false); err != nil {
 				return err
 			}
-			mode := copyMode(item)
+			mode, _ := parseMode(item.Chmod)
 			if err := h.fs.Copy(src, dest, mode); err != nil {
 				return err
 			}
@@ -147,17 +135,6 @@ func (h Host) copyDests(item spec.FileItem) []string {
 		out[i] = h.expandHome(d.Path)
 	}
 	return out
-}
-
-// copyMode: spec chmod when set, else default (0644, 0640 under HOME/).
-func copyMode(item spec.FileItem) os.FileMode {
-	if m, ok := parseMode(item.Chmod); ok {
-		return m
-	}
-	if strings.HasPrefix(item.Rel, "HOME/") {
-		return 0640
-	}
-	return 0644
 }
 
 // ownerSpec combines owner + owner-group into "owner:group" for fs.Chown ("" -> no chown).

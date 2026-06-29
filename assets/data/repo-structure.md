@@ -28,6 +28,7 @@ ci
   zsh
     functions
     scripts
+      bootstrap
       installs
 root
   HOME

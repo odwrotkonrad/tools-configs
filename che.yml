@@ -65,6 +65,7 @@ base:
           - {dest: [/etc/zsh/zshrc.d/completions]}
     install:
       - ci/zsh/scripts/installs/*.zsh
+      - ci/zsh/scripts/bootstrap/*.zsh
     services: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-desktop:

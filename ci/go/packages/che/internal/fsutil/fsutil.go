@@ -51,7 +51,7 @@ func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 		f.Log("mkdir", dest)
 		return nil
 	}
-	argv := f.MkdirArgv(dest, asUser, ModeArg(mode), parents)
+	argv := f.MkdirArgv(dest, asUser, modeArgOpt(mode), parents)
 	if err := run(exec.Command(argv[0], argv[1:]...)); err != nil {
 		return err
 	}
@@ -61,12 +61,16 @@ func (f FS) Mkdir(dest, asUser string, mode os.FileMode, parents bool) error {
 
 // MkdirArgv builds a mkdir argv, escalating per dest/asUser: asUser -> sudo -u
 // <user>, root-tree -> sudo unless root, HOME-tree -> direct. parents adds -p.
+// mode "" -> no -m (mkdir honors umask).
 func (f FS) MkdirArgv(dest, asUser, mode string, parents bool) []string {
 	base := []string{"mkdir"}
 	if parents {
 		base = append(base, "-p")
 	}
-	base = append(base, "-m", mode, dest)
+	if mode != "" {
+		base = append(base, "-m", mode)
+	}
+	base = append(base, dest)
 	switch {
 	case asUser != "" && os.Geteuid() == 0:
 		return append([]string{"sudo", "-u", asUser}, base...)
@@ -87,7 +91,9 @@ func (f FS) Symlink(target, dest string) error {
 }
 
 func (f FS) Copy(src, dest string, mode os.FileMode) error {
-	return f.mutate("cp", dest, dest, "install", "-m", ModeArg(mode), src, dest)
+	argv := append([]string{"install"}, modeFlag(mode)...)
+	argv = append(argv, src, dest)
+	return f.mutate("cp", dest, dest, argv...)
 }
 
 func (f FS) Remove(dest string) error {
@@ -115,7 +121,7 @@ func (f FS) Install(dest string, body []byte, mode os.FileMode, owner string) er
 	}
 	tmp.Close()
 
-	argv := []string{"install", "-m", ModeArg(mode)}
+	argv := append([]string{"install"}, modeFlag(mode)...)
 	if owner != "" {
 		o, g, _ := strings.Cut(owner, ":")
 		argv = append(argv, "-o", o, "-g", g)
@@ -168,6 +174,22 @@ func run(c *exec.Cmd) error {
 
 // ModeArg renders an octal mode for install/mkdir/chmod argv.
 func ModeArg(m os.FileMode) string { return fmt.Sprintf("%04o", m) }
+
+// modeArgOpt is ModeArg for a set mode, "" when unset (0) -> argv omits -m.
+func modeArgOpt(m os.FileMode) string {
+	if m == 0 {
+		return ""
+	}
+	return ModeArg(m)
+}
+
+// modeFlag is ["-m", <mode>] for a set mode, empty when unset (0).
+func modeFlag(m os.FileMode) []string {
+	if m == 0 {
+		return nil
+	}
+	return []string{"-m", ModeArg(m)}
+}
 
 // IsDir reports whether p is an existing directory.
 func IsDir(p string) bool {
