@@ -34,14 +34,31 @@ func resolve(t *testing.T, dir, profile string) Resolved {
 }
 
 var mergeFiles = map[string]string{
-	"root/etc/zshrc":               "zshrc\n",
-	"root/HOME/.config/zsh/.zshrc": "user zshrc\n",
-	"root/etc/grafana/grafana.ini": "ini\n",
+	"root/etc/zshrc":                                   "zshrc\n",
+	"root/HOME/.config/zsh/.zshrc":                     "user zshrc\n",
+	"root/etc/grafana/grafana.ini":                     "ini\n",
+	"root/Library/LaunchDaemons/otelcol.plist.host.cp": "plist\n",
+}
+
+// find returns a pointer to the first item satisfying pred, or nil.
+func find(items []FileItem, pred func(FileItem) bool) *FileItem {
+	if i := slices.IndexFunc(items, pred); i >= 0 {
+		return &items[i]
+	}
+	return nil
+}
+
+func relIs(rel string) func(FileItem) bool {
+	return func(it FileItem) bool { return it.Rel == rel }
+}
+
+func destIs(path string) func(FileItem) bool {
+	return func(it FileItem) bool { return it.Dests[0].Path == path }
 }
 
 // hasLink reports whether res.Links carries a file with the given rel.
 func hasLink(res Resolved, rel string) bool {
-	return slices.ContainsFunc(res.Links, func(it FileItem) bool { return it.Rel == rel })
+	return find(res.Links, relIs(rel)) != nil
 }
 
 func TestResolveMerge(t *testing.T) {
@@ -68,6 +85,10 @@ func TestResolveMerge(t *testing.T) {
 	}
 	if !hasLink(host, "etc/grafana/grafana.ini") {
 		t.Errorf("host missing grafana link: %v", host.Links)
+	}
+	// glob in a perm-bearing copy group stamps perms on matched files.
+	if c := find(host.Copies, relIs("Library/LaunchDaemons/otelcol.plist.host.cp")); c == nil || c.Chmod != "0600" {
+		t.Errorf("perm-group glob did not stamp copy chmod: %+v", c)
 	}
 
 	// cli: base minus exclude-desktop.
@@ -130,34 +151,28 @@ func TestResolveClassify(t *testing.T) {
 
 // rels extracts the Rel of each FileItem.
 func rels(items []FileItem) []string {
-	out := make([]string, len(items))
-	for i, it := range items {
-		out[i] = it.Rel
-	}
-	return out
+	return mapItems(items, func(it FileItem) string { return it.Rel })
 }
 
 // dirPaths extracts the first dest path of each dir FileItem.
 func dirPaths(items []FileItem) []string {
-	out := make([]string, len(items))
+	return mapItems(items, func(it FileItem) string { return it.Dests[0].Path })
+}
+
+// mapItems projects each FileItem through fn.
+func mapItems[T any](items []FileItem, fn func(FileItem) T) []T {
+	out := make([]T, len(items))
 	for i, it := range items {
-		out[i] = it.Dests[0].Path
+		out[i] = fn(it)
 	}
 	return out
 }
 
+// findDir returns the dir FileItem with the given dest path, or nil.
+func findDir(res Resolved, path string) *FileItem { return find(res.ExtraDirs, destIs(path)) }
+
 // hasDir reports whether res.ExtraDirs carries the given path.
 func hasDir(res Resolved, path string) bool { return findDir(res, path) != nil }
-
-// findDir returns the dir FileItem with the given dest path, or nil.
-func findDir(res Resolved, path string) *FileItem {
-	for i, it := range res.ExtraDirs {
-		if it.Dests[0].Path == path {
-			return &res.ExtraDirs[i]
-		}
-	}
-	return nil
-}
 
 func TestResolveUndefinedFails(t *testing.T) {
 	dir := fixtureRepo(t, "merge", mergeFiles)
@@ -197,7 +212,7 @@ func TestIncludeExcludeSections(t *testing.T) {
 	if hasLink(res, "etc/zsh/zshenv") {
 		t.Errorf("exclude.link glob not applied: %v", rels(res.Links))
 	}
-	if slices.ContainsFunc(res.Copies, func(it FileItem) bool { return it.Rel == "HOME/.config/zsh/c.host.cp" }) {
+	if find(res.Copies, relIs("HOME/.config/zsh/c.host.cp")) != nil {
 		t.Errorf("exclude.copy glob did not drop rich entry: %v", rels(res.Copies))
 	}
 	if !slices.Contains(res.Installs, "ci/zsh/scripts/installs/10-brew.zsh") {

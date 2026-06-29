@@ -13,83 +13,56 @@ base:
       - etc/**
       - usr/**
     copy:
-      - HOME/**
-      - etc/**
-      - usr/**
-      - source: Library/LaunchDaemons/otelcol.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/otelcol.plist}]
-        owner: root
+      - files: [HOME/**, etc/**, usr/**]
+      - owner: root
         owner-group: wheel
         chmod: "0644"
-      - source: Library/LaunchDaemons/dir-size-exporter.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/dir-size-exporter.plist}]
-        owner: root
-        owner-group: wheel
-        chmod: "0644"
-      - source: Library/LaunchDaemons/port-exporter.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/port-exporter.plist}]
-        owner: root
-        owner-group: wheel
-        chmod: "0644"
-      - source: Library/LaunchDaemons/grafana.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/grafana.plist}]
-        owner: root
-        owner-group: wheel
-        chmod: "0644"
-      - source: Library/LaunchDaemons/prometheus.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/prometheus.plist}]
-        owner: root
-        owner-group: wheel
-        chmod: "0644"
-      - source: Library/LaunchDaemons/jaeger.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/jaeger.plist}]
-        owner: root
-        owner-group: wheel
-        chmod: "0644"
-      - source: Library/LaunchDaemons/loki.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/loki.plist}]
-        owner: root
-        owner-group: wheel
-        chmod: "0644"
+        files:
+          - {source: Library/LaunchDaemons/otelcol.plist.host.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
+          - {source: Library/LaunchDaemons/dir-size-exporter.plist.host.cp, dest: [/Library/LaunchDaemons/dir-size-exporter.plist]}
+          - {source: Library/LaunchDaemons/port-exporter.plist.host.cp, dest: [/Library/LaunchDaemons/port-exporter.plist]}
+          - {source: Library/LaunchDaemons/grafana.plist.host.cp, dest: [/Library/LaunchDaemons/grafana.plist]}
+          - {source: Library/LaunchDaemons/prometheus.plist.host.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
+          - {source: Library/LaunchDaemons/jaeger.plist.host.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
+          - {source: Library/LaunchDaemons/loki.plist.host.cp, dest: [/Library/LaunchDaemons/loki.plist]}
     template:
-      - HOME/**
-      - etc/**
-      - usr/**
-      - source: etc/sudoers.d/configs.host.tpl
-        dest: [{path: /etc/sudoers.d/configs}]
-        owner: root
+      - files: [HOME/**, etc/**, usr/**]
+      - owner: root
         owner-group: wheel
         chmod: "0440"
-      - source: Library/LaunchAgents/gitlab-runner.plist.host.tpl
-        dest: [{path: /Library/LaunchAgents/gitlab-runner.plist}]
-        owner: root
+        files:
+          - {source: etc/sudoers.d/configs.host.tpl, dest: [/etc/sudoers.d/configs]}
+      - owner: root
         owner-group: wheel
         chmod: "0644"
-      - source: HOME/.config/agents/templates/AGENTS.md.host.tpl
-        dest:
-          - {path: ~/.config/claude/CLAUDE.md, render-referenced-files: true}
-          - {path: ~/.config/codex/AGENTS.md, render-referenced-files: true}
+        files:
+          - {source: Library/LaunchAgents/gitlab-runner.plist.host.tpl, dest: [/Library/LaunchAgents/gitlab-runner.plist]}
+      - files:
+          - source: HOME/.config/agents/templates/AGENTS.md.host.tpl
+            dest:
+              - ~/.config/claude/CLAUDE.md
+              - {path: ~/.config/codex/AGENTS.md, render-referenced-files: true}
     mkdirs:
-      - dest: [{path: "/var/log/{otelcol,dir_size_exporter,port_exporter}"}]
-        chmod: "2775"
-      - dest: [{path: "/var/custom/cache/dir_size_exporter"}]
-        chmod: "2775"
-      - dest: [{path: "/var/log/{grafana,prometheus,jaeger,loki}"}]
-        chmod: "2775"
-      - dest: [{path: "/usr/local/var/{grafana,prometheus}"}]
-        chmod: "2775"
-      - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
-      - HOME/.config/codex
-      - HOME/.local/{bin,share}
-      - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
-      - HOME/ScreenCapture
-      - dest: [{path: /etc/zsh/zshrc.d/completions}]
-        owner: root
+      - files:
+          - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
+          - HOME/.config/codex
+          - HOME/.local/{bin,share}
+          - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
+          - HOME/ScreenCapture
+          - /var/root/.cache/zsh
+          - /var/root/.config
+          - /var/root/.local/state/zsh/completions
+      - chmod: "2775"
+        files:
+          - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
+          - {dest: ["/var/custom/cache/dir_size_exporter"]}
+          - {dest: ["/var/log/{grafana,prometheus,jaeger,loki}"]}
+          - {dest: ["/usr/local/var/{grafana,prometheus}"]}
+      - owner: root
         owner-group: wheel
         chmod: "0755"
-      - /var/root/.cache/zsh
-      - /var/root/.config
-      - /var/root/.local/state/zsh/completions
+        files:
+          - {dest: [/etc/zsh/zshrc.d/completions]}
     install:
       - ci/zsh/scripts/installs/*.zsh
     services: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]

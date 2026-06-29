@@ -10,8 +10,8 @@ base:
       - HOME/.config/extra/**
       - HOME/.config/oneoff/**
     copy:
-      - source: HOME/.config/zsh/c.host.cp
-        dest: [{path: ~/.config/zsh/c}]
+      - files:
+          - {source: HOME/.config/zsh/c.host.cp, dest: [~/.config/zsh/c]}
     install:
       - ci/zsh/scripts/installs/10-brew.zsh
       - ci/zsh/scripts/installs/20-foo.zsh

@@ -12,10 +12,9 @@ base:
       - etc/zshrc
       - etc/zsh/**
     copy:
-      - HOME/.config/zsh/**
-      - Library/LaunchDaemons/otelcol.plist*
+      - files: [HOME/.config/zsh/**, Library/LaunchDaemons/otelcol.plist*]
     template:
-      - HOME/.config/zsh/**
+      - files: [HOME/.config/zsh/**]
 
 cli/macos:
   mixin-profiles: [base]

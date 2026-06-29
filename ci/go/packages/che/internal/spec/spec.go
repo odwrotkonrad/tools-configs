@@ -56,40 +56,61 @@ type excludeSet struct {
 	Services []string `yaml:"services"`
 }
 
-// DestSpec is one dest path plus per-dest template option.
+// DestSpec is one dest path plus per-dest template option: a scalar path, or a
+// mapping carrying the render option.
 type DestSpec struct {
 	Path                  string `yaml:"path"`
 	RenderReferencedFiles bool   `yaml:"render-referenced-files"`
 }
 
-// entry is a copy/template/mkdirs YAML union: a bare glob string, or a rich
-// object carrying explicit dest(s) + perms. glob is set iff the glob form.
-type entry struct {
-	glob       string
-	Source     string     `yaml:"source"`
-	Dest       []DestSpec `yaml:"dest"`
-	Owner      string     `yaml:"owner"`
-	OwnerGroup string     `yaml:"owner-group"`
-	Chmod      string     `yaml:"chmod"`
-}
-
-func (e *entry) UnmarshalYAML(value *yaml.Node) error {
+func (d *DestSpec) UnmarshalYAML(value *yaml.Node) error {
 	if value.Kind == yaml.ScalarNode {
-		e.glob = value.Value
+		d.Path = value.Value
 		return nil
 	}
-	type alias entry
-	return value.Decode((*alias)(e))
+	type alias DestSpec
+	return value.Decode((*alias)(d))
+}
+
+// Perms is shared ownership/mode: empty fields mean "use the code default".
+type Perms struct {
+	Owner      string `yaml:"owner"`
+	OwnerGroup string `yaml:"owner-group"`
+	Chmod      string `yaml:"chmod"`
+}
+
+func (p Perms) set() bool { return p != Perms{} }
+
+// entry is a copy/template/mkdirs perm-group: optional perms cascading to every
+// item in Files (globs included).
+type entry struct {
+	Perms `yaml:",inline"`
+	Files []fileSpec `yaml:"files"`
+}
+
+// fileSpec is one item in a perm-group's Files list: a bare glob string, or a
+// {source, dest} object. glob is set iff the glob form.
+type fileSpec struct {
+	glob   string
+	Source string     `yaml:"source"`
+	Dest   []DestSpec `yaml:"dest"`
+}
+
+func (f *fileSpec) UnmarshalYAML(value *yaml.Node) error {
+	if value.Kind == yaml.ScalarNode {
+		f.glob = value.Value
+		return nil
+	}
+	type alias fileSpec
+	return value.Decode((*alias)(f))
 }
 
 // FileItem is one resolved file: repo-relative source (under root/), explicit
 // dests (nil -> derived in host), optional perms.
 type FileItem struct {
-	Rel        string
-	Dests      []DestSpec
-	Owner      string
-	OwnerGroup string
-	Chmod      string
+	Rel   string
+	Dests []DestSpec
+	Perms
 }
 
 // Resolved is the classified, repo-relative selection the passes consume.
@@ -104,18 +125,19 @@ type Resolved struct {
 }
 
 // effective is the composed additive selection before classification + exclude.
-// Glob forms are bare strings (a YAML scalar carries no perms); only rich
-// entries carry perms, so glob-classified files never have any.
+// A glob in a perm-bearing group records its perms in perms[glob]; classify
+// stamps matched files with them (last match wins).
 type effective struct {
-	linkGlobs []string   // link-pass globs (repo-relative under root/)
-	copyGlobs []string   // copy-pass globs
-	tmplGlobs []string   // template-pass globs
-	richCopy  []FileItem // rich-form copy entries
-	richTmpl  []FileItem // rich-form template entries
-	dirs      []FileItem // mkdirs: glob forms expanded to one item per path, rich carry perms
-	install   []string   // install unit paths (order = run order)
-	services  []string   // service names
-	exclude   excludeSet // accumulated exclude globs (applied last, wins)
+	linkGlobs []string         // link-pass globs (repo-relative under root/)
+	copyGlobs []string         // copy-pass globs
+	tmplGlobs []string         // template-pass globs
+	richCopy  []FileItem       // rich-form copy entries
+	richTmpl  []FileItem       // rich-form template entries
+	dirs      []FileItem       // mkdirs: glob forms expanded to one item per path, rich carry perms
+	perms     map[string]Perms // glob -> group perms (copy/template glob items)
+	install   []string         // install unit paths (order = run order)
+	services  []string         // service names
+	exclude   excludeSet       // accumulated exclude globs (applied last, wins)
 }
 
 // Load parses che.yml: the `profiles:` enum plus every other top-level key as a
@@ -155,7 +177,7 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 			"detected profile %q is not defined in che.yml (defined: %v)",
 			profile, r.detectableLeaves())
 	}
-	var eff effective
+	eff := effective{perms: map[string]Perms{}}
 	if err := r.mergeInto(&eff, profile, nil); err != nil {
 		return Resolved{}, err
 	}
@@ -191,13 +213,13 @@ func classify(root string, eff effective, res *Resolved) error {
 		}
 		switch {
 		case matchAny(tmpls, rel) && strings.HasSuffix(rel, TmplExt):
-			res.Templates = append(res.Templates, FileItem{Rel: rel})
+			res.Templates = append(res.Templates, FileItem{Rel: rel, Perms: permsFor(eff.perms, tmpls, rel)})
 		case matchAny(copies, rel) && strings.HasSuffix(rel, CpExt):
-			res.Copies = append(res.Copies, FileItem{Rel: rel})
+			res.Copies = append(res.Copies, FileItem{Rel: rel, Perms: permsFor(eff.perms, copies, rel)})
 		case filepath.Base(rel) == ".gitkeep":
 			// excluded from every pass
 		case matchAny(links, rel):
-			res.Links = append(res.Links, FileItem{Rel: rel})
+			res.Links = append(res.Links, FileItem{Rel: rel, Perms: permsFor(eff.perms, links, rel)})
 		}
 	}
 	collectDirs(res)
@@ -314,8 +336,8 @@ func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 	}
 	in := ps.Include
 	eff.linkGlobs = append(eff.linkGlobs, in.Link...)
-	splitEntries(in.Copy, &eff.copyGlobs, &eff.richCopy)
-	splitEntries(in.Template, &eff.tmplGlobs, &eff.richTmpl)
+	splitEntries(in.Copy, &eff.copyGlobs, &eff.richCopy, eff.perms)
+	splitEntries(in.Template, &eff.tmplGlobs, &eff.richTmpl, eff.perms)
 	for _, e := range in.Mkdirs {
 		eff.dirs = append(eff.dirs, dirItems(e)...)
 	}
@@ -335,36 +357,51 @@ func (ex *excludeSet) append(o excludeSet) {
 	ex.Services = append(ex.Services, o.Services...)
 }
 
-// splitEntries routes each entry to globs (glob form) or rich FileItems (rich form).
-func splitEntries(entries []entry, globs *[]string, rich *[]FileItem) {
+// splitEntries walks each perm-group's Files: glob items go to globs (recording
+// group perms in perms when set), {source,dest} items become rich FileItems
+// carrying the group's perms.
+func splitEntries(entries []entry, globs *[]string, rich *[]FileItem, perms map[string]Perms) {
 	for _, e := range entries {
-		if e.glob != "" {
-			*globs = append(*globs, e.glob)
-		} else {
-			*rich = append(*rich, e.item(e.Source, e.Dest))
+		for _, f := range e.Files {
+			if f.glob != "" {
+				*globs = append(*globs, f.glob)
+				if e.set() {
+					perms[f.glob] = e.Perms
+				}
+				continue
+			}
+			*rich = append(*rich, FileItem{Rel: f.Source, Dests: f.Dest, Perms: e.Perms})
 		}
 	}
 }
 
-// dirItems expands a mkdirs entry into one FileItem per brace-expanded dest path,
-// each carrying the entry's perms (path in Dests[0]).
+// dirItems expands each mkdirs perm-group item into one FileItem per
+// brace-expanded dest path, carrying the group's perms (path in Dests[0]).
 func dirItems(e entry) []FileItem {
-	paths := e.Dest
-	if e.glob != "" {
-		paths = []DestSpec{{Path: e.glob}}
-	}
 	var out []FileItem
-	for _, d := range paths {
-		for _, p := range fsutil.ExpandBraces(d.Path) {
-			out = append(out, e.item("", []DestSpec{{Path: p}}))
+	for _, f := range e.Files {
+		paths := f.Dest
+		if f.glob != "" {
+			paths = []DestSpec{{Path: f.glob}}
+		}
+		for _, d := range paths {
+			for _, p := range fsutil.ExpandBraces(d.Path) {
+				out = append(out, FileItem{Dests: []DestSpec{{Path: p}}, Perms: e.Perms})
+			}
 		}
 	}
 	return out
 }
 
-// item builds a FileItem carrying the entry's perms.
-func (e entry) item(rel string, dests []DestSpec) FileItem {
-	return FileItem{Rel: rel, Dests: dests, Owner: e.Owner, OwnerGroup: e.OwnerGroup, Chmod: e.Chmod}
+// permsFor returns the perms of the last glob in globs that matches rel.
+func permsFor(perms map[string]Perms, globs []string, rel string) Perms {
+	var p Perms
+	for _, g := range globs {
+		if hit, ok := perms[g]; ok && fsutil.MatchGlob(strings.TrimSuffix(g, "/"), rel) {
+			p = hit
+		}
+	}
+	return p
 }
 
 // isDetectable reports whether profile is both declared in the enum and defined.

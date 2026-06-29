@@ -10,18 +10,19 @@ base:
       - HOME/.config/zsh/**
       - etc/zshrc
     copy:
-      - HOME/.config/zsh/**
-      - source: Library/LaunchDaemons/otelcol.plist.host.cp
-        dest: [{path: /Library/LaunchDaemons/otelcol.plist}]
-        owner: root
+      - files: [HOME/.config/zsh/**]
+      - owner: root
         owner-group: wheel
         chmod: "0644"
+        files:
+          - {source: Library/LaunchDaemons/otelcol.plist.host.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
     template:
-      - HOME/.config/zsh/**
+      - files: [HOME/.config/zsh/**]
     mkdirs:
-      - HOME/.cache/zsh
-      - dest: [{path: /var/log/che-test-setgid}]
-        chmod: "2775"
+      - files: [HOME/.cache/zsh]
+      - chmod: "2775"
+        files:
+          - {dest: [/var/log/che-test-setgid]}
     install:
       - install/unit
     services: [otelcol]

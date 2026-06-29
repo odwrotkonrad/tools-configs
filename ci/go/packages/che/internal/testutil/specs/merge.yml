@@ -11,10 +11,14 @@ base:
       - etc/zshrc
       - HOME/.config/zsh/**
       - etc/grafana/**
+    copy:
+      - chmod: "0600"
+        files: [Library/LaunchDaemons/**]
     mkdirs:
-      - HOME/.cache/zsh
-      - dest: [{path: /var/log/grafana}]
-        chmod: "2775"
+      - files: [HOME/.cache/zsh]
+      - chmod: "2775"
+        files:
+          - {dest: [/var/log/grafana]}
     install:
       - ci/zsh/scripts/installs/10-brew.zsh
       - ci/zsh/scripts/installs/20-kitty.zsh
