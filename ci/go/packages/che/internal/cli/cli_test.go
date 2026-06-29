@@ -13,12 +13,27 @@ import (
 func setupDryRun(t *testing.T) string {
 	t.Helper()
 	home := testutil.MockRepoEnv(t)
-	dryRun = true
-	t.Cleanup(func() { dryRun = false })
+	t.Setenv("CHE_DRY_RUN", "")
+	dryRunMode = "delta"
+	t.Cleanup(func() { dryRunMode = "" })
 	if err := build(); err != nil {
 		t.Fatalf("build() errored: %v", err)
 	}
 	return home
+}
+
+// build() reads CHE_DRY_RUN from env when the flag is unset.
+func TestBuildDryRunEnvFallback(t *testing.T) {
+	testutil.MockRepoEnv(t)
+	dryRunMode = ""
+	t.Cleanup(func() { dryRunMode = "" })
+	t.Setenv("CHE_DRY_RUN", "all")
+	if err := build(); err != nil {
+		t.Fatalf("build() errored: %v", err)
+	}
+	if !theHost.DryRun {
+		t.Fatal("DryRun = false, want true (CHE_DRY_RUN=all from env)")
+	}
 }
 
 // [<] 🤖🤖

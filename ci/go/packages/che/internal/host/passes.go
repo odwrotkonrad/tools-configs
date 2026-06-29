@@ -32,7 +32,7 @@ func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
 	for _, item := range extraDirs {
 		rel := item.Dests[0].Path
 		dest := h.ToDest(rel)
-		if fsutil.IsDir(dest) {
+		if !h.DryRunAll() && fsutil.IsDir(dest) {
 			continue
 		}
 		if err := h.mkExtraDir(item, dest); err != nil {
@@ -47,7 +47,7 @@ func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
 func (h Host) ensureConfigDirs(dirRels []string) error {
 	for _, rel := range dirRels {
 		dest := h.ToDest(rel)
-		if fsutil.IsDir(dest) {
+		if !h.DryRunAll() && fsutil.IsDir(dest) {
 			continue
 		}
 		if err := h.fs.Mkdir(dest, "", 0, false); err != nil {
@@ -101,9 +101,11 @@ func (h Host) MkLinks(links []spec.FileItem, dirRels []string) error {
 		rel := item.Rel
 		src := h.Src(rel)
 		dest := h.ToDest(rel)
-		if resolved, rerr := filepath.EvalSymlinks(dest); rerr == nil {
-			if srcResolved, serr := filepath.EvalSymlinks(src); serr == nil && resolved == srcResolved {
-				continue
+		if !h.DryRunAll() {
+			if resolved, rerr := filepath.EvalSymlinks(dest); rerr == nil {
+				if srcResolved, serr := filepath.EvalSymlinks(src); serr == nil && resolved == srcResolved {
+					continue
+				}
 			}
 		}
 		if err := h.fs.Symlink(src, dest); err != nil {
@@ -130,7 +132,7 @@ func (h Host) MkCopies(copies []spec.FileItem, dirRels []string) error {
 	for _, item := range copies {
 		src := h.Src(item.Rel)
 		for _, dest := range h.copyDests(item) {
-			if sameContent(src, dest) {
+			if !h.DryRunAll() && sameContent(src, dest) {
 				continue
 			}
 			mode, _ := parseMode(item.Chmod)

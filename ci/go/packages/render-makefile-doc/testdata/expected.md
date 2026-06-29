@@ -1,5 +1,11 @@
 ## `./Makefile`
 
+### Parameters:
+
+`DRY_RUN=delta|all` mode with values
+`VERBOSE` plain param no vals
+`EXPORTED` bare export, read from env
+
 ### Wrappers:
 
 `run-sync-quick`: `run-host-thing -> run-repo-thing` do quick sync

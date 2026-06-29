@@ -47,6 +47,7 @@ base:
           - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
           - HOME/.config/codex
           - HOME/.local/{bin,share}
+          - HOME/.local/share/che/backups
           - HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}
           - HOME/ScreenCapture
           - /var/root/.cache/zsh

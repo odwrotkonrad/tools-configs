@@ -26,4 +26,22 @@ func TestSectionOpen(t *testing.T) {
 	}
 }
 
+func TestValsComment(t *testing.T) {
+	cases := []struct {
+		text string
+		vals string
+		ok   bool
+	}{
+		{"#[vals] delta|all", "delta|all", true},
+		{"#[what] not vals", "", false},
+		{"#[why] nope", "", false},
+	}
+	for _, c := range cases {
+		vals, ok := valsComment(c.text)
+		if ok != c.ok || vals != c.vals {
+			t.Errorf("valsComment(%q) = (%q,%v), want (%q,%v)", c.text, vals, ok, c.vals, c.ok)
+		}
+	}
+}
+
 //[<] 🤖🤖🤖

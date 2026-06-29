@@ -39,7 +39,7 @@ func TestPrepend(t *testing.T) {
 }
 
 func TestSrc(t *testing.T) {
-	h := New("/repo", "/Users/x", "cli/macos", false)
+	h := New("/repo", "/Users/x", "cli/macos", DryRunOff)
 	if got := h.Src("etc/zshrc"); got != "/repo/root/etc/zshrc" {
 		t.Errorf("Src = %q, want /repo/root/etc/zshrc", got)
 	}
@@ -62,7 +62,7 @@ func TestResolveInstall(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	h := New(dir, "/Users/x", "cli/macos", false)
+	h := New(dir, "/Users/x", "cli/macos", DryRunOff)
 
 	// explicit keep spec order, glob expands in place sorted
 	got, err := h.ResolveInstall([]string{

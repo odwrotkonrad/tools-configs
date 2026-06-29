@@ -24,6 +24,10 @@ func renderTarget(t target) string {
 	var b strings.Builder
 	b.WriteString("`")
 	b.WriteString(t.name)
+	if t.vals != "" {
+		b.WriteString("=")
+		b.WriteString(t.vals)
+	}
 	b.WriteString("`")
 	if len(t.chain) > 0 {
 		b.WriteString(": `")

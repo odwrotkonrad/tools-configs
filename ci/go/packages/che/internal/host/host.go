@@ -13,6 +13,16 @@ import (
 	"configs/ci/go/packages/che/internal/fsutil"
 )
 
+// DryRunMode selects how a dry run reports: off (real run), delta (only dests
+// that would change), all (every dest, as if nothing existed at the destination).
+type DryRunMode int
+
+const (
+	DryRunOff DryRunMode = iota
+	DryRunDelta
+	DryRunAll
+)
+
 // Host is the live system the load passes act on: repo source tree, invoking
 // identity, detected profile, mutating filesystem.
 type Host struct {
@@ -21,21 +31,28 @@ type Host struct {
 	Home     string
 	Profile  string // "<space>/<os>-<arch>"
 	DryRun   bool
+	mode     DryRunMode
 	fs       fsutil.FS
 }
 
-// New builds a Host, wiring an fsutil.FS that honors dryRun, escalates priv per-dest.
-func New(repoRoot, home, profile string, dryRun bool) Host {
+// New builds a Host, wiring an fsutil.FS that honors the dry-run mode, escalates priv per-dest.
+func New(repoRoot, home, profile string, mode DryRunMode) Host {
 	root := filepath.Join(repoRoot, "root")
+	dryRun := mode != DryRunOff
 	return Host{
 		RepoRoot: repoRoot,
 		Root:     root,
 		Home:     home,
 		Profile:  profile,
 		DryRun:   dryRun,
+		mode:     mode,
 		fs:       fsutil.FS{Home: home, DryRun: dryRun},
 	}
 }
+
+// DryRunAll reports whether the run reports the full insert set (every dest),
+// bypassing the "already in desired state" skip checks.
+func (h Host) DryRunAll() bool { return h.mode == DryRunAll }
 
 // Src maps a repo-relative path (under root/) to its absolute source path.
 func (h Host) Src(rel string) string { return filepath.Join(h.Root, rel) }

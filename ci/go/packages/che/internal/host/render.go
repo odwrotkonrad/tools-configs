@@ -22,6 +22,12 @@ func (h Host) RenderTemplates(templates []spec.FileItem) error {
 	if err := h.archiveBefore("render", dests); err != nil {
 		return err
 	}
+	if h.DryRun { // [why] dry-run logs dests only: no gomplate render, no @-include resolve
+		for _, dest := range dests {
+			h.fs.Log("render", dest)
+		}
+		return nil
+	}
 	for _, item := range templates {
 		if err := h.renderTemplate(item); err != nil {
 			return err

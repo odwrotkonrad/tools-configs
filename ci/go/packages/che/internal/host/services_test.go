@@ -18,7 +18,7 @@ func fixtureHost(t *testing.T) Host {
 		"root/Library/LaunchAgents/gitlab-runner.plist.host.tpl":             "<plist/>\n",
 		"root/HOME/Library/LaunchAgents/load-defaults-config.plist.host.tpl": "<plist/>\n",
 	})
-	return New(dir, "/Users/x", "desktop/macos", false)
+	return New(dir, "/Users/x", "desktop/macos", DryRunOff)
 }
 
 func TestResolveDomains(t *testing.T) {

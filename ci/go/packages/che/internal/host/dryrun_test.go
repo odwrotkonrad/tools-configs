@@ -17,7 +17,7 @@ import (
 func setupHost(t *testing.T) (Host, spec.Resolved, string) {
 	t.Helper()
 	dir, home := testutil.CheRepo(t)
-	h := New(dir, home, testutil.CheProfile, true)
+	h := New(dir, home, testutil.CheProfile, DryRunDelta)
 	s, err := spec.Load(filepath.Join(dir, "che.yml"))
 	if err != nil {
 		t.Fatal(err)
@@ -55,6 +55,81 @@ func snapshotTree(t *testing.T, dir string) string {
 	}
 	slices.Sort(lines)
 	return strings.Join(lines, "\n")
+}
+
+// dry-run=all reports every dest even when already in desired state, where
+// dry-run=delta skips it.
+func TestDryRunAllReportsSettledDests(t *testing.T) {
+	cases := []struct {
+		name string
+		// settle puts a dest into desired state (link points into repo / copy matches).
+		settle func(t *testing.T, h Host, r spec.Resolved) string
+		run    func(Host, spec.Resolved) error
+	}{
+		{
+			"link",
+			func(t *testing.T, h Host, r spec.Resolved) string {
+				item := r.Links[0]
+				dest := h.ToDest(item.Rel)
+				if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.Symlink(h.Src(item.Rel), dest); err != nil {
+					t.Fatal(err)
+				}
+				return dest
+			},
+			func(h Host, r spec.Resolved) error { return h.MkLinks(r.Links, r.Dirs) },
+		},
+		{
+			"copy",
+			func(t *testing.T, h Host, r spec.Resolved) string {
+				item := r.Copies[0]
+				dest := h.copyDests(item)[0]
+				src, err := os.ReadFile(h.Src(item.Rel))
+				if err != nil {
+					t.Fatal(err)
+				}
+				if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.WriteFile(dest, src, 0o644); err != nil {
+					t.Fatal(err)
+				}
+				return dest
+			},
+			func(h Host, r spec.Resolved) error { return h.MkCopies(r.Copies, r.Dirs) },
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			dir, home := testutil.CheRepo(t)
+			s, err := spec.Load(filepath.Join(dir, "che.yml"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			res, err := s.Resolve(testutil.CheProfile, filepath.Join(dir, "root"))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			dest := c.settle(t, New(dir, home, testutil.CheProfile, DryRunDelta), res)
+
+			delta := New(dir, home, testutil.CheProfile, DryRunDelta)
+			deltaOut, err := testutil.CaptureStdout(t, func() error { return c.run(delta, res) })
+			if err != nil {
+				t.Fatal(err)
+			}
+			testutil.NotLine(t, deltaOut, dest)
+
+			all := New(dir, home, testutil.CheProfile, DryRunAll)
+			allOut, err := testutil.CaptureStdout(t, func() error { return c.run(all, res) })
+			if err != nil {
+				t.Fatal(err)
+			}
+			testutil.WantLines(t, allOut, dest)
+		})
+	}
 }
 
 // each pass dry-run: prints actions, mutates nothing.

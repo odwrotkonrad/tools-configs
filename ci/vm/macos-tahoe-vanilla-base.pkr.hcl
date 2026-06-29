@@ -57,7 +57,7 @@ build {
       "sudo install -o ${var.username} -g staff -m 600 /tmp/authorized_key.pub /Users/${var.username}/.ssh/authorized_keys",
       "sudo dseditgroup -o edit -a ${var.username} -t user com.apple.access_ssh",
       "sudo dscacheutil -flushcache",
-      #[why] ssh-forward the 1Password token (vm-ssh SendEnv) so `op` works in the vm
+      #[why] ssh-forward the 1Password token (make-run-in-vm.zsh SendEnv) so `op` works in the vm
       "echo 'AcceptEnv OP_SERVICE_ACCOUNT_TOKEN' | sudo tee /etc/ssh/sshd_config.d/100-accept-op-token.conf >/dev/null"
     ]
   }
