@@ -6,7 +6,7 @@ workflow:
 
 stages:
   - validate
-  - dry-run
+  - dry-run-apply
   - test
 
 .base:
@@ -14,7 +14,6 @@ stages:
   image: python:3.14-slim
   ##[>] 🤖🤖
   variables:
-    GO_VERSION: "1.26.3"
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
   cache:
@@ -26,17 +25,13 @@ stages:
       - .cache/go-build
   ##[<] 🤖🤖
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang
+    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
     - pip install --no-cache-dir -r root/etc/python/requirements.txt
-    - curl -fsSL https://github.com/hairyhenderson/gomplate/releases/download/v5.1.0/gomplate_linux-amd64 -o /usr/local/bin/gomplate
-    - chmod +x /usr/local/bin/gomplate
-    - curl -fsSL https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64 -o /usr/local/bin/yq
-    - chmod +x /usr/local/bin/yq
-    ##[>] 🤖🤖
-    - curl -fsSL https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz | tar -C /usr/local -xz
+    ##[>] 🤖
+    #[why] go toolchain + gomplate, yq, lefthook installed by run-repo-ci-install-deps (00-ci-deps.zsh)
     - export PATH=/usr/local/go/bin:$PATH
     - export CC=clang
-    ##[<] 🤖🤖
+    ##[<] 🤖
 
 validate-docsgen:
   extends: .base
@@ -51,20 +46,26 @@ validate-typecheck:
   script:
     - make run-repo-ci-typecheck
 
-dry-run-sync:
+dry-run-apply-sync:
   extends: .base
-  stage: dry-run
+  stage: dry-run-apply
   parallel:
     matrix:
       - CHE_FORCE_PROFILE: [desktop/macos, cli/macos, cli/linux]
   script:
     - MK_DRY_RUN=all make run-sync-full
 
-test-scripts:
+test-python:
   extends: .base
   stage: test
   script:
-    - make run-repo-ci-tests
+    - make run-repo-ci-tests-python
+
+test-go:
+  extends: .base
+  stage: test
+  script:
+    - make run-repo-ci-tests-go
 
 .e2e-macos:
   #[why] macos remote vms have minimum lease time of 24h, I don't need 24/7 instance running so my local machine polls gitlab pipeline, executes the job and sends results back
@@ -75,18 +76,18 @@ test-scripts:
   variables:
     GIT_CLONE_PATH: $CI_BUILDS_DIR/configs
 
-dry-run-sync-desktop-macos-local-vm:
+dry-run-apply-macos-desktop:
   extends: .e2e-macos
-  stage: dry-run
+  stage: dry-run-apply
   needs: []
   script:
     - MK_DRY_RUN=all make run-sync
 
 
-sync-macos-local-vm:
+apply-macos-desktop:
   extends: .e2e-macos
   stage: test
-  needs: [dry-run-sync-desktop-macos-local-vm]
+  needs: [dry-run-apply-macos-desktop]
   rules:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never

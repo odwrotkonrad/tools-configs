@@ -23,7 +23,8 @@
 ### Onto Repo (CI):
 
 `run-repo-ci-render-templates` render *.repo.tpl onto repo
-`run-repo-ci-tests` test pytest & go
+`run-repo-ci-tests-python` test pytest
+`run-repo-ci-tests-go` test go
 `run-repo-ci-typecheck` mypy typecheck
 `run-repo-ci-typecheck`
 `run-repo-ci-prepare-hooks` install lefthook git hooks

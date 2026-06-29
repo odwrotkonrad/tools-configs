@@ -1,5 +1,5 @@
 #!/bin/zsh
-#[what] ci build deps: go toolchain (https://go.dev/dl/) + lefthook
+#[what] ci build deps: go toolchain (https://go.dev/dl/) + lefthook, gomplate, yq
 
 emulate -LR zsh
 setopt errexit
@@ -43,11 +43,18 @@ function install_go {
 fn-install-if-missing go install_go
 
 ##[>] 🤖🤖
-lefthook_version=v2.1.9
+#[why] install into GOPATH/bin (no sudo); run-target wrapper has it on PATH
+function go_install { PATH="${goroot}/bin:${PATH}" go install "$1" }
 
-function install_lefthook {
-  PATH="${goroot}/bin:${PATH}" go install "github.com/evilmartians/lefthook/v2@${lefthook_version}"
-}
+lefthook_version=v2.1.9
+gomplate_version=v5.1.0
+yq_version=v4.53.3
+
+function install_lefthook { go_install "github.com/evilmartians/lefthook/v2@${lefthook_version}" }
+function install_gomplate { go_install "github.com/hairyhenderson/gomplate/v5/cmd/gomplate@${gomplate_version}" }
+function install_yq { go_install "github.com/mikefarah/yq/v4@${yq_version}" }
 
 fn-install-if-missing lefthook install_lefthook
+fn-install-if-missing gomplate install_gomplate
+fn-install-if-missing yq install_yq
 ##[<] 🤖🤖
