@@ -1,6 +1,11 @@
 #!/bin/zsh
 
 emulate -LR zsh
+
+##[>] 🤖🤖
+autoload -Uz fn-is-virt
+fn-is-virt && return 0
+##[<] 🤖🤖
 setopt errexit pipefail
 
 autoload -Uz fn-install-if-missing

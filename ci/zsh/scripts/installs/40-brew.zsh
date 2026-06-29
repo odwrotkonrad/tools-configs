@@ -5,6 +5,11 @@
 #/[what]
 
 emulate -LR zsh
+
+##[>] 🤖🤖
+autoload -Uz fn-is-os
+fn-is-os mac || return 0
+##[<] 🤖🤖
 setopt errexit pipefail
 
 autoload -Uz fn-install-if-missing

@@ -29,8 +29,6 @@ ci
     functions
     scripts
       installs
-        mac
-        shared
 root
   HOME
     .config

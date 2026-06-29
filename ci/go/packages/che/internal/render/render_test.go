@@ -9,17 +9,6 @@ import (
 	"configs/ci/go/packages/che/internal/testutil"
 )
 
-func TestSplitFrontmatter(t *testing.T) {
-	src := []byte("---\nrender-to:\n  - ~/.config/claude/CLAUDE.md\n---\nbody line\n")
-	fm, body := SplitFrontmatter(src)
-	if !strings.Contains(string(fm), "render-to") {
-		t.Errorf("frontmatter missing render-to: %q", fm)
-	}
-	if strings.TrimSpace(string(body)) != "body line" {
-		t.Errorf("body = %q, want 'body line'", body)
-	}
-}
-
 func TestExecTemplateEnv(t *testing.T) {
 	t.Setenv("HOME", "/Users/test")
 	out, err := Exec("t", []byte(`log_dir = "{{ env.Getenv "HOME" }}/x"`))

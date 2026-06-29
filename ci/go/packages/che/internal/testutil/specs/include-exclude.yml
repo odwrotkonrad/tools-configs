@@ -1,28 +1,29 @@
 profiles:
-  virt:
-    mac-os-aarch64:
-base-cli:
-  load-configuration:
-    etc/zshrc:
-    etc/zsh/**:
-  install:
-    - ci/zsh/scripts/installs/mac/brew.zsh
-  services: [otelcol]
-extra:
-  load-configuration:
-    HOME/.config/extra/**:
-virt/mac-os-aarch64:
-  include-profiles: [base-cli]
+  cli:
+    macos:
+
+base:
   include:
-    profiles: [extra]
-    load-configuration:
-      - HOME/.config/oneoff/**
-    install:
-      - ci/zsh/scripts/installs/mac/oneoff
-    services: [grafana]
-  exclude:
-    load-configuration:
+    link:
+      - etc/zshrc
       - etc/zsh/**
+      - HOME/.config/extra/**
+      - HOME/.config/oneoff/**
+    copy:
+      - source: HOME/.config/zsh/c.host.cp
+        dest: [{path: ~/.config/zsh/c}]
     install:
-      - ci/zsh/scripts/installs/mac/brew.zsh
-    services: [otelcol]
+      - ci/zsh/scripts/installs/10-brew.zsh
+      - ci/zsh/scripts/installs/20-foo.zsh
+    services: [otelcol, grafana]
+
+cli/macos:
+  mixin-profiles: [base]
+  exclude:
+    link:
+      - etc/zsh/**
+    copy:
+      - HOME/.config/zsh/c.host.cp
+    install:
+      - ci/zsh/scripts/installs/20-foo.zsh
+    services: [graf*]

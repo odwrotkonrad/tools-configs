@@ -83,7 +83,7 @@ run-repo-ci-prepare-hooks:
 
 #[what] install build deps (go toolchain from go.dev)
 run-repo-ci-install-deps:
-	@$(PRETTY) $(CI_SCRIPTS)/installs/shared/golang.zsh
+	@$(PRETTY) $(CI_SCRIPTS)/installs/10-golang.zsh
 
 #[what] compile ci/go cmds into ci/go/bin
 run-repo-ci-prepare-executables: | run-repo-ci-install-deps
@@ -102,7 +102,7 @@ run-repo-ci-vm-build:
 run-repo-ci-vm-ssh:
 	@$(PRETTY) $(CI_SCRIPTS)/vm-ssh.zsh
 
-#[what] build vm then run the che passes in it (virt/mac-os-aarch64 profile)
+#[what] build vm then run the che passes in it (cli/macos profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
 	@$(IN_VM) run-host-upsert-configs
 	@$(IN_VM) run-host-mk-dirs

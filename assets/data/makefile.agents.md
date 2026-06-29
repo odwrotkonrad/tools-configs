@@ -31,4 +31,4 @@
 `run-repo-ci-vm-build-base` build vanilla base vm image
 `run-repo-ci-vm-build` build configs-local vm image
 `run-repo-ci-vm-ssh` ssh into the local vm
-`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run the che passes in it (virt/mac-os-aarch64 profile)
+`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run the che passes in it (cli/macos profile)

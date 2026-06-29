@@ -5,6 +5,7 @@ package host
 import (
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"configs/ci/go/packages/che/internal/fsutil"
@@ -12,17 +13,18 @@ import (
 )
 
 // MkDirs creates repo-tree ancestor dirs (parents first) plus profile extra-dirs.
-func (h Host) MkDirs(dirRels, extraDirs []string) error {
+func (h Host) MkDirs(dirRels []string, extraDirs []spec.FileItem) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
 	}
 	user := h.InvokingUser()
-	for _, entry := range extraDirs {
-		dest := h.ToDest(entry)
+	for _, item := range extraDirs {
+		rel := item.Dests[0].Path
+		dest := h.ToDest(rel)
 		if fsutil.IsDir(dest) {
 			continue
 		}
-		if err := h.mkExtraDir(entry, dest, user); err != nil {
+		if err := h.mkExtraDir(item, rel, dest, user); err != nil {
 			return err
 		}
 	}
@@ -51,29 +53,46 @@ func (h Host) ensureConfigDirs(dirRels []string) error {
 // isHome reports whether a repo-relative path is in HOME tree.
 func isHome(rel string) bool { return rel == "HOME" || strings.HasPrefix(rel, "HOME/") }
 
-// mkExtraDir creates one extra-dir with -p, then applies special owner/mode classes.
-func (h Host) mkExtraDir(rel, dest, user string) error {
-	switch {
-	case isHome(rel):
-		return h.fs.Mkdir(dest, user, 0750, true)
-	case strings.HasPrefix(rel, "var/log/") ||
-		strings.HasPrefix(rel, "usr/local/var") ||
-		rel == "var/custom/cache/dir_size_exporter":
-		if err := h.fs.Mkdir(dest, "", 02775, true); err != nil { // custom group + setgid
+// mkExtraDir creates one extra-dir with -p, perms from spec else defaults
+// (HOME-tree user 0750, else 0755). Owner/group from spec when set; a chmod
+// with set-bits (>0777) reapplied via chmod so the special bits stick.
+func (h Host) mkExtraDir(item spec.FileItem, rel, dest, user string) error {
+	asUser, mode := dirDefault(rel, user)
+	if m, ok := parseMode(item.Chmod); ok {
+		mode = m
+	}
+	if owner := ownerSpec(item); owner != "" {
+		asUser = "" // explicit owner set below via chown, not via mkdir -u
+	}
+	if err := h.fs.Mkdir(dest, asUser, mode, true); err != nil {
+		return err
+	}
+	if mode > 0777 { // set-uid/gid/sticky: mkdir -m may drop it, reapply
+		if err := h.fs.Chmod(fsutil.ModeArg(mode), dest); err != nil {
 			return err
 		}
-		return h.fs.Chmod("2775", dest)
-	default:
-		return h.fs.Mkdir(dest, "", 0755, true)
 	}
+	if owner := ownerSpec(item); owner != "" {
+		return h.fs.Chown(owner, dest)
+	}
+	return nil
+}
+
+// dirDefault returns the default (owner, mode) for an extra-dir by tree.
+func dirDefault(rel, user string) (string, os.FileMode) {
+	if isHome(rel) {
+		return user, 0750
+	}
+	return "", 0755
 }
 
 // MkLinks symlinks each config into its live dest (ln -fhs), backing up non-repo dests, skipping links already pointing into the repo.
-func (h Host) MkLinks(links, dirRels []string) error {
+func (h Host) MkLinks(links []spec.FileItem, dirRels []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
 	}
-	for _, rel := range links {
+	for _, item := range links {
+		rel := item.Rel
 		src := h.Src(rel)
 		dest := h.ToDest(rel)
 		if resolved, rerr := filepath.EvalSymlinks(dest); rerr == nil {
@@ -91,53 +110,88 @@ func (h Host) MkLinks(links, dirRels []string) error {
 	return nil
 }
 
-// copyServices: copied dests with explicit owner:perms. [why] root launchd daemons must be root:wheel 0644. Only loaded dests, so the VM skips them.
-var copyServices = []string{
-	"dir-size-exporter", "grafana", "jaeger", "loki",
-	"otelcol", "port-exporter", "prometheus",
-}
-
-func copyPerms(dest string) (owner string, mode os.FileMode, ok bool) {
-	for _, s := range copyServices {
-		if dest == "/Library/LaunchDaemons/"+s+".plist" {
-			return "root:wheel", 0644, true
-		}
-	}
-	return "", 0, false
-}
-
-// MkCopies copies each *.host.cp to its live dest (marker stripped) when contents differ, backing up first, applying the perms map.
-func (h Host) MkCopies(copies, dirRels []string) error {
+// MkCopies copies each *.host.cp to its dest(s) (marker stripped, or explicit
+// dest) when contents differ, backing up first, applying spec perms (else default).
+func (h Host) MkCopies(copies []spec.FileItem, dirRels []string) error {
 	if err := h.ensureConfigDirs(dirRels); err != nil {
 		return err
 	}
-	for _, rel := range copies {
-		src := h.Src(rel)
-		destRel := strings.TrimSuffix(rel, spec.CpExt)
-		dest := h.ToDest(destRel)
-		if sameContent(src, dest) {
-			continue
-		}
-		if err := h.fs.BackupBeforeOverwrite(dest, false); err != nil {
-			return err
-		}
-		owner, mode, custom := copyPerms(dest)
-		if !custom {
-			mode = 0644
-			if strings.HasPrefix(destRel, "HOME/") {
-				mode = 0640
+	for _, item := range copies {
+		src := h.Src(item.Rel)
+		for _, dest := range h.copyDests(item) {
+			if sameContent(src, dest) {
+				continue
 			}
-		}
-		if err := h.fs.Copy(src, dest, mode); err != nil {
-			return err
-		}
-		if custom {
-			if err := h.fs.Chown(owner, dest); err != nil {
+			if err := h.fs.BackupBeforeOverwrite(dest, false); err != nil {
 				return err
+			}
+			mode := copyMode(item)
+			if err := h.fs.Copy(src, dest, mode); err != nil {
+				return err
+			}
+			if owner := ownerSpec(item); owner != "" {
+				if err := h.fs.Chown(owner, dest); err != nil {
+					return err
+				}
 			}
 		}
 	}
 	return nil
+}
+
+// copyDests returns the explicit dests (~/ resolved), else the marker-stripped derived dest.
+func (h Host) copyDests(item spec.FileItem) []string {
+	if len(item.Dests) == 0 {
+		return []string{h.ToDest(strings.TrimSuffix(item.Rel, spec.CpExt))}
+	}
+	out := make([]string, len(item.Dests))
+	for i, d := range item.Dests {
+		out[i] = h.expandHome(d.Path)
+	}
+	return out
+}
+
+// copyMode: spec chmod when set, else default (0644, 0640 under HOME/).
+func copyMode(item spec.FileItem) os.FileMode {
+	if m, ok := parseMode(item.Chmod); ok {
+		return m
+	}
+	if strings.HasPrefix(item.Rel, "HOME/") {
+		return 0640
+	}
+	return 0644
+}
+
+// ownerSpec combines owner + owner-group into "owner:group" for fs.Chown ("" -> no chown).
+func ownerSpec(item spec.FileItem) string {
+	switch {
+	case item.Owner != "" && item.OwnerGroup != "":
+		return item.Owner + ":" + item.OwnerGroup
+	case item.Owner != "":
+		return item.Owner
+	default:
+		return ""
+	}
+}
+
+// parseMode parses an octal chmod string ("" -> not set).
+func parseMode(s string) (os.FileMode, bool) {
+	if s == "" {
+		return 0, false
+	}
+	n, err := strconv.ParseUint(s, 8, 32)
+	if err != nil {
+		return 0, false
+	}
+	return os.FileMode(n), true
+}
+
+// expandHome resolves a leading ~/ to the host home.
+func (h Host) expandHome(p string) string {
+	if rest, ok := strings.CutPrefix(p, "~/"); ok {
+		return filepath.Join(h.Home, rest)
+	}
+	return p
 }
 
 func sameContent(a, b string) bool {

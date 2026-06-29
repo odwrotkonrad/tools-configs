@@ -1,9 +1,9 @@
 profiles:
-  virt:
-    mac-os-aarch64:
+  cli:
+    macos:
 a:
-  include-profiles: [b]
+  mixin-profiles: [b]
 b:
-  include-profiles: [a]
-virt/mac-os-aarch64:
-  include-profiles: [a]
+  mixin-profiles: [a]
+cli/macos:
+  mixin-profiles: [a]

@@ -10,34 +10,21 @@ import (
 	"strings"
 )
 
-// DetectProfile -> "<space>/<os>-<arch>", space = bare-metal|virt. base has no detection.
+// DetectProfile -> "<space>/<os>", space = desktop|cli (cli iff virtualized). base has no detection.
 func DetectProfile() string {
-	osName := NormalizeOS(runtime.GOOS)
-	arch := NormalizeArch(runtime.GOARCH)
-	space := "bare-metal"
+	space := "desktop"
 	if Virtualized() {
-		space = "virt"
+		space = "cli"
 	}
-	return space + "/" + osName + "-" + arch
+	return space + "/" + NormalizeOS(runtime.GOOS)
 }
 
 func NormalizeOS(goos string) string {
 	switch goos {
 	case "darwin":
-		return "mac-os"
+		return "macos"
 	default:
 		return goos
-	}
-}
-
-func NormalizeArch(goarch string) string {
-	switch goarch {
-	case "arm64":
-		return "aarch64"
-	case "amd64":
-		return "x86"
-	default:
-		return goarch
 	}
 }
 

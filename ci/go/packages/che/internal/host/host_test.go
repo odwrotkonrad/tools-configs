@@ -39,7 +39,7 @@ func TestPrepend(t *testing.T) {
 }
 
 func TestSrc(t *testing.T) {
-	h := New("/repo", "/Users/x", "virt/mac-os-aarch64", false)
+	h := New("/repo", "/Users/x", "cli/macos", false)
 	if got := h.Src("etc/zshrc"); got != "/repo/root/etc/zshrc" {
 		t.Errorf("Src = %q, want /repo/root/etc/zshrc", got)
 	}
@@ -49,9 +49,9 @@ func TestSrc(t *testing.T) {
 func TestResolveInstall(t *testing.T) {
 	dir := t.TempDir()
 	scripts := []string{
-		"ci/zsh/scripts/installs/mac/brew.zsh",
-		"ci/zsh/scripts/installs/mac/kitty.zsh",
-		"ci/zsh/scripts/installs/shared/golang.zsh",
+		"ci/zsh/scripts/installs/40-brew.zsh",
+		"ci/zsh/scripts/installs/90-kitty.zsh",
+		"ci/zsh/scripts/installs/10-golang.zsh",
 	}
 	for _, rel := range scripts {
 		p := filepath.Join(dir, rel)
@@ -62,26 +62,25 @@ func TestResolveInstall(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	h := New(dir, "/Users/x", "virt/mac-os-aarch64", false)
+	h := New(dir, "/Users/x", "cli/macos", false)
 
 	// explicit keep spec order, glob expands in place sorted
 	got, err := h.ResolveInstall([]string{
-		"ci/zsh/scripts/installs/shared/golang.zsh",
-		"ci/zsh/scripts/installs/mac/*.zsh",
+		"ci/zsh/scripts/installs/90-kitty.zsh",
+		"ci/zsh/scripts/installs/[01]*.zsh",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	want := []string{
-		filepath.Join(dir, "ci/zsh/scripts/installs/shared/golang.zsh"),
-		filepath.Join(dir, "ci/zsh/scripts/installs/mac/brew.zsh"),
-		filepath.Join(dir, "ci/zsh/scripts/installs/mac/kitty.zsh"),
+		filepath.Join(dir, "ci/zsh/scripts/installs/90-kitty.zsh"),
+		filepath.Join(dir, "ci/zsh/scripts/installs/10-golang.zsh"),
 	}
 	if !slices.Equal(got, want) {
 		t.Errorf("ResolveInstall = %v, want %v", got, want)
 	}
 
-	if _, err := h.ResolveInstall([]string{"ci/zsh/scripts/installs/mac/absent.zsh"}); err == nil {
+	if _, err := h.ResolveInstall([]string{"ci/zsh/scripts/installs/99-absent.zsh"}); err == nil {
 		t.Error("ResolveInstall must error on a missing script")
 	}
 	// glob matching nothing errors
