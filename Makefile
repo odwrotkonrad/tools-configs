@@ -68,7 +68,6 @@ run-repo-ci-typecheck: SCRIPTS := root/usr/local/scripts
 run-repo-ci-typecheck: MYPY := mypy --config-file root/HOME/.config/mypy/config
 run-repo-ci-typecheck:
 	@$(MYPY) --scripts-are-modules $(SCRIPTS)/python/*
-	@$(MYPY) --scripts-are-modules ci/python/scripts/*
 	@$(MYPY) $(SCRIPTS)/python/root_scripts_lib
 
 #[what] install lefthook git hooks

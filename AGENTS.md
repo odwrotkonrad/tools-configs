@@ -156,11 +156,12 @@ ci
           spec
           testutil
             specs
+      render-dirs-tree
+        lib
+        testdata
       render-makefile-doc
         lib
         testdata
-  python
-    scripts
   vm
   zsh
     functions
@@ -271,6 +272,4 @@ tests
       get-os-open-files-with
       get-term-open-files-with
         mock
-      render-dirs-tree
-        fixture
       root_scripts_test_lib
