@@ -1,5 +1,5 @@
 #!/bin/zsh
-#[where] https://go.dev/dl/
+#[what] ci build deps: go toolchain (https://go.dev/dl/) + lefthook
 
 emulate -LR zsh
 setopt errexit
@@ -41,3 +41,13 @@ function install_go {
 }
 
 fn-install-if-missing go install_go
+
+##[>] 🤖🤖
+lefthook_version=v2.1.9
+
+function install_lefthook {
+  PATH="${goroot}/bin:${PATH}" go install "github.com/evilmartians/lefthook/v2@${lefthook_version}"
+}
+
+fn-install-if-missing lefthook install_lefthook
+##[<] 🤖🤖

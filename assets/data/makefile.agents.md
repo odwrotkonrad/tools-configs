@@ -27,7 +27,7 @@
 `run-repo-ci-typecheck` mypy typecheck
 `run-repo-ci-typecheck`
 `run-repo-ci-prepare-hooks` install lefthook git hooks
-`run-repo-ci-install-deps` install build deps (go toolchain from go.dev)
+`run-repo-ci-install-deps`
 `run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 
 #### VM:

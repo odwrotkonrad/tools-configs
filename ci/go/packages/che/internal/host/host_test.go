@@ -51,7 +51,7 @@ func TestResolveInstall(t *testing.T) {
 	scripts := []string{
 		"ci/zsh/scripts/installs/40-brew.zsh",
 		"ci/zsh/scripts/installs/90-kitty.zsh",
-		"ci/zsh/scripts/installs/10-golang.zsh",
+		"ci/zsh/scripts/installs/00-ci-deps.zsh",
 	}
 	for _, rel := range scripts {
 		p := filepath.Join(dir, rel)
@@ -74,7 +74,7 @@ func TestResolveInstall(t *testing.T) {
 	}
 	want := []string{
 		filepath.Join(dir, "ci/zsh/scripts/installs/90-kitty.zsh"),
-		filepath.Join(dir, "ci/zsh/scripts/installs/10-golang.zsh"),
+		filepath.Join(dir, "ci/zsh/scripts/installs/00-ci-deps.zsh"),
 	}
 	if !slices.Equal(got, want) {
 		t.Errorf("ResolveInstall = %v, want %v", got, want)

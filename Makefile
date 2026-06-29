@@ -72,9 +72,8 @@ run-repo-ci-typecheck:
 run-repo-ci-prepare-hooks:
 	@lefthook install --force
 
-#[what] install build deps (go toolchain from go.dev)
 run-repo-ci-install-deps:
-	@10-golang.zsh $@
+	@00-ci-deps.zsh $@
 
 #[what] compile ci/go cmds into ci/go/bin
 run-repo-ci-prepare-executables: | run-repo-ci-install-deps
