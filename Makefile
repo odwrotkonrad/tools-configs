@@ -2,7 +2,7 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
-COMMANDS := run-repo-ci-tests run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
+COMMANDS := run-repo-ci-tests-python run-repo-ci-tests-go run-repo-ci-typecheck run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-install-all run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
 IN_VM := $(CURDIR)/ci/zsh/scripts/run-in-vm.zsh -c
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
@@ -55,9 +55,12 @@ RENDER_LOCAL ?= --local
 run-repo-ci-render-templates: | run-repo-ci-prepare-executables
 	@tpl-gen-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
 
-#[what] test pytest & go
-run-repo-ci-tests:
+#[what] test pytest
+run-repo-ci-tests-python:
 	@pytest tests/scripts/python
+
+#[what] test go
+run-repo-ci-tests-go:
 	@go test -C ci/go ./...
 
 #[what] mypy typecheck

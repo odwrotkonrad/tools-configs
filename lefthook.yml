@@ -17,6 +17,9 @@ pre-commit:
 
 pre-push:
   jobs:
-    - name: tests
-      run: make run-repo-ci-tests
+    - name: test-python
+      run: make run-repo-ci-tests-python
+
+    - name: test-go
+      run: make run-repo-ci-tests-go
 ##[<] 🤖
