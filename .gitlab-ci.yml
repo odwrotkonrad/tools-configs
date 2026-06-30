@@ -38,6 +38,7 @@ validate-pre-commit-all:
   stage: validate
   variables:
     MK_RENDER_SKIP: .env
+    CLICOLOR: "0"
   script:
     - make run-repo-ci-precommit-all
     - git diff --exit-code HEAD
