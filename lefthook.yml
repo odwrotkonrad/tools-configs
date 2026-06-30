@@ -7,8 +7,16 @@ pre-commit:
     - name: docsgen
       run: make run-repo-ci-render-templates && git add assets/data/repo-structure.md assets/data/makefile.agents.md README.md CLAUDE.md AGENTS.md
 
+    - name: validate-yml
+      glob: "*.{yml,yaml}"
+      run: for f in {staged_files}; do yq e '.' "$f" > /dev/null && echo "validated $f" || exit 1; done
+
 pre-push:
   jobs:
+    - name: glab-ci-lint
+      glob: ".gitlab-ci.yml"
+      run: glab ci lint {push_files}
+
     - name: test-go
       run: make run-repo-ci-tests-go
 ##[<] 🤖

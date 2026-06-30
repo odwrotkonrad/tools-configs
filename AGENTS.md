@@ -103,8 +103,8 @@ vim: root/HOME/.config/vim/vimrc
 
 ### Wrappers:
 
-`run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates`
-`run-sync-full`: `run-repo-ci-prepare-executables -> run-sync -> run-host-render-templates`
+`run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates -> run-host-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
+`run-sync-full`: `run-sync -> run-host-run-scripts-all` full sync: run-sync then run all profile scripts (installs)
 `run-repo-ci-vm-all`: `run-repo-ci-vm-build-base -> run-repo-ci-vm-build`
 
 ### Onto Host:
@@ -122,6 +122,7 @@ vim: root/HOME/.config/vim/vimrc
 `run-repo-ci-render-templates` render *.repo.tpl onto repo
 `run-repo-ci-tests-go` test go
 `run-repo-ci-prepare-hooks` install lefthook git hooks
+`run-repo-ci-precommit-all` run pre-commit hooks over all files (not just staged)
 `run-repo-ci-install-deps`
 `run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 

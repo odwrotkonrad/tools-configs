@@ -2,7 +2,7 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
-COMMANDS := run-repo-ci-tests-go run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
+COMMANDS := run-repo-ci-tests-go run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
 IN_VM := $(CURDIR)/ci/zsh/scripts/run-in-vm.zsh -c
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
@@ -17,9 +17,10 @@ export MK_DRY_RUN_RENDER_SECRETS
 ##[<] Environment Variables
 
 ##[>] Wrappers [genai-include]
-run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks run-repo-ci-render-templates
-#[why] run-host-render-templates is not quick
-run-sync-full: run-repo-ci-prepare-executables run-sync run-host-render-templates
+#[what] convenience sync: configs, dirs, hooks, all template renders (repo + host)
+run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks run-repo-ci-render-templates run-host-render-templates
+#[what] full sync: run-sync then run all profile scripts (installs)
+run-sync-full: run-sync run-host-run-scripts-all
 run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
 ##[<] Wrappers
 
@@ -69,6 +70,10 @@ run-repo-ci-tests-go: | run-repo-ci-install-deps
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:
 	@lefthook install --force
+
+#[what] run pre-commit hooks over all files (not just staged)
+run-repo-ci-precommit-all: | run-repo-ci-prepare-hooks
+	@lefthook run pre-commit --all-files --force
 
 run-repo-ci-install-deps:
 	@00-ci-deps.zsh $@
