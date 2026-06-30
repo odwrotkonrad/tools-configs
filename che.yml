@@ -15,7 +15,7 @@ base:
     copy:
       - files: [HOME/**, etc/**, usr/**]
       - owner: root
-        owner-group: wheel
+        owner-group: "0"
         chmod: "0644"
         files:
           - {source: Library/LaunchDaemons/otelcol.plist.host.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
@@ -28,12 +28,12 @@ base:
     template:
       - files: [HOME/**, etc/**, usr/**]
       - owner: root
-        owner-group: wheel
+        owner-group: "0"
         chmod: "0440"
         files:
           - {source: etc/sudoers.d/configs.host.tpl, dest: [/etc/sudoers.d/configs]}
       - owner: root
-        owner-group: wheel
+        owner-group: "0"
         chmod: "0644"
         files:
           - {source: Library/LaunchAgents/gitlab-runner.plist.host.tpl, dest: [/Library/LaunchAgents/gitlab-runner.plist]}
@@ -60,7 +60,7 @@ base:
           - {dest: ["/var/log/{grafana,prometheus,jaeger,loki}"]}
           - {dest: ["/usr/local/var/{grafana,prometheus}"]}
       - owner: root
-        owner-group: wheel
+        owner-group: "0"
         chmod: "0755"
         files:
           - {dest: [/etc/zsh/zshrc.d/completions]}
