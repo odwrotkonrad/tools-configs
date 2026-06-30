@@ -89,7 +89,7 @@ run-repo-ci-vm-ssh:
 
 #[what] build vm then run the che ops in it (cli/macos profile)
 run-repo-ci-vm-test: run-repo-ci-vm-build
-	@$(IN_VM) 'make run-sync-full'
+	@$(IN_VM) 'CI=1 make run-sync-full'
 
 ###[<] VM
 ##[<] Onto Repo

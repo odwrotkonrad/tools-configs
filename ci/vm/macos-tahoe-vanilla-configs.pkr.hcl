@@ -64,12 +64,4 @@ build {
       "rm -f /tmp/configs.git.bundle",
     ]
   }
-
-  ##[>] 🤖🤖
-  provisioner "shell" {
-    inline = [
-      "sudo -iu user make -C ${var.repo_path} run-repo-ci-install-deps",
-    ]
-  }
-  ##[<] 🤖🤖
 }

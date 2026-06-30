@@ -17,11 +17,9 @@ function build_args {
   )
   packer_args=( ${var_files[@]/#/-var-file=} )
 
-  if [[ $name == macos-tahoe-vanilla-configs ]] {
-    local bundle=$(mktemp -t configs.git.bundle)
-    git -C $repo_root bundle create $bundle --all
-    packer_args+=(-var bundle_path=$bundle)
-  }
+  local bundle=$(mktemp -t configs.git.bundle)
+  git -C $repo_root bundle create $bundle --all
+  packer_args+=(-var bundle_path=$bundle)
 }
 
 function build_vm {

@@ -19,6 +19,15 @@ variable "pubkey_path" {
   type = string
 }
 
+variable "repo_path" {
+  type = string
+}
+
+#[what] git bundle (git bundle create --all) cloned into vm. required 🤖
+variable "bundle_path" {
+  type = string
+}
+
 variable "username" {
   type = string
 }
@@ -67,4 +76,26 @@ build {
       "if ! xcode-select -p >/dev/null 2>&1; then sudo touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress; label=$(softwareupdate -l 2>/dev/null | grep -o 'Label: Command Line Tools.*' | tail -1 | sed 's/Label: //'); sudo softwareupdate -i \"$label\" --verbose; sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress; fi",
     ]
   }
+
+  ##[>] 🤖🤖
+  provisioner "file" {
+    source      = var.bundle_path
+    destination = "/tmp/configs.git.bundle"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo install -d -o ${var.username} -g staff \"$(dirname '${var.repo_path}')\"",
+      "sudo -u ${var.username} git clone /tmp/configs.git.bundle '${var.repo_path}'",
+      "rm -f /tmp/configs.git.bundle",
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo -iu ${var.username} make -C ${var.repo_path} run-repo-ci-install-deps",
+      "sudo rm -rf '${var.repo_path}'",
+    ]
+  }
+  ##[<] 🤖🤖
 }

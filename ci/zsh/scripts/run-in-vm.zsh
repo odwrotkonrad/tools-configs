@@ -24,11 +24,15 @@ case $(read_state $vm) {
 typeset -a cmd=( "$@" )
 [[ $1 == -c && -n $2 ]] && cmd=( "cd $vm_repo && $2" )
 
-ssh -t -i $key \
-  -o IdentitiesOnly=yes \
-  -o PreferredAuthentications=publickey \
-  -o StrictHostKeyChecking=no \
-  -o UserKnownHostsFile=/dev/null \
-  -o SendEnv=OP_SERVICE_ACCOUNT_TOKEN \
-  $user@$(tart ip $vm) "${cmd[@]}"
+for attempt ( 1 2 3 ) {
+  ssh -t -i $key \
+    -o IdentitiesOnly=yes \
+    -o PreferredAuthentications=publickey \
+    -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    -o SendEnv=OP_SERVICE_ACCOUNT_TOKEN \
+    $user@$(tart ip $vm) "${cmd[@]}" && return
+  (( attempt < 3 )) && sleep 2
+}
+fn-exit-with 1 "${0:t}: ssh failed after 3 attempts"
 ##[<] 🤖🤖
