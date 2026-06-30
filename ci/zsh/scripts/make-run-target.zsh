@@ -14,6 +14,9 @@ export GOMPLATE_CONFIG=$root/root/etc/gomplate/gomplate.yaml
 export CHE_DRY_RUN=$MK_DRY_RUN
 export CHE_DRY_RUN_RENDER_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
 
+autoload -Uz fn-is-os
+if { fn-is-os linux } export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
+
 autoload -Uz fn-annotate-with-sections fn-print-with fn-log-msg
 
 [[ $1 == -c && -n $2 ]] || exit 0
