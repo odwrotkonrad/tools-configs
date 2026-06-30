@@ -16,7 +16,4 @@ pre-push:
     - name: glab-ci-lint
       glob: ".gitlab-ci.yml"
       run: glab ci lint {push_files}
-
-    - name: test-go
-      run: make run-repo-ci-tests-go
 ##[<] 🤖

@@ -4,7 +4,7 @@
 emulate -LR zsh
 setopt errexit
 
-autoload -Uz fn-install-if-missing fn-exit-with fn-is-os fn-is-arch
+autoload -Uz fn-install-if-missing fn-exit-with fn-is-os fn-is-arch fn-log-msg
 
 version=1.26.4
 
@@ -46,15 +46,27 @@ fn-install-if-missing go install_go
 #[why] install into GOPATH/bin (no sudo); run-target wrapper has it on PATH
 function go_install { PATH="${goroot}/bin:${PATH}" go install "$1" }
 
-lefthook_version=v2.1.9
-gomplate_version=v5.1.0
-yq_version=v4.53.3
+#[what] 3rd-party go tools: bin -> module@version
+typeset -A third_party_tools=(
+  lefthook  'github.com/evilmartians/lefthook/v2@v2.1.9'
+  gomplate  'github.com/hairyhenderson/gomplate/v5/cmd/gomplate@v5.1.0'
+  yq        'github.com/mikefarah/yq/v4@v4.53.3'
+)
 
-function install_lefthook { go_install "github.com/evilmartians/lefthook/v2@${lefthook_version}" }
-function install_gomplate { go_install "github.com/hairyhenderson/gomplate/v5/cmd/gomplate@${gomplate_version}" }
-function install_yq { go_install "github.com/mikefarah/yq/v4@${yq_version}" }
+#[what] own published go tools needed by repo-ci: render-* at template render, che at dry-run sync
+typeset -A own_tools=(
+  che                  'gitlab.com/konradodwrot/go/che@v0.0.2'
+  render-makefile-doc  'gitlab.com/konradodwrot/go/render-files/cmd/render-makefile-doc@v0.0.2'
+  render-dirs-tree     'gitlab.com/konradodwrot/go/render-files/cmd/render-dirs-tree@v0.0.2'
+)
 
-fn-install-if-missing lefthook install_lefthook
-fn-install-if-missing gomplate install_gomplate
-fn-install-if-missing yq install_yq
+for bin module ( ${(kv)third_party_tools} ${(kv)own_tools} ) {
+  if (( $+commands[$bin] )) {
+    fn-log-msg -t "$bin" -- already installed
+    continue
+  }
+  fn-log-msg -t "$bin" -- installing
+  go_install "$module"
+  fn-log-msg -t "$bin" -- installed
+}
 ##[<] 🤖🤖

@@ -7,24 +7,6 @@ assets
   images
   recordings
 ci
-  go
-    packages
-      che
-        internal
-          cli
-          fsutil
-          host
-          log
-          render
-          spec
-          testutil
-            specs
-      checkcmd
-      render-dirs-tree
-        testdata
-      render-makefile-doc
-        lib
-        testdata
   vm
   zsh
     functions
@@ -87,13 +69,6 @@ root
           User
             .exported
       LaunchAgents
-    projects
-      go
-        get-os-open-files-with
-          lib
-        get-term-open-files-with
-          lib
-          testdata
   Library
     LaunchAgents
     LaunchDaemons

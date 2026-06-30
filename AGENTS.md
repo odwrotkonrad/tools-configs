@@ -120,11 +120,9 @@ vim: root/HOME/.config/vim/vimrc
 ### Onto Repo (CI):
 
 `run-repo-ci-render-templates` render *.repo.tpl onto repo
-`run-repo-ci-tests-go` test go
 `run-repo-ci-prepare-hooks` install lefthook git hooks
 `run-repo-ci-precommit-all` run pre-commit hooks over all files (not just staged)
 `run-repo-ci-install-deps`
-`run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 
 #### VM:
 
@@ -144,24 +142,6 @@ assets
   images
   recordings
 ci
-  go
-    packages
-      che
-        internal
-          cli
-          fsutil
-          host
-          log
-          render
-          spec
-          testutil
-            specs
-      checkcmd
-      render-dirs-tree
-        testdata
-      render-makefile-doc
-        lib
-        testdata
   vm
   zsh
     functions
@@ -224,13 +204,6 @@ root
           User
             .exported
       LaunchAgents
-    projects
-      go
-        get-os-open-files-with
-          lib
-        get-term-open-files-with
-          lib
-          testdata
   Library
     LaunchAgents
     LaunchDaemons
