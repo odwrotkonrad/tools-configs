@@ -17,7 +17,7 @@ func TestSubcommandsWired(t *testing.T) {
 	}
 	for _, want := range []string{
 		"link", "copy", "render-templates", "mk-dirs",
-		"prune-links", "install-tools", "detect", "services",
+		"prune-links", "run-scripts", "detect", "services",
 	} {
 		if !slices.Contains(got, want) {
 			t.Errorf("subcommand %q not wired to RootCmd; have %v", want, got)

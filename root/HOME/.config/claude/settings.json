@@ -107,7 +107,7 @@
   },
   "outputStyle": "Interactive Code",
   "alwaysThinkingEnabled": false,
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": true,
   "skipWorkflowUsageWarning": true,

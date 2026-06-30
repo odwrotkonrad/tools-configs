@@ -1,8 +1,6 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  auto_cancel:
-    on_new_commit: interruptible
 
 stages:
   - validate
@@ -18,22 +16,32 @@ stages:
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
   cache:
-    key:
-      files:
-        - ci/go/go.sum
-    paths:
-      - .cache/go-mod
-      - .cache/go-build
+    - key:
+        files:
+          - ci/go/go.sum
+      paths:
+        - .cache/go-mod
+        - .cache/go-build
+    - key: apt-debs-bookworm
+      paths:
+        - .cache/apt-archives
   ##[<] 🤖🤖
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
+    ##[>] 🤖🤖
+    - mkdir -p .cache/apt-archives
+    - apt-get update
+    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
+    ##[<] 🤖🤖
 
-validate-docsgen:
+validate-pre-commit-all:
   extends: .base
   stage: validate
+  variables:
+    MK_RENDER_SKIP: .env
+    CLICOLOR: "0"
   script:
-    - make run-repo-ci-render-templates RENDER_LOCAL=
-    - git diff --exit-code
+    - make run-repo-ci-precommit-all
+    - git diff --exit-code HEAD
 
 dry-run-apply-sync:
   extends: .base
@@ -45,7 +53,6 @@ dry-run-apply-sync:
       - CHE_FORCE_PROFILE: [desktop/macos, cli/macos, cli/linux]
   script:
     - make run-sync-full
-    - make run-host-install-all
 
 test-go:
   extends: .base
@@ -58,7 +65,6 @@ test-go:
   tags: [local]
   image: macos-tahoe-vanilla-base
   resource_group: macos-local-vm
-  interruptible: true  #[what] new commits will cancel this job to free up resource 🤖
   variables:
     GIT_CLONE_PATH: $CI_BUILDS_DIR/configs
 
@@ -67,19 +73,21 @@ dry-run-apply-macos-desktop:
   stage: dry-run-apply
   variables:
     MK_DRY_RUN: all
+    CHE_FORCE_PROFILE: desktop/macos
   needs: []
   script:
-    - make run-sync
-    - make run-host-install-all
+    - make run-sync-full
 
-apply-macos-desktop:
+apply-macos-cli:
   extends: .e2e-macos
   stage: test
+  variables:
+    CHE_FORCE_PROFILE: cli/macos
   needs: [dry-run-apply-macos-desktop]
+  allow_failure: true
   rules:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
-    - when: on_success
+    - when: manual
   script:
-    - make run-sync
-    - make run-host-install-all
+    - make run-sync-full

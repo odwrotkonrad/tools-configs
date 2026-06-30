@@ -64,7 +64,7 @@ base:
         chmod: "0755"
         files:
           - {dest: [/etc/zsh/zshrc.d/completions]}
-    install:
+    run-scripts:
       - ci/zsh/scripts/installs/*.zsh
       - ci/zsh/scripts/bootstrap/*.zsh
     services: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]

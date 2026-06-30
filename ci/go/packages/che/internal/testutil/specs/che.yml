@@ -23,7 +23,7 @@ base:
       - chmod: "2775"
         files:
           - {dest: [/var/log/che-test-setgid]}
-    install:
+    run-scripts:
       - install/unit
     services: [otelcol]
 

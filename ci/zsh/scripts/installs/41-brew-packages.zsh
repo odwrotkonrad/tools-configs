@@ -29,6 +29,7 @@ fn-is-virt && export HOMEBREW_IS_VIRT=true || export HOMEBREW_IS_VIRT=false
 #   idempotent, retry 3x clears transient failures, then give up.
 function bundle_stage {
   local stage=$1 attempt
+  fn-log-msg -t brew -- "installing stage: $stage"
   for attempt ( 1 2 3 ) {
     HOMEBREW_STAGE=$stage brew bundle install --jobs auto --no-upgrade --file=$brewfile && return 0
     fn-log-msg -t brew -- "stage $stage failed (attempt $attempt/3), retrying"

@@ -99,11 +99,12 @@ vim: root/HOME/.config/vim/vimrc
 ### Environment Variables:
 
 `MK_DRY_RUN=delta|all` `$ che` - print targets instead of load, if not `$ che` - omit cmd with message
+`MK_DRY_RUN_RENDER_SECRETS=true|false` render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
 
 ### Wrappers:
 
-`run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates`
-`run-sync-full`: `run-repo-ci-prepare-executables -> run-sync -> run-host-render-templates`
+`run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates -> run-host-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
+`run-sync-full`: `run-sync -> run-host-run-scripts-all` full sync: run-sync then run all profile scripts (installs)
 `run-repo-ci-vm-all`: `run-repo-ci-vm-build-base -> run-repo-ci-vm-build`
 
 ### Onto Host:
@@ -112,7 +113,8 @@ vim: root/HOME/.config/vim/vimrc
 `run-host-delete-broken-links` prune broken symlinks
 `run-host-mk-dirs` required by configuration and tools dirs
 `run-host-render-templates` render *.host.tpl onto host
-`run-host-install-all` run the detected profile's install units
+`run-host-run-scripts-all` run all of the detected profile's scripts
+`run-host-run-scripts` run profile scripts whose path matches NAME (substring)
 `run-host-restart-services` reload running service launchagents
 
 ### Onto Repo (CI):
@@ -120,6 +122,7 @@ vim: root/HOME/.config/vim/vimrc
 `run-repo-ci-render-templates` render *.repo.tpl onto repo
 `run-repo-ci-tests-go` test go
 `run-repo-ci-prepare-hooks` install lefthook git hooks
+`run-repo-ci-precommit-all` run pre-commit hooks over all files (not just staged)
 `run-repo-ci-install-deps`
 `run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 
@@ -190,10 +193,7 @@ root
             zsh
           docs
         skills
-          user-git-branch-name-upsert
-          user-git-commit
-          user-git-mr-upsert
-          user-git-upsert-all
+          user-git-ops
         themes
       codex
       gcloud

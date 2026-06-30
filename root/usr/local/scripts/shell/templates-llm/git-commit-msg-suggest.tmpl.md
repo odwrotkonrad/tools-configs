@@ -1,13 +1,7 @@
-## Data
+## Context
 
 ### Full Diff
 {{ getenv "DIFF_FULL" }}
-
-### Diff Stats
-{{ getenv "DIFF_STATS" }}
-
-### Commit Template
-{{ getenv "COMMIT_TEMPLATE" }}
 
 ## Style
 
@@ -54,3 +48,14 @@ add the keybinding so the integrated terminal matches
 ## Important
 
 {{ . }}{{ end }}
+
+## Data
+
+### Diff Stats
+{{ getenv "DIFF_STATS" }}
+
+### Commit Template
+{{ getenv "COMMIT_TEMPLATE" }}
+
+### Current Branch
+{{ getenv "CURRENT_BRANCH" }}

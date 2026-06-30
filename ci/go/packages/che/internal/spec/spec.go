@@ -36,13 +36,13 @@ type profileSpec struct {
 }
 
 // includeSet is the additive payload: link globs, copy/template/mkdirs entries
-// (glob-string OR rich object), install globs, service names.
+// (glob-string OR rich object), script globs, service names.
 type includeSet struct {
 	Link     []string `yaml:"link"`
 	Copy     []entry  `yaml:"copy"`
 	Template []entry  `yaml:"template"`
 	Mkdirs   []entry  `yaml:"mkdirs"`
-	Install  []string `yaml:"install"`
+	Scripts  []string `yaml:"run-scripts"`
 	Services []string `yaml:"services"`
 }
 
@@ -53,7 +53,7 @@ type excludeSet struct {
 	Copy     []string `yaml:"copy"`
 	Template []string `yaml:"template"`
 	Mkdirs   []string `yaml:"mkdirs"`
-	Install  []string `yaml:"install"`
+	Scripts  []string `yaml:"run-scripts"`
 	Services []string `yaml:"services"`
 }
 
@@ -120,7 +120,7 @@ type Resolved struct {
 	Dirs      []string   // every ancestor dir of links+copies+templates, plus mkdirs
 	ExtraDirs []FileItem // mkdirs only (live dest entries), one per path, carrying perms
 	Services  []string   // service names
-	Installs  []string   // install unit entries in spec order
+	Scripts   []string   // script entries in spec order
 }
 
 // globSet is an ordered list of op globs, each carrying its group's perms
@@ -163,7 +163,7 @@ type effective struct {
 	richCopy  []FileItem // rich-form copy entries
 	richTmpl  []FileItem // rich-form template entries
 	dirs      []FileItem // mkdirs: glob forms expanded to one item per path, rich carry perms
-	install   []string   // install unit paths (order = run order)
+	scripts   []string   // script paths (order = run order)
 	services  []string   // service names
 	exclude   excludeSet // accumulated exclude globs (applied last, wins)
 }
@@ -211,7 +211,7 @@ func (r *Raw) Resolve(profile, root string) (Resolved, error) {
 	}
 	res := Resolved{
 		ExtraDirs: eff.dirs,
-		Installs:  fsutil.ExpandAll(eff.install),
+		Scripts:   fsutil.ExpandAll(eff.scripts),
 		Services:  fsutil.ExpandAll(eff.services),
 		Copies:    eff.richCopy,
 		Templates: eff.richTmpl,
@@ -303,14 +303,14 @@ func applyExcludes(ex excludeSet, res *Resolved) {
 	copyG := fsutil.ExpandAll(ex.Copy)
 	tmplG := fsutil.ExpandAll(ex.Template)
 	dirG := fsutil.ExpandAll(ex.Mkdirs)
-	instG := fsutil.ExpandAll(ex.Install)
+	instG := fsutil.ExpandAll(ex.Scripts)
 	svcG := fsutil.ExpandAll(ex.Services)
 
 	res.Links = dropFiles(res.Links, link)
 	res.Copies = dropFiles(res.Copies, copyG)
 	res.Templates = dropFiles(res.Templates, tmplG)
 	res.ExtraDirs = dropFiles(res.ExtraDirs, dirG)
-	res.Installs = dropStrings(res.Installs, instG)
+	res.Scripts = dropStrings(res.Scripts, instG)
 	res.Services = dropStrings(res.Services, svcG)
 
 	res.Dirs = nil
@@ -370,7 +370,7 @@ func (r *Raw) mergeInto(eff *effective, name string, seen []string) error {
 	for _, e := range in.Mkdirs {
 		eff.dirs = append(eff.dirs, dirItems(e)...)
 	}
-	eff.install = append(eff.install, in.Install...)
+	eff.scripts = append(eff.scripts, in.Scripts...)
 	eff.services = append(eff.services, in.Services...)
 	eff.exclude.append(ps.Exclude)
 	return nil
@@ -382,7 +382,7 @@ func (ex *excludeSet) append(o excludeSet) {
 	ex.Copy = append(ex.Copy, o.Copy...)
 	ex.Template = append(ex.Template, o.Template...)
 	ex.Mkdirs = append(ex.Mkdirs, o.Mkdirs...)
-	ex.Install = append(ex.Install, o.Install...)
+	ex.Scripts = append(ex.Scripts, o.Scripts...)
 	ex.Services = append(ex.Services, o.Services...)
 }
 

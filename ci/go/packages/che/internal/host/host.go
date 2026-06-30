@@ -57,11 +57,11 @@ func (h Host) Src(rel string) string { return filepath.Join(h.Root, rel) }
 // TrackedFiles lists git-tracked files under root/, repo-relative to root.
 func (h Host) TrackedFiles() ([]string, error) { return fsutil.TrackedFiles(h.Root) }
 
-// ResolveInstall expands the install list IN SPEC ORDER (no sort). Each entry must
+// ResolveScripts expands the scripts list IN SPEC ORDER (no sort). Each entry must
 // resolve to >=1 script ([why] catches typos/renames). Globs expand in place.
-func (h Host) ResolveInstall(installs []string) ([]string, error) {
+func (h Host) ResolveScripts(scripts []string) ([]string, error) {
 	var out []string
-	for _, entry := range installs {
+	for _, entry := range scripts {
 		abs := filepath.Join(h.RepoRoot, entry)
 		if strings.ContainsAny(entry, "*?[") {
 			hits, err := filepath.Glob(abs)
@@ -69,14 +69,14 @@ func (h Host) ResolveInstall(installs []string) ([]string, error) {
 				return nil, err
 			}
 			if len(hits) == 0 {
-				return nil, fmt.Errorf("install entry matched no script: %s", entry)
+				return nil, fmt.Errorf("run-scripts entry matched no script: %s", entry)
 			}
 			slices.Sort(hits)
 			out = append(out, hits...)
 			continue
 		}
 		if _, err := os.Stat(abs); err != nil {
-			return nil, fmt.Errorf("install script not found: %s", entry)
+			return nil, fmt.Errorf("run-scripts script not found: %s", entry)
 		}
 		out = append(out, abs)
 	}

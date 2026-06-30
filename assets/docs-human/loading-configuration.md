@@ -7,6 +7,6 @@ make run-host-upsert-configs
 #[what] create directories tools need
 make run-host-mk-dirs
 
-#[what] install tools, services, dependencies
-make run-host-install-all
+#[what] run profile scripts: install tools, services, dependencies
+make run-host-run-scripts-all
 ```

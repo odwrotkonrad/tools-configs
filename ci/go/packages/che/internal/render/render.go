@@ -107,6 +107,11 @@ func ResolveAtIncludes(repoRoot string, body []byte) []byte {
 	return out.Bytes()
 }
 
+// HasSecretRef: body contains an op:// secret reference (a render-time vault fetch).
+func HasSecretRef(body []byte) bool {
+	return bytes.Contains(body, []byte("op://"))
+}
+
 // IsAtInclude: line is exactly '@<no-space>', no whitespace.
 func IsAtInclude(line string) bool {
 	if !strings.HasPrefix(line, "@") || len(line) < 2 {

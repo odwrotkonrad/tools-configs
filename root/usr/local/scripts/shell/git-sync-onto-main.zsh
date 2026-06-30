@@ -1,11 +1,12 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
 #   Sync working branch with main. Autostash dirty tree.
-#   on main: fast-forward from origin.
+#   on main: fast-forward from origin, exit 0.
 #   on a branch:
 #     1. fast-forward local main from origin
-#     2. if merged into main: checkout main, exit 23
-#     3. else rebase branch onto main
+#     2. up to date (branch contains main): exit 0
+#     3. merged into main: checkout main, exit 23
+#     4. else rebase branch onto main
 #   on conflict: print conflicted files, leave the rebase in progress, exit 22.
 #   Usage: git-sync-onto-main
 #   Downstream: git, origin.
@@ -27,10 +28,12 @@ if [[ $branch == main ]] {
 
 git fetch origin main:main
 
+if git merge-base --is-ancestor main HEAD; then
+  fn-exit-with 0 "up to date, sync skipped"
+fi
+
 if git merge-base --is-ancestor HEAD main; then
-  git stash push -u -m "git-sync-onto-main" >/dev/null 2>&1 && stashed=1 || stashed=0
   git checkout main
-  (( stashed )) && git stash pop
   fn-exit-with 23 "branch '$branch' already merged; switched to main"
 fi
 

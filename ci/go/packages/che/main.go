@@ -16,7 +16,7 @@ func init() {
 		cli.RenderCmd,
 		cli.DirsCmd,
 		cli.PruneCmd,
-		cli.InstallCmd,
+		cli.RunScriptsCmd,
 		cli.DetectCmd,
 		cli.ServicesCmd,
 	)

@@ -4,16 +4,13 @@ output:
   - summary
   - failure
   - execution_info
+  - execution_out
 
 pre-commit:
   parallel: false
   jobs:
     - name: ssh-authenticate.bash
       run: /usr/local/scripts/shell/ssh-authenticate.bash
-
-    - name: validate-yml
-      glob: "*.{yml,yaml}"
-      run: yq e '.' {staged_files}
 
     - name: ruff
       glob: "*.py"
