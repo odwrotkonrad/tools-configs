@@ -44,16 +44,16 @@ typeset -A template_input=(
 
 #[what] no commits, skip llm
 if [[ -z $template_input[RECENT_COMMITS] ]]; then
-  fn-log-msg -t "${0:t}" "no commits in $script_input[opt_range], emitting scratch name"
+  fn-log-msg -t "${0:t}" "no commits in $script_input[opt_range], emitting scratch name" >&2
   jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
   exit 0
 fi
-fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model, current branch ${template_input[CURRENT_BRANCH]:-none}"
+fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model, current branch ${template_input[CURRENT_BRANCH]:-none}" >&2
 
 
 ##[>] fill template 🤖
 prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
-fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..."
+fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..." >&2
 ##[<] fill template 🤖
 
 
@@ -68,6 +68,6 @@ schema='{
 }'
 
 out=$(<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema")
-fn-log-msg -t "${0:t}" "llm returned ${#out} chars"
+fn-log-msg -t "${0:t}" "llm returned ${#out} chars" >&2
 print -r -- "$out"
 ##[<] llm invocation

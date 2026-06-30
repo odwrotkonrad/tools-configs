@@ -25,7 +25,7 @@ typeset -A script_input=(
 )
 ##[<] script input
 
-fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model"
+fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model" >&2
 
 # no commits: error
 [[ -n "$(git log --format=%h "$script_input[opt_range]")" ]] || { echo "error: no commits in $script_input[opt_range]" >&2; exit 1 }
@@ -37,13 +37,13 @@ case "$(git remote get-url origin)" in
   *github.com*) current_description="$(gh pr view --json body --jq .body 2>/dev/null || true)" ;;
   *) current_description="" ;;
 esac
-fn-log-msg -t "${0:t}" "current description: ${#current_description} chars"
+fn-log-msg -t "${0:t}" "current description: ${#current_description} chars" >&2
 ##[<] current mr/pr description 🤖
 
 
 ##[>] commit list (deterministic, newest-first) 🤖
 commit_list="$(git log --format='- %s' "$script_input[opt_range]")"
-fn-log-msg -t "${0:t}" "commits:"$'\n'"$commit_list"
+fn-log-msg -t "${0:t}" "commits:"$'\n'"$commit_list" >&2
 ##[<] commit list (deterministic, newest-first) 🤖
 
 
@@ -59,7 +59,7 @@ typeset -A template_input=(
 
 ##[>] fill template 🤖
 prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
-fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..."
+fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..." >&2
 ##[<] fill template 🤖
 
 
@@ -75,12 +75,12 @@ schema='{
 }'
 
 llm_out=$(<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema")
-fn-log-msg -t "${0:t}" "llm returned ${#llm_out} chars, injecting commit list"
+fn-log-msg -t "${0:t}" "llm returned ${#llm_out} chars, injecting commit list" >&2
 ##[<] llm invocation
 
 
 ##[>] inject commit list at top of description 🤖
 commits_block=$'## Commits\n'"$commit_list"
 jq --arg c "$commits_block" '.description = $c + "\n\n## Changes\n\n" + .description' <<< "$llm_out"
-fn-log-msg -t "${0:t}" "done"
+fn-log-msg -t "${0:t}" "done" >&2
 ##[<] inject commit list at top of description 🤖

@@ -40,11 +40,11 @@ typeset -A template_input=(
 
 
 [[ -n $template_input[DIFF_FULL] ]] || { echo "error: nothing staged" >&2; exit 1 }
-fn-log-msg -t "${0:t}" "model $llm_model, branch ${template_input[CURRENT_BRANCH]:-none}, staged diff ${#template_input[DIFF_FULL]} chars"
+fn-log-msg -t "${0:t}" "model $llm_model, branch ${template_input[CURRENT_BRANCH]:-none}, staged diff ${#template_input[DIFF_FULL]} chars" >&2
 
 ##[>] fill template 🤖
 prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
-fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..."
+fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..." >&2
 ##[<] fill template 🤖
 
 
@@ -60,6 +60,6 @@ schema='{
 }'
 
 out=$(<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema")
-fn-log-msg -t "${0:t}" "llm returned ${#out} chars"
+fn-log-msg -t "${0:t}" "llm returned ${#out} chars" >&2
 print -r -- "$out"
 ##[<] llm invocation
