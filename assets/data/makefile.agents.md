@@ -4,6 +4,7 @@
 ### Environment Variables:
 
 `MK_DRY_RUN=delta|all` `$ che` - print targets instead of load, if not `$ che` - omit cmd with message
+`MK_DRY_RUN_RENDER_SECRETS=true|false` render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
 
 ### Wrappers:
 
@@ -17,7 +18,8 @@
 `run-host-delete-broken-links` prune broken symlinks
 `run-host-mk-dirs` required by configuration and tools dirs
 `run-host-render-templates` render *.host.tpl onto host
-`run-host-install-all` run the detected profile's install units
+`run-host-run-scripts-all` run all of the detected profile's scripts
+`run-host-run-scripts` run profile scripts whose path matches NAME (substring)
 `run-host-restart-services` reload running service launchagents
 
 ### Onto Repo (CI):

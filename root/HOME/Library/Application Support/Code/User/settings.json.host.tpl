@@ -568,7 +568,7 @@
   "search.searchOnTypeDebouncePeriod": 300,
   "search.searchView.keywordSuggestions": false,
   "search.searchView.semanticSearchBehavior": "manual",
-  "search.useIgnoreFiles": true,
+  "search.useIgnoreFiles": false,
   "search.useReplacePreview": true,
   ////[<] search
 

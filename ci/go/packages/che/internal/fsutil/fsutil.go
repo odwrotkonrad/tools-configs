@@ -21,7 +21,8 @@ type FS struct {
 	DryRun bool
 }
 
-// Log emits a line through the dry-run gate.
+// Log emits a 'title: msg' line through the dry-run gate. Title is "type" or
+// "type(subtype)" (see log.Msg).
 func (f FS) Log(title, msg string) { log.Msg(title, msg, f.DryRun) }
 
 // UnderHome reports dest in user-owned Home tree (no sudo).

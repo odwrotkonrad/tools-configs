@@ -12,7 +12,7 @@ import (
 func TestRenderCmd(t *testing.T) {
 	home := setupDryRun(t)
 	out := testutil.RunDry(t, RenderCmd, true)
-	testutil.WantLines(t, out, "render: "+home+"/.config/zsh/t [dry-run]")
+	testutil.WantLines(t, out, "render(dry-run): "+home+"/.config/zsh/t")
 }
 
 // [<] 🤖🤖

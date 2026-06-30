@@ -12,7 +12,7 @@ base:
     copy:
       - files:
           - {source: HOME/.config/zsh/c.host.cp, dest: [~/.config/zsh/c]}
-    install:
+    run-scripts:
       - ci/zsh/scripts/installs/10-brew.zsh
       - ci/zsh/scripts/installs/20-foo.zsh
     services: [otelcol, grafana]
@@ -24,6 +24,6 @@ cli/macos:
       - etc/zsh/**
     copy:
       - HOME/.config/zsh/c.host.cp
-    install:
+    run-scripts:
       - ci/zsh/scripts/installs/20-foo.zsh
     services: [graf*]

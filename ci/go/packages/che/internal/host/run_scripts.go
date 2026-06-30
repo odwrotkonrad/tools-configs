@@ -10,11 +10,11 @@ import (
 	"strings"
 )
 
-// Install runs profile install units in spec order.
-func (h Host) Install(scripts []string) error {
-	env := h.installEnv()
+// RunScripts runs profile scripts in spec order.
+func (h Host) RunScripts(scripts []string) error {
+	env := h.scriptsEnv()
 	for _, script := range scripts {
-		h.fs.Log("install", script)
+		h.fs.Log("run-scripts", script)
 		if h.DryRun() {
 			continue
 		}
@@ -22,14 +22,14 @@ func (h Host) Install(scripts []string) error {
 		c.Env = env
 		c.Stdout, c.Stderr = os.Stdout, os.Stderr
 		if err := c.Run(); err != nil {
-			return fmt.Errorf("install unit failed: %s: %w", script, err)
+			return fmt.Errorf("script failed: %s: %w", script, err)
 		}
 	}
 	return nil
 }
 
-// installEnv mirrors Makefile $(ZSH) wrapper env, che profile exports.
-func (h Host) installEnv() []string {
+// scriptsEnv mirrors Makefile $(ZSH) wrapper env, che profile exports.
+func (h Host) scriptsEnv() []string {
 	fns := filepath.Join(h.RepoRoot, "ci/zsh/functions")
 	scripts := filepath.Join(h.RepoRoot, "ci/zsh/scripts")
 	installs := filepath.Join(scripts, "installs")

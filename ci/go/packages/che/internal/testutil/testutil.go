@@ -9,11 +9,18 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
 )
+
+// ansiRe matches SGR escape sequences (bold/reset) so assertions stay style-agnostic.
+var ansiRe = regexp.MustCompile(`\x1b\[[0-9;]*m`)
+
+// StripANSI removes SGR escape sequences, leaving plain text to assert against.
+func StripANSI(s string) string { return ansiRe.ReplaceAllString(s, "") }
 
 // specsFS holds the checked-in che.yml fixtures.
 //
@@ -109,7 +116,7 @@ func MockRepoEnv(t *testing.T) string {
 }
 
 // RunDry runs a subcommand's RunE (caller already built dry-run state), captures stdout,
-// asserts every printed line carries the [dry-run] marker. dryRunLines=false skips that
+// asserts every printed line carries the (dry-run) scope. dryRunLines=false skips that
 // check (e.g. detect, prints bare profile).
 func RunDry(t *testing.T, cmd *cobra.Command, dryRunLines bool) string {
 	t.Helper()
@@ -119,7 +126,7 @@ func RunDry(t *testing.T, cmd *cobra.Command, dryRunLines bool) string {
 	}
 	if dryRunLines {
 		for line := range strings.SplitSeq(strings.TrimSpace(out), "\n") {
-			if line != "" && !strings.Contains(line, "[dry-run]") {
+			if line != "" && !strings.Contains(line, "(dry-run)") {
 				t.Errorf("non-dry-run line: %q\n--- got ---\n%s", line, out)
 			}
 		}
@@ -127,9 +134,10 @@ func RunDry(t *testing.T, cmd *cobra.Command, dryRunLines bool) string {
 	return out
 }
 
-// WantLines asserts every fragment appears in out (order-independent).
+// WantLines asserts every fragment appears in out (order-independent, style-agnostic).
 func WantLines(t *testing.T, out string, fragments ...string) {
 	t.Helper()
+	out = StripANSI(out)
 	for _, f := range fragments {
 		if !strings.Contains(out, f) {
 			t.Errorf("output missing %q\n--- got ---\n%s", f, out)
@@ -137,9 +145,10 @@ func WantLines(t *testing.T, out string, fragments ...string) {
 	}
 }
 
-// NotLine asserts the fragment does not appear in out.
+// NotLine asserts the fragment does not appear in out (style-agnostic).
 func NotLine(t *testing.T, out, fragment string) {
 	t.Helper()
+	out = StripANSI(out)
 	if strings.Contains(out, fragment) {
 		t.Errorf("output unexpectedly contains %q\n--- got ---\n%s", fragment, out)
 	}

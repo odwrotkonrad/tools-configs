@@ -76,12 +76,12 @@ func TestResolveMerge(t *testing.T) {
 
 	// desktop: base, everything present.
 	host := resolve(t, dir, "desktop/macos")
-	wantInstall := []string{
+	wantScripts := []string{
 		"ci/zsh/scripts/installs/10-brew.zsh",
 		"ci/zsh/scripts/installs/20-kitty.zsh",
 	}
-	if !slices.Equal(host.Installs, wantInstall) {
-		t.Errorf("host install order = %v, want %v", host.Installs, wantInstall)
+	if !slices.Equal(host.Scripts, wantScripts) {
+		t.Errorf("host scripts order = %v, want %v", host.Scripts, wantScripts)
 	}
 	if !hasDir(host, "/var/log/grafana") || !hasDir(host, "HOME/.cache/zsh") {
 		t.Errorf("host dirs missing merge: %v", dirPaths(host.ExtraDirs))
@@ -103,8 +103,8 @@ func TestResolveMerge(t *testing.T) {
 
 	// cli: base minus exclude-desktop.
 	vm := resolve(t, dir, "cli/macos")
-	if !slices.Equal(vm.Installs, []string{"ci/zsh/scripts/installs/10-brew.zsh"}) {
-		t.Errorf("vm install = %v, want brew only", vm.Installs)
+	if !slices.Equal(vm.Scripts, []string{"ci/zsh/scripts/installs/10-brew.zsh"}) {
+		t.Errorf("vm scripts = %v, want brew only", vm.Scripts)
 	}
 	if hasDir(vm, "/var/log/grafana") {
 		t.Errorf("vm must not keep desktop dirs: %v", dirPaths(vm.ExtraDirs))
@@ -221,11 +221,11 @@ func TestIncludeExcludeSections(t *testing.T) {
 	if find(res.Copies, relIs("HOME/.config/zsh/c.host.cp")) != nil {
 		t.Errorf("exclude.copy glob did not drop rich entry: %v", rels(res.Copies))
 	}
-	if !slices.Contains(res.Installs, "ci/zsh/scripts/installs/10-brew.zsh") {
-		t.Errorf("include.install brew missing: %v", res.Installs)
+	if !slices.Contains(res.Scripts, "ci/zsh/scripts/installs/10-brew.zsh") {
+		t.Errorf("include.run-scripts brew missing: %v", res.Scripts)
 	}
-	if slices.Contains(res.Installs, "ci/zsh/scripts/installs/20-foo.zsh") {
-		t.Errorf("exclude.install did not remove foo: %v", res.Installs)
+	if slices.Contains(res.Scripts, "ci/zsh/scripts/installs/20-foo.zsh") {
+		t.Errorf("exclude.run-scripts did not remove foo: %v", res.Scripts)
 	}
 	if slices.Contains(res.Services, "grafana") {
 		t.Errorf("exclude.services glob did not remove grafana: %v", res.Services)

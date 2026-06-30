@@ -12,8 +12,9 @@ export PYTHONPATH=$root/root/usr/local/scripts/python
 export MYPYPATH=$root/root/usr/local/scripts/python
 export GOMPLATE_CONFIG=$root/root/etc/gomplate/gomplate.yaml
 export CHE_DRY_RUN=$MK_DRY_RUN
+export CHE_DRY_RUN_RENDER_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
 
-autoload -Uz fn-annotate-with-sections fn-print-with
+autoload -Uz fn-annotate-with-sections fn-print-with fn-log-msg
 
 [[ $1 == -c && -n $2 ]] || exit 0
 typeset line=$2
@@ -22,7 +23,7 @@ typeset -a dry_run_exempt=( run-repo-ci-install-deps run-repo-ci-prepare-executa
 if (( ${dry_run_exempt[(Ie)${line##* }]} )) {
   line=${line% *}
 } elif [[ -n $MK_DRY_RUN && ${line%% *} != che ]] {
-  print -r -- "[dry-run] would run: $line"
+  fn-log-msg -t 'exec(dry-run)' $line
   exit 0
 }
 

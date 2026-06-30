@@ -5,6 +5,7 @@ go 1.26.3
 require (
 	github.com/1password/onepassword-sdk-go v0.4.0
 	github.com/dsnet/compress v0.0.1
+	github.com/fatih/color v1.18.0
 	github.com/go-git/go-git/v5 v5.19.1
 	github.com/hairyhenderson/gomplate/v4 v4.3.3
 	github.com/spf13/cobra v1.10.2
@@ -74,7 +75,6 @@ require (
 	github.com/envoyproxy/go-control-plane/envoy v1.32.4 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.2.1 // indirect
 	github.com/extism/go-sdk v1.7.1 // indirect
-	github.com/fatih/color v1.18.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.9.0 // indirect

@@ -15,8 +15,17 @@ import (
 // Glob-form items (no explicit dest) render to the derived live path; rich items
 // fan out across their dests, inlining @-includes per RenderReferencedFiles.
 func (h Host) RenderTemplates(templates []spec.FileItem) error {
+	skipSecret := os.Getenv("CHE_DRY_RUN_RENDER_SECRETS") != ""
+	var keep []spec.FileItem
 	var dests []string
 	for _, item := range templates {
+		if skipSecret && h.hasSecretRef(item) {
+			for _, dest := range h.templateDests(item) {
+				h.fs.Log("render(dry-run-render-secrets)", dest)
+			}
+			continue
+		}
+		keep = append(keep, item)
 		dests = append(dests, h.templateDests(item)...)
 	}
 	if err := h.archiveBefore("render", dests); err != nil {
@@ -28,12 +37,22 @@ func (h Host) RenderTemplates(templates []spec.FileItem) error {
 		}
 		return nil
 	}
-	for _, item := range templates {
+	for _, item := range keep {
 		if err := h.renderTemplate(item); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// hasSecretRef reports whether item's template source carries an op:// secret
+// reference (a render-time vault fetch). Unreadable source -> false (render proceeds, errors there).
+func (h Host) hasSecretRef(item spec.FileItem) bool {
+	src, err := os.ReadFile(h.Src(item.Rel))
+	if err != nil {
+		return false
+	}
+	return render.HasSecretRef(src)
 }
 
 // templateDests returns an item's live dests: derived path (glob-form, no
