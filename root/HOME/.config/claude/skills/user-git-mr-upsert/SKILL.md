@@ -9,7 +9,7 @@ description: Create or update the MR/PR with a title and description from branch
 2. Always push the branch by decision tree:
    - history rewritten (rebased by step 1, or amended an already-pushed commit) → `$ git push --force-with-lease -u origin HEAD`
    - else → `$ git push -u origin HEAD`
-3. Generate: `$ llm-git-mr-text-suggest.zsh` → `{title, description}` from `main...HEAD`.
+3. Generate: `$ llm-git-mr-text-suggest.zsh` → `{title, description}` from `main...HEAD`. Self-contained: incorporates the current MR/PR body (small new diff → modifies in place, preserves wording) and prepends a `## Commits` list automatically. No skill-side fetch needed.
 4. Pick CLI from `git remote get-url origin`: gitlab.com → `glab` | github.com → `gh`.
 5. Upsert MR:
    - no open MR → create as draft (`glab mr create --draft ...` | `gh pr create --draft ...`)

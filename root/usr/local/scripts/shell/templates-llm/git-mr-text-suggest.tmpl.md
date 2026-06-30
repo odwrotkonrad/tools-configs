@@ -1,36 +1,26 @@
-## Data
-
-### Full Diff - source of truth
-{{ getenv "DIFF_FULL" }}
-
-### Full Diff Stats
-{{ getenv "DIFF_STATS" }}
-
-### Latest Commit
-{{ getenv "LATEST_COMMIT" }}
-
 ## Style
 
 {{ renderMarkdown "--strip-frontmatter" "--strip-comments" "--increment-heading-levels" (printf "%s/.config/claude/rules/docs/prose.md" (env.Getenv "HOME")) | strings.TrimSpace }}
 
 ## Task
 
-Write an MR/PR title and description from the net diff against main. Fill `title` and `description`.
-The net diff is the source of truth: describe only what it changes, not what the commit says.
-Terse, specific, exhaustive: every change in the diff appears, trim words, never changes.
+Write an MR/PR title and description from the commit messages against main. Fill `title` and `description`.
+The commit messages are the source of truth: describe what they change. The diff stats are context for scope and size only.
+Terse, specific, exhaustive: every change the commits state appears, trim words, never changes.
 One line per bullet. No prose, no wrap-around. Drop nothing.
-State what changed. Never why. Never explain, justify, or guess. Only what the diff shows.
+State what changed. Never why. Never explain, justify, or guess.
 
-- derive everything from the net diff, the latest commit is secondary context for intent only
-- a change absent from the net diff MUST NOT appear, even if mentioned in the commit
-- when the commit and the diff disagree, the diff wins
+- derive everything from the commit messages, the diff stats are secondary context for scope and size only
+- current description present → treat as base. Scale edits to change size: large change may rewrite, small change modifies in place, preserve existing wording, structure, bullet order. Add or adjust bullets only for what the commits change
+- current description empty (first create) → write fresh from the commit messages
+- never write a `## Commits` section, the tool injects the commit list separately
 
 `title` → `<type>(<scope>): <summary>`:
-- summary names what the diff changes as a whole, imperative, concise
+- summary names what the commits change as a whole, imperative, concise
 - one area → `(area)`, 2+ areas → `(area,area,...)`
 
 `description` → markdown grouped by area:
-- `## <scope>` heading per area, first-appearance order in the diff
+- `## <scope>` heading per area, first-appearance order in the commits
 - one `- ` bullet per change, reviewer-facing
 - flag breaking changes or migrations
 
@@ -62,3 +52,16 @@ one area → title `config(zsh): restructure zle widgets and naming`:
 ## Important
 
 {{ . }}{{ end }}
+
+## Context
+
+### Current Description
+{{ getenv "CURRENT_DESCRIPTION" }}
+
+### Diff Stats
+{{ getenv "DIFF_STATS" }}
+
+## Data - source of truth
+
+### Commit Messages
+{{ getenv "COMMIT_BODIES" }}

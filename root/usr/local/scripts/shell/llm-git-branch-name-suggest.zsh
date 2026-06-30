@@ -13,6 +13,7 @@ set -e
 source "${0:A:h}/lib/llm-lib.zsh"
 read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load "${0:t}")"
 lib-llm-env-export "${0:t}"
+autoload -Uz fn-log-msg
 
 
 ##[>] script input
@@ -20,7 +21,7 @@ zparseopts -D -E -- -range:=opt_range
 typeset -A script_input=(
   in_instructions_runtime "$([[ -t 0 ]] || cat)"
 
-  opt_range "${opt_range[2]:-main..HEAD}"
+  opt_range "${opt_range[2]:-main..$(git rev-parse --abbrev-ref HEAD)}"
 )
 ##[<] script input
 
@@ -43,13 +44,16 @@ typeset -A template_input=(
 
 #[what] no commits, skip llm
 if [[ -z $template_input[RECENT_COMMITS] ]]; then
+  fn-log-msg -t "${0:t}" "no commits in $script_input[opt_range], emitting scratch name"
   jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
   exit 0
 fi
+fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model, current branch ${template_input[CURRENT_BRANCH]:-none}"
 
 
 ##[>] fill template 🤖
 prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
+fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..."
 ##[<] fill template 🤖
 
 
@@ -63,5 +67,7 @@ schema='{
   "additionalProperties": false
 }'
 
-<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema"
+out=$(<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema")
+fn-log-msg -t "${0:t}" "llm returned ${#out} chars"
+print -r -- "$out"
 ##[<] llm invocation

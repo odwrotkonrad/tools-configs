@@ -4,8 +4,8 @@
 #   Usage: <extra-instructions-on-stdin> | llm-git-mr-text-suggest [--range <range>]
 #   extra-instructions: optional, from stdin when piped.
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
-#   Upstream: git-mr skill. Downstream: net diff, commits as secondary context.
-#   Out: { "title": ..., "description": ... }.
+#   Upstream: git-mr skill. Downstream: commit messages, diff stats + current MR/PR body as context.
+#   Out: { "title": ..., "description": ... }. description top: tool-injected ## Commits list.
 #/[what]
 
 set -e
@@ -13,6 +13,7 @@ set -e
 source "${0:A:h}/lib/llm-lib.zsh"
 read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load "${0:t}")"
 lib-llm-env-export "${0:t}"
+autoload -Uz fn-log-msg
 
 
 ##[>] script input
@@ -20,26 +21,45 @@ zparseopts -D -E -- -range:=opt_range
 typeset -A script_input=(
   in_instructions_runtime "$([[ -t 0 ]] || cat)"
 
-  opt_range "${opt_range[2]:-main..HEAD}"
+  opt_range "${opt_range[2]:-main..$(git rev-parse --abbrev-ref HEAD)}"
 )
 ##[<] script input
 
-
-##[>] template input 🤖
-typeset -A template_input=(
-  LATEST_COMMIT "$(git log -1 --format='%B' HEAD)"
-  DIFF_FULL "$(git diff "${script_input[opt_range]/../...}")"
-  DIFF_STATS "$(git diff --stat "${script_input[opt_range]/../...}")"
-  INSTRUCTIONS_RUNTIME "$script_input[in_instructions_runtime]"
-)
-##[<] template input 🤖
+fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model"
 
 # no commits: error
 [[ -n "$(git log --format=%h "$script_input[opt_range]")" ]] || { echo "error: no commits in $script_input[opt_range]" >&2; exit 1 }
 
 
+##[>] current mr/pr description 🤖
+case "$(git remote get-url origin)" in
+  *gitlab.com*) current_description="$(glab mr view -F json --jq .description 2>/dev/null || true)" ;;
+  *github.com*) current_description="$(gh pr view --json body --jq .body 2>/dev/null || true)" ;;
+  *) current_description="" ;;
+esac
+fn-log-msg -t "${0:t}" "current description: ${#current_description} chars"
+##[<] current mr/pr description 🤖
+
+
+##[>] commit list (deterministic, newest-first) 🤖
+commit_list="$(git log --format='- %s' "$script_input[opt_range]")"
+fn-log-msg -t "${0:t}" "commits:"$'\n'"$commit_list"
+##[<] commit list (deterministic, newest-first) 🤖
+
+
+##[>] template input 🤖
+typeset -A template_input=(
+  COMMIT_BODIES "$(git log --format='%B' "$script_input[opt_range]")"
+  DIFF_STATS "$(git diff --stat "${script_input[opt_range]/../...}")"
+  CURRENT_DESCRIPTION "$current_description"
+  INSTRUCTIONS_RUNTIME "$script_input[in_instructions_runtime]"
+)
+##[<] template input 🤖
+
+
 ##[>] fill template 🤖
 prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
+fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..."
 ##[<] fill template 🤖
 
 
@@ -54,5 +74,13 @@ schema='{
   "additionalProperties": false
 }'
 
-<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema"
+llm_out=$(<<< "$prompt" "$llm_script" --model "$llm_model" --schema "$schema")
+fn-log-msg -t "${0:t}" "llm returned ${#llm_out} chars, injecting commit list"
 ##[<] llm invocation
+
+
+##[>] inject commit list at top of description 🤖
+commits_block=$'## Commits\n'"$commit_list"
+jq --arg c "$commits_block" '.description = $c + "\n\n" + .description' <<< "$llm_out"
+fn-log-msg -t "${0:t}" "done"
+##[<] inject commit list at top of description 🤖
