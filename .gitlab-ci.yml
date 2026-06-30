@@ -16,15 +16,22 @@ stages:
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
   cache:
-    key:
-      files:
-        - ci/go/go.sum
-    paths:
-      - .cache/go-mod
-      - .cache/go-build
+    - key:
+        files:
+          - ci/go/go.sum
+      paths:
+        - .cache/go-mod
+        - .cache/go-build
+    - key: apt-debs-bookworm
+      paths:
+        - .cache/apt-archives
   ##[<] 🤖🤖
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
+    ##[>] 🤖🤖
+    - mkdir -p .cache/apt-archives
+    - apt-get update
+    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
+    ##[<] 🤖🤖
 
 validate-docsgen:
   extends: .base
