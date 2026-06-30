@@ -72,7 +72,7 @@ run-repo-ci-prepare-hooks:
 	@lefthook install --force
 
 #[what] run pre-commit hooks over all files (not just staged)
-run-repo-ci-precommit-all: | run-repo-ci-prepare-hooks
+run-repo-ci-precommit-all: | run-repo-ci-install-deps run-repo-ci-prepare-hooks
 	@lefthook run pre-commit --all-files --force
 
 run-repo-ci-install-deps:
