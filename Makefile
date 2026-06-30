@@ -84,7 +84,7 @@ run-repo-ci-virt-macos-build:
 
 #[what] build the macos image then run the che ops in it (cli/macos profile)
 run-repo-ci-virt-macos-test: run-repo-ci-virt-macos-build
-	@virt-ssh-mac.zsh -c 'CI=1 make run-sync-full'
+	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_FORCE_PROFILE=cli/macos make run-sync-full'
 
 #[what] ssh into the macos image (auto-starts if stopped)
 run-repo-ci-virt-macos-ssh:
@@ -96,7 +96,7 @@ run-repo-ci-virt-linux-build:
 
 #[what] build the ci-linux image then run the che ops in it (cli/linux profile)
 run-repo-ci-virt-linux-test: run-repo-ci-virt-linux-build
-	@virt-ssh-linux.zsh -c 'CI=1 make run-sync-full'
+	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_FORCE_PROFILE=cli/linux make run-sync-full'
 
 #[what] build the ci-linux image and open an interactive shell in it
 run-repo-ci-virt-linux-ssh: run-repo-ci-virt-linux-build
