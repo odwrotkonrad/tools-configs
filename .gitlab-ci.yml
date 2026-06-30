@@ -31,7 +31,7 @@ stages:
     ##[>] 🤖🤖
     - mkdir -p .cache/apt-archives
     - apt-get update
-    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
+    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo unzip
     ##[<] 🤖🤖
 
 validate-pre-commit-all:
