@@ -2,8 +2,7 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
-COMMANDS := run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
-IN_VM := $(CURDIR)/ci/zsh/scripts/run-in-vm.zsh -c
+COMMANDS := run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -83,13 +82,24 @@ run-repo-ci-vm-build-base:
 run-repo-ci-vm-build:
 	@vm-build.zsh macos-tahoe-vanilla-configs
 
-#[what] ssh into the local vm
-run-repo-ci-vm-ssh:
-	@run-in-vm.zsh
-
-#[what] build vm then run the che ops in it (cli/macos profile)
-run-repo-ci-vm-test: run-repo-ci-vm-build
-	@$(IN_VM) 'CI=1 make run-sync-full'
-
 ###[<] VM
+
+###[>] Virt
+#[what] build the macos vm then run the che ops in it (cli/macos profile)
+run-repo-ci-virt-macos-test: run-repo-ci-vm-build
+	@virt-ssh-mac.zsh -c 'CI=1 make run-sync-full'
+
+#[what] ssh into the macos vm (auto-starts if stopped)
+run-repo-ci-virt-macos-ssh:
+	@virt-ssh-mac.zsh
+
+#[what] build the ci-linux image then run the che ops in it (cli/linux profile)
+run-repo-ci-virt-linux-test:
+	@virt-ssh-linux.zsh -c 'CI=1 make run-sync-full'
+
+#[what] build the ci-linux image and open an interactive shell in it
+run-repo-ci-virt-linux-ssh:
+	@virt-ssh-linux.zsh
+
+###[<] Virt
 ##[<] Onto Repo

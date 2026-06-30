@@ -84,6 +84,8 @@ base-exclude-desktop:
     mkdirs:
       - /var/log/{grafana,prometheus,jaeger,loki}
       - /usr/local/var/{grafana,prometheus}
+    run-scripts:
+      - ci/zsh/scripts/installs/80-go-host-tools.zsh
     services: [grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-macos:

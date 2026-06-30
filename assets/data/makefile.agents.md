@@ -33,5 +33,10 @@
 
 `run-repo-ci-vm-build-base` build vanilla base vm image
 `run-repo-ci-vm-build` build configs-local vm image
-`run-repo-ci-vm-ssh` ssh into the local vm
-`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run the che ops in it (cli/macos profile)
+
+#### Virt:
+
+`run-repo-ci-virt-macos-test`: `run-repo-ci-vm-build` build the macos vm then run the che ops in it (cli/macos profile)
+`run-repo-ci-virt-macos-ssh` ssh into the macos vm (auto-starts if stopped)
+`run-repo-ci-virt-linux-test` build the ci-linux image then run the che ops in it (cli/linux profile)
+`run-repo-ci-virt-linux-ssh` build the ci-linux image and open an interactive shell in it
