@@ -11,7 +11,7 @@ emulate -LR zsh
 setopt errexit pipefail
 
 ##[>] 🤖🤖
-autoload -Uz fn-log-msg fn-is-virt
+autoload -Uz fn-log-msg fn-is-virt fn-is-os
 
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
@@ -33,5 +33,7 @@ function bundle_stage {
 }
 
 typeset brewfile=/etc/homebrew/Brewfile
-for stage ( tap formulae go npm cask vscode ) bundle_stage $stage
+typeset -a stages=( tap formulae go npm )
+fn-is-os mac && stages+=( cask vscode ) #[why] casks are macos-only 🤖
+for stage ( $stages ) bundle_stage $stage
 ##[<] 🤖🤖

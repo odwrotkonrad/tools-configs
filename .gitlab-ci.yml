@@ -101,5 +101,16 @@ apply-linux-cli:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
     - when: manual
+  before_script:
+    ##[>] 🤖🤖
+    - mkdir -p .cache/apt-archives
+    - apt-get update
+    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo unzip procps file
+    - useradd -m -s /bin/zsh ko
+    - "echo 'ko ALL=(ALL) NOPASSWD: ALL' >/etc/sudoers.d/ko"
+    - chown -R ko "$CI_PROJECT_DIR"
+    ##[<] 🤖🤖
   script:
-    - make run-sync-full
+    ##[>] 🤖🤖
+    - sudo -u ko --preserve-env=CHE_FORCE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC make -C "$CI_PROJECT_DIR" run-sync-full
+    ##[<] 🤖🤖
