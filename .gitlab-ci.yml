@@ -113,5 +113,5 @@ apply-linux-cli:
     ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
-    - sudo -u ko --preserve-env=CHE_FORCE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC make -C "$CI_PROJECT_DIR" run-sync-full
+    - sudo -u ko --preserve-env=CI,CHE_FORCE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC make -C "$CI_PROJECT_DIR" run-sync-full
     ##[<] 🤖🤖
