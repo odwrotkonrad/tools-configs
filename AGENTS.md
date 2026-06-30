@@ -227,7 +227,6 @@ root
     loki
     otelcol
     prometheus
-    python
     rg
     sudoers.d
     zsh
