@@ -71,14 +71,6 @@ if stage?("formulae")
 end
 ##[<] formulae
 
-##[>] go
-if stage?("go")
-  go "github.com/hairyhenderson/gomplate/v4/cmd/gomplate"
-  go "golang.org/x/tools/gopls"
-  go "github.com/evilmartians/lefthook/v2"
-end
-##[<] go
-
 ##[>] npm
 if stage?("npm")
   npm "@github/copilot"
