@@ -78,6 +78,7 @@ apply-macos-cli:
   stage: smoke-apply
   variables:
     CHE_FORCE_PROFILE: cli/macos
+    MK_DRY_RUN_RENDER_SECRETS: "true"
   needs: [dry-run-apply-macos-desktop]
   allow_failure: true
   rules:
