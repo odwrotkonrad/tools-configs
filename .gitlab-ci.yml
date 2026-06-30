@@ -3,13 +3,44 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 stages:
+  - build-image
   - validate
   - dry-run-apply
   - smoke-apply
 
-.base:
+##[>] 🤖🤖
+variables:
+  CI_LINUX_IMAGE: $CI_REGISTRY_IMAGE/ci-linux:bookworm
+
+build-ci-linux-image:
+  stage: build-image
   needs: []
-  image: debian:bookworm-slim
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  rules:
+    - if: $CI_MERGE_REQUEST_DRAFT == "true"
+      when: never
+    - changes:
+        - ci/Dockerfile.linux
+        - ci/zsh/scripts/installs/00-ci-deps.zsh
+        - ci/zsh/functions/fn-*
+    - when: manual
+      allow_failure: true
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')\"}}}" >/kaniko/.docker/config.json
+    - /kaniko/executor
+        --context "$CI_PROJECT_DIR"
+        --dockerfile "$CI_PROJECT_DIR/ci/Dockerfile.linux"
+        --destination "$CI_LINUX_IMAGE"
+##[<] 🤖🤖
+
+.base:
+  needs:
+    - job: build-ci-linux-image
+      optional: true
+  image: $CI_LINUX_IMAGE
   ##[>] 🤖🤖
   variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
@@ -23,16 +54,7 @@ stages:
       paths:
         - .cache/go-mod
         - .cache/go-build
-    - key: apt-debs-bookworm
-      paths:
-        - .cache/apt-archives
   ##[<] 🤖🤖
-  before_script:
-    ##[>] 🤖🤖
-    - mkdir -p .cache/apt-archives
-    - apt-get update
-    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo unzip
-    ##[<] 🤖🤖
 
 validate-pre-commit-all:
   extends: .base
@@ -96,7 +118,9 @@ apply-linux-cli:
     CHE_FORCE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
-  needs: []
+  needs:
+    - job: build-ci-linux-image
+      optional: true
   allow_failure: true
   rules:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
@@ -104,14 +128,9 @@ apply-linux-cli:
     - when: manual
   before_script:
     ##[>] 🤖🤖
-    - mkdir -p .cache/apt-archives
-    - apt-get update
-    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo unzip procps file
-    - useradd -m -s /bin/zsh ko
-    - "echo 'ko ALL=(ALL) NOPASSWD: ALL' >/etc/sudoers.d/ko"
     - chown -R ko "$CI_PROJECT_DIR"
     ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
-    - sudo -u ko --preserve-env=CI,CHE_FORCE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC make -C "$CI_PROJECT_DIR" run-sync-full
+    - sudo -u ko --preserve-env=CI,CHE_FORCE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" run-sync-full
     ##[<] 🤖🤖

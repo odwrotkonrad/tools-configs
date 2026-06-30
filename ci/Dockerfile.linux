@@ -1,0 +1,24 @@
+##[>] 🤖🤖
+FROM debian:bookworm-slim
+
+ENV GOPATH=/usr/local/go-tools
+ENV PATH=/usr/local/go/bin:/usr/local/go-tools/bin:/usr/local/bin:$PATH
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      make git zsh curl ca-certificates clang sudo unzip procps file perl \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/zsh ko \
+ && echo 'ko ALL=(ALL) NOPASSWD: ALL' >/etc/sudoers.d/ko
+
+COPY ci/zsh/functions /opt/ci/ci/zsh/functions
+COPY ci/zsh/scripts/installs/00-ci-deps.zsh /opt/ci/ci/zsh/scripts/installs/00-ci-deps.zsh
+
+RUN install -d -m 0777 "$GOPATH" \
+ && FPATH=/opt/ci/ci/zsh/functions:$FPATH \
+    GOMODCACHE=/tmp/go-mod GOCACHE=/tmp/go-build \
+    /opt/ci/ci/zsh/scripts/installs/00-ci-deps.zsh build-ci-image \
+ && chmod -R a+rX "$GOPATH" /usr/local/go \
+ && rm -rf /tmp/go-mod /tmp/go-build /opt/ci
+##[<] 🤖🤖

@@ -90,6 +90,7 @@ base-exclude-macos:
   exclude:
     link:
       - etc/defaults.yml
+      - HOME/.config/homebrew/trust.json
 
 desktop/macos:
   mixin-profiles: [base]
