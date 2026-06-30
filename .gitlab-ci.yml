@@ -34,6 +34,8 @@ build-ci-linux-image:
         --context "$CI_PROJECT_DIR"
         --dockerfile "$CI_PROJECT_DIR/ci/Dockerfile.linux"
         --destination "$CI_LINUX_IMAGE"
+        --cache=true
+        --cache-repo "$CI_REGISTRY_IMAGE/ci-linux-cache"
 ##[<] 🤖🤖
 
 .base:
