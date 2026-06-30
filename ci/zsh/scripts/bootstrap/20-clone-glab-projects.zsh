@@ -54,10 +54,15 @@ function sync_project {
   fn-log-msg -t 'sync(updated)' $dest
 }
 
+#[what] CI: clone over https with the token (no ssh key); else ssh url 🤖
+typeset url_field=ssh_url_to_repo
+if (( ${+CI} )) url_field=http_url_to_repo
+
 glab api --paginate \
   "groups/konradodwrot/projects?include_subgroups=true&archived=false" \
-  | jq -r '.[] | [.path_with_namespace, .default_branch, .ssh_url_to_repo] | @tsv' \
+  | jq -r ".[] | [.path_with_namespace, .default_branch, .${url_field}] | @tsv" \
   | while IFS=$'\t' read -r ns branch url; do
+      if (( ${+CI} )) url=${url/#https:\/\//https://oauth2:${GITLAB_TOKEN}@}
       if { ! sync_project $ns $branch $url } fn-log-msg -t 'sync(fail)' "${root}/${ns}"
     done
 ##[<] 🤖🤖

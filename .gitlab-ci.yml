@@ -94,6 +94,7 @@ apply-linux-cli:
   variables:
     CHE_FORCE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
+    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs:
     - job: dry-run-apply-sync
       parallel:
