@@ -12,8 +12,7 @@ RUN apt-get update \
 RUN useradd -m -s /bin/zsh ko \
  && echo 'ko ALL=(ALL) NOPASSWD: ALL' >/etc/sudoers.d/ko
 
-COPY ci/zsh/functions /opt/ci/ci/zsh/functions
-COPY ci/zsh/scripts/installs/00-ci-deps.zsh /opt/ci/ci/zsh/scripts/installs/00-ci-deps.zsh
+COPY . /opt/ci
 
 RUN install -d -m 0777 "$GOPATH" \
  && GOMODCACHE=/tmp/go-mod GOCACHE=/tmp/go-build \

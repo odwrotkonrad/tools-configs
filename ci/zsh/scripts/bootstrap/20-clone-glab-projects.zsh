@@ -9,6 +9,8 @@ umask 002
 
 autoload -Uz fn-log-msg
 
+(( ${+CI} )) && { fn-log-msg -t clone-glab -- 'skip in CI'; return 0 }  #[why] no op auth in CI 🤖🤖
+
 ##[>] 🤖🤖
 root=${HOME}/projects/gitlab
 
