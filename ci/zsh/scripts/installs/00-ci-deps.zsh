@@ -55,7 +55,7 @@ typeset -A third_party_tools=(
 
 #[what] own published go tools needed by repo-ci: render-* at template render, che at dry-run sync
 typeset -A own_tools=(
-  che                  'gitlab.com/konradodwrot/go/che@v0.0.2'
+  che                  'gitlab.com/konradodwrot/go/che@v0.0.3'
   render-makefile-doc  'gitlab.com/konradodwrot/go/render-files/cmd/render-makefile-doc@v0.0.2'
   render-dirs-tree     'gitlab.com/konradodwrot/go/render-files/cmd/render-dirs-tree@v0.0.2'
 )
