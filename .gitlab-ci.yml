@@ -79,6 +79,7 @@ apply-macos-cli:
   variables:
     CHE_FORCE_PROFILE: cli/macos
     MK_DRY_RUN_RENDER_SECRETS: "true"
+    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs: [dry-run-apply-macos-desktop]
   allow_failure: true
   rules:
