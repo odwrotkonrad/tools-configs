@@ -204,6 +204,9 @@ root
           User
             .exported
       LaunchAgents
+    projects
+      gitlab
+        konradodwrot
   Library
     LaunchAgents
     LaunchDaemons
