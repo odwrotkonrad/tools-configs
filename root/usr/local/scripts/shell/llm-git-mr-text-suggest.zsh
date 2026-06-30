@@ -81,6 +81,6 @@ fn-log-msg -t "${0:t}" "llm returned ${#llm_out} chars, injecting commit list"
 
 ##[>] inject commit list at top of description 🤖
 commits_block=$'## Commits\n'"$commit_list"
-jq --arg c "$commits_block" '.description = $c + "\n\n" + .description' <<< "$llm_out"
+jq --arg c "$commits_block" '.description = $c + "\n\n## Changes\n\n" + .description' <<< "$llm_out"
 fn-log-msg -t "${0:t}" "done"
 ##[<] inject commit list at top of description 🤖
