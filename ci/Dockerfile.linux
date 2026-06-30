@@ -16,9 +16,8 @@ COPY ci/zsh/functions /opt/ci/ci/zsh/functions
 COPY ci/zsh/scripts/installs/00-ci-deps.zsh /opt/ci/ci/zsh/scripts/installs/00-ci-deps.zsh
 
 RUN install -d -m 0777 "$GOPATH" \
- && FPATH=/opt/ci/ci/zsh/functions:$FPATH \
-    GOMODCACHE=/tmp/go-mod GOCACHE=/tmp/go-build \
-    /opt/ci/ci/zsh/scripts/installs/00-ci-deps.zsh build-ci-image \
+ && GOMODCACHE=/tmp/go-mod GOCACHE=/tmp/go-build \
+    zsh -c 'fpath=(/opt/ci/ci/zsh/functions $fpath); source /opt/ci/ci/zsh/scripts/installs/00-ci-deps.zsh build-ci-image' \
  && chmod -R a+rX "$GOPATH" /usr/local/go \
  && rm -rf /tmp/go-mod /tmp/go-build /opt/ci
 ##[<] 🤖🤖
