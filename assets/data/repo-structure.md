@@ -61,6 +61,7 @@ root
           completions
           functions
     .gitlab-runner
+    .homebrew
     .ollama
     .ssh
     Library

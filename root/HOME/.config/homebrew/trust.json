@@ -1,14 +1,1 @@
-{
-  "trustedtaps": [
-    "azure/azure-cli",
-    "cirruslabs/cli"
-  ],
-  "trustedformulae": [
-    "cirruslabs/cli/gitlab-tart-executor",
-    "cirruslabs/cli/tart",
-    "hashicorp/tap/packer"
-  ],
-  "trustedcasks": [
-    "azure/azure-cli/azure-cli-preview"
-  ]
-}
+../../.homebrew/trust.json
