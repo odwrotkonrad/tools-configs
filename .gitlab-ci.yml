@@ -94,6 +94,11 @@ apply-linux-cli:
   variables:
     CHE_FORCE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
+  needs:
+    - job: dry-run-apply-sync
+      parallel:
+        matrix:
+          - CHE_FORCE_PROFILE: cli/linux
   allow_failure: true
   rules:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
