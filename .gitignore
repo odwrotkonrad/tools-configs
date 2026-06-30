@@ -18,6 +18,3 @@ __pycache__/
 
 # rendered packer variables
 /ci/vm/*.local.pkrvars.hcl
-
-# go binaries built on demand by run-repo-ci-prepare-executables
-/ci/go/bin/

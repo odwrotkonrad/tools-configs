@@ -5,7 +5,7 @@
 #   push: always plain (never force in automation); diverged remote -> push fails,
 #     error tails into the log, push manually.
 #   cli: gitlab.com -> glab | github.com -> gh.
-#   upsert: no open MR -> draft | open same source -> edit | changed source -> close + recreate.
+#   upsert: no open MR -> create | open same source -> edit | changed source -> close + recreate.
 #   Usage: git-mr-upsert
 #   Downstream: git-branch-name-upsert, llm-git-mr-suggest, git, glab/gh.
 #   Exit Codes: 22 sync conflicts
@@ -54,22 +54,22 @@ print -r -- "cli: $cli"
 if [[ $cli == glab ]] {
   open_source=$(glab mr view -F json --jq '.source_branch' 2>/dev/null || true)
   if [[ -z $open_source ]] {
-    glab mr create --draft --source-branch $branch --title $title --description $description --yes
+    glab mr create --source-branch $branch --title $title --description $description --yes
   } elif [[ $open_source == $branch ]] {
     glab mr update --title $title --description $description
   } else {
     glab mr close 2>/dev/null || true
-    glab mr create --draft --source-branch $branch --title $title --description $description --yes
+    glab mr create --source-branch $branch --title $title --description $description --yes
   }
 } else {
   open_source=$(gh pr view --json headRefName --jq '.headRefName' 2>/dev/null || true)
   if [[ -z $open_source ]] {
-    gh pr create --draft --head $branch --title $title --body $description
+    gh pr create --head $branch --title $title --body $description
   } elif [[ $open_source == $branch ]] {
     gh pr edit --title $title --body $description
   } else {
     gh pr close $open_source 2>/dev/null || true
-    gh pr create --draft --head $branch --title $title --body $description
+    gh pr create --head $branch --title $title --body $description
   }
 }
 ##[<] upsert mr/pr 🤖🤖

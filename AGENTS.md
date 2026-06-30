@@ -105,7 +105,7 @@ vim: root/HOME/.config/vim/vimrc
 
 `run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> run-repo-ci-render-templates -> run-host-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
 `run-sync-full`: `run-sync -> run-host-run-scripts-all` full sync: run-sync then run all profile scripts (installs)
-`run-repo-ci-vm-all`: `run-repo-ci-vm-build-base -> run-repo-ci-vm-build`
+`run-repo-ci-virt-macos-build-all`: `run-repo-ci-virt-macos-build-base -> run-repo-ci-virt-macos-build`
 
 ### Onto Host:
 
@@ -120,18 +120,19 @@ vim: root/HOME/.config/vim/vimrc
 ### Onto Repo (CI):
 
 `run-repo-ci-render-templates` render *.repo.tpl onto repo
-`run-repo-ci-tests-go` test go
 `run-repo-ci-prepare-hooks` install lefthook git hooks
 `run-repo-ci-precommit-all` run pre-commit hooks over all files (not just staged)
 `run-repo-ci-install-deps`
-`run-repo-ci-prepare-executables` compile ci/go cmds into ci/go/bin
 
-#### VM:
+#### Virt:
 
-`run-repo-ci-vm-build-base` build vanilla base vm image
-`run-repo-ci-vm-build` build configs-local vm image
-`run-repo-ci-vm-ssh` ssh into the local vm
-`run-repo-ci-vm-test`: `run-repo-ci-vm-build` build vm then run the che ops in it (cli/macos profile)
+`run-repo-ci-virt-macos-build-base` build vanilla base macos image
+`run-repo-ci-virt-macos-build` build configs-local macos image
+`run-repo-ci-virt-macos-test`: `run-repo-ci-virt-macos-build` build the macos image then run the che ops in it (cli/macos profile)
+`run-repo-ci-virt-macos-ssh` ssh into the macos image (auto-starts if stopped)
+`run-repo-ci-virt-linux-build` build the ci-linux image
+`run-repo-ci-virt-linux-test`: `run-repo-ci-virt-linux-build` build the ci-linux image then run the che ops in it (cli/linux profile)
+`run-repo-ci-virt-linux-ssh`: `run-repo-ci-virt-linux-build` build the ci-linux image and open an interactive shell in it
 
 ## Directory Tree
 
@@ -144,24 +145,6 @@ assets
   images
   recordings
 ci
-  go
-    packages
-      che
-        internal
-          cli
-          fsutil
-          host
-          log
-          render
-          spec
-          testutil
-            specs
-      checkcmd
-      render-dirs-tree
-        testdata
-      render-makefile-doc
-        lib
-        testdata
   vm
   zsh
     functions
@@ -216,6 +199,7 @@ root
           completions
           functions
     .gitlab-runner
+    .homebrew
     .ollama
     .ssh
     Library
@@ -225,12 +209,8 @@ root
             .exported
       LaunchAgents
     projects
-      go
-        get-os-open-files-with
-          lib
-        get-term-open-files-with
-          lib
-          testdata
+      gitlab
+        konradodwrot
   Library
     LaunchAgents
     LaunchDaemons
@@ -247,7 +227,6 @@ root
     loki
     otelcol
     prometheus
-    python
     rg
     sudoers.d
     zsh

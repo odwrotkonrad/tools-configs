@@ -1,22 +1,17 @@
 #!/bin/zsh
 #>[what]
 #   brew bundle /etc/homebrew/Brewfile, one stage per call:
-#   tap -> formulae -> go -> npm -> cask -> vscode (taps first; cask/vscode last for code cli).
+#   tap -> formulae -> npm -> cask -> vscode (taps first; cask/vscode last for code cli).
 #   Brewfile gates on HOMEBREW_STAGE + HOMEBREW_IS_VIRT.
 #   #[why] brew wipes env (bin/brew: env -i), keeps allowlist + HOMEBREW_*. gate
 #   vars must be HOMEBREW_-prefixed.
 #/[what]
 
 emulate -LR zsh
-
-##[>] 🤖🤖
-autoload -Uz fn-is-os
-fn-is-os mac || return 0
-##[<] 🤖🤖
 setopt errexit pipefail
 
 ##[>] 🤖🤖
-autoload -Uz fn-log-msg fn-is-virt
+autoload -Uz fn-log-msg fn-is-virt fn-is-os
 
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
@@ -38,5 +33,7 @@ function bundle_stage {
 }
 
 typeset brewfile=/etc/homebrew/Brewfile
-for stage ( tap formulae go npm cask vscode ) bundle_stage $stage
+typeset -a stages=( tap formulae npm )
+fn-is-os mac && stages+=( cask vscode ) #[why] casks are macos-only 🤖
+for stage ( $stages ) bundle_stage $stage
 ##[<] 🤖🤖

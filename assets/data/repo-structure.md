@@ -7,24 +7,6 @@ assets
   images
   recordings
 ci
-  go
-    packages
-      che
-        internal
-          cli
-          fsutil
-          host
-          log
-          render
-          spec
-          testutil
-            specs
-      checkcmd
-      render-dirs-tree
-        testdata
-      render-makefile-doc
-        lib
-        testdata
   vm
   zsh
     functions
@@ -79,6 +61,7 @@ root
           completions
           functions
     .gitlab-runner
+    .homebrew
     .ollama
     .ssh
     Library
@@ -88,12 +71,8 @@ root
             .exported
       LaunchAgents
     projects
-      go
-        get-os-open-files-with
-          lib
-        get-term-open-files-with
-          lib
-          testdata
+      gitlab
+        konradodwrot
   Library
     LaunchAgents
     LaunchDaemons
@@ -110,7 +89,6 @@ root
     loki
     otelcol
     prometheus
-    python
     rg
     sudoers.d
     zsh

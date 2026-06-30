@@ -1,1 +1,1 @@
-{{ env.Getenv "USER" }} ALL=(root) NOPASSWD: SETENV: {{ env.Getenv "HOME" }}/projects/configs/ci/go/bin/che *
+ko ALL=(root) NOPASSWD: SETENV: {{ env.Getenv "GOPATH" | default (printf "%s/go" (env.Getenv "HOME")) }}/bin/che *

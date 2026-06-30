@@ -5,7 +5,7 @@ fn-is-virt() {
   case $(uname -s) {
     (Darwin) [[ $(sysctl -n kern.hv_vmm_present 2>/dev/null) == 1 ]] ;;
     (Linux)
-      systemd-detect-virt -q && return 0
+      (( $+commands[systemd-detect-virt] )) && systemd-detect-virt -q && return 0
       [[ -e /.dockerenv ]] && return 0
       grep -qE 'docker|containerd|lxc' /proc/1/cgroup 2>/dev/null ;;
     (*) return 1 ;;

@@ -1,16 +1,11 @@
 #!/bin/zsh
-#>[what] pip + gem packages (go/npm live in the Brewfile).
+#>[what] gem + go lang packages / LSPs (npm lives in the Brewfile). 🤖
 #/[what]
 
 emulate -LR zsh
-
-##[>] 🤖🤖
-autoload -Uz fn-is-os
-fn-is-os mac || return 0
-##[<] 🤖🤖
 setopt errexit pipefail
 
 ##[>] 🤖🤖
-pip install -r /etc/python/requirements.txt
-gem install ruby-lsp
+"$(brew --prefix ruby)/bin/gem" install ruby-lsp
+PATH="/usr/local/go/bin:${PATH}" GOPATH=${HOME}/go go install golang.org/x/tools/gopls@latest
 ##[<] 🤖🤖

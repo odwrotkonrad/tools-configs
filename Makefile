@@ -1,9 +1,8 @@
 #[what] Project's Makefile
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
-WRAPPERS := run-sync run-sync-full run-repo-ci-vm-all
-COMMANDS := run-repo-ci-tests-go run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-prepare-executables run-repo-ci-vm-build-base run-repo-ci-vm-build run-repo-ci-vm-ssh run-repo-ci-vm-test
-IN_VM := $(CURDIR)/ci/zsh/scripts/run-in-vm.zsh -c
+WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
+COMMANDS := run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -21,37 +20,37 @@ export MK_DRY_RUN_RENDER_SECRETS
 run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks run-repo-ci-render-templates run-host-render-templates
 #[what] full sync: run-sync then run all profile scripts (installs)
 run-sync-full: run-sync run-host-run-scripts-all
-run-repo-ci-vm-all: run-repo-ci-vm-build-base run-repo-ci-vm-build
+run-repo-ci-virt-macos-build-all: run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
 #[what] load configs onto host (profile-selected symlink + copy ops)
-run-host-upsert-configs: | run-repo-ci-prepare-executables
+run-host-upsert-configs: | run-repo-ci-install-deps
 	@che link
 	@che copy
 
 #[what] prune broken symlinks
-run-host-delete-broken-links: | run-repo-ci-prepare-executables
+run-host-delete-broken-links: | run-repo-ci-install-deps
 	@che prune-links
 
 #[what] required by configuration and tools dirs
-run-host-mk-dirs: | run-repo-ci-prepare-executables
+run-host-mk-dirs: | run-repo-ci-install-deps
 	@che mk-dirs
 
 #[what] render *.host.tpl onto host
-run-host-render-templates: | run-repo-ci-prepare-executables
+run-host-render-templates: | run-repo-ci-install-deps
 	@che render-templates
 
 #[what] run all of the detected profile's scripts
-run-host-run-scripts-all: | run-repo-ci-prepare-executables
+run-host-run-scripts-all: | run-repo-ci-install-deps
 	@che run-scripts
 
 #[what] run profile scripts whose path matches NAME (substring)
-run-host-run-scripts: | run-repo-ci-prepare-executables
+run-host-run-scripts: | run-repo-ci-install-deps
 	@che run-scripts $(NAME)
 
 #[what] reload running service launchagents
-run-host-restart-services: | run-repo-ci-prepare-executables
+run-host-restart-services: | run-repo-ci-install-deps
 	@che services bootout
 	@che services bootin
 	@che services ensure
@@ -60,12 +59,8 @@ run-host-restart-services: | run-repo-ci-prepare-executables
 ##[>] Onto Repo (CI) [genai-include]
 RENDER_LOCAL ?= --local
 #[what] render *.repo.tpl onto repo
-run-repo-ci-render-templates: | run-repo-ci-prepare-executables
+run-repo-ci-render-templates: | run-repo-ci-install-deps
 	@tpl-gen-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
-
-#[what] test go
-run-repo-ci-tests-go: | run-repo-ci-install-deps
-	@go test -C ci/go ./...
 
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:
@@ -78,26 +73,34 @@ run-repo-ci-precommit-all: | run-repo-ci-install-deps run-repo-ci-prepare-hooks
 run-repo-ci-install-deps:
 	@00-ci-deps.zsh $@
 
-#[what] compile ci/go cmds into ci/go/bin
-run-repo-ci-prepare-executables: | run-repo-ci-install-deps
-	@go build -C ci/go -o bin/ ./packages/... $@
-
-###[>] VM
-#[what] build vanilla base vm image
-run-repo-ci-vm-build-base:
+###[>] Virt
+#[what] build vanilla base macos image
+run-repo-ci-virt-macos-build-base:
 	@vm-build.zsh macos-tahoe-vanilla-base
 
-#[what] build configs-local vm image
-run-repo-ci-vm-build:
+#[what] build configs-local macos image
+run-repo-ci-virt-macos-build:
 	@vm-build.zsh macos-tahoe-vanilla-configs
 
-#[what] ssh into the local vm
-run-repo-ci-vm-ssh:
-	@run-in-vm.zsh
+#[what] build the macos image then run the che ops in it (cli/macos profile)
+run-repo-ci-virt-macos-test: run-repo-ci-virt-macos-build
+	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_FORCE_PROFILE=cli/macos make run-sync-full'
 
-#[what] build vm then run the che ops in it (cli/macos profile)
-run-repo-ci-vm-test: run-repo-ci-vm-build
-	@$(IN_VM) 'make run-sync-full'
+#[what] ssh into the macos image (auto-starts if stopped)
+run-repo-ci-virt-macos-ssh:
+	@virt-ssh-mac.zsh
 
-###[<] VM
+#[what] build the ci-linux image
+run-repo-ci-virt-linux-build:
+	@virt-build-linux.zsh
+
+#[what] build the ci-linux image then run the che ops in it (cli/linux profile)
+run-repo-ci-virt-linux-test: run-repo-ci-virt-linux-build
+	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_FORCE_PROFILE=cli/linux make run-sync-full'
+
+#[what] build the ci-linux image and open an interactive shell in it
+run-repo-ci-virt-linux-ssh: run-repo-ci-virt-linux-build
+	@virt-ssh-linux.zsh
+
+###[<] Virt
 ##[<] Onto Repo

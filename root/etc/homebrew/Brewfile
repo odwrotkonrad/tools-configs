@@ -19,7 +19,7 @@ if stage?("formulae")
   brew "openssl@3"     # Cryptography and SSL/TLS Toolkit
   brew "bat"           # Clone of cat(1) with syntax highlighting and Git integration
   brew "bats-core"     # Bash Automated Testing System
-  brew "duti"          # Select default apps for documents and URL schemes on macOS
+  brew "duti" if OS.mac? # Select default apps for documents and URL schemes on macOS
   brew "fd"            # Simple, fast and user-friendly alternative to find
   brew "ffmpeg"        # Play, record, convert, and stream audio and video codecs
   brew "fzf"           # Command-line fuzzy finder written in Go
@@ -70,14 +70,6 @@ if stage?("formulae")
   end
 end
 ##[<] formulae
-
-##[>] go
-if stage?("go")
-  go "github.com/hairyhenderson/gomplate/v4/cmd/gomplate"
-  go "golang.org/x/tools/gopls"
-  go "github.com/evilmartians/lefthook/v2"
-end
-##[<] go
 
 ##[>] npm
 if stage?("npm")

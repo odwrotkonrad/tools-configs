@@ -3,13 +3,46 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 stages:
+  - build-image
   - validate
   - dry-run-apply
-  - test
+  - smoke-apply
+
+##[>] 🤖🤖
+variables:
+  CI_LINUX_IMAGE: $CI_REGISTRY_IMAGE/ci-linux:bookworm
+
+build-ci-linux-image:
+  stage: build-image
+  needs: []
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  rules:
+    - if: $CI_MERGE_REQUEST_DRAFT == "true"
+      when: never
+    - changes:
+        - ci/Dockerfile.linux
+        - ci/zsh/scripts/installs/00-ci-deps.zsh
+        - ci/zsh/functions/fn-*
+    - when: manual
+      allow_failure: true
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')\"}}}" >/kaniko/.docker/config.json
+    - /kaniko/executor
+        --context "$CI_PROJECT_DIR"
+        --dockerfile "$CI_PROJECT_DIR/ci/Dockerfile.linux"
+        --destination "$CI_LINUX_IMAGE"
+        --cache=true
+        --cache-repo "$CI_REGISTRY_IMAGE/ci-linux-cache"
+##[<] 🤖🤖
 
 .base:
-  needs: []
-  image: debian:bookworm-slim
+  needs:
+    - job: build-ci-linux-image
+      optional: true
+  image: $CI_LINUX_IMAGE
   ##[>] 🤖🤖
   variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
@@ -18,20 +51,12 @@ stages:
   cache:
     - key:
         files:
-          - ci/go/go.sum
+          - ci/zsh/scripts/installs/00-ci-deps.zsh
+          - ci/zsh/scripts/installs/80-go-host-tools.zsh
       paths:
         - .cache/go-mod
         - .cache/go-build
-    - key: apt-debs-bookworm
-      paths:
-        - .cache/apt-archives
   ##[<] 🤖🤖
-  before_script:
-    ##[>] 🤖🤖
-    - mkdir -p .cache/apt-archives
-    - apt-get update
-    - apt-get -o Dir::Cache::archives=$CI_PROJECT_DIR/.cache/apt-archives install -y --no-install-recommends make git zsh curl ca-certificates clang sudo
-    ##[<] 🤖🤖
 
 validate-pre-commit-all:
   extends: .base
@@ -54,12 +79,6 @@ dry-run-apply-sync:
   script:
     - make run-sync-full
 
-test-go:
-  extends: .base
-  stage: test
-  script:
-    - make run-repo-ci-tests-go
-
 .e2e-macos:
   #[why] macos remote vms have minimum lease time of 24h, I don't need 24/7 instance running so my local machine polls gitlab pipeline, executes the job and sends results back
   tags: [local]
@@ -80,9 +99,11 @@ dry-run-apply-macos-desktop:
 
 apply-macos-cli:
   extends: .e2e-macos
-  stage: test
+  stage: smoke-apply
   variables:
     CHE_FORCE_PROFILE: cli/macos
+    MK_DRY_RUN_RENDER_SECRETS: "true"
+    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs: [dry-run-apply-macos-desktop]
   allow_failure: true
   rules:
@@ -91,3 +112,27 @@ apply-macos-cli:
     - when: manual
   script:
     - make run-sync-full
+
+apply-linux-cli:
+  extends: .base
+  stage: smoke-apply
+  variables:
+    CHE_FORCE_PROFILE: cli/linux
+    MK_DRY_RUN_RENDER_SECRETS: "true"
+    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
+  needs:
+    - job: build-ci-linux-image
+      optional: true
+  allow_failure: true
+  rules:
+    - if: $CI_MERGE_REQUEST_DRAFT == "true"
+      when: never
+    - when: manual
+  before_script:
+    ##[>] 🤖🤖
+    - chown -R ko "$CI_PROJECT_DIR"
+    ##[<] 🤖🤖
+  script:
+    ##[>] 🤖🤖
+    - sudo -u ko --preserve-env=CI,CHE_FORCE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" run-sync-full
+    ##[<] 🤖🤖

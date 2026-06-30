@@ -26,12 +26,22 @@ typeset -a bins=(
     /usr/local/bin
     /usr/local/scripts/shell
     /usr/local/scripts/python
+)
+
+if { fn-is-os mac } bins+=(
     /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Support
     /opt/local/bin
     /opt/X11/bin
     /opt/homebrew/lib/ruby/gems/*/bin(N)
     /opt/homebrew/opt/ruby/bin
     /opt/homebrew/bin
+)
+
+if { fn-is-os linux } bins+=(
+    /home/linuxbrew/.linuxbrew/bin
+)
+
+bins+=(
     /usr/bin
     /usr/sbin
     /bin
