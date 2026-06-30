@@ -4,7 +4,7 @@
 #   Usage: <extra-instructions-on-stdin> | llm-git-branch-name-suggest [--range <range>]
 #   extra-instructions: optional, read from stdin when piped.
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
-#   Upstream: git-commit, git-mr skills. Downstream: git commit messages.
+#   Upstream: git-branch-name-upsert. Downstream: git commit messages.
 #   Out: { "name": ... }.
 #/[what]
 

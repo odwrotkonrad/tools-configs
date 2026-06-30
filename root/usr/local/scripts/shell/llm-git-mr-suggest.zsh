@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 #>[what]
 #   LLM driven change request (MR/PR) generation
-#   Usage: <extra-instructions-on-stdin> | llm-git-mr-text-suggest [--range <range>]
+#   Usage: <extra-instructions-on-stdin> | llm-git-mr-suggest [--range <range>]
 #   extra-instructions: optional, from stdin when piped.
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
-#   Upstream: git-mr skill. Downstream: commit messages, diff stats + current MR/PR body as context.
+#   Upstream: git-mr-upsert. Downstream: commit messages, diff stats + current MR/PR body as context.
 #   Out: { "title": ..., "description": ... }. description top: tool-injected ## Commits list.
 #/[what]
 

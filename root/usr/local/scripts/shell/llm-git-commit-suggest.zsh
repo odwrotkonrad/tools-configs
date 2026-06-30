@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 #>[what]
 #   Suggest commit message via LLM.
-#   Usage: <extra-instructions-on-stdin> | llm-git-commit-msg-suggest
+#   Usage: <extra-instructions-on-stdin> | llm-git-commit-suggest
 #   stdin: optional extra instructions.
 #   provider, model, template, env from /etc/custom/llm.yml.
-#   Upstream: git-commit skill. Out: { "subject": ..., "description": ... }.
+#   Upstream: git-commit-upsert. Out: { "subject": ..., "description": ... }.
 #/[what]
 
 set -e

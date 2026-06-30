@@ -193,10 +193,7 @@ root
             zsh
           docs
         skills
-          user-git-branch-name-upsert
-          user-git-commit
-          user-git-mr-upsert
-          user-git-upsert-all
+          user-git-ops
         themes
       codex
       gcloud
