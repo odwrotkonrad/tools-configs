@@ -5,7 +5,7 @@ workflow:
 stages:
   - validate
   - dry-run-apply
-  - test
+  - smoke-apply
 
 .base:
   needs: []
@@ -75,7 +75,7 @@ dry-run-apply-macos-desktop:
 
 apply-macos-cli:
   extends: .e2e-macos
-  stage: test
+  stage: smoke-apply
   variables:
     CHE_FORCE_PROFILE: cli/macos
   needs: [dry-run-apply-macos-desktop]
@@ -89,7 +89,7 @@ apply-macos-cli:
 
 apply-linux-cli:
   extends: .base
-  stage: test
+  stage: smoke-apply
   variables:
     CHE_FORCE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
