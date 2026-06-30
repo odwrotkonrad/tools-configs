@@ -44,7 +44,8 @@ fn-install-if-missing go install_go
 
 ##[>] 🤖🤖
 #[why] install into GOPATH/bin (no sudo); run-target wrapper has it on PATH
-function go_install { PATH="${goroot}/bin:${PATH}" go install "$1" }
+#[why] CGO_ENABLED=1 + CC=clang: che pulls onepassword-sdk-go, which needs cgo to build
+function go_install { PATH="${goroot}/bin:${PATH}" CGO_ENABLED=1 CC=clang go install "$1" }
 
 #[what] 3rd-party go tools: bin -> module@version
 typeset -A third_party_tools=(
