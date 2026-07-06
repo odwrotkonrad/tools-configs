@@ -39,7 +39,7 @@ run-host-mk-dirs: | run-repo-ci-install-deps
 
 #[what] render *.host.tpl onto host
 run-host-render-templates: | run-repo-ci-install-deps
-	@che render-templates
+	@che render-templates --host
 
 #[what] run all of the detected profile's scripts
 run-host-run-scripts-all: | run-repo-ci-install-deps
@@ -57,10 +57,9 @@ run-host-restart-services: | run-repo-ci-install-deps
 ##[<] Onto Host
 
 ##[>] Onto Repo (CI) [genai-include]
-RENDER_LOCAL ?= --local
 #[what] render *.repo.tpl onto repo
 run-repo-ci-render-templates: | run-repo-ci-install-deps
-	@tpl-gen-onto-repo.zsh $(RENDER_LOCAL) $(CURDIR)
+	@che render-templates --repo
 
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:

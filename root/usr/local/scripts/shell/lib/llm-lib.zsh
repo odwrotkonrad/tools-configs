@@ -38,13 +38,13 @@ lib-llm-env-export() {
 ##[<] lib-llm-env-export 🤖🤖
 
 ##[>] lib-llm-prompt-fill 🤖🤖
-#[what] render templates-llm/<template> with the named assoc's pairs as gomplate vars
+#[what] render templates-llm/<template> with the named assoc's pairs as env vars (render-tpl engine)
 lib-llm-prompt-fill() {
   local template=$1 assoc=$2
   local base=${${(%):-%x}:A:h:h}
   local -A vars=("${(@kv)${(P)assoc}}")
 
   for k v in "${(@kv)vars}"; do export "$k"="$v"; done
-  gomplate -f "$base/templates-llm/$template"
+  render-tpl -f "$base/templates-llm/$template"
 }
 ##[<] lib-llm-prompt-fill 🤖🤖

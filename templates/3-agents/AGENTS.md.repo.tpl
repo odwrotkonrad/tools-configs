@@ -1,8 +1,3 @@
----
-render-to:
-  - CLAUDE.md
-  - AGENTS.md
----
 @assets/docs-agents/commenting-convention.md
 
 @assets/docs-agents/file-naming.md
