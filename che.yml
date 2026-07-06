@@ -25,6 +25,9 @@ base:
           - {source: Library/LaunchDaemons/prometheus.plist.host.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
           - {source: Library/LaunchDaemons/jaeger.plist.host.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
           - {source: Library/LaunchDaemons/loki.plist.host.cp, dest: [/Library/LaunchDaemons/loki.plist]}
+      - chmod: "0700"
+        files:
+          - {source: HOME/.ssh/config.host.cp, dest: [~/.ssh/config]}
     template:
       - files: [HOME/**, etc/**, usr/**]
       - owner: root
@@ -53,6 +56,9 @@ base:
           - /var/root/.cache/zsh
           - /var/root/.config
           - /var/root/.local/state/zsh/completions
+      - chmod: "0700"
+        files:
+          - {dest: [HOME/.ssh]}
       - chmod: "2775"
         files:
           - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
