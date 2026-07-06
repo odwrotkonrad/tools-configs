@@ -4,7 +4,7 @@
 emulate -LR zsh
 setopt errexit
 
-autoload -Uz fn-install-if-missing fn-exit-with fn-is-os fn-is-arch fn-log-msg
+autoload -Uz fn-install-if-missing fn-install-go-mod-if-outdated fn-exit-with fn-is-os fn-is-arch fn-log-msg
 
 version=1.26.4
 
@@ -43,29 +43,14 @@ function install_go {
 fn-install-if-missing go install_go
 
 ##[>] 🤖🤖
-#[why] install into GOPATH/bin (no sudo); run-target wrapper has it on PATH
-#[why] CGO_ENABLED=1 + CC=clang: che pulls onepassword-sdk-go, which needs cgo to build
-function go_install { PATH="${goroot}/bin:${PATH}" CGO_ENABLED=1 CC=clang go install "$1" }
-
-#[what] 3rd-party go tools: bin -> module@version
-typeset -A third_party_tools=(
-  lefthook  'github.com/evilmartians/lefthook/v2@v2.1.9'
-  yq        'github.com/mikefarah/yq/v4@v4.53.3'
-)
-
-#[what] own published go tools: che renders host + repo templates (dirs-tree + makefile-doc built in); render-tpl renders ad-hoc llm prompts (shared engine)
-typeset -A own_tools=(
+#[what] go tools: bin -> module@version (3rd-party + own; che renders host + repo templates, render-tpl renders ad-hoc llm prompts)
+typeset -A go_tools=(
+  lefthook   'github.com/evilmartians/lefthook/v2@v2.1.9'
+  yq         'github.com/mikefarah/yq/v4@v4.53.3'
   che        'gitlab.com/konradodwrot/go/che@v0.0.11'
   render-tpl 'gitlab.com/konradodwrot/go/render-files/cmd/render-tpl@v0.0.4'
 )
 
-for bin module ( ${(kv)third_party_tools} ${(kv)own_tools} ) {
-  if (( $+commands[$bin] )) {
-    fn-log-msg -t "$bin" -- already installed
-    continue
-  }
-  fn-log-msg -t "$bin" -- installing
-  go_install "$module"
-  fn-log-msg -t "$bin" -- installed
-}
+#[why] reinstall on version drift so pin bumps land over a stale binary
+for bin module ( ${(kv)go_tools} ) fn-install-go-mod-if-outdated "$bin" "$module"
 ##[<] 🤖🤖
