@@ -1,1 +1,0 @@
-../../../root/usr/local/scripts/shell/render-with-frontmatter.zsh

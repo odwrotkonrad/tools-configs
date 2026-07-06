@@ -8,9 +8,6 @@ typeset root=$(git -C ${0:A:h} rev-parse --show-toplevel)
 
 export FPATH=$root/ci/zsh/functions:$FPATH
 export PATH=$root/ci/zsh/scripts:$root/ci/zsh/scripts/installs:${GOPATH:-$HOME/go}/bin:/usr/local/go/bin:/usr/local/bin:$PATH
-export PYTHONPATH=$root/root/usr/local/scripts/python
-export MYPYPATH=$root/root/usr/local/scripts/python
-export GOMPLATE_CONFIG=$root/root/etc/gomplate/gomplate.yaml
 export CHE_DRY_RUN=$MK_DRY_RUN
 export CHE_DRY_RUN_RENDER_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
 

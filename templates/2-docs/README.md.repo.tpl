@@ -1,19 +1,17 @@
----
-render-to: README.md
----
-{{- $inv := renderWithFrontmatter "assets/data/tools-inventory-index.yml" | data.YAML -}}
+{{- $front := frontmatter "assets/data/tools-inventory-index.yml" | data.YAML -}}
+{{- $body := readBody "assets/data/tools-inventory-index.yml" -}}
 ## **Config**uration file**s**
 
 {{ file.Read "assets/docs-human/description.md" }}
 {{ file.Read "assets/docs-human/purpose.md" }}
-## {{ $inv.frontmatter.title }}
+## {{ $front.title }}
 
-{{ $inv.frontmatter.description }}
+{{ $front.description }}
 
 ```yaml
-{{ $inv.body }}```
+{{ $body }}```
 
-{{ range $uri, $desc := $inv.frontmatter.references -}}
+{{ range $uri, $desc := $front.references -}}
 - [{{ $uri }}]({{ $uri }}) - {{ $desc }}
 {{ end }}
 ## Observability

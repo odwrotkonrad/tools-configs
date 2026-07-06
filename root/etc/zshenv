@@ -27,7 +27,6 @@ AZURE_CORE_OUTPUT='json'
 CODEX_HOME="${XDG_CONFIG_HOME}/codex"
 CODEX_SQLITE_HOME="${XDG_STATE_HOME}/codex"
 RUST_LOG="info"
-GOMPLATE_CONFIG='/etc/gomplate/gomplate.yaml'
 PKG_CONFIG_PATH='/opt/homebrew/opt/ruby/lib/pkgconfig'
 PIP_DISABLE_PIP_VERSION_CHECK='1'
 RIPGREP_CONFIG_PATH='/etc/rg/rgrc'

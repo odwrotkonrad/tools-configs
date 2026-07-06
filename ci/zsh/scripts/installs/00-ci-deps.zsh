@@ -50,15 +50,13 @@ function go_install { PATH="${goroot}/bin:${PATH}" CGO_ENABLED=1 CC=clang go ins
 #[what] 3rd-party go tools: bin -> module@version
 typeset -A third_party_tools=(
   lefthook  'github.com/evilmartians/lefthook/v2@v2.1.9'
-  gomplate  'github.com/hairyhenderson/gomplate/v5/cmd/gomplate@v5.1.0'
   yq        'github.com/mikefarah/yq/v4@v4.53.3'
 )
 
-#[what] own published go tools needed by repo-ci: render-* at template render, che at dry-run sync
+#[what] own published go tools: che renders host + repo templates (dirs-tree + makefile-doc built in); render-tpl renders ad-hoc llm prompts (shared engine)
 typeset -A own_tools=(
-  che                  'gitlab.com/konradodwrot/go/che@v0.0.6'
-  render-makefile-doc  'gitlab.com/konradodwrot/go/render-files/cmd/render-makefile-doc@v0.0.2'
-  render-dirs-tree     'gitlab.com/konradodwrot/go/render-files/cmd/render-dirs-tree@v0.0.2'
+  che        'gitlab.com/konradodwrot/go/che@v0.0.11'
+  render-tpl 'gitlab.com/konradodwrot/go/render-files/cmd/render-tpl@v0.0.4'
 )
 
 for bin module ( ${(kv)third_party_tools} ${(kv)own_tools} ) {

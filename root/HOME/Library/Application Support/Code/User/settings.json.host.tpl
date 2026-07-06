@@ -184,7 +184,7 @@
   "git.allowForcePush": true,
   "git.alwaysShowStagedChangesResourceGroup": true,
   "git.alwaysSignOff": true,
-  "git.autoRepositoryDetection": false,
+  "git.autoRepositoryDetection": true,
   "git.blame.editorDecoration.template": "(${authorDateAgo} ${authorEmail}): ${subject}",
   "git.blame.statusBarItem.enabled": false,
   "git.branchSortOrder": "committerdate",
@@ -234,7 +234,7 @@
   ////[<] git
 
   ////[>] scm
-  "scm.alwaysShowRepositories": false,
+  "scm.alwaysShowRepositories": true,
   "scm.autoReveal": false,
   "scm.compactFolders": true,
   "scm.countBadge": "off",
@@ -249,7 +249,7 @@
   "scm.inputMaxLineCount": 15,
   "scm.inputMinLineCount": 2,
   "scm.providerCountBadge": "hidden",
-  "scm.repositories.selectionMode": "single",
+  "scm.repositories.selectionMode": "multiple",
   "scm.showActionButton": false,
   "scm.diffDecorationsGutterPattern": {
     "added": false,

@@ -1,12 +1,6 @@
 ##[>] 🤖🤖
-profiles:
-  desktop:
-    macos:
-  cli:
-    macos:
-    linux:
-
 base:
+  options: {mixinOnly: true}
   include:
     link:
       - HOME/**
@@ -15,7 +9,7 @@ base:
     copy:
       - files: [HOME/**, etc/**, usr/**]
       - owner: root
-        owner-group: "0"
+        ownerGroup: "0"
         chmod: "0644"
         files:
           - {source: Library/LaunchDaemons/otelcol.plist.host.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
@@ -28,12 +22,12 @@ base:
     template:
       - files: [HOME/**, etc/**, usr/**]
       - owner: root
-        owner-group: "0"
+        ownerGroup: "0"
         chmod: "0440"
         files:
           - {source: etc/sudoers.d/configs.host.tpl, dest: [/etc/sudoers.d/configs]}
       - owner: root
-        owner-group: "0"
+        ownerGroup: "0"
         chmod: "0644"
         files:
           - {source: Library/LaunchAgents/gitlab-runner.plist.host.tpl, dest: [/Library/LaunchAgents/gitlab-runner.plist]}
@@ -41,7 +35,21 @@ base:
           - source: HOME/.config/agents/templates/AGENTS.md.host.tpl
             dest:
               - ~/.config/claude/CLAUDE.md
-              - {path: ~/.config/codex/AGENTS.md, render-referenced-files: true}
+              - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
+    repoTemplate:
+      - files:
+          - source: templates/1-env/local.env.repo.tpl
+            dest:
+              - {path: .env, options: {writeType: mergeUpsert}}
+          - {source: templates/2-docs/README.md.repo.tpl, dest: [README.md]}
+          - {source: templates/2-docs/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
+          - {source: templates/2-docs/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
+          - source: templates/3-agents/AGENTS.md.repo.tpl
+            dest:
+              - CLAUDE.md
+              - {path: AGENTS.md, options: {renderReferencedFiles: true}}
+          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
+          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
     mkdirs:
       - files:
           - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
@@ -60,16 +68,17 @@ base:
           - {dest: ["/var/log/{grafana,prometheus,jaeger,loki}"]}
           - {dest: ["/usr/local/var/{grafana,prometheus}"]}
       - owner: root
-        owner-group: "0"
+        ownerGroup: "0"
         chmod: "0755"
         files:
           - {dest: [/etc/zsh/zshrc.d/completions]}
-    run-scripts:
+    runScripts:
       - ci/zsh/scripts/installs/*.zsh
       - ci/zsh/scripts/bootstrap/*.zsh
     services: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-desktop:
+  options: {mixinOnly: true}
   exclude:
     link:
       - HOME/.gitlab-runner/**
@@ -84,22 +93,26 @@ base-exclude-desktop:
     mkdirs:
       - /var/log/{grafana,prometheus,jaeger,loki}
       - /usr/local/var/{grafana,prometheus}
-    run-scripts:
+    runScripts:
       - ci/zsh/scripts/installs/80-go-host-tools.zsh
     services: [grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-macos:
+  options: {mixinOnly: true}
   exclude:
     link:
       - etc/defaults.yml
       - HOME/.config/homebrew/trust.json
 
 desktop/macos:
-  mixin-profiles: [base]
+  options: {autoDetect: true}
+  mixinProfiles: [base]
 
 cli/macos:
-  mixin-profiles: [base, base-exclude-desktop]
+  options: {autoDetect: true}
+  mixinProfiles: [base, base-exclude-desktop]
 
 cli/linux:
-  mixin-profiles: [base, base-exclude-macos, base-exclude-desktop]
+  options: {autoDetect: true}
+  mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
 ##[<] 🤖🤖

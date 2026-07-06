@@ -78,7 +78,6 @@ root
     LaunchDaemons
   etc
     custom
-    gomplate
     grafana
       provisioning
         dashboards

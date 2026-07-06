@@ -48,7 +48,6 @@ fzf: root/etc/zsh/rc.d/20-tools.zsh
 gcloud: root/HOME/.config/gcloud/configurations/config_main.host.tpl
 gitlab-runner: root/HOME/.gitlab-runner/config.toml.host.tpl
 golang: root/etc/zshenv
-gomplate: root/etc/gomplate/gomplate.yaml
 homebrew: root/etc/zshrc
 loki: root/etc/loki/config.yml
 man: root/etc/man.conf
