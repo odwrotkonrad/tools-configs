@@ -18,7 +18,7 @@ allow_login_shell = true
 log_dir = "{{ env.Getenv "HOME" }}/.local/state/codex/log"
 sqlite_home = "{{ env.Getenv "HOME" }}/.local/state/codex"
 
-[projects."{{ env.Getenv "HOME" }}/projects/configs"]
+[projects."{{ env.Getenv "PWD" }}"]
 trust_level = "trusted"
 
 [projects."{{ env.Getenv "HOME" }}/.config/codex"]

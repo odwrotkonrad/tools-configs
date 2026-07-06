@@ -12,7 +12,7 @@ autoload -Uz fn-log-msg fn-tpl-strip-empty-frontmatter fn-tpl-inline-includes fn
 
 ##[>] 🤖🤖
 zparseopts -D -F -- -local=local || exit 1
-configs=${1:-$HOME/projects/configs}
+configs=${1:-$(git -C ${0:A:h} rev-parse --show-toplevel)}
 local_glob='*local*'
 
 #[what] MK_RENDER_SKIP: comma-separated render-to dests to omit
