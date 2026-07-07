@@ -5,11 +5,12 @@ setopt errexit pipefail
 autoload -Uz fn-exit-with
 
 ##[>] 🤖🤖
-typeset repo_root=$(git -C ${0:A:h} rev-parse --show-toplevel)
+#[why] shared ci-linux base now lives in infra/ci-images; pull it and tag local instead of building from a repo-local Dockerfile
 typeset image=ci-linux:local
-typeset dockerfile=$repo_root/ci/Dockerfile.linux
+typeset shared=registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:bookworm
 
 (( $+commands[docker] )) || fn-exit-with 1 "${0:t}: docker not found"
 
-docker build -f $dockerfile -t $image $repo_root
+docker pull $shared
+docker tag $shared $image
 ##[<] 🤖🤖
