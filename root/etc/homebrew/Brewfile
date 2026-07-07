@@ -31,6 +31,7 @@ if stage?("formulae")
   brew "pcre2"         # Perl compatible regular expressions library with a new API
   brew "git"           # Distributed revision control system
   brew "glab"          # Open-source GitLab command-line tool
+  brew "goreleaser"    # 🤖 Deliver Go binaries as fast and easily as possible
   brew "htop"          # Improved top (interactive process viewer)
   brew "jq"            # Lightweight and flexible command-line JSON processor
   brew "sqlite"        # Command-line interface for SQLite
@@ -58,6 +59,7 @@ if stage?("formulae")
   brew "watch"         # Executes a program periodically, showing output fullscreen
   brew "yq"            # Process YAML, JSON, XML, CSV and properties from the CLI
   brew "zlib"          # General-purpose lossless data-compression library
+  brew "zig"           # 🤖 Programming language designed for robustness and clarity
 
   unless virt?
     brew "grafana"                             # Metric visualizations and dashboards
