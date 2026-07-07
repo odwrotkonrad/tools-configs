@@ -41,6 +41,7 @@ validate-pre-commit-all:
 dry-run-apply-sync:
   extends: .base
   stage: dry-run-apply
+  needs: []
   variables:
     MK_DRY_RUN: all
   parallel:
