@@ -1,6 +1,7 @@
 ---
 paths:
   - "**/claude/settings.json"
+  - "**/claude/settings.json.host.tpl"
   - "**/.claude/settings.json"
   - "**/.claude/settings.local.json"
   - "**/.zclaude"
@@ -17,7 +18,7 @@ root/HOME/.config/claude/:
   CLAUDE.md:                # global instructions, all projects
   comments.md:              # @-included by CLAUDE.md
   git.md:                   # @-included by CLAUDE.md
-  settings.json:
+  settings.json.host.tpl:
   agents/:
   agent-memory/:
   commands/:

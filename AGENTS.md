@@ -21,7 +21,7 @@ Maintains stateful configuration of a system and its tools, optimized for a read
 
 # Conventions
 
-- `conventions/purpose/convention.md`: every repo carries `assets/docs-agents/purpose.md` with five headings (what, why, goals, usage, future), included at the top of `AGENTS.md`, `CLAUDE.md`, `README.md`.
+- `conventions/purpose/convention.md`: every repo carries `assets/docs-agents/purpose.md` with three headings (what, why, goals), included at the top of `AGENTS.md`, `CLAUDE.md`, `README.md`.
 - `conventions/comments/convention.md`: comment label prefixes (`[where]`, `[why]`, `[what]`), `[>]`/`[<]` sectioning, 🤖 AI-generated marks.
 - `conventions/makefile/convention.md`: house Makefile style, `[genai-include]` sectioning that feeds the generated Makefile doc for AI agents.
 - `conventions/templates/convention.md`: generating repo docs with che templates: `templates/1-env|2-data|3-audience`, `che.yml` wiring, `make render-templates`.
@@ -51,7 +51,7 @@ references:
 ##[>] primary
 agents: root/HOME/.config/agents/templates/AGENTS.md.host.tpl
 ccstatusline: root/HOME/.config/ccstatusline/settings.json
-claude: root/HOME/.config/claude/settings.json
+claude: root/HOME/.config/claude/settings.json.host.tpl
 codex: root/HOME/.config/codex/config.toml.host.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml

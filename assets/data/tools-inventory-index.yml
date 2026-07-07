@@ -7,7 +7,7 @@ references:
 ##[>] primary
 agents: root/HOME/.config/agents/templates/AGENTS.md.host.tpl
 ccstatusline: root/HOME/.config/ccstatusline/settings.json
-claude: root/HOME/.config/claude/settings.json
+claude: root/HOME/.config/claude/settings.json.host.tpl
 codex: root/HOME/.config/codex/config.toml.host.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml
