@@ -8,7 +8,8 @@
     { "name": "go/get-term-open-files-with", "path": "go/cruft/get-term-open-files-with" },
     { "name": "infra/git-repos", "path": "infra/git-repos" },
     { "name": "infra/ci-images", "path": "infra/ci-images" },
-    { "name": "notes", "path": "notes" }
+    { "name": "notes", "path": "notes" },
+    { "name": "workspace", "path": "workspace" }
   ],
   "settings": {}
 }

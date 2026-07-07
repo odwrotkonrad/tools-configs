@@ -98,10 +98,12 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
+  "model": "claude-fable-5[1m]",
   "availableModels": [
+    "fable",
+    "opus",
     "sonnet",
-    "opus"
+    "haiku"
   ],
   "statusLine": {
     "type": "command",
