@@ -1,0 +1,23 @@
+#[what] fn-install-prebuilt-if-outdated <bin> <version> <installer-fn> <parser-fn>: run installer when the on-PATH bin is absent or its reported version differs from the pin
+#[why] prebuilt tools must pick up version bumps even when a stale binary is on PATH; mirrors fn-install-go-mod-if-outdated without the go-compile
+#[what] parser-fn maps the raw '<bin> --version' output to a bare version string (formats differ per tool)
+
+function fn-install-prebuilt-if-outdated {
+  emulate -LR zsh
+  autoload -Uz fn-log-msg
+  local bin=$1 want=$2 installer=$3 parser=$4 have
+
+  if (( $+commands[$bin] )) {
+    have=$($parser "$($commands[$bin] --version 2>/dev/null)")
+    if [[ -n $have && $have == $want ]] {
+      fn-log-msg -t $bin -- "already installed ($have)"
+      return
+    }
+    fn-log-msg -t $bin -- "reinstalling ${have:-unknown} -> $want"
+  } else {
+    fn-log-msg -t $bin -- "installing $want"
+  }
+
+  $installer
+  fn-log-msg -t $bin -- installed
+}

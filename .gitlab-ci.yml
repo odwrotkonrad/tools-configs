@@ -9,7 +9,7 @@ stages:
 
 ##[>] 🤖🤖
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:bookworm
+  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:v0.0.1
 ##[<] 🤖🤖
 
 .base:
