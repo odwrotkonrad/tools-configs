@@ -1,4 +1,5 @@
 #[what] Project's Makefile
+#[why] SHELL is a zsh wrapper (not bare `zsh`) to power MK_DRY_RUN: it prints or omits each target's recipe instead of running it
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
