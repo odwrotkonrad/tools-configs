@@ -98,10 +98,12 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
+  "model": "fable",
   "availableModels": [
+    "fable",
+    "opus",
     "sonnet",
-    "opus"
+    "haiku"
   ],
   "statusLine": {
     "type": "command",
