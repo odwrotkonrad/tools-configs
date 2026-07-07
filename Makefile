@@ -2,7 +2,7 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
-COMMANDS := run-host-upsert-configs run-host-render-templates run-repo-ci-render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
+COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -17,7 +17,7 @@ export MK_DRY_RUN_RENDER_SECRETS
 
 ##[>] Wrappers [genai-include]
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host)
-run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks run-repo-ci-render-templates run-host-render-templates
+run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks render-templates run-host-render-templates
 #[what] full sync: run-sync then run all profile scripts (installs)
 run-sync-full: run-sync run-host-run-scripts-all
 run-repo-ci-virt-macos-build-all: run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build
@@ -58,7 +58,7 @@ run-host-restart-services: | run-repo-ci-install-deps
 
 ##[>] Onto Repo (CI) [genai-include]
 #[what] render *.repo.tpl onto repo
-run-repo-ci-render-templates: | run-repo-ci-install-deps
+render-templates: | run-repo-ci-install-deps
 	@che render-templates --repo
 
 #[what] install lefthook git hooks

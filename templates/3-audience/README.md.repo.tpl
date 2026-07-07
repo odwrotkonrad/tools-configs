@@ -2,8 +2,8 @@
 {{- $body := readBody "assets/data/tools-inventory-index.yml" -}}
 ## **Config**uration file**s**
 
-{{ file.Read "assets/docs-human/description.md" }}
-{{ file.Read "assets/docs-human/purpose.md" }}
+{{ renderMarkdown "assets/docs-agents/purpose.md" "normalize-headings" }}
+
 ## {{ $front.title }}
 
 {{ $front.description }}
