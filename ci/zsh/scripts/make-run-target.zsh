@@ -9,7 +9,7 @@ typeset root=$(git -C ${0:A:h} rev-parse --show-toplevel)
 export FPATH=$root/ci/zsh/functions:$FPATH
 export PATH=$root/ci/zsh/scripts:$root/ci/zsh/scripts/installs:${GOPATH:-$HOME/go}/bin:/usr/local/go/bin:/usr/local/bin:$PATH
 export CHE_DRY_RUN=$MK_DRY_RUN
-export CHE_DRY_RUN_RENDER_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
+export CHE_RENDER_TEMPLATES_DRY_RUN_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
 
 autoload -Uz fn-is-os
 if { fn-is-os linux } export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH

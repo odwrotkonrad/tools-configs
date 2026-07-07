@@ -17,15 +17,6 @@ Maintains stateful configuration of a system and its tools, optimized for a read
 - One `root/` tree loads onto any supported host profile (desktop/macos, cli/macos, cli/linux).
 - Generated docs stay fresh: tools inventory, Makefile doc, repo tree, agent files, README.
 
-### How To Use
-
-`make run-sync` loads configs, dirs, hooks, and renders all templates (repo + host). `make run-sync-full` adds the profile's install scripts. `make render-templates` regenerates repo docs. Virt targets build and test macOS and linux images.
-
-### Future Direction
-
-- `docs-human` variants of the generated docs.
-- Config coverage grows with the toolchain.
-
 ## Tools Inventory Index
 
 Tool -> primary config file.
