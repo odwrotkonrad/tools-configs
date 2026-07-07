@@ -3,46 +3,17 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 stages:
-  - build-image
   - validate
   - dry-run-apply
   - smoke-apply
 
 ##[>] 🤖🤖
 variables:
-  CI_LINUX_IMAGE: $CI_REGISTRY_IMAGE/ci-linux:bookworm
-
-build-ci-linux-image:
-  stage: build-image
-  needs: []
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  rules:
-    - if: $CI_MERGE_REQUEST_DRAFT == "true"
-      when: never
-    - changes:
-        - ci/Dockerfile.linux
-        - ci/zsh/scripts/installs/00-ci-deps.zsh
-        - ci/zsh/functions/fn-*
-    - when: manual
-      allow_failure: true
-  script:
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')\"}}}" >/kaniko/.docker/config.json
-    - /kaniko/executor
-        --context "$CI_PROJECT_DIR"
-        --dockerfile "$CI_PROJECT_DIR/ci/Dockerfile.linux"
-        --destination "$CI_LINUX_IMAGE"
-        --cache=true
-        --cache-repo "$CI_REGISTRY_IMAGE/ci-linux-cache"
+  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:bookworm
 ##[<] 🤖🤖
 
 .base:
-  needs:
-    - job: build-ci-linux-image
-      optional: true
-  image: $CI_LINUX_IMAGE
+  image: $CI_IMAGE
   ##[>] 🤖🤖
   variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
@@ -63,7 +34,6 @@ validate-pre-commit-all:
   stage: validate
   variables:
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    CLICOLOR: "0"
   script:
     - make run-repo-ci-precommit-all
     - git diff --exit-code HEAD
@@ -120,9 +90,7 @@ apply-linux-cli:
     CHE_FORCE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
-  needs:
-    - job: build-ci-linux-image
-      optional: true
+  needs: []
   allow_failure: true
   rules:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"

@@ -48,7 +48,7 @@ typeset -A go_tools=(
   lefthook   'github.com/evilmartians/lefthook/v2@v2.1.9'
   yq         'github.com/mikefarah/yq/v4@v4.53.3'
   che        'gitlab.com/konradodwrot/go/che@v0.0.12'
-  render-tpl 'gitlab.com/konradodwrot/go/render-files/cmd/render-tpl@v0.0.5'
+  render-tpl 'gitlab.com/konradodwrot/go/render-files/cmd/render-tpl@v0.0.6'
 )
 
 #[why] reinstall on version drift so pin bumps land over a stale binary
