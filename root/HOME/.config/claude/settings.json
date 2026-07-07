@@ -98,7 +98,7 @@
     ],
     "defaultMode": "default"
   },
-  "model": "fable",
+  "model": "claude-fable-5[1m]",
   "availableModels": [
     "fable",
     "opus",
