@@ -19,18 +19,9 @@ Maintains stateful configuration of a system and its tools, optimized for a read
 - One `root/` tree loads onto any supported host profile (desktop/macos, cli/macos, cli/linux).
 - Generated docs stay fresh: tools inventory, Makefile doc, repo tree, agent files, README.
 
-## How To Use
-
-`make run-sync` loads configs, dirs, hooks, and renders all templates (repo + host). `make run-sync-full` adds the profile's install scripts. `make render-templates` regenerates repo docs. Virt targets build and test macOS and linux images.
-
-## Future Direction
-
-- `docs-human` variants of the generated docs.
-- Config coverage grows with the toolchain.
-
 # Conventions
 
-- `conventions/purpose/convention.md`: every repo carries `assets/docs-agents/purpose.md` with five headings (what, why, goals, usage, future), included at the top of `AGENTS.md`, `CLAUDE.md`, `README.md`.
+- `conventions/purpose/convention.md`: every repo carries `assets/docs-agents/purpose.md` with three headings (what, why, goals), included at the top of `AGENTS.md`, `CLAUDE.md`, `README.md`.
 - `conventions/comments/convention.md`: comment label prefixes (`[where]`, `[why]`, `[what]`), `[>]`/`[<]` sectioning, 🤖 AI-generated marks.
 - `conventions/makefile/convention.md`: house Makefile style, `[genai-include]` sectioning that feeds the generated Makefile doc for AI agents.
 - `conventions/templates/convention.md`: generating repo docs with che templates: `templates/1-env|2-data|3-audience`, `che.yml` wiring, `make render-templates`.
@@ -60,7 +51,7 @@ references:
 ##[>] primary
 agents: root/HOME/.config/agents/templates/AGENTS.md.host.tpl
 ccstatusline: root/HOME/.config/ccstatusline/settings.json
-claude: root/HOME/.config/claude/settings.json
+claude: root/HOME/.config/claude/settings.json.host.tpl
 codex: root/HOME/.config/codex/config.toml.host.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml

@@ -105,14 +105,14 @@ base-exclude-macos:
       - HOME/.config/homebrew/trust.json
 
 desktop/macos:
-  options: {autoDetect: true}
+  options: {onlyIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   mixinProfiles: [base]
 
 cli/macos:
-  options: {autoDetect: true}
+  options: {onlyIf: ['builtin:isOs == macos', 'builtin:isVirt']}
   mixinProfiles: [base, base-exclude-desktop]
 
 cli/linux:
-  options: {autoDetect: true}
+  options: {onlyIf: ['builtin:isOs == linux']}
   mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
 ##[<] 🤖🤖
