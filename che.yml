@@ -41,10 +41,10 @@ base:
           - source: templates/1-env/local.env.repo.tpl
             dest:
               - {path: .env, options: {writeType: mergeUpsert}}
-          - {source: templates/2-docs/README.md.repo.tpl, dest: [README.md]}
-          - {source: templates/2-docs/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
-          - {source: templates/2-docs/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
-          - source: templates/3-agents/AGENTS.md.repo.tpl
+          - {source: templates/2-data/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
+          - {source: templates/2-data/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
+          - {source: templates/3-audience/README.md.repo.tpl, dest: [README.md]}
+          - source: templates/3-audience/AGENTS.md.repo.tpl
             dest:
               - CLAUDE.md
               - {path: AGENTS.md, options: {renderReferencedFiles: true}}

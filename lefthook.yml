@@ -5,7 +5,7 @@ extends:
 pre-commit:
   jobs:
     - name: docsgen
-      run: make run-repo-ci-render-templates && git add assets/data/repo-structure.md assets/data/makefile.agents.md README.md CLAUDE.md AGENTS.md
+      run: make render-templates && git add assets/data/repo-structure.md assets/data/makefile.agents.md README.md CLAUDE.md AGENTS.md
 
     - name: validate-yml
       glob: "*.{yml,yaml}"
