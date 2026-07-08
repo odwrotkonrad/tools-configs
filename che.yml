@@ -105,7 +105,8 @@ cli/linux:
   mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
   include:
     copy:
-      #[why] debian zsh reads global rc from /etc/zsh, not /etc: mirror the loader files there (they source the shared /etc/zsh/*.d dirs)
+      #[why] global rc dir is a zsh compile-time option (--enable-etc-dir): debian builds with /etc/zsh, macos keeps the upstream /etc, so linux needs the loader files mirrored there (they source the shared /etc/zsh/*.d dirs)
+      #[where] debian zsh packaging (debian/rules --enable-etc-dir=/etc/zsh); man zsh STARTUP/SHUTDOWN FILES per OS
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
