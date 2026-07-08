@@ -46,7 +46,8 @@ fn-install-if-missing go install_go
 #[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
 #   che renders host + repo templates, render-tpl renders ad-hoc llm prompts
 che_version=0.0.25
-render_tpl_version=0.0.11
+render_tpl_version=0.0.15
+render_repo_group_index_version=0.0.15
 lefthook_version=2.1.9
 yq_version=4.53.3
 
@@ -68,10 +69,16 @@ typeset -A che_sha=(
   linux_arm64  79f7ba0bf44d8f9f632e4b920aad1766e5e132113ff6970dfa6a38418d13def4
 )
 typeset -A render_tpl_sha=(
-  darwin_amd64 55ee74a522162d913bc34e9954e332593e458a06ce1636bed9bd6c6d5eb5ece7
-  darwin_arm64 dd5c71cd0535105b7363ffa0c345dcf578c9cc57b12e654c4d1ba9d1c61f2130
-  linux_amd64  6f84db42652abf59bd571180afa6900e6e8446bce3c1df63af7acbbad7b7cd14
-  linux_arm64  d493dd5814e8d64da4d45c9f3f6d78a0e249ff0946bb9b4e78793af71a8869a8
+  darwin_amd64 08609c0b0cdfe9c7e6720d7294eac6b19ad3b1cc5abf5db2b050c12a049b9a2d
+  darwin_arm64 0abf8ec41a6f080598319d90876a0865aa73ce0b30b3acff70bf8e1c48be6715
+  linux_amd64  8a8e3a79596c06a1558ede8fdcd3b8b6b98a92265d3474d196673ace31fa936f
+  linux_arm64  a6d9233cc48e89c607ea1a49e30d85e03f509a810c8431e5bffc82d72d882ece
+)
+typeset -A render_repo_group_index_sha=(
+  darwin_amd64 48aa3ef228a3e53f0dabfbb5f44d59128876e4a99c745e4e1e038993d50d5bfe
+  darwin_arm64 eb3f54bb26f275a440f8245f21f0507e31e265db35840522977cbe09616f9307
+  linux_amd64  2d44a9fa82be3e810dea46f0c5df0d0cc109a765710953adffd68b1cffeafd78
+  linux_arm64  c859ec8885af8dffe7d8c102fa93ceb4af598be1d4c9ee4c0ec06660da66f64a
 )
 typeset -A lefthook_sha=(
   Linux_x86_64 0d60b0d350c923963729574f6431171f0277788884ad0c6284fa0160c36e3877
@@ -107,6 +114,9 @@ function install_che {
 function install_render_tpl {
   install_gitlab_tarball 'konradodwrot%2Fgo%2Frender-files' render-files render-tpl "$render_tpl_version" "${render_tpl_sha[${che_os}_${che_arch}]}"
 }
+function install_render_repo_group_index {
+  install_gitlab_tarball 'konradodwrot%2Fgo%2Frender-files' render-files render-repo-group-index "$render_repo_group_index_version" "${render_repo_group_index_sha[${che_os}_${che_arch}]}"
+}
 
 #[what] lefthook publishes raw binaries (no tarball) on github
 function install_lefthook {
@@ -138,6 +148,7 @@ function parse_yq       { local v=${${(z)1}[-1]}; print -r -- ${v#v} }
 #[why] reinstall on version drift so pin bumps land over a stale binary
 fn-install-prebuilt-if-outdated che        "$che_version"        install_che        parse_field3
 fn-install-prebuilt-if-outdated render-tpl "$render_tpl_version" install_render_tpl parse_field3
+fn-install-prebuilt-if-outdated render-repo-group-index "$render_repo_group_index_version" install_render_repo_group_index parse_field3
 fn-install-prebuilt-if-outdated lefthook   "$lefthook_version"   install_lefthook   parse_field3
 fn-install-prebuilt-if-outdated yq         "$yq_version"         install_yq         parse_yq
 ##[<] 🤖🤖
