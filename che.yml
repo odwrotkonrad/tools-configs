@@ -1,6 +1,5 @@
 ##[>] 🤖🤖
 base:
-  options: {mixinOnly: true}
   include:
     link:
       - HOME/**
@@ -64,7 +63,6 @@ base:
     services: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-desktop:
-  options: {mixinOnly: true}
   exclude:
     link:
       - HOME/.gitlab-runner/**
@@ -84,26 +82,24 @@ base-exclude-desktop:
     services: [grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-macos:
-  options: {mixinOnly: true}
   exclude:
     link:
       - etc/defaults.yml
       - HOME/.config/homebrew/trust.json
 
 desktop/macos:
-  options: {onlyIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options: {autoExec: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   mixinProfiles: [base]
 
 cli/macos:
-  options: {onlyIf: ['builtin:isOs == macos', 'builtin:isVirt']}
+  options: {autoExec: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt']}
   mixinProfiles: [base, base-exclude-desktop]
 
 cli/linux:
-  options: {onlyIf: ['builtin:isOs == linux']}
+  options: {autoExec: true, execIf: ['builtin:isOs == linux']}
   mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
 
 ontoRepo:
-  options: {mixinOnly: true}
   include:
     renderTemplates:
       - files:

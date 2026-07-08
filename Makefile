@@ -15,7 +15,7 @@ export MK_DRY_RUN
 #[what] render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
 #[vals] true|false
 export MK_DRY_RUN_RENDER_SECRETS
-#[what] force one che profile for host ops (onlyIf skipped), passed as `$ che --profile`
+#[what] force one che profile for host ops (execIf skipped), passed as `$ che --profile`
 #[vals] desktop/macos|cli/macos|cli/linux
 export CHE_PROFILE
 ##[<] Environment Variables
