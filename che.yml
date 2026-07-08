@@ -36,20 +36,6 @@ base:
             dest:
               - ~/.config/claude/CLAUDE.md
               - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
-    repoTemplate:
-      - files:
-          - source: templates/1-env/local.env.repo.tpl
-            dest:
-              - {path: .env, options: {writeType: mergeUpsert}}
-          - {source: templates/2-data/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
-          - {source: templates/2-data/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
-          - {source: templates/3-audience/README.md.repo.tpl, dest: [README.md]}
-          - source: templates/3-audience/AGENTS.md.repo.tpl
-            dest:
-              - CLAUDE.md
-              - {path: AGENTS.md, options: {renderReferencedFiles: true}}
-          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
-          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
     mkdirs:
       - files:
           - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
@@ -115,4 +101,21 @@ cli/macos:
 cli/linux:
   options: {onlyIf: ['builtin:isOs == linux']}
   mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
+
+ontoRepo:
+  include:
+    repoTemplate:
+      - files:
+          - source: templates/1-env/local.env.repo.tpl
+            dest:
+              - {path: .env, options: {writeType: mergeUpsert}}
+          - {source: templates/2-data/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
+          - {source: templates/2-data/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
+          - {source: templates/3-audience/README.md.repo.tpl, dest: [README.md]}
+          - source: templates/3-audience/AGENTS.md.repo.tpl
+            dest:
+              - CLAUDE.md
+              - {path: AGENTS.md, options: {renderReferencedFiles: true}}
+          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
+          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
 ##[<] 🤖🤖
