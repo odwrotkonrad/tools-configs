@@ -45,9 +45,9 @@ fn-install-if-missing go install_go
 ##[>] 🤖🤖
 #[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
 #   che renders host + repo templates, render-tpl renders ad-hoc llm prompts
-che_version=0.0.27
-render_tpl_version=0.0.15
-render_repo_group_index_version=0.0.15
+che_version=0.0.28
+render_tpl_version=0.0.28
+render_repo_group_index_version=0.0.28
 lefthook_version=2.1.9
 yq_version=4.53.3
 
@@ -63,22 +63,22 @@ if { fn-is-arch arm } { lh_arch=arm64 } else { lh_arch=x86_64 }
 
 #[what] per-target sha256 (darwin/linux x arm64/amd64); key = os_arch
 typeset -A che_sha=(
-  darwin_amd64 fc441cc28fb589607b3058018e59e8fa63f869b78969aac8d7ec1e0d63cb3abc
-  darwin_arm64 b8e0af098fb004746cb303cd3e7bd371f2560e560979c84b777718cbcdf57133
-  linux_amd64  36c09bd286b509da3a733a76b261d2e96a7818b6ce7566d8f90564dbd5dbf5ac
-  linux_arm64  23883e96cccc07aa28308404c69090018101276eb86586890bfdbff3e975f3a5
+  darwin_amd64 8f31178cc969982aea093a00791a45607cee74fcb28cd03d5141c3695139cbe2
+  darwin_arm64 9f73b903c84cd8b28eb6b678342e3790d666034728d184bfe5ee0a753c55b64c
+  linux_amd64  7bae29be10e8e5ccafc22b75f726b2cc75ad03a8cf4f3e3738d9e37f42aea602
+  linux_arm64  31519843fc7be6dcd60ffbec5d86fc6b59611305c79a9ee9a4337d061ae2aef4
 )
 typeset -A render_tpl_sha=(
-  darwin_amd64 08609c0b0cdfe9c7e6720d7294eac6b19ad3b1cc5abf5db2b050c12a049b9a2d
-  darwin_arm64 0abf8ec41a6f080598319d90876a0865aa73ce0b30b3acff70bf8e1c48be6715
-  linux_amd64  8a8e3a79596c06a1558ede8fdcd3b8b6b98a92265d3474d196673ace31fa936f
-  linux_arm64  a6d9233cc48e89c607ea1a49e30d85e03f509a810c8431e5bffc82d72d882ece
+  darwin_amd64 98756717d8397c578d87d907f9e8b5337783ff6fce718bf07b3bec35b746324d
+  darwin_arm64 e0d9767d6d4e85ce4d6ec35180908386cfa85cd70fd1fced5dcc2bc485aa4ed6
+  linux_amd64  49e34ae0b1f48cfb119b7b053f7960845455de2add3aa41951015c4d0911f2e7
+  linux_arm64  1f4a2b82d72a95950ec7067dcf457b1467e96986fb6068f93f77d8358c047060
 )
 typeset -A render_repo_group_index_sha=(
-  darwin_amd64 48aa3ef228a3e53f0dabfbb5f44d59128876e4a99c745e4e1e038993d50d5bfe
-  darwin_arm64 eb3f54bb26f275a440f8245f21f0507e31e265db35840522977cbe09616f9307
-  linux_amd64  2d44a9fa82be3e810dea46f0c5df0d0cc109a765710953adffd68b1cffeafd78
-  linux_arm64  c859ec8885af8dffe7d8c102fa93ceb4af598be1d4c9ee4c0ec06660da66f64a
+  darwin_amd64 c19a66b9e67e1f42f325c9a8b07a71a3c75bdc29524c29e2357359d36f8928ef
+  darwin_arm64 4b4c13b9b153545323c5509feda0dff4c287336af6a8db4f4ede2a50c6364605
+  linux_amd64  eaff5462095ef97f0c18c3462033915c417255113db15579f5ad33de463e7ab6
+  linux_arm64  91b72e414033308c7dcf7aa7070e3cc80969b7afc389e122a27315a9e7471f45
 )
 typeset -A lefthook_sha=(
   Linux_x86_64 0d60b0d350c923963729574f6431171f0277788884ad0c6284fa0160c36e3877
@@ -109,13 +109,13 @@ function install_gitlab_tarball {
 }
 
 function install_che {
-  install_gitlab_tarball 'konradodwrot%2Fgo%2Fche' che che "$che_version" "${che_sha[${che_os}_${che_arch}]}"
+  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che che "$che_version" "${che_sha[${che_os}_${che_arch}]}"
 }
 function install_render_tpl {
-  install_gitlab_tarball 'konradodwrot%2Fgo%2Frender-files' render-files render-tpl "$render_tpl_version" "${render_tpl_sha[${che_os}_${che_arch}]}"
+  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che render-tpl "$render_tpl_version" "${render_tpl_sha[${che_os}_${che_arch}]}"
 }
 function install_render_repo_group_index {
-  install_gitlab_tarball 'konradodwrot%2Fgo%2Frender-files' render-files render-repo-group-index "$render_repo_group_index_version" "${render_repo_group_index_sha[${che_os}_${che_arch}]}"
+  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che render-repo-group-index "$render_repo_group_index_version" "${render_repo_group_index_sha[${che_os}_${che_arch}]}"
 }
 
 #[what] lefthook publishes raw binaries (no tarball) on github
