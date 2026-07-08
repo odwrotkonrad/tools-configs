@@ -36,4 +36,7 @@ typeset brewfile=/etc/homebrew/Brewfile
 typeset -a stages=( tap formulae npm )
 fn-is-os mac && stages+=( cask vscode ) #[why] casks are macos-only 🤖
 for stage ( $stages ) bundle_stage $stage
+
+#[why] brew zsh rides in as a dependency (fzf-tab) and would shadow /usr/bin/zsh with a different compiled-in rc dir (/etc vs debian's /etc/zsh): unlink it, one zsh owns the shell 🤖🤖
+if { fn-is-os linux && brew list zsh >/dev/null 2>&1 } brew unlink zsh
 ##[<] 🤖🤖
