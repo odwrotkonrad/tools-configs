@@ -7,6 +7,8 @@ fn-is-virt() {
     (Linux)
       (( $+commands[systemd-detect-virt] )) && systemd-detect-virt -q && return 0
       [[ -e /.dockerenv ]] && return 0
+      #[why] systemd convention, set by image builds: buildkit RUN has no /.dockerenv or cgroup marker 🤖
+      [[ -n ${container:-} ]] && return 0
       grep -qE 'docker|containerd|lxc' /proc/1/cgroup 2>/dev/null ;;
     (*) return 1 ;;
   }

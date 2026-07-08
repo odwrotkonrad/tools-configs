@@ -8,7 +8,7 @@ def virt?     = ENV["HOMEBREW_IS_VIRT"] == "true"
 if stage?("tap")
   tap "azure/azure-cli"
   tap "hashicorp/tap"
-  tap "cirruslabs/cli" unless virt?
+  tap "cirruslabs/cli" if OS.mac? && !virt?
 end
 ##[<] tap
 
@@ -65,10 +65,12 @@ if stage?("formulae")
     brew "grafana"                             # Metric visualizations and dashboards
     brew "logcli"                              # Run LogQL queries against a Loki server
     brew "loki"                                # Horizontally-scalable log aggregation
-    brew "cirruslabs/cli/tart"                 # Run macOS and Linux VMs on Apple Silicon
     brew "gitlab-runner"                       # GitLab CI runner that runs jobs on this host
-    brew "cirruslabs/cli/gitlab-tart-executor" # GitLab runner executor for ephemeral Tart VMs
     brew "hashicorp/tap/packer"                # Build identical machine images (vm base)
+    if OS.mac? # tart runs VMs on Apple Silicon only 🤖
+      brew "cirruslabs/cli/tart"                 # Run macOS and Linux VMs on Apple Silicon
+      brew "cirruslabs/cli/gitlab-tart-executor" # GitLab runner executor for ephemeral Tart VMs
+    end
   end
 end
 ##[<] formulae

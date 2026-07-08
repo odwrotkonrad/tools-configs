@@ -7,7 +7,7 @@
     { "name": "go/get-os-open-files-with", "path": "go/cruft/get-os-open-files-with" },
     { "name": "go/get-term-open-files-with", "path": "go/cruft/get-term-open-files-with" },
     { "name": "infra/git-repos", "path": "infra/git-repos" },
-    { "name": "infra/ci-images", "path": "infra/ci-images" },
+    { "name": "infra/oci-images", "path": "infra/oci-images" },
     { "name": "notes", "path": "notes" },
     { "name": "sandbox", "path": "sandbox" },
     { "name": "workspace", "path": "workspace" }
