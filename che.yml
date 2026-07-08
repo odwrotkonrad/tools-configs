@@ -1,7 +1,9 @@
 ##[>] 🤖🤖
 base:
   plugins:
-    - "@git@gitlab.com:konradodwrot/workspace.git::gitlabGroup"
+    - ref: "@git@gitlab.com:konradodwrot/workspace.git::gitlabGroup"
+      env:
+        GITLAB_GROUP: konradodwrot
   include:
     link:
       - HOME/**
