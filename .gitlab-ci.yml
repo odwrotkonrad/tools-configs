@@ -99,6 +99,8 @@ apply-linux-cli:
     - when: manual
   before_script:
     ##[>] 🤖🤖
+    #[why] ci-linux carries no user (ko moved to the dev-sandbox image): create it here for the as-user apply
+    - useradd -m -s /bin/zsh -G root ko && echo 'ko ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/ko
     - chown -R ko "$CI_PROJECT_DIR"
     ##[<] 🤖🤖
   script:
