@@ -5,6 +5,7 @@ base:
     - ref: "@https://gitlab.com/konradodwrot/workspace.git::gitlabGroup"
       env:
         GITLAB_GROUP: konradodwrot
+        HOST_DIR_GITLAB_GROUP: konradodwrot
   include:
     link:
       - HOME/**
