@@ -43,6 +43,10 @@ alias a-rt-search-files-output-sort-lex+='fn-root-rg --sort=path '
 
 ##[>] suffix aliases >[what] $ man zshbuiltins (alias -s)
 () {
+  ##[>] 🤖🤖
+  #[why] the cli is a host tool install: absent in the sandbox image
+  (( $+commands[get-term-open-files-with] )) || return 0
+  ##[<] 🤖🤖
   local terminal=any ext opener
   [[ $TERM_PROGRAM == vscode ]] && terminal=vscode
   [[ $TERM == xterm-kitty ]] && terminal=kitty

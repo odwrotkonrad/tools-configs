@@ -10,5 +10,8 @@ CLAUDE_CODE_NEW_INIT=1
 unsetopt allexport
 ##[<] env
 
-. "$NVM_DIR/nvm.sh"
-. "$NVM_DIR/bash_completion"
+##[>] 🤖🤖
+#[why] nvm is a mac/brew install: absent on linux hosts and in the sandbox image
+[[ -f "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
+[[ -f "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"
+##[<] 🤖🤖

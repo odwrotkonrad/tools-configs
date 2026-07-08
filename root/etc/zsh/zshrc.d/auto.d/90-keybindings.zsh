@@ -59,12 +59,15 @@ typeset -A cchars=(
     susp    "$keystrokes[ctrlZ]"            #[what] Process Suspend (SIGTSTP)
     quit    "$keystrokes[ctrlBackslash]"    #[what] Process Quit + core dump (SIGQUIT)
     intr    "$keystrokes[ctrlC]"            #[what] Process Interrupt (SIGINT)
-    status  "$keystrokes[ctrlT]"            #[what] Process Status (SIGINFO)
     lnext   "$keystrokes[ctrlV]"            #[what] Literal Next, listen next key sequence verbatim
     kill    "$keystrokes[ctrlX]"            #[what] cut the whole input line
     erase   "$keystrokes[backspace]"        #[what] backspace, remove last char
     werase  "$keystrokes[altBackspace]"     #[what] alt+backspace, remove last word
 )
+##[>] 🤖🤖
+#[why] status/SIGINFO is bsd-only: gnu stty has no such cchar
+if { fn-is-os mac } cchars[status]="$keystrokes[ctrlT]" #[what] Process Status (SIGINFO)
+##[<] 🤖🤖
 for action char in ${(kv)cchars}; stty ${action} ${char}
 ##[<] stty
 
