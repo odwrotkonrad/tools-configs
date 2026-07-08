@@ -109,6 +109,7 @@ if stage?("vscode") && !virt?
   vscode "ms-python.python"
   vscode "ms-python.vscode-python-envs"
   vscode "openai.chatgpt"
+  vscode "redhat.vscode-yaml"
   vscode "tamasfe.even-better-toml"
   vscode "yzhang.markdown-all-in-one"
 end
