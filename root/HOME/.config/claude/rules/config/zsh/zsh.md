@@ -23,7 +23,7 @@ paths:
         .zlogout:
         zshenv.d/:                                          # loaded by .zshenv (all shells)
           auto.d/:                                          # sourced in name order
-            30-params.zsh.host.tpl:                   # rendered per host
+            30-params.zsh.ontoHost.tpl:                   # rendered per host
             81-claude.zsh:                                  # man-as-text, clobber; guarded on CLAUDECODE
           functions/:                                       # autoloaded
         zshrc.d/:                                           # loaded by .zshrc (interactive)

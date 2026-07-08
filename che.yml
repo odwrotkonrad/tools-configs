@@ -12,44 +12,30 @@ base:
         ownerGroup: "0"
         chmod: "0644"
         files:
-          - {source: Library/LaunchDaemons/otelcol.plist.host.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
-          - {source: Library/LaunchDaemons/dir-size-exporter.plist.host.cp, dest: [/Library/LaunchDaemons/dir-size-exporter.plist]}
-          - {source: Library/LaunchDaemons/port-exporter.plist.host.cp, dest: [/Library/LaunchDaemons/port-exporter.plist]}
-          - {source: Library/LaunchDaemons/grafana.plist.host.cp, dest: [/Library/LaunchDaemons/grafana.plist]}
-          - {source: Library/LaunchDaemons/prometheus.plist.host.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
-          - {source: Library/LaunchDaemons/jaeger.plist.host.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
-          - {source: Library/LaunchDaemons/loki.plist.host.cp, dest: [/Library/LaunchDaemons/loki.plist]}
-    template:
-      - files: [HOME/**, etc/**, usr/**]
+          - {source: Library/LaunchDaemons/otelcol.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
+          - {source: Library/LaunchDaemons/dir-size-exporter.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/dir-size-exporter.plist]}
+          - {source: Library/LaunchDaemons/port-exporter.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/port-exporter.plist]}
+          - {source: Library/LaunchDaemons/grafana.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/grafana.plist]}
+          - {source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
+          - {source: Library/LaunchDaemons/jaeger.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
+          - {source: Library/LaunchDaemons/loki.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/loki.plist]}
+    renderTemplates:
+      - files: [root/HOME/**, root/etc/**, root/usr/**]
       - owner: root
         ownerGroup: "0"
         chmod: "0440"
         files:
-          - {source: etc/sudoers.d/configs.host.tpl, dest: [/etc/sudoers.d/configs]}
+          - {source: root/etc/sudoers.d/configs.ontoHost.tpl, dest: [/etc/sudoers.d/configs]}
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
         files:
-          - {source: Library/LaunchAgents/gitlab-runner.plist.host.tpl, dest: [/Library/LaunchAgents/gitlab-runner.plist]}
+          - {source: root/Library/LaunchAgents/gitlab-runner.plist.ontoHost.tpl, dest: [/Library/LaunchAgents/gitlab-runner.plist]}
       - files:
-          - source: HOME/.config/agents/templates/AGENTS.md.host.tpl
+          - source: root/HOME/.config/agents/templates/AGENTS.md.ontoHost.tpl
             dest:
               - ~/.config/claude/CLAUDE.md
               - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
-    repoTemplate:
-      - files:
-          - source: templates/1-env/local.env.repo.tpl
-            dest:
-              - {path: .env, options: {writeType: mergeUpsert}}
-          - {source: templates/2-data/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
-          - {source: templates/2-data/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
-          - {source: templates/3-audience/README.md.repo.tpl, dest: [README.md]}
-          - source: templates/3-audience/AGENTS.md.repo.tpl
-            dest:
-              - CLAUDE.md
-              - {path: AGENTS.md, options: {renderReferencedFiles: true}}
-          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
-          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.repo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
     mkdirs:
       - files:
           - HOME/.cache/{zsh,homebrew,get-term-open-files-with}
@@ -86,10 +72,10 @@ base-exclude-desktop:
       - etc/{grafana,prometheus,jaeger,loki}/**
     copy:
       - Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*
-    template:
-      - HOME/.gitlab-runner/**
-      - HOME/Library/**
-      - Library/LaunchAgents/gitlab-runner.plist*
+    renderTemplates:
+      - root/HOME/.gitlab-runner/**
+      - root/HOME/Library/**
+      - root/Library/LaunchAgents/gitlab-runner.plist*
     mkdirs:
       - /var/log/{grafana,prometheus,jaeger,loki}
       - /usr/local/var/{grafana,prometheus}
@@ -115,4 +101,22 @@ cli/macos:
 cli/linux:
   options: {onlyIf: ['builtin:isOs == linux']}
   mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
+
+ontoRepo:
+  options: {mixinOnly: true}
+  include:
+    renderTemplates:
+      - files:
+          - source: templates/1-env/local.env.ontoRepo.tpl
+            dest:
+              - {path: .env, options: {writeType: mergeUpsert}}
+          - {source: templates/2-data/makefile-agents.md.ontoRepo.tpl, dest: [assets/data/makefile.agents.md]}
+          - {source: templates/2-data/repo-structure.md.ontoRepo.tpl, dest: [assets/data/repo-structure.md]}
+          - {source: templates/3-audience/README.md.ontoRepo.tpl, dest: [README.md]}
+          - source: templates/3-audience/AGENTS.md.ontoRepo.tpl
+            dest:
+              - CLAUDE.md
+              - {path: AGENTS.md, options: {renderReferencedFiles: true}}
+          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
+          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
 ##[<] 🤖🤖

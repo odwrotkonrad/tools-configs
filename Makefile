@@ -2,6 +2,7 @@
 #[why] SHELL is a zsh wrapper (not bare `zsh`) to power MK_DRY_RUN: it prints or omits each target's recipe instead of running it
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
+CHE := che $(if $(CHE_PROFILE),--profile=$(CHE_PROFILE))
 WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
 COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
@@ -14,6 +15,9 @@ export MK_DRY_RUN
 #[what] render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
 #[vals] true|false
 export MK_DRY_RUN_RENDER_SECRETS
+#[what] force one che profile for host ops (onlyIf skipped), passed as `$ che --profile`
+#[vals] desktop/macos|cli/macos|cli/linux
+export CHE_PROFILE
 ##[<] Environment Variables
 
 ##[>] Wrappers [genai-include]
@@ -27,40 +31,40 @@ run-repo-ci-virt-macos-build-all: run-repo-ci-virt-macos-build-base run-repo-ci-
 ##[>] Onto Host [genai-include]
 #[what] load configs onto host (profile-selected symlink + copy ops)
 run-host-upsert-configs: | run-repo-ci-install-deps
-	@che link
-	@che copy
+	@$(CHE) link
+	@$(CHE) copy
 
 #[what] prune broken symlinks
 run-host-delete-broken-links: | run-repo-ci-install-deps
-	@che prune-links
+	@$(CHE) prune-links
 
 #[what] required by configuration and tools dirs
 run-host-mk-dirs: | run-repo-ci-install-deps
-	@che mk-dirs
+	@$(CHE) mk-dirs
 
-#[what] render *.host.tpl onto host
+#[what] render *.ontoHost.tpl onto host
 run-host-render-templates: | run-repo-ci-install-deps
-	@che render-templates --host
+	@$(CHE) render-templates
 
 #[what] run all of the detected profile's scripts
 run-host-run-scripts-all: | run-repo-ci-install-deps
-	@che run-scripts
+	@$(CHE) run-scripts
 
 #[what] run profile scripts whose path matches NAME (substring)
 run-host-run-scripts: | run-repo-ci-install-deps
-	@che run-scripts $(NAME)
+	@$(CHE) run-scripts $(NAME)
 
 #[what] reload running service launchagents
 run-host-restart-services: | run-repo-ci-install-deps
-	@che services bootout
-	@che services bootin
-	@che services ensure
+	@$(CHE) services bootout
+	@$(CHE) services bootin
+	@$(CHE) services ensure
 ##[<] Onto Host
 
 ##[>] Onto Repo (CI) [genai-include]
-#[what] render *.repo.tpl onto repo
+#[what] render *.ontoRepo.tpl onto repo
 render-templates: | run-repo-ci-install-deps
-	@che render-templates --repo
+	@che render-templates --profile=ontoRepo
 
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:
@@ -84,7 +88,7 @@ run-repo-ci-virt-macos-build:
 
 #[what] build the macos image then run the che ops in it (cli/macos profile)
 run-repo-ci-virt-macos-test: run-repo-ci-virt-macos-build
-	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILES_FORCE_ONE=cli/macos make run-sync-full'
+	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/macos make run-sync-full'
 
 #[what] ssh into the macos image (auto-starts if stopped)
 run-repo-ci-virt-macos-ssh:
@@ -96,7 +100,7 @@ run-repo-ci-virt-linux-build:
 
 #[what] build the ci-linux image then run the che ops in it (cli/linux profile)
 run-repo-ci-virt-linux-test: run-repo-ci-virt-linux-build
-	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILES_FORCE_ONE=cli/linux make run-sync-full'
+	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/linux make run-sync-full'
 
 #[what] build the ci-linux image and open an interactive shell in it
 run-repo-ci-virt-linux-ssh: run-repo-ci-virt-linux-build
