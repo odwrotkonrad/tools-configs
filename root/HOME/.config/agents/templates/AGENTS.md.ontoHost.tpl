@@ -13,7 +13,7 @@ Use only these. Any other forbidden.
 
 ## System-Wide Configs
 
-- Edit non-project configs only in `{{ env.Getenv "PWD" }}`, under the `root/` tree (symlinked by default, `.host.cp` copied). Live system paths are derived.
+- Edit non-project configs only in `{{ env.Getenv "PWD" }}`, under the `root/` tree (symlinked by default, `.ontoHost.cp` copied). Live system paths are derived.
 
 ## IMPORTANT
 

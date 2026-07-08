@@ -9,6 +9,7 @@
     { "name": "infra/git-repos", "path": "infra/git-repos" },
     { "name": "infra/ci-images", "path": "infra/ci-images" },
     { "name": "notes", "path": "notes" },
+    { "name": "sandbox", "path": "sandbox" },
     { "name": "workspace", "path": "workspace" }
   ],
   "settings": {}

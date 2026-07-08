@@ -9,7 +9,7 @@ stages:
 
 ##[>] 🤖🤖
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:v0.0.1
+  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:v0.0.7
 ##[<] 🤖🤖
 
 .base:
@@ -46,7 +46,7 @@ dry-run-apply-sync:
     MK_DRY_RUN: all
   parallel:
     matrix:
-      - CHE_PROFILES_FORCE_ONE: [desktop/macos, cli/macos, cli/linux]
+      - CHE_PROFILE: [desktop/macos, cli/macos, cli/linux]
   script:
     - make run-sync-full
 
@@ -63,7 +63,7 @@ dry-run-apply-macos-desktop:
   stage: dry-run-apply
   variables:
     MK_DRY_RUN: all
-    CHE_PROFILES_FORCE_ONE: desktop/macos
+    CHE_PROFILE: desktop/macos
   needs: []
   script:
     - make run-sync-full
@@ -72,7 +72,7 @@ apply-macos-cli:
   extends: .e2e-macos
   stage: smoke-apply
   variables:
-    CHE_PROFILES_FORCE_ONE: cli/macos
+    CHE_PROFILE: cli/macos
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs: [dry-run-apply-macos-desktop]
@@ -88,7 +88,7 @@ apply-linux-cli:
   extends: .base
   stage: smoke-apply
   variables:
-    CHE_PROFILES_FORCE_ONE: cli/linux
+    CHE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs: []
@@ -103,5 +103,5 @@ apply-linux-cli:
     ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
-    - sudo -u ko --preserve-env=CI,CHE_PROFILES_FORCE_ONE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" run-sync-full
+    - sudo -u ko --preserve-env=CI,CHE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" run-sync-full
     ##[<] 🤖🤖
