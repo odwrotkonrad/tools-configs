@@ -3,6 +3,10 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profile=$(CHE_PROFILE) --omit-exec-if)
+##[>] 🤖🤖
+#[why] renders can't call fn-is-virt (templates only see env): compute once, templates read CHE_IS_VIRT
+export CHE_IS_VIRT ?= $(shell zsh -c 'source ci/zsh/functions/fn-is-virt && fn-is-virt && echo true || echo false')
+##[<] 🤖🤖
 WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
 COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
