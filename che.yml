@@ -1,5 +1,7 @@
 ##[>] 🤖🤖
 base:
+  plugins:
+    - "@git@gitlab.com:konradodwrot/workspace.git::gitlabGroup"
   include:
     link:
       - HOME/**
