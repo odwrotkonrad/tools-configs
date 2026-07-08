@@ -2,6 +2,7 @@
   "folders": [
     { "name": "configs", "path": "configs" },
     { "name": "conventions", "path": "conventions" },
+    { "name": "go-modules", "path": "go-modules" },
     { "name": "go/che", "path": "go/che" },
     { "name": "go/render-files", "path": "go/render-files" },
     { "name": "go/get-os-open-files-with", "path": "go/cruft/get-os-open-files-with" },
