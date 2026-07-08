@@ -34,12 +34,12 @@ base:
       #[why] sandbox keypair from 1password, rendered under the standard names the ssh/git config reference; virt only (desktop excludes them: never clobber the host's real keys)
       - chmod: "0600"
         files:
-          - {source: root/HOME/.ssh/id_access.ontoHost.tpl, dest: [~/.ssh/id_access]}
-          - {source: root/HOME/.ssh/id_signing.ontoHost.tpl, dest: [~/.ssh/id_signing]}
+          - {source: root/HOME/.ssh/id_access.ontoHost.tpl, dest: [{path: ~/.ssh/id_access, options: {writeType: raw}}]}
+          - {source: root/HOME/.ssh/id_signing.ontoHost.tpl, dest: [{path: ~/.ssh/id_signing, options: {writeType: raw}}]}
       - chmod: "0644"
         files:
-          - {source: root/HOME/.ssh/id_access.pub.ontoHost.tpl, dest: [~/.ssh/id_access.pub]}
-          - {source: root/HOME/.ssh/id_signing.pub.ontoHost.tpl, dest: [~/.ssh/id_signing.pub]}
+          - {source: root/HOME/.ssh/id_access.pub.ontoHost.tpl, dest: [{path: ~/.ssh/id_access.pub, options: {writeType: raw}}]}
+          - {source: root/HOME/.ssh/id_signing.pub.ontoHost.tpl, dest: [{path: ~/.ssh/id_signing.pub, options: {writeType: raw}}]}
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
