@@ -31,6 +31,15 @@ base:
         chmod: "0440"
         files:
           - {source: root/etc/sudoers.d/configs.ontoHost.tpl, dest: [/etc/sudoers.d/configs]}
+      #[why] sandbox keypair from 1password, rendered under the standard names the ssh/git config reference; virt only (desktop excludes them: never clobber the host's real keys)
+      - chmod: "0600"
+        files:
+          - {source: root/HOME/.ssh/id_access.ontoHost.tpl, dest: [~/.ssh/id_access]}
+          - {source: root/HOME/.ssh/id_signing.ontoHost.tpl, dest: [~/.ssh/id_signing]}
+      - chmod: "0644"
+        files:
+          - {source: root/HOME/.ssh/id_access.pub.ontoHost.tpl, dest: [~/.ssh/id_access.pub]}
+          - {source: root/HOME/.ssh/id_signing.pub.ontoHost.tpl, dest: [~/.ssh/id_signing.pub]}
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
@@ -93,9 +102,14 @@ base-exclude-macos:
       - etc/defaults.yml
       - HOME/.config/homebrew/trust.json
 
+base-exclude-virt-ssh-keys:
+  exclude:
+    renderTemplates:
+      - root/HOME/.ssh/**
+
 desktop/macos:
   options: {autoExec: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
-  mixinProfiles: [base]
+  mixinProfiles: [base, base-exclude-virt-ssh-keys]
 
 cli/macos:
   options: {autoExec: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt']}
