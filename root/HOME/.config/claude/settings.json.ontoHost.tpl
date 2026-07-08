@@ -145,7 +145,7 @@
       "Skill(user-git-mr-upsert)",
       "Skill(user-git-upsert-all)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "{{ if eq (env.Getenv "CHE_IS_VIRT") "true" }}bypassPermissions{{ else }}default{{ end }}"
   },
   "model": "claude-fable-5[1m]",
   "availableModels": [
