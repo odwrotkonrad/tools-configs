@@ -5,6 +5,8 @@ extends:
 pre-commit:
   jobs:
     - name: docsgen
+      env:
+        MK_DRY_RUN_RENDER_SECRETS: "true"
       run: make render-templates && git add assets/data/repo-structure.md assets/data/makefile.agents.md README.md CLAUDE.md AGENTS.md
 
     - name: validate-yml
