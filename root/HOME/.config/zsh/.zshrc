@@ -7,9 +7,9 @@ typeset -a funcs=(
 
 fn-insert fpath $funcs
 fn-autoload-functions $funcs
-fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
-
 emulate zsh -LRc "autoload -Uz compinit" && compinit
+
+fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
 
 # had to be disabled for loading configs, renabling here
 setopt localoptions localtraps
