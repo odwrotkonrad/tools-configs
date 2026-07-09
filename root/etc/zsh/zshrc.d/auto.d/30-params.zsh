@@ -8,5 +8,5 @@ typeset -A zsh_params=(
 )
 for k v in "${(@kv)zsh_params}"; typeset -g "$k=$v"
 ##[>] 🤖🤖
-if fn-is-virt PS1="(virt) $PS1"
+if { fn-is-virt } PS1="(virt) $PS1"
 ##[<] 🤖🤖
