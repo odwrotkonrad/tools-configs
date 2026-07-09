@@ -38,6 +38,7 @@ comp_file_fetch() {
 }
 
 comp_file_write rg _rg < <(rg --generate=complete-zsh)
+comp_file_write che _che < <(che completion zsh)
 comp_file_write asdf _asdf < <(asdf completion zsh)
 comp_file_write codex _codex < <(codex completion zsh)
 comp_file_write kubectl _kubectl < <(kubectl completion zsh)
