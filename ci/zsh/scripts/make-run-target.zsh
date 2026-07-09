@@ -11,6 +11,10 @@ export PATH=$root/ci/zsh/scripts:$root/ci/zsh/scripts/installs:${GOPATH:-$HOME/g
 export CHE_DRY_RUN=$MK_DRY_RUN
 export CHE_RENDER_TEMPLATES_DRY_RUN_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
 
+#[why] renders can't call fn-is-virt (templates only see env): computed here, not via $(shell) which this wrapper would annotate
+autoload -Uz fn-is-virt
+if [[ -z ${CHE_IS_VIRT-} ]] { fn-is-virt && export CHE_IS_VIRT=true || export CHE_IS_VIRT=false }
+
 autoload -Uz fn-is-os
 if { fn-is-os linux } export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
 
