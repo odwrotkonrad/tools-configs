@@ -7,3 +7,6 @@ typeset -A zsh_params=(
   PS4         '+ '      #[what] prompt when debugging prompt with XTRACE is set
 )
 for k v in "${(@kv)zsh_params}"; typeset -g "$k=$v"
+##[>] 🤖🤖
+if fn-is-virt PS1="(virt) $PS1"
+##[<] 🤖🤖
