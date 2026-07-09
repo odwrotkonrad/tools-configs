@@ -109,7 +109,7 @@ typeset -A keystrokes_widgets=(
 
     "$keystrokes[cr]"               wd-fn-root-accept-line
     "$keystrokes[altCr]"            .self-insert-unmeta
-    "$keystrokes[tab]"              .expand-or-complete
+    "$keystrokes[tab]"              expand-or-complete
 
     "$keystrokes[ctrlV]"            wd-fn-root-keystrokes-listen
 )
