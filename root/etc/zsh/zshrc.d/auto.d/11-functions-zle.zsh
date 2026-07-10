@@ -62,3 +62,7 @@ typeset -a wd_fn_rt=(
    wd-fn-root-keystrokes-listen
 )
 for widget ( $wd_fn_rt ) zle -N $widget
+
+##[>] 🤖🤖
+zle -C wd-fn-root-history-menu menu-select _generic
+##[<] 🤖🤖

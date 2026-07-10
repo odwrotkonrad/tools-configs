@@ -7,7 +7,9 @@ typeset -a funcs=(
 
 fn-insert fpath $funcs
 fn-autoload-functions $funcs
-emulate zsh -LRc "autoload -Uz compinit" && compinit
+
+autoload -U compinit && compinit
+
 
 fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
 

@@ -109,11 +109,15 @@ typeset -A keystrokes_widgets=(
 
     "$keystrokes[cr]"               wd-fn-root-accept-line
     "$keystrokes[altCr]"            .self-insert-unmeta
-    "$keystrokes[tab]"              expand-or-complete
+    "$keystrokes[tab]"              complete-word
 
     "$keystrokes[ctrlV]"            wd-fn-root-keystrokes-listen
 )
 for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
 
 bindkey -A key_map main
+
+##[>] 🤖
+bindkey -M menuselect "${rt_seq[esc]}" accept-line
+##[<] 🤖
 ##[<] zshzle

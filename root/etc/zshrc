@@ -1,5 +1,9 @@
 #[what] 5th zsh file sourced, after $ZDOTDIR/.zprofile; only for interactive shells
 
+##[>] 🤖🤖
+zmodload zsh/complist
+##[<] 🤖🤖
+
 typeset -a funcs=(
     /etc/zsh/zshrc.d/functions
     /etc/zsh/zshrc.d/completions
