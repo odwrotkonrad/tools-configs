@@ -1,7 +1,7 @@
 providers:
   claude-code:
     script: llm-run-claude-code.zsh
-    model: haiku
+    model: sonnet
     env:
       CLAUDE_CODE_DISABLE_THINKING: "1"
       CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1"

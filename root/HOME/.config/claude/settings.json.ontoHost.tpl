@@ -124,7 +124,6 @@
       "Write(//private/tmp/**)"
     ],
     "deny": [
-      "Agent",
       "Agent(claude-code-guide)",
       "Agent(Explore)",
       "Grep",

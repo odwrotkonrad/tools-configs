@@ -26,4 +26,8 @@
 !**/.env.example
 
 **/.claude/settings.local.json
+**/.claude/settings.json
+**/.claude/agents/ro.md
+**/.claude/agents/rw.md
+**/.claude/agent-memory-local/
 ##[<] inverse rules
