@@ -6,6 +6,7 @@
     { "name": "infra/git-repos", "path": "infra/git-repos" },
     { "name": "infra/oci-images", "path": "infra/oci-images" },
     { "name": "notes", "path": "notes" },
+    { "name": "resume-md-pdf", "path": "resume-md-pdf" },
     { "name": "sandbox", "path": "sandbox" },
     { "name": "workspace", "path": "workspace" }
   ],
