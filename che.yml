@@ -108,15 +108,15 @@ base-exclude-virt-ssh-keys:
       - root/HOME/.ssh/**
 
 desktop/macos:
-  options: {autoExec: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options: {autoDiscover: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   mixinProfiles: [base, base-exclude-virt-ssh-keys]
 
 cli/macos:
-  options: {autoExec: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt']}
+  options: {autoDiscover: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt']}
   mixinProfiles: [base, base-exclude-desktop]
 
 cli/linux:
-  options: {autoExec: true, execIf: ['builtin:isOs == linux']}
+  options: {autoDiscover: true, execIf: ['builtin:isOs == linux']}
   mixinProfiles: [base, base-exclude-macos, base-exclude-desktop]
   include:
     copy:
@@ -133,7 +133,7 @@ cli/linux:
           - {source: etc/zlogout, dest: [/etc/zsh/zlogout]}
 
 claude-agents:
-  options: {autoExec: true, execIf: ['builtin:isVirt']}
+  options: {autoDiscover: true, execIf: ['builtin:isVirt']}
   include:
     renderTemplates:
       - ctx: {repo: Configs}
