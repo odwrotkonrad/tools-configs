@@ -31,8 +31,8 @@ run-repo-ci-virt-macos-build-all: run-repo-ci-virt-macos-build-base run-repo-ci-
 ##[>] Onto Host [genai-include]
 #[what] load configs onto host (profile-selected symlink + copy ops)
 run-host-upsert-configs: | run-repo-ci-install-deps
-	@$(CHE) link
-	@$(CHE) copy
+	@$(CHE) make-links
+	@$(CHE) make-copies
 
 #[what] prune broken symlinks
 run-host-delete-broken-links: | run-repo-ci-install-deps
@@ -40,7 +40,7 @@ run-host-delete-broken-links: | run-repo-ci-install-deps
 
 #[what] required by configuration and tools dirs
 run-host-mk-dirs: | run-repo-ci-install-deps
-	@$(CHE) mk-dirs
+	@$(CHE) make-dirs
 
 #[what] render *.ontoHost.tpl onto host
 run-host-render-templates: | run-repo-ci-install-deps
