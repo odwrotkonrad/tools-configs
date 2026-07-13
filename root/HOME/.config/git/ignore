@@ -23,6 +23,7 @@
 !**/.dockerignore
 !**/.python-version
 !**/.gitlab-ci.yml
+!**/.golangci.yml
 !**/.env.example
 
 **/.claude/settings.local.json
