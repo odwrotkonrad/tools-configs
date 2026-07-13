@@ -23,6 +23,7 @@ root
       aws
       azure
       ccstatusline
+      che
       claude
         agent-memory
         agents
