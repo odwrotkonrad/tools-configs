@@ -2,7 +2,7 @@
 #[why] SHELL is a zsh wrapper (not bare `zsh`) to power MK_DRY_RUN: it prints or omits each target's recipe instead of running it
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
-CHE := che $(if $(CHE_PROFILE),--profile=$(CHE_PROFILE) --skip-exec-if)
+CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-exec-if)
 WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
 COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
@@ -15,7 +15,7 @@ export MK_DRY_RUN
 #[what] render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
 #[vals] true|false
 export MK_DRY_RUN_RENDER_SECRETS
-#[what] force one che profile for host ops, passed as `$ che --profile --skip-exec-if`
+#[what] force one che profile for host ops, passed as `$ che --profiles --skip-exec-if`
 #[vals] desktop/macos|cli/macos|cli/linux
 export CHE_PROFILE
 ##[<] Environment Variables
@@ -64,7 +64,7 @@ run-host-restart-services: | run-repo-ci-install-deps
 ##[>] Onto Repo (CI) [genai-include]
 #[what] render *.ontoRepo.tpl onto repo
 render-templates: | run-repo-ci-install-deps
-	@che render-templates --profile=ontoRepo
+	@che render-templates --profiles=ontoRepo
 
 #[what] install lefthook git hooks
 run-repo-ci-prepare-hooks:
