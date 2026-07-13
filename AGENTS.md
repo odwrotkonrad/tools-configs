@@ -98,7 +98,7 @@ vim: root/HOME/.config/vim/vimrc
 
 `MK_DRY_RUN=delta|all` `$ che` - print targets instead of load, if not `$ che` - omit cmd with message
 `MK_DRY_RUN_RENDER_SECRETS=true|false` render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
-`CHE_PROFILE=desktop/macos|cli/macos|cli/linux` force one che profile for host ops, passed as `$ che --profile --skip-exec-if`
+`CHE_PROFILE=desktop/macos|cli/macos|cli/linux` force one che profile for host ops, passed as `$ che --profiles --skip-exec-if`
 
 ### Wrappers:
 
@@ -160,6 +160,7 @@ root
       aws
       azure
       ccstatusline
+      che
       claude
         agent-memory
         agents
