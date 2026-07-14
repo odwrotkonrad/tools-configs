@@ -90,6 +90,7 @@ end
 if stage?("cask")
   cask "1password-cli"                     # Command-line interface for 1Password
   cask "azure/azure-cli/azure-cli-preview"
+  cask "beekeeper-studio" unless virt?     ##[ai] 🤖 SQL GUI (SQLite/Postgres/MySQL/MariaDB)
   cask "font-jetbrains-mono"
   cask "visual-studio-code" unless virt?
 end

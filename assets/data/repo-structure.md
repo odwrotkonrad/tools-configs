@@ -14,7 +14,10 @@ ci
       bootstrap
       installs
 root
-  HOME
+  Library
+    LaunchAgents
+    LaunchDaemons
+  _home
     .config
       agents
         docs
@@ -74,9 +77,6 @@ root
     projects
       gitlab
         konradodwrot
-  Library
-    LaunchAgents
-    LaunchDaemons
   etc
     custom
     grafana

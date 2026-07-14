@@ -11,7 +11,7 @@ paths:
 ### Files
 
 ```yml
-root/HOME/.ssh/:
+root/_home/.ssh/:
   config:  # client config
 ```
 

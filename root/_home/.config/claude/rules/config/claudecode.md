@@ -14,7 +14,7 @@ paths:
 ### Files
 
 ```yml
-root/HOME/.config/claude/:
+root/_home/.config/claude/:
   CLAUDE.md:                # global instructions, all projects
   comments.md:              # @-included by CLAUDE.md
   git.md:                   # @-included by CLAUDE.md
