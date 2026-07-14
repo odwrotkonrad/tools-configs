@@ -10,11 +10,11 @@ base:
           GITLAB_GROUP: konradodwrot
           HOST_DIR_GITLAB_GROUP: konradodwrot
     makeLinks:
-      - HOME/**
+      - {source: HOME/**, dest: 's#^HOME#$HOME#'}
       - etc/**
       - usr/**
     makeCopies:
-      - files: [HOME/**, etc/**, usr/**]
+      - files: [{source: HOME/**, dest: 's#^HOME#$HOME#'}, etc/**, usr/**]
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
@@ -27,7 +27,7 @@ base:
           - {source: Library/LaunchDaemons/jaeger.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
           - {source: Library/LaunchDaemons/loki.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/loki.plist]}
     renderTemplates:
-      - templates: [HOME/**, etc/**, usr/**]
+      - templates: [{source: HOME/**, dest: 's#^HOME#$HOME#'}, etc/**, usr/**]
       - owner: root
         ownerGroup: "0"
         chmod: "0440"
