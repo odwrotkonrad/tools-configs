@@ -15,7 +15,7 @@ paths:
 ```yml
 - zsh:
     files:
-      root/HOME/.config/zsh/:
+      root/_home/.config/zsh/:
         .zshenv:
         .zprofile:
         .zshrc:

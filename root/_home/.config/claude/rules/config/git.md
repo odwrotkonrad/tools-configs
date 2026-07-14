@@ -9,13 +9,13 @@ paths:
 ### Files
 
 ```yml
-root/HOME/.config/git/:
+root/_home/.config/git/:
   config:
   ignore:
   commit-template:  # commit.template; type(scope): subject
 ```
 
-Hooks via lefthook (`root/HOME/.config/lefthook/lefthook.yml`)
+Hooks via lefthook (`root/_home/.config/lefthook/lefthook.yml`)
 
 ### Documentation
 

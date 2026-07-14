@@ -45,9 +45,9 @@ fn-install-if-missing go install_go
 ##[>] 🤖🤖
 #[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
 #   che renders host + repo templates, render-tpl renders ad-hoc llm prompts
-che_version=0.0.46
-render_tpl_version=0.0.46
-render_repo_group_index_version=0.0.46
+che_version=0.0.47
+render_tpl_version=0.0.47
+render_repo_group_index_version=0.0.47
 lefthook_version=2.1.9
 yq_version=4.53.3
 
@@ -63,22 +63,22 @@ if { fn-is-arch arm } { lh_arch=arm64 } else { lh_arch=x86_64 }
 
 #[what] per-target sha256 (darwin/linux x arm64/amd64); key = os_arch
 typeset -A che_sha=(
-  darwin_amd64 4f86ef61e6a82dab649aaced448258446378b4f29cf47c0fd13aa1fe724f65f6
-  darwin_arm64 0887f2fa448b8ef72afbe271c6e782ef1a51824dd4e68e34c3cf2128cf67ef24
-  linux_amd64  b13d74fc5fa1bc04a74dc80459dadfde077a3623376fa1a84e35cba08e12aa75
-  linux_arm64  94c43d6761085e3b863c29c960d0165147899e796f438deb1149b6708fef6104
+  darwin_amd64 acf9a106f11d1b56dd7209edb1dba9ce6bc68592b3c39a732d4f0b1f77ce1bf5
+  darwin_arm64 d1aacc0c3fea8eb06a43dae10088d110d294d507c5795af7175f03b1ca89d9a9
+  linux_amd64  84ada3391c2c2add758c0733f88e72f6caaf52a2770a8016c9b99f0c14480f6a
+  linux_arm64  80952891b1a27c0d231dd6e81f9b680962a4b3c0028041a7401980f3ada657e8
 )
 typeset -A render_tpl_sha=(
-  darwin_amd64 0a06b57065e765e35d277c367688231be9a1e6142a5a366eb4ca643884fb7392
-  darwin_arm64 9d7ab58f9088eadce969f85f191de8cf8b03a297b09443005317c5c03e9732e5
-  linux_amd64  49b2bf02d9d69fbdf2097bba1a6ccf65469d721b47c4734de2439ab357df6b7d
-  linux_arm64  9a7854f2af285fe96b5ff01b10c39309fc0e544703b6c858355cde6aaf6e314e
+  darwin_amd64 614cc053ad3778df1644835fcc14414ebe0e09de60a98a1c186205cbea3b8f9c
+  darwin_arm64 9288788c600fbe1a543d7bb2bf14e6ec5d88b605420e3c95425fe399f831e7fc
+  linux_amd64  cbde24abb69871312cf0dc876348bbb3069942f783e70b612de023d0c3ae331f
+  linux_arm64  8298e94a1c2d371e4d9172f0a00c52432cac00d08f2a851722db3a9192592bfe
 )
 typeset -A render_repo_group_index_sha=(
-  darwin_amd64 c9e37f9ff394ce2ec4e3b7e08894ec525c3ba96fded2f28c9fcf828a21dc7e0b
-  darwin_arm64 72cc47a4de7c4ba5221f56fb744da806f9389dc3edcdefb02cc52c86bfcf8c6d
-  linux_amd64  b2a1d4dd9e49f678b0203fc59560c7603c795ab2587ce61924f20474012ef3a1
-  linux_arm64  b62cbf924e2c9ed388a156feb7af090d56442695bff3b0440ab1976bef7a2873
+  darwin_amd64 42713217e0eb7bba95fd298164d66f758e4495e00e367556f910e4239b55781d
+  darwin_arm64 4d69b61df569a2e54d17fd13200c604202e6a5fb125f567e732cc0e893e8bd45
+  linux_amd64  ac526e734a47f1c0e9788dfed7586c354293f9781be5aa69e8138779b3dcf732
+  linux_arm64  2f6a7955f475ca1d92bfd671d54fdbd91ae360f562ef3cae7a4ea74828cda83b
 )
 typeset -A lefthook_sha=(
   Linux_x86_64 0d60b0d350c923963729574f6431171f0277788884ad0c6284fa0160c36e3877
