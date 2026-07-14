@@ -79,8 +79,10 @@ bindkey -M key_map -R "^@"-"~" self-insert
 typeset -A keystrokes_widgets=(
     "$keystrokes[bracketedPaste]"   .bracketed-paste
 
-    "$keystrokes[up]"               .up-line-or-history
-    "$keystrokes[down]"             .down-line-or-history
+    ##[>] 🤖🤖
+    "$keystrokes[up]"               wd-fn-root-fzf-history
+    "$keystrokes[down]"             wd-fn-root-fzf-history
+    ##[<] 🤖🤖
     "$keystrokes[right]"            .forward-char
     "$keystrokes[left]"             .backward-char
 
