@@ -7,8 +7,7 @@ base:
     profiles:
       - source: "@https://gitlab.com/konradodwrot/workspace.git/che.yml::gitlabGroup"
         env:
-          GITLAB_GROUP: konradodwrot
-          HOST_DIR_GITLAB_GROUP: konradodwrot
+          GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
@@ -90,6 +89,9 @@ base-exclude-desktop:
       - _home/.gitlab-runner/**
       - _home/Library/**
       - Library/LaunchAgents/gitlab-runner.plist*
+      #[why] 🤖🤖 cli/linux-only excludes (cli/macos does not include base-exclude-desktop): the sandbox authenticates to google via ADC (GOOGLE_APPLICATION_CREDENTIALS), not gcloud/aws config files, and the quota project is hardcoded in that profile's 30-params branch: no op:// dependency remains in the pod
+      - _home/.config/gcloud/**
+      - _home/.config/aws/config.ontoHost.tpl
     makeDirs:
       - /var/log/{grafana,prometheus,jaeger,loki}
       - /usr/local/var/{grafana,prometheus}

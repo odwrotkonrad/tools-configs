@@ -5,9 +5,9 @@ listen_address = "localhost:9252"
 [[runners]]
   name = "ko-mac-tart"
   url = "https://gitlab.com"
-  token = "{{ op "op://ProgrammaticAccess/gitlab_runner/token" }}"
+  token = "{{ secret "op://ProgrammaticAccess/gitlab_runner/token" }}"
   executor = "custom"
-  environment = ["TART_EXECUTOR_SSH_USERNAME=user", "TART_EXECUTOR_SSH_PASSWORD={{ op "op://ProgrammaticAccess/gitlab_runner/vm_password" }}"]
+  environment = ["TART_EXECUTOR_SSH_USERNAME=user", "TART_EXECUTOR_SSH_PASSWORD={{ secret "op://ProgrammaticAccess/gitlab_runner/vm_password" }}"]
   [runners.custom_build_dir]
     enabled = true
   [runners.feature_flags]

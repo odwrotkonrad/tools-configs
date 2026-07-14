@@ -76,7 +76,6 @@ root
       LaunchAgents
     projects
       gitlab
-        konradodwrot
   etc
     custom
     grafana
