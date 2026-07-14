@@ -35,3 +35,8 @@ function install_jaeger {
 }
 
 fn-install-if-missing jaeger install_jaeger
+
+##[>] 🤖🤖
+autoload -Uz fn-boot-service
+fn-boot-service jaeger
+##[<] 🤖🤖

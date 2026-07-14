@@ -45,7 +45,7 @@ fn-install-if-missing go install_go
 ##[>] 🤖🤖
 #[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
 #   che renders host + repo templates, render-tpl renders ad-hoc llm prompts
-che_version=0.0.47
+che_version=0.0.49
 render_tpl_version=0.0.47
 render_repo_group_index_version=0.0.47
 lefthook_version=2.1.9
@@ -63,10 +63,10 @@ if { fn-is-arch arm } { lh_arch=arm64 } else { lh_arch=x86_64 }
 
 #[what] per-target sha256 (darwin/linux x arm64/amd64); key = os_arch
 typeset -A che_sha=(
-  darwin_amd64 acf9a106f11d1b56dd7209edb1dba9ce6bc68592b3c39a732d4f0b1f77ce1bf5
-  darwin_arm64 d1aacc0c3fea8eb06a43dae10088d110d294d507c5795af7175f03b1ca89d9a9
-  linux_amd64  84ada3391c2c2add758c0733f88e72f6caaf52a2770a8016c9b99f0c14480f6a
-  linux_arm64  80952891b1a27c0d231dd6e81f9b680962a4b3c0028041a7401980f3ada657e8
+  darwin_amd64 127e8887c956fc2ab428eff066edfec2814fb6cfecff10cdbcfde6cc04e17731
+  darwin_arm64 b15aca4a0b67e69f722aa315eb3267fe276b270ba95d5d3880ff36c091942353
+  linux_amd64  661c6a707d9306b4638c492bc1a0b95929110d331674431486b41cbc4da85fb8
+  linux_arm64  2fb48a49e0267fd33acaf3e231d0892af8ba7d17c659d6153b4cba829bf1c527
 )
 typeset -A render_tpl_sha=(
   darwin_amd64 614cc053ad3778df1644835fcc14414ebe0e09de60a98a1c186205cbea3b8f9c

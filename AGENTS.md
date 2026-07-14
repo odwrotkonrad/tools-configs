@@ -114,7 +114,6 @@ vim: root/_home/.config/vim/vimrc
 `run-host-render-templates` render *.ontoHost.tpl onto host
 `run-host-run-scripts-all` run all of the detected profile's scripts
 `run-host-run-scripts` run profile scripts whose path matches NAME (substring)
-`run-host-restart-services` reload running service launchagents
 
 ### Onto Repo (CI):
 

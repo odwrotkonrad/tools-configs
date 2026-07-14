@@ -35,3 +35,8 @@ function install_prometheus {
 }
 
 fn-install-if-missing prometheus install_prometheus
+
+##[>] 🤖🤖
+autoload -Uz fn-boot-service
+fn-boot-service prometheus
+##[<] 🤖🤖

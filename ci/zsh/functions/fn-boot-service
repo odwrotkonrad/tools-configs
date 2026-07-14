@@ -1,0 +1,39 @@
+#[what] fn-boot-service <name>: bootstrap a launchd service from its live plist (bootout if loaded, wait until gone, bootstrap, return)
+#[why] plists carry RunAtLoad+KeepAlive: bootstrap starts now and reboot re-loads. no pid-settle wait; bootout is async so poll until gone before bootstrap (else it races error 5) 🤖🤖
+
+function fn-boot-service {
+  emulate -LR zsh
+  setopt errexit pipefail
+  autoload -Uz fn-log-msg
+  local name=$1
+
+  local daemon=/Library/LaunchDaemons/$name.plist
+  local agent=/Library/LaunchAgents/$name.plist
+
+  local plist domain
+  local -a sudo
+  if [[ -e $daemon ]]; then
+    plist=$daemon domain=system sudo=(sudo)
+  elif [[ -e $agent ]]; then
+    plist=$agent domain=gui/$(id -u) sudo=()
+  else
+    fn-log-msg -t "boot-service($name)" -- "no plist at $daemon or $agent, skipping"
+    return 0
+  fi
+
+  local target=$domain/$name
+  is_loaded() { $sudo launchctl print $target >/dev/null 2>&1 }
+
+  if is_loaded; then
+    fn-log-msg -t "boot-service($name)" -- "bootout $target"
+    $sudo launchctl bootout $target 2>/dev/null || true
+    local i
+    for (( i = 0; i < 50; i++ )); do
+      is_loaded || break
+      sleep 0.1
+    done
+  fi
+
+  fn-log-msg -t "boot-service($name)" -- "bootstrap $domain $plist"
+  $sudo launchctl bootstrap $domain $plist
+}

@@ -36,4 +36,6 @@ schema_config:
 
 limits_config:
   allow_structured_metadata: true
+  #[why] claude-code logs raw API bodies + user prompts (OTEL_LOG_RAW_API_BODIES/OTEL_LOG_USER_PROMPTS), whose per-entry structured metadata exceeds loki's 64KiB default and wedges the ingester; raise the ceiling to absorb them
+  max_structured_metadata_size: 512kb
 ##[<] 🤖🤖

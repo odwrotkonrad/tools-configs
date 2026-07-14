@@ -4,7 +4,7 @@ SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-exec-if)
 WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
-COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-restart-services run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
+COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -53,12 +53,6 @@ run-host-run-scripts-all: | run-repo-ci-install-deps
 #[what] run profile scripts whose path matches NAME (substring)
 run-host-run-scripts: | run-repo-ci-install-deps
 	@$(CHE) run-scripts $(NAME)
-
-#[what] reload running service launchagents
-run-host-restart-services: | run-repo-ci-install-deps
-	@$(CHE) services bootout
-	@$(CHE) services bootin
-	@$(CHE) services ensure
 ##[<] Onto Host
 
 ##[>] Onto Repo (CI) [genai-include]
