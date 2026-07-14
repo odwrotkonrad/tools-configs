@@ -66,8 +66,8 @@ build {
       "sudo install -o ${var.username} -g staff -m 600 /tmp/authorized_key.pub /Users/${var.username}/.ssh/authorized_keys",
       "sudo dseditgroup -o edit -a ${var.username} -t user com.apple.access_ssh",
       "sudo dscacheutil -flushcache",
-      #[why] ssh-forward the 1Password token (virt-ssh-mac.zsh SendEnv) so `op` works in the vm
-      "echo 'AcceptEnv OP_SERVICE_ACCOUNT_TOKEN' | sudo tee /etc/ssh/sshd_config.d/100-accept-op-token.conf >/dev/null"
+      #[why] ssh-forward the 1Password token + GCP SA key (virt-ssh-mac.zsh SendEnv) so `op` works in the vm and the restricted SA key becomes the vm's ADC identity (gcp:// secret resolution, mirrors the sandbox pod)
+      "echo 'AcceptEnv OP_SERVICE_ACCOUNT_TOKEN GCP_SA_KEY' | sudo tee /etc/ssh/sshd_config.d/100-accept-op-token.conf >/dev/null"
     ]
   }
 

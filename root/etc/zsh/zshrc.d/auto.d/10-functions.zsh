@@ -8,9 +8,10 @@ function fn_otel_resource_cwd {
 add-zsh-hook chpwd fn_otel_resource_cwd
 fn_otel_resource_cwd
 
+#[why] 🤖🤖 read the gitlab token from $GITLAB_TOKEN_SECRET_PATH (op:// on host/vm, gcp:// in the sandbox pod, toggled in 40-gcp-adc): che's secret resolver handles both schemes, so this function stays context-agnostic
 function fn_auth_glab {
   glab auth status >/dev/null 2>&1 && return 0
-  local token=$(op read "op://ProgrammaticAccess/gitlab/access_token")
+  local token=$(print -r -- '{{ secret (getenv "GITLAB_TOKEN_SECRET_PATH") }}' | render-tpl -f /dev/stdin 2>/dev/null)
   [[ -n $token ]] && print -r -- $token | glab auth login --hostname gitlab.com --stdin
 }
 
