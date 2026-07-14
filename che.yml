@@ -77,7 +77,6 @@ base:
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
       - ci/zsh/scripts/bootstrap/*.zsh
-    runServices: [otelcol, dir-size-exporter, port-exporter, grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-desktop:
   exclude:
@@ -96,7 +95,6 @@ base-exclude-desktop:
       - /usr/local/var/{grafana,prometheus}
     runScripts:
       - ci/zsh/scripts/installs/80-go-host-tools.zsh
-    runServices: [grafana, prometheus, jaeger, loki, gitlab-runner]
 
 base-exclude-macos:
   exclude:

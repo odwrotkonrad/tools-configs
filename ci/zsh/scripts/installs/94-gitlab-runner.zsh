@@ -35,3 +35,8 @@ if [[ -e $brew_plist ]] {
   fn-log-msg -t gitlab-runner -- "no stale brew plist, skipping bootout"
 }
 ###[<] retire brew gitlab-runner service 🤖🤖🤖
+
+##[>] 🤖🤖
+autoload -Uz fn-boot-service
+fn-boot-service gitlab-runner
+##[<] 🤖🤖

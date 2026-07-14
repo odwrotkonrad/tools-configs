@@ -26,3 +26,8 @@ function install_otelcol {
 }
 
 fn-install-if-missing otelcol install_otelcol
+
+##[>] 🤖🤖
+autoload -Uz fn-is-os fn-is-virt fn-boot-service
+if { ! fn-is-virt && fn-is-os mac } fn-boot-service otelcol
+##[<] 🤖🤖
