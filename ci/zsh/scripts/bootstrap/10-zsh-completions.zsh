@@ -23,7 +23,8 @@ comp_file_write() {
     local dir=$(comp_dir_get $1)
     fn-log-msg -t 'completions(write)' -- "$1 -> $dir/$2"
     if [[ $dir == $comp_dir_root ]] {
-        sudo cp -f /dev/stdin $dir/$2
+        #[why] 🤖 install -m 0644: sudo resets umask to root's, so a bare `cp` leaves the file 0600 (root-only) and every other user's compinit fails "permission denied" reading it. mode must be world-readable
+        sudo install -m 0644 /dev/stdin $dir/$2
         return
     }
     cp -f /dev/stdin $dir/$2
