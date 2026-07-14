@@ -23,10 +23,10 @@ comp_file_write() {
     local dir=$(comp_dir_get $1)
     fn-log-msg -t 'completions(write)' -- "$1 -> $dir/$2"
     if [[ $dir == $comp_dir_root ]] {
-        sudo cp /dev/stdin $dir/$2
+        sudo cp -f /dev/stdin $dir/$2
         return
     }
-    cp /dev/stdin $dir/$2
+    cp -f /dev/stdin $dir/$2
 }
 
 comp_file_fetch() {

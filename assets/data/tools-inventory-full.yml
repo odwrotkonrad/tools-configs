@@ -7,7 +7,7 @@ references:
 
 #[what] Shared files referenced by many tools.
 files:
-  root/HOME/.config/zsh/rc.d/10-tools.zsh:
+  root/_home/.config/zsh/rc.d/10-tools.zsh:
   root/etc/:
     zshenv:
     zshrc:
@@ -19,18 +19,18 @@ files:
 tools:
   - asdf:
       files:
-        root/HOME/:
+        root/_home/:
           .config/asdf/.asdfrc:
           .tool-versions:
         root/etc/zsh/functions/fn_asdf_install:
 
   - ccstatusline:
       files:
-        root/HOME/.config/ccstatusline/settings.json:
+        root/_home/.config/ccstatusline/settings.json:
 
   - claude:
       files:
-        root/HOME/.config/claude/:
+        root/_home/.config/claude/:
           CLAUDE.md:
           settings.json:
           agents/:
@@ -42,7 +42,7 @@ tools:
 
   - codex:
       files:
-        root/HOME/.config/codex/config.toml.ontoHost.tpl:
+        root/_home/.config/codex/config.toml.ontoHost.tpl:
 
   - defaults:
       files:
@@ -53,13 +53,13 @@ tools:
 
   - editorconfig:
       files:
-        root/HOME/.editorconfig:
+        root/_home/.editorconfig:
 
   - fzf:
 
   - git:
       files:
-        root/HOME/.config/git/:
+        root/_home/.config/git/:
           config:
           ignore:
           commit-template:
@@ -77,7 +77,7 @@ tools:
 
   - kitty:
       files:
-        root/HOME/.config/kitty/:
+        root/_home/.config/kitty/:
           kitty.conf:
           dark-theme.auto.conf:
           light-theme.auto.conf:
@@ -89,11 +89,11 @@ tools:
 
   - nvm:
       files:
-        root/HOME/.nvmrc:
+        root/_home/.nvmrc:
 
   - prettier:
       files:
-        root/HOME/.config/prettier/.prettierrc.yml:
+        root/_home/.config/prettier/.prettierrc.yml:
 
   - prometheus:
       files:
@@ -112,30 +112,30 @@ tools:
 
   - ruff:
       files:
-        root/HOME/.config/ruff/ruff.toml:
+        root/_home/.config/ruff/ruff.toml:
 
   - ssh:
       files:
-        root/HOME/.ssh/config:
+        root/_home/.ssh/config:
         root/etc/zsh/functions/:
           fn-ssh-generate-keys:
           fn-ssh-test-git-connection:
 
   - tmux:
       files:
-        root/HOME/.config/tmux/tmux.conf:
+        root/_home/.config/tmux/tmux.conf:
 
   - vim:
       files:
-        root/HOME/.config/vim/vimrc:
+        root/_home/.config/vim/vimrc:
 
   - vscode:
       files:
-        root/HOME/Library/Application Support/Code/User/settings.json.ontoHost.tpl:
+        root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl:
 
   - zsh:
       files:
-        root/HOME/.config/zsh/:
+        root/_home/.config/zsh/:
           .zshenv:
           .zprofile:
           .zshrc:
