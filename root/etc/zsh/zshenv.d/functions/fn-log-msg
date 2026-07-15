@@ -1,21 +1,19 @@
-#[what] log a line as 'HH:MM:SS.mmm: [title: ]msg', title via optional -t/--title
+#[what] log a line as '[title: ]msg', title via optional -t/--title
 #   title formats as type(subtype): type bold, '(subtype)' plain
 
 function fn-log-msg {
   emulate -LR zsh
   setopt errexit pipefail
   autoload -Uz fn-print-with
-  zmodload zsh/datetime
 
   local -a title
   zparseopts -D t:=title -title:=title
 
-  local stamp=${(%):-"%D{%H:%M:%S}"}.${${EPOCHREALTIME#*.}[1,3]}
   local prefix=""
   if (( ${#title} )) {
     local type=${title[2]%%\(*} sub=${title[2]#${title[2]%%\(*}}
     prefix="$(fn-print-with bold $type)$sub: "
   }
 
-  print -- "$stamp: $prefix$*"
+  print -- "$prefix$*"
 }

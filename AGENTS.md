@@ -142,6 +142,9 @@ assets
   docs-human
   images
   recordings
+  spec
+    zsh_completions_dirs
+    zsh_config
 ci
   vm
   zsh

@@ -54,7 +54,6 @@ zle-intr() {
     }
 }
 
-
 typeset -a wd_fn_rt=(
    wd-fn-root-job-foreground
    wd-fn-root-accept-line

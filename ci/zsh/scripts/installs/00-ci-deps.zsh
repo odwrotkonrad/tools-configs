@@ -1,5 +1,5 @@
 #!/bin/zsh
-#[what] ci build deps: go toolchain (https://go.dev/dl/) + prebuilt lefthook, yq, che, render-tpl
+#[what] ci build deps: go toolchain (https://go.dev/dl/) + prebuilt lefthook, yq, che (bundles the render binaries)
 
 emulate -LR zsh
 setopt errexit
@@ -44,12 +44,13 @@ fn-install-if-missing go install_go
 
 ##[>] 🤖🤖
 #[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
-#   che renders host + repo templates, render-tpl renders ad-hoc llm prompts
-che_version=0.0.52
-render_tpl_version=0.0.52
-render_repo_group_index_version=0.0.52
+#   the che tarball bundles che + render-tpl + render-repo-group-index (one fetch, one checksum)
+che_version=0.0.53
 lefthook_version=2.1.9
 yq_version=4.53.3
+
+#[what] render binaries bundled inside the che tarball, installed alongside che
+che_bundle_bins=(che render-tpl render-repo-group-index)
 
 #[what] resolve os/arch tokens once, per publisher naming scheme
 if { fn-is-os mac }   { che_os=darwin  lh_os=MacOS yq_os=darwin }
@@ -63,22 +64,10 @@ if { fn-is-arch arm } { lh_arch=arm64 } else { lh_arch=x86_64 }
 
 #[what] per-target sha256 (darwin/linux x arm64/amd64); key = os_arch
 typeset -A che_sha=(
-  darwin_amd64 b8b5aef15d6779364843d8f5a78c8944683927f7b7e7f71cc7c873f9b14859b8
-  darwin_arm64 d13e0a769b0ced168fb60c3ea8f622e895cde901bdba68074aeefec9441d6206
-  linux_amd64  b130408d802a4db12e3f4084dd04452955a844bb3736e4a409961389e001193d
-  linux_arm64  460070f7bd304aac7c0958fff5645ab8418a714b8cf88cef82b2b4b0a840deb0
-)
-typeset -A render_tpl_sha=(
-  darwin_amd64 bd6e6ddedf90c80bb8044a6ba7e118246cbc153609f3ba3760a8f866418e425a
-  darwin_arm64 8cdba154e8f6d38a003244af26326ddde678be1bd5baf1281d91813aa371b0d7
-  linux_amd64  2a13cb45b9e70993f3041adaea22095c73ee505168a36de1bdb0e7b57ff7879c
-  linux_arm64  b0214d5e0c39352fb372623ce8a40c10372c2f43e0415ced4ec9a7af1c71bbb0
-)
-typeset -A render_repo_group_index_sha=(
-  darwin_amd64 89ee0bfda931538e3528364439f1d73f54499d5955f501eeac04e5a77163fb2d
-  darwin_arm64 589053bde707d298a98debd3b11a7aa42039ff954bf6e38f5a2fd1aea5da8054
-  linux_amd64  2e20881df0b49e42613426b9738ccfee9a0f34d2754df14d38379df6a794f3cc
-  linux_arm64  7fd6938c5817fc91beec2bb43ab33250bac8f458aff2091a472a72f36af38135
+  darwin_amd64 97ed1b5ad9fb466a45070ec5c3619830e317e15feeb069f32ebe27db0ba5ab2d
+  darwin_arm64 c07f183c3f2914fc382153eaf031226f7095670f9ec5194cda56d477670724d2
+  linux_amd64  b4baa9033235efd1fba582109f840fac53c75994e19827ffd9b229c27df055da
+  linux_arm64  0c7d6f9003558760abc7f08c5996b0dcbb41a3b06bfc06e901a9d9eb9dfb371f
 )
 typeset -A lefthook_sha=(
   Linux_x86_64 0d60b0d350c923963729574f6431171f0277788884ad0c6284fa0160c36e3877
@@ -95,27 +84,24 @@ typeset -A yq_sha=(
 
 prefix=/usr/local
 
-#[what] extract a single binary from a checksummed .tar.gz into /usr/local/bin
+#[what] extract named binaries from a checksummed .tar.gz into /usr/local/bin
 function install_gitlab_tarball {
-  local project=$1 pkg=$2 bin=$3 version=$4 sha=$5
-  local archive="${bin}_${version}_${che_os}_${che_arch}.tar.gz"
+  local project=$1 pkg=$2 archive_bin=$3 version=$4 sha=$5; shift 5
+  local -a bins=("$@")
+  local archive="${archive_bin}_${version}_${che_os}_${che_arch}.tar.gz"
   local url="https://gitlab.com/api/v4/projects/${project}/packages/generic/${pkg}/${version}/${archive}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
   curl -fsSL -o "$tmp/$archive" "$url"
   echo "$sha  $tmp/$archive" | shasum -a 256 -c - || fn-exit-with 1 "checksum mismatch: $archive"
-  tar -xzf "$tmp/$archive" -C "$tmp" "$bin"
-  sudo install -m 0755 "$tmp/$bin" "$prefix/bin/$bin"
+  tar -xzf "$tmp/$archive" -C "$tmp" "${bins[@]}"
+  for bin ( "${bins[@]}" ) sudo install -m 0755 "$tmp/$bin" "$prefix/bin/$bin"
 }
 
+#[why] one che tarball drops che + the bundled render binaries, one checksum
 function install_che {
-  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che che "$che_version" "${che_sha[${che_os}_${che_arch}]}"
-}
-function install_render_tpl {
-  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che render-tpl "$render_tpl_version" "${render_tpl_sha[${che_os}_${che_arch}]}"
-}
-function install_render_repo_group_index {
-  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che render-repo-group-index "$render_repo_group_index_version" "${render_repo_group_index_sha[${che_os}_${che_arch}]}"
+  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che che "$che_version" \
+    "${che_sha[${che_os}_${che_arch}]}" "${che_bundle_bins[@]}"
 }
 
 #[what] lefthook publishes raw binaries (no tarball) on github
@@ -146,9 +132,8 @@ function parse_field3   { print -r -- ${${(z)1}[3]} }
 function parse_yq       { local v=${${(z)1}[-1]}; print -r -- ${v#v} }
 
 #[why] reinstall on version drift so pin bumps land over a stale binary
+#   the che pin governs the whole bundle (che + render binaries), one outdated-check
 fn-install-prebuilt-if-outdated che        "$che_version"        install_che        parse_field3
-fn-install-prebuilt-if-outdated render-tpl "$render_tpl_version" install_render_tpl parse_field3
-fn-install-prebuilt-if-outdated render-repo-group-index "$render_repo_group_index_version" install_render_repo_group_index parse_field3
 fn-install-prebuilt-if-outdated lefthook   "$lefthook_version"   install_lefthook   parse_field3
 fn-install-prebuilt-if-outdated yq         "$yq_version"         install_yq         parse_yq
 ##[<] 🤖🤖

@@ -101,10 +101,6 @@
       "Edit(//tmp/**)",
       "Edit(//private/tmp/**)",
       "ExitPlanMode",
-      "Glob(./*)",
-      "Glob(//tmp/**)",
-      "Glob(//private/tmp/**)",
-      "Glob(//Applications/Visual Studio Code.app/Contents/Resources/**)",
       "LSP",
       "Read(**/*)",
       "Read(//tmp/**)",
@@ -119,9 +115,7 @@
       "WebFetch(domain:goreleaser.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:registry.terraform.io)",
-      "WebSearch",
-      "Write(//tmp/**)",
-      "Write(//private/tmp/**)"
+      "WebSearch"
     ],
     "deny": [
       "Agent(claude-code-guide)",
