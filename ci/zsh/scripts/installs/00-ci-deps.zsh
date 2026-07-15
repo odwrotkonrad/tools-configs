@@ -45,7 +45,7 @@ fn-install-if-missing go install_go
 ##[>] 🤖🤖
 #[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
 #   the che tarball bundles che + render-tpl + render-repo-group-index (one fetch, one checksum)
-che_version=0.0.52
+che_version=0.0.53
 lefthook_version=2.1.9
 yq_version=4.53.3
 
@@ -64,10 +64,10 @@ if { fn-is-arch arm } { lh_arch=arm64 } else { lh_arch=x86_64 }
 
 #[what] per-target sha256 (darwin/linux x arm64/amd64); key = os_arch
 typeset -A che_sha=(
-  darwin_amd64 b8b5aef15d6779364843d8f5a78c8944683927f7b7e7f71cc7c873f9b14859b8
-  darwin_arm64 d13e0a769b0ced168fb60c3ea8f622e895cde901bdba68074aeefec9441d6206
-  linux_amd64  b130408d802a4db12e3f4084dd04452955a844bb3736e4a409961389e001193d
-  linux_arm64  460070f7bd304aac7c0958fff5645ab8418a714b8cf88cef82b2b4b0a840deb0
+  darwin_amd64 97ed1b5ad9fb466a45070ec5c3619830e317e15feeb069f32ebe27db0ba5ab2d
+  darwin_arm64 c07f183c3f2914fc382153eaf031226f7095670f9ec5194cda56d477670724d2
+  linux_amd64  b4baa9033235efd1fba582109f840fac53c75994e19827ffd9b229c27df055da
+  linux_arm64  0c7d6f9003558760abc7f08c5996b0dcbb41a3b06bfc06e901a9d9eb9dfb371f
 )
 typeset -A lefthook_sha=(
   Linux_x86_64 0d60b0d350c923963729574f6431171f0277788884ad0c6284fa0160c36e3877
