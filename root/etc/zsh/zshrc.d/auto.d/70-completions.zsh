@@ -70,16 +70,16 @@ _cd_deep() {
   (( $#v1 )) || hh1='*'
   (( $#v2 )) || hh2='*/*'
   (( $#v3 )) || hh3='*/*/*'
-  local -a dv1 dh1 dv2 dh2 dv3 dh3
-  _cd_deep_paircols v1 h1 dv1 dh1
-  _cd_deep_paircols v2 h2 dv2 dh2
-  _cd_deep_paircols v3 h3 dv3 dh3
-  (( $#v1 )) && _wanted pwd     expl '*'     compadd -Q -U -V pwd   -d dv1 -a v1
-  (( $#h1 )) && _wanted pwd-h   expl "$hh1"  compadd -Q -U -V pwd-h   -d dh1 -a h1
-  (( $#v2 )) && _wanted pwd-1   expl '*/*'   compadd -Q -U -V pwd-1   -d dv2 -a v2
-  (( $#h2 )) && _wanted pwd-1-h expl "$hh2"  compadd -Q -U -V pwd-1-h -d dh2 -a h2
-  (( $#v3 )) && _wanted pwd-2   expl '*/*/*' compadd -Q -U -V pwd-2   -d dv3 -a v3
-  (( $#h3 )) && _wanted pwd-2-h expl "$hh3"  compadd -Q -U -V pwd-2-h -d dh3 -a h3
+  local -a dv1 dh1 dv2 dh2 dv3 dh3 sv1 sph1 sv2 sph2 sv3 sph3
+  sv1=( ${v1/%//} ); sph1=( ${h1/%//} ); _cd_deep_paircols sv1 sph1 dv1 dh1
+  sv2=( ${v2/%//} ); sph2=( ${h2/%//} ); _cd_deep_paircols sv2 sph2 dv2 dh2
+  sv3=( ${v3/%//} ); sph3=( ${h3/%//} ); _cd_deep_paircols sv3 sph3 dv3 dh3
+  (( $#v1 )) && _wanted pwd     expl '*'     compadd -Q -U -S / -V pwd   -d dv1 -a v1
+  (( $#h1 )) && _wanted pwd-h   expl "$hh1"  compadd -Q -U -S / -V pwd-h   -d dh1 -a h1
+  (( $#v2 )) && _wanted pwd-1   expl '*/*'   compadd -Q -U -S / -V pwd-1   -d dv2 -a v2
+  (( $#h2 )) && _wanted pwd-1-h expl "$hh2"  compadd -Q -U -S / -V pwd-1-h -d dh2 -a h2
+  (( $#v3 )) && _wanted pwd-2   expl '*/*/*' compadd -Q -U -S / -V pwd-2   -d dv3 -a v3
+  (( $#h3 )) && _wanted pwd-2-h expl "$hh3"  compadd -Q -U -S / -V pwd-2-h -d dh3 -a h3
 
   #[what] relative-up groups: siblings (../*), siblings' children (../*/*), grandparent children (../../*); each drops the entry that duplicates PWD / its children / the parent; always globbed, filtered only when a pattern is typed
   local -a u1 u2 u3
@@ -110,21 +110,22 @@ _cd_deep() {
   (( $#uv1 )) || uhh1=".. ${up_p}/*"
   (( $#uv2 )) || uhh2=".. ${up_p}/*/*"
   (( $#uv3 )) || uhh3="../.. ${up_g}/*"
-  local -a duv1 duh1 duv2 duh2 duv3 duh3
-  _cd_deep_paircols uv1 uh1 duv1 duh1
-  _cd_deep_paircols uv2 uh2 duv2 duh2
-  _cd_deep_paircols uv3 uh3 duv3 duh3
-  (( $#uv1 )) && _wanted up-1   expl ".. ${up_p}/*"    compadd -Q -U -V up-1   -d duv1 -a uv1
-  (( $#uh1 )) && _wanted up-1-h expl "$uhh1"   compadd -Q -U -V up-1-h -d duh1 -a uh1
-  (( $#uv2 )) && _wanted up-2   expl ".. ${up_p}/*/*"  compadd -Q -U -V up-2   -d duv2 -a uv2
-  (( $#uh2 )) && _wanted up-2-h expl "$uhh2"   compadd -Q -U -V up-2-h -d duh2 -a uh2
-  (( $#uv3 )) && _wanted up-3   expl "../.. ${up_g}/*" compadd -Q -U -V up-3   -d duv3 -a uv3
-  (( $#uh3 )) && _wanted up-3-h expl "$uhh3"   compadd -Q -U -V up-3-h -d duh3 -a uh3
+  local -a duv1 duh1 duv2 duh2 duv3 duh3 suv1 suh1 suv2 suh2 suv3 suh3
+  suv1=( ${uv1/%//} ); suh1=( ${uh1/%//} ); _cd_deep_paircols suv1 suh1 duv1 duh1
+  suv2=( ${uv2/%//} ); suh2=( ${uh2/%//} ); _cd_deep_paircols suv2 suh2 duv2 duh2
+  suv3=( ${uv3/%//} ); suh3=( ${uh3/%//} ); _cd_deep_paircols suv3 suh3 duv3 duh3
+  (( $#uv1 )) && _wanted up-1   expl ".. ${up_p}/*"    compadd -Q -U -S / -V up-1   -d duv1 -a uv1
+  (( $#uh1 )) && _wanted up-1-h expl "$uhh1"   compadd -Q -U -S / -V up-1-h -d duh1 -a uh1
+  (( $#uv2 )) && _wanted up-2   expl ".. ${up_p}/*/*"  compadd -Q -U -S / -V up-2   -d duv2 -a uv2
+  (( $#uh2 )) && _wanted up-2-h expl "$uhh2"   compadd -Q -U -S / -V up-2-h -d duh2 -a uh2
+  (( $#uv3 )) && _wanted up-3   expl "../.. ${up_g}/*" compadd -Q -U -S / -V up-3   -d duv3 -a uv3
+  (( $#uh3 )) && _wanted up-3-h expl "$uhh3"   compadd -Q -U -S / -V up-3-h -d duh3 -a uh3
 
   local -a stack=( $dirstack )                                         #[what] $dirstack = stack minus $PWD
   (( plen )) && stack=( ${(f)"$(_cd_deep_filter $PREFIX $stack)"} )
   stack=( ${(D)stack} )
-  (( $#stack )) && _wanted directory-stack expl 'Stack *' compadd -Q -U -V dstack -a stack
+  local -a dstack=( ${stack/%//} )
+  (( $#stack )) && _wanted directory-stack expl 'Stack *' compadd -Q -U -S / -V dstack -d dstack -a stack
 
   #[what] children/grandchildren of the already-pattern-matched stacked dirs, re-filtered by the typed pattern
   local d
@@ -151,13 +152,13 @@ _cd_deep() {
   local shh1 shh2
   (( $#sv1 )) || shh1='Stack */*'
   (( $#sv2 )) || shh2='Stack */*/*'
-  local -a dsv1 dsh1 dsv2 dsh2
-  _cd_deep_paircols sv1 sh1 dsv1 dsh1
-  _cd_deep_paircols sv2 sh2 dsv2 dsh2
-  (( $#sv1 )) && _wanted directory-stack-1   expl 'Stack */*'   compadd -Q -U -V dstack-1   -d dsv1 -a sv1
-  (( $#sh1 )) && _wanted directory-stack-1-h expl "$shh1" compadd -Q -U -V dstack-1-h -d dsh1 -a sh1
-  (( $#sv2 )) && _wanted directory-stack-2   expl 'Stack */*/*' compadd -Q -U -V dstack-2   -d dsv2 -a sv2
-  (( $#sh2 )) && _wanted directory-stack-2-h expl "$shh2" compadd -Q -U -V dstack-2-h -d dsh2 -a sh2
+  local -a dsv1 dsh1 dsv2 dsh2 psv1 psh1 psv2 psh2
+  psv1=( ${sv1/%//} ); psh1=( ${sh1/%//} ); _cd_deep_paircols psv1 psh1 dsv1 dsh1
+  psv2=( ${sv2/%//} ); psh2=( ${sh2/%//} ); _cd_deep_paircols psv2 psh2 dsv2 dsh2
+  (( $#sv1 )) && _wanted directory-stack-1   expl 'Stack */*'   compadd -Q -U -S / -V dstack-1   -d dsv1 -a sv1
+  (( $#sh1 )) && _wanted directory-stack-1-h expl "$shh1" compadd -Q -U -S / -V dstack-1-h -d dsh1 -a sh1
+  (( $#sv2 )) && _wanted directory-stack-2   expl 'Stack */*/*' compadd -Q -U -S / -V dstack-2   -d dsv2 -a sv2
+  (( $#sh2 )) && _wanted directory-stack-2-h expl "$shh2" compadd -Q -U -S / -V dstack-2-h -d dsh2 -a sh2
 
   (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
 }
@@ -233,6 +234,24 @@ _cd_deep_paircols() {
   set -A $3 "${d1[@]}"
   set -A $4 "${d2[@]}"
 }
+
+##[>] 🤖🤖
+#[what] right-pad all four arrays' display strings to their shared max width, so a visible/hidden quad under one heading lays out on the same grid
+_cd_deep_quadcols() {
+  local -a src1=( ${(P)1} ) src2=( ${(P)2} ) src3=( ${(P)3} ) src4=( ${(P)4} )
+  local w=0 x
+  for x in $src1 $src2 $src3 $src4; do (( ${#x} > w )) && w=${#x}; done
+  local -a d1 d2 d3 d4
+  for x in $src1; do d1+=( ${(r:w:)x} ); done
+  for x in $src2; do d2+=( ${(r:w:)x} ); done
+  for x in $src3; do d3+=( ${(r:w:)x} ); done
+  for x in $src4; do d4+=( ${(r:w:)x} ); done
+  set -A $5 "${d1[@]}"
+  set -A $6 "${d2[@]}"
+  set -A $7 "${d3[@]}"
+  set -A $8 "${d4[@]}"
+}
+##[<] 🤖🤖
 
 ##[>] 🤖🤖
 #[what] visible ($1) and hidden ($2) share cap $3: visible first, hidden fills the remainder, none left -> no hidden; $3<=0 uncapped
@@ -440,18 +459,182 @@ _file_deep_order() {
   print -l -- $normal -- $hidden $lowp
 }
 
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' low-precedence '.git' 'node_modules' '.cache'
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' level-1-max 0
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' level-2-max 12
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' level-3-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' level-4-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' stack-1-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' stack-2-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' up-1-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' up-2-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' up-3-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' up-4-max 6
-zstyle ':completion:*:*:(code|vim|vi|nano|cat|less|bat):*' group-order \
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' low-precedence '.git' 'node_modules' '.cache'
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-1-max 0
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-2-max 12
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-3-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-4-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' stack-1-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' stack-2-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-1-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-2-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-3-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-4-max 6
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' group-order \
+  pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h pwd-3 pwd-3-h \
+  up-1 up-1-h up-2 up-2-h up-3 up-3-h up-4 up-4-h \
+  directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
+##[<] 🤖🤖
+
+##[>] 🤖🤖 both args (code ls stat): same sources/order/caps as _file_deep, leaf = file OR dir; dirs by item-count desc (trailing /, -S /) first, then files by mtime
+#[what] order a level's file glob (mtime) and dir glob (count-desc) each by its native criterion, splice dirs-first into one visible and one hidden tagged stream, capshare the pair together, split back into dir/file visible+hidden preserving order and stripping the kind tag
+_both_deep_order() {
+  local files_v=$1 dirs_v=$2 cap=$3
+  local -a fo do fv fh dv dh
+  fo=( ${(f)"$(_file_deep_order ${(P)files_v})"} ); fv=( ${fo[1,${fo[(i)--]}-1]} ); fh=( ${fo[${fo[(i)--]}+1,-1]} )
+  do=( ${(f)"$(_cd_deep_order ${(P)dirs_v})"} );    dv=( ${do[1,${do[(i)--]}-1]} ); dh=( ${do[${do[(i)--]}+1,-1]} )
+
+  local -a mvis mhid
+  mvis=( ${dv/#/d:} ${fv/#/f:} ); mhid=( ${dh/#/d:} ${fh/#/f:} )
+  _cd_deep_capshare mvis mhid $cap
+
+  local e
+  local -a odv ofv odh ofh
+  for e in $mvis; do [[ $e == d:* ]] && odv+=( ${e#d:} ) || ofv+=( ${e#f:} ); done
+  for e in $mhid; do [[ $e == d:* ]] && odh+=( ${e#d:} ) || ofh+=( ${e#f:} ); done
+  set -A $dirs_v "${odv[@]}"; set -A ${dirs_v}h "${odh[@]}"
+  set -A $files_v "${ofv[@]}"; set -A ${files_v}h "${ofh[@]}"
+}
+
+#[what] emit one level: dirs (with trailing-/ display and -S / insert) then files under the shared visible -V tag, then the same under the hidden -V tag; when a stream mixes kinds the two compadds under one -V merge into one visual group
+_both_deep_emit() {
+  local files_v=$1 dirs_v=$2 vtag=$3 htag=$4 vhdr=$5 hhdr=$6
+  local files_vh=${files_v}h dirs_vh=${dirs_v}h
+  local -a fv=( ${(P)files_v} ) dv=( ${(P)dirs_v} )
+  local -a fh=( ${(P)files_vh} ) dh=( ${(P)dirs_vh} )
+  local expl
+  local -a ddv dfv ddh dfh pddv pdfv pddh pdfh
+  ddv=( ${dv/%//} ); dfv=( $fv ); ddh=( ${dh/%//} ); dfh=( $fh )
+  _cd_deep_quadcols ddv dfv ddh dfh  pddv pdfv pddh pdfh
+  (( $#dv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -V $vtag -S / -d pddv -a dv }
+  (( $#fv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -V $vtag        -d pdfv -a fv }
+  (( $#dh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $htag -S / -d pddh -a dh }
+  (( $#fh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $htag        -d pdfh -a fh }
+}
+
+_both_deep() {
+  local -a lowprec deprio
+  zstyle -a ":completion:${curcontext}" low-precedence lowprec
+  zstyle -a ":completion:${curcontext}" deprioritize-name deprio
+  (( $#deprio )) || deprio=( test )
+
+  local plen=$#PREFIX
+
+  #[what] two parallel globs per level: files *(-.omDN) mtime-newest-first, dirs *(-/DN); ordered/spliced/capped together by _both_deep_order into <name> (visible) + <name>h (hidden)
+  local -a lf1 lf2 lf3 lf4 ld1 ld2 ld3 ld4
+  lf1=( *(-.omDN) );       ld1=( *(-/DN) )
+  lf2=( */*(-.omDN) );     ld2=( */*(-/DN) )
+  lf3=( */*/*(-.omDN) );   ld3=( */*/*(-/DN) )
+  lf4=( */*/*/*(-.omDN) ); ld4=( */*/*/*(-/DN) )
+  if (( plen )) {
+    lf1=( ${(f)"$(_cd_deep_filter $PREFIX $lf1)"} ); ld1=( ${(f)"$(_cd_deep_filter $PREFIX $ld1)"} )
+    lf2=( ${(f)"$(_cd_deep_filter $PREFIX $lf2)"} ); ld2=( ${(f)"$(_cd_deep_filter $PREFIX $ld2)"} )
+    lf3=( ${(f)"$(_cd_deep_filter $PREFIX $lf3)"} ); ld3=( ${(f)"$(_cd_deep_filter $PREFIX $ld3)"} )
+    lf4=( ${(f)"$(_cd_deep_filter $PREFIX $lf4)"} ); ld4=( ${(f)"$(_cd_deep_filter $PREFIX $ld4)"} )
+  }
+
+  local m1 m2 m3 m4
+  zstyle -s ":completion:${curcontext}" level-1-max m1 || m1=0
+  zstyle -s ":completion:${curcontext}" level-2-max m2 || m2=12
+  zstyle -s ":completion:${curcontext}" level-3-max m3 || m3=6
+  zstyle -s ":completion:${curcontext}" level-4-max m4 || m4=6
+  local -a lf1h lf2h lf3h lf4h ld1h ld2h ld3h ld4h
+  _both_deep_order lf1 ld1 $m1
+  _both_deep_order lf2 ld2 $m2
+  _both_deep_order lf3 ld3 $m3
+  _both_deep_order lf4 ld4 $m4
+
+  local hh1 hh2 hh3 hh4
+  (( $#lf1 + $#ld1 )) || hh1='*'
+  (( $#lf2 + $#ld2 )) || hh2='*/*'
+  (( $#lf3 + $#ld3 )) || hh3='*/*/*'
+  (( $#lf4 + $#ld4 )) || hh4='*/*/*/*'
+  _both_deep_emit lf1 ld1 pwd   pwd-h   '*'       "$hh1"
+  _both_deep_emit lf2 ld2 pwd-1 pwd-1-h '*/*'     "$hh2"
+  _both_deep_emit lf3 ld3 pwd-2 pwd-2-h '*/*/*'   "$hh3"
+  _both_deep_emit lf4 ld4 pwd-3 pwd-3-h '*/*/*/*' "$hh4"
+
+  #[what] relative-up groups: siblings (../*), siblings' children (../*/*), grandparent children (../../*), parent great-grandchildren (../*/*/*); each drops the entry duplicating PWD / its children / the parent; both kinds per group
+  local -a uf1 uf2 uf3 uf4 ud1 ud2 ud3 ud4
+  uf1=( ../*(-.omDN) );     uf1=( ${uf1:#../${PWD:t}} )
+  uf2=( ../*/*(-.omDN) );   uf2=( ${uf2:#../${PWD:t}/*} )
+  uf3=( ../../*(-.omDN) );  uf3=( ${uf3:#../../${PWD:h:t}} )
+  uf4=( ../*/*/*(-.omDN) ); uf4=( ${uf4:#../${PWD:t}/*/*} )
+  ud1=( ../*(-/DN) );       ud1=( ${ud1:#../${PWD:t}} )
+  ud2=( ../*/*(-/DN) );     ud2=( ${ud2:#../${PWD:t}/*} )
+  ud3=( ../../*(-/DN) );    ud3=( ${ud3:#../../${PWD:h:t}} )
+  ud4=( ../*/*/*(-/DN) );   ud4=( ${ud4:#../${PWD:t}/*/*} )
+  if (( plen )) {
+    uf1=( ${(f)"$(_cd_deep_filter $PREFIX $uf1)"} ); ud1=( ${(f)"$(_cd_deep_filter $PREFIX $ud1)"} )
+    uf2=( ${(f)"$(_cd_deep_filter $PREFIX $uf2)"} ); ud2=( ${(f)"$(_cd_deep_filter $PREFIX $ud2)"} )
+    uf3=( ${(f)"$(_cd_deep_filter $PREFIX $uf3)"} ); ud3=( ${(f)"$(_cd_deep_filter $PREFIX $ud3)"} )
+    uf4=( ${(f)"$(_cd_deep_filter $PREFIX $uf4)"} ); ud4=( ${(f)"$(_cd_deep_filter $PREFIX $ud4)"} )
+  }
+
+  local mu1 mu2 mu3 mu4
+  zstyle -s ":completion:${curcontext}" up-1-max mu1 || mu1=6
+  zstyle -s ":completion:${curcontext}" up-2-max mu2 || mu2=6
+  zstyle -s ":completion:${curcontext}" up-3-max mu3 || mu3=6
+  zstyle -s ":completion:${curcontext}" up-4-max mu4 || mu4=6
+  local -a uf1h uf2h uf3h uf4h ud1h ud2h ud3h ud4h
+  _both_deep_order uf1 ud1 $mu1
+  _both_deep_order uf2 ud2 $mu2
+  _both_deep_order uf3 ud3 $mu3
+  _both_deep_order uf4 ud4 $mu4
+
+  local up_p=${PWD:h:t} up_g=${PWD:h:h:t}
+  local uhh1 uhh2 uhh3 uhh4
+  (( $#uf1 + $#ud1 )) || uhh1=".. ${up_p}/*"
+  (( $#uf2 + $#ud2 )) || uhh2=".. ${up_p}/*/*"
+  (( $#uf3 + $#ud3 )) || uhh3="../.. ${up_g}/*"
+  (( $#uf4 + $#ud4 )) || uhh4=".. ${up_p}/*/*/*"
+  _both_deep_emit uf1 ud1 up-1 up-1-h ".. ${up_p}/*"       "$uhh1"
+  _both_deep_emit uf2 ud2 up-2 up-2-h ".. ${up_p}/*/*"     "$uhh2"
+  _both_deep_emit uf3 ud3 up-3 up-3-h "../.. ${up_g}/*"    "$uhh3"
+  _both_deep_emit uf4 ud4 up-4 up-4-h ".. ${up_p}/*/*/*"   "$uhh4"
+
+  #[what] file+dir leaves under the already-pattern-matched stacked dirs, re-filtered by the typed pattern; the bare stacked dir is offered by _cd_deep, not here
+  local d
+  local -a sf1 sf2 sd1 sd2 allstack=( $dirstack )
+  if (( plen )) {
+    for d in $allstack; do sf1+=( ${d%/}/*(-.omDN) ); sd1+=( ${d%/}/*(-/DN) ); done
+    for d in $allstack; do sf2+=( ${d%/}/*/*(-.omDN) ); sd2+=( ${d%/}/*/*(-/DN) ); done
+    sf1=( ${(f)"$(_cd_deep_filter $PREFIX $sf1)"} ); sd1=( ${(f)"$(_cd_deep_filter $PREFIX $sd1)"} )
+    sf2=( ${(f)"$(_cd_deep_filter $PREFIX $sf2)"} ); sd2=( ${(f)"$(_cd_deep_filter $PREFIX $sd2)"} )
+  }
+
+  local ms1 ms2
+  zstyle -s ":completion:${curcontext}" stack-1-max ms1 || ms1=6
+  zstyle -s ":completion:${curcontext}" stack-2-max ms2 || ms2=6
+  local -a sf1h sf2h sd1h sd2h
+  _both_deep_order sf1 sd1 $ms1
+  _both_deep_order sf2 sd2 $ms2
+
+  sf1=( ${(D)sf1} ); sf1h=( ${(D)sf1h} ); sd1=( ${(D)sd1} ); sd1h=( ${(D)sd1h} )
+  sf2=( ${(D)sf2} ); sf2h=( ${(D)sf2h} ); sd2=( ${(D)sd2} ); sd2h=( ${(D)sd2h} )
+
+  local shh1 shh2
+  (( $#sf1 + $#sd1 )) || shh1='Stack */*'
+  (( $#sf2 + $#sd2 )) || shh2='Stack */*/*'
+  _both_deep_emit sf1 sd1 directory-stack-1 directory-stack-1-h 'Stack */*'   "$shh1"
+  _both_deep_emit sf2 sd2 directory-stack-2 directory-stack-2-h 'Stack */*/*' "$shh2"
+
+  (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+}
+
+zstyle ':completion:*:*:(code|ls|stat):*' low-precedence '.git' 'node_modules' '.cache'
+zstyle ':completion:*:*:(code|ls|stat):*' deprioritize-name 'test'
+zstyle ':completion:*:*:(code|ls|stat):*' level-1-max 0
+zstyle ':completion:*:*:(code|ls|stat):*' level-2-max 12
+zstyle ':completion:*:*:(code|ls|stat):*' level-3-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' level-4-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' stack-1-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' stack-2-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' up-1-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' up-2-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' up-3-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' up-4-max 6
+zstyle ':completion:*:*:(code|ls|stat):*' group-order \
   pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h pwd-3 pwd-3-h \
   up-1 up-1-h up-2 up-2-h up-3 up-3-h up-4 up-4-h \
   directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h

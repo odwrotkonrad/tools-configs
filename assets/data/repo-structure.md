@@ -8,6 +8,7 @@ assets
   recordings
   spec
     zsh_completions_dirs
+    zsh_completions_dirs_and_files
     zsh_completions_files
     zsh_config
 ci
