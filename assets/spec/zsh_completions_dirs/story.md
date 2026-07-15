@@ -33,11 +33,14 @@ I want directory completion candidates
 
   to be capped to specific values
     current directory (PWD) - uncapped
-    PWD+1 - capped to 20 candidates
+    PWD+1 - capped to 12 candidates
     PWD+2 - capped to 6 candidates
     ../* / ../*/* / ../../* - capped to 6 candidates each
     Directory stack PWD+1 - capped to 6 candidates
     Directory stack PWD+2 - capped to 6 candidates
+
+    where each segment's cap is shared by its non-hidden and hidden groups together
+      non-hidden filled first, hidden taking the remaining room, none left means no hidden shown
 
     and I want these cap values to be configurable via zstyle
 
@@ -53,13 +56,15 @@ I want directory completion candidates
     * (PWD)
     */* (PWD+1)
     */*/* (PWD+2)
-    ../* (PWD siblings)
-    ../*/* (siblings' children)
-    ../../* (grandparent children)
+    .. <parent>/* — ../* (PWD siblings)
+    .. <parent>/*/* — ../*/* (siblings' children)
+    ../.. <grandparent>/* — ../../* (grandparent children)
     Stack * (directory stack)
       Stack */* (stack+1)
       Stack */*/* (stack+2)
 
-    where groups are prepended with '## name' e.g. `## *`, `## */*`, `## ../*`, `## ../*/*`, `## ../../*`, `## Stack *`, `## Stack */*`
+    where each up-group heading names the actual base dir it lists: the `..`-relative prefix then `<basedir>/*`
+
+    where groups are prepended with '## name' e.g. `## *`, `## */*`, `## .. <parent>/*`, `## .. <parent>/*/*`, `## ../.. <grandparent>/*`, `## Stack *`, `## Stack */*`
 
     where paths render with `~` for paths under `$HOME`

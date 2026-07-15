@@ -125,10 +125,12 @@ bindkey -A key_map main
 ##[>] 🤖
 bindkey -M menuselect "${rt_seq[esc]}" accept-line
 ##[<] 🤖
-##[>] 🤖🤖 alt+up/down scroll the completion menu 3 rows at a time
+##[>] 🤖🤖 alt+arrows mirror the native arrows in the menu: up/down scroll 3 rows, left/right move 1 column
 #[why] a user widget bound in menuselect exits menu selection (man zshmodules);
-#[why] a bindkey -s macro re-feeds the native down/up key, each move stays in the menu
-bindkey -M menuselect -s "$keystrokes[altDown]" "$keystrokes[down]$keystrokes[down]$keystrokes[down]"
-bindkey -M menuselect -s "$keystrokes[altUp]"   "$keystrokes[up]$keystrokes[up]$keystrokes[up]"
+#[why] a bindkey -s macro re-feeds the native arrow key, each move stays in the menu
+bindkey -M menuselect -s "$keystrokes[altDown]"  "$keystrokes[down]$keystrokes[down]$keystrokes[down]"
+bindkey -M menuselect -s "$keystrokes[altUp]"    "$keystrokes[up]$keystrokes[up]$keystrokes[up]"
+bindkey -M menuselect -s "$keystrokes[altRight]" "$keystrokes[right]"
+bindkey -M menuselect -s "$keystrokes[altLeft]"  "$keystrokes[left]"
 ##[<] 🤖🤖
 ##[<] zshzle
