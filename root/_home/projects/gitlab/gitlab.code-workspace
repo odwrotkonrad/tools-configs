@@ -3,7 +3,6 @@
     { "name": "configs", "path": "konradodwrot/configs" },
     { "name": "conventions", "path": "konradodwrot/conventions" },
     { "name": "go-modules", "path": "konradodwrot/go-modules" },
-    { "name": "infra/git-repos", "path": "konradodwrot/infra/git-repos" },
     { "name": "infra/oci-images", "path": "konradodwrot/infra/oci-images" },
     { "name": "notes", "path": "konradodwrot/notes" },
     { "name": "resume-md-pdf", "path": "konradodwrot/resume-md-pdf" },
