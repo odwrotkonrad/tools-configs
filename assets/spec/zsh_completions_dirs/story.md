@@ -11,9 +11,12 @@ I want directory completion candidates
     1. PWD
     2. PWD+1
     3. PWD+2
-    4. Directory stack contents
-    5. Directory stack contents PWD+1
-    6. Directory stack contents PWD+2
+    4. ../* (PWD siblings, PWD itself excluded)
+    5. ../*/* (siblings' children, PWD's own children excluded)
+    6. ../../* (grandparent children, parent dir excluded)
+    7. Directory stack contents
+    8. Directory stack contents PWD+1
+    9. Directory stack contents PWD+2
 
     and within each segment, I want this specific ordering:
       non-hidden directories, sorted by the number of items inside
@@ -31,9 +34,10 @@ I want directory completion candidates
   to be capped to specific values
     current directory (PWD) - uncapped
     PWD+1 - capped to 20 candidates
-    PWD+2 - capped to 5 candidates
-    Directory stack PWD+1 - capped to 5 candidates
-    Directory stack PWD+2 - capped to 5 candidates
+    PWD+2 - capped to 6 candidates
+    ../* / ../*/* / ../../* - capped to 6 candidates each
+    Directory stack PWD+1 - capped to 6 candidates
+    Directory stack PWD+2 - capped to 6 candidates
 
     and I want these cap values to be configurable via zstyle
 
@@ -49,10 +53,13 @@ I want directory completion candidates
     * (PWD)
     */* (PWD+1)
     */*/* (PWD+2)
+    ../* (PWD siblings)
+    ../*/* (siblings' children)
+    ../../* (grandparent children)
     Stack * (directory stack)
       Stack */* (stack+1)
       Stack */*/* (stack+2)
 
-    where groups are prepended with '## name' e.g. `## *`, `## */*`, `## Stack *`, `## Stack */*`
+    where groups are prepended with '## name' e.g. `## *`, `## */*`, `## ../*`, `## ../*/*`, `## ../../*`, `## Stack *`, `## Stack */*`
 
     where paths render with `~` for paths under `$HOME`

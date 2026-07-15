@@ -54,7 +54,7 @@ Scenario: matched stacked dirs expand to child and grandchild groups
   Then only stacked dirs matching the pattern are expanded
   And their matching children form a Stack */* group
   And their matching grandchildren form a Stack */*/* group
-  And each of those groups is capped at 5 items
+  And each of those groups is capped at 6 items
   And within each group visible candidates precede hidden ones
   And a stack level with only hidden candidates carries its header
 
@@ -88,12 +88,35 @@ Scenario Outline: multi-segment pattern matches segments in order, ending at the
     | r/src   | root/datasource, root/dir/datasource |
     | d/da    | root/dir/datasource                  |
 
-Scenario: no search pattern shows PWD, PWD+1, and the directory stack only
+Scenario: the relative-up groups sit after PWD levels and before the stack
+  Given the up groups (../*, ../*/*, ../../*) are shown
+  When completions are shown
+  Then the ../* group appears after the PWD+2 group
+  And the ../*/* group appears after the ../* group
+  And the ../../* group appears after the ../*/* group
+  And all three appear before the base Stack * group
+
+Scenario: the relative-up groups drop the entries that duplicate other groups
+  Given I have typed any search pattern or none
+  When I press TAB
+  Then the ../* group shows PWD's siblings but not PWD itself (../<pwdname>)
+  And the ../*/* group shows siblings' children but not PWD's own children (already in ## */*)
+  And the ../../* group shows grandparent children but not the parent dir (../../<parentname>, == ..)
+
+Scenario: each relative-up group is capped and orders visible before hidden
+  Given a relative-up group has more candidates than its cap
+  When completions are shown
+  Then that group is capped at 6 items
+  And within it visible candidates precede hidden ones
+  And an up group with only hidden candidates carries its header (../*, ../*/*, or ../../*)
+
+Scenario: no search pattern shows PWD levels, the up groups, and the directory stack
   Given I have typed no search pattern
   When I press TAB
   Then the PWD group is shown
   And the PWD+1 group is shown, capped to 20 candidates
-  And the PWD+2 group is not shown
+  And the PWD+2 group is shown, capped to 6 candidates
+  And the ../*, ../*/*, and ../../* groups are shown, capped to 6 candidates each
   And the base Stack * group is shown
   And the Stack */* and Stack */*/* groups are not shown
 

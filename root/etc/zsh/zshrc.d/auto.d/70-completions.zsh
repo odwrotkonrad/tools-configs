@@ -32,7 +32,7 @@ zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 zstyle ':completion:*:*:touch:argument-1:*' format ''
 ##[<] 🤖🤖
 
-##[>] 🤖🤖🤖 cd: PWD (headerless) / PWD+1 / PWD+2 / dir-stack / dir-stack+1 / dir-stack+2 (children+grandchildren of matched stacked dirs), per-segment ordered + capped, visible then headerless-hidden groups
+##[>] 🤖🤖🤖 cd: PWD / PWD+1 / PWD+2 / ../* (siblings, PWD dropped) / ../*/* (siblings' children, PWD's own dropped) / ../../* (grandparent children, parent dropped) / dir-stack / dir-stack+1 / dir-stack+2 ..., per-segment ordered + capped, visible then headerless-hidden groups
 _cd_deep() {
   local -a lowprec deprio
   zstyle -a ":completion:${curcontext}" low-precedence lowprec
@@ -44,8 +44,8 @@ _cd_deep() {
   local -a l1 l2 l3
   l1=( *(-/DN) )
   l2=( */*(-/DN) )
+  l3=( */*/*(-/DN) )
   if (( plen )) {
-    l3=( */*/*(-/DN) )
     l1=( ${(f)"$(_cd_deep_filter $PREFIX $l1)"} )
     l2=( ${(f)"$(_cd_deep_filter $PREFIX $l2)"} )
     l3=( ${(f)"$(_cd_deep_filter $PREFIX $l3)"} )
@@ -60,7 +60,7 @@ _cd_deep() {
   local m1 m2 m3
   zstyle -s ":completion:${curcontext}" level-1-max m1 || m1=0
   zstyle -s ":completion:${curcontext}" level-2-max m2 || m2=20
-  zstyle -s ":completion:${curcontext}" level-3-max m3 || m3=5
+  zstyle -s ":completion:${curcontext}" level-3-max m3 || m3=6
   (( m1 > 0 && $#v1 > m1 )) && v1=( $v1[1,m1] )
   (( m1 > 0 && $#h1 > m1 )) && h1=( $h1[1,m1] )
   (( m2 > 0 && $#v2 > m2 )) && v2=( $v2[1,m2] )
@@ -84,6 +84,45 @@ _cd_deep() {
   (( $#v3 )) && _wanted pwd-2   expl '*/*/*' compadd -Q -U -V pwd-2   -d dv3 -a v3
   (( $#h3 )) && _wanted pwd-2-h expl "$hh3"  compadd -Q -U -V pwd-2-h -d dh3 -a h3
 
+  #[what] relative-up groups: siblings (../*), siblings' children (../*/*), grandparent children (../../*); each drops the entry that duplicates PWD / its children / the parent; always globbed, filtered only when a pattern is typed
+  local -a u1 u2 u3
+  u1=( ../*(-/DN) );    u1=( ${u1:#../${PWD:t}} )
+  u2=( ../*/*(-/DN) );  u2=( ${u2:#../${PWD:t}/*} )
+  u3=( ../../*(-/DN) ); u3=( ${u3:#../../${PWD:h:t}} )
+  if (( plen )) {
+    u1=( ${(f)"$(_cd_deep_filter $PREFIX $u1)"} )
+    u2=( ${(f)"$(_cd_deep_filter $PREFIX $u2)"} )
+    u3=( ${(f)"$(_cd_deep_filter $PREFIX $u3)"} )
+  }
+
+  local -a uv1 uh1 uv2 uh2 uv3 uh3
+  ordered=( ${(f)"$(_cd_deep_order $u1)"} ); uv1=( ${ordered[1,${ordered[(i)--]}-1]} ); uh1=( ${ordered[${ordered[(i)--]}+1,-1]} )
+  ordered=( ${(f)"$(_cd_deep_order $u2)"} ); uv2=( ${ordered[1,${ordered[(i)--]}-1]} ); uh2=( ${ordered[${ordered[(i)--]}+1,-1]} )
+  ordered=( ${(f)"$(_cd_deep_order $u3)"} ); uv3=( ${ordered[1,${ordered[(i)--]}-1]} ); uh3=( ${ordered[${ordered[(i)--]}+1,-1]} )
+
+  local mu1 mu2 mu3
+  zstyle -s ":completion:${curcontext}" up-1-max mu1 || mu1=6
+  zstyle -s ":completion:${curcontext}" up-2-max mu2 || mu2=6
+  zstyle -s ":completion:${curcontext}" up-3-max mu3 || mu3=6
+  (( mu1 > 0 && $#uv1 > mu1 )) && uv1=( $uv1[1,mu1] ); (( mu1 > 0 && $#uh1 > mu1 )) && uh1=( $uh1[1,mu1] )
+  (( mu2 > 0 && $#uv2 > mu2 )) && uv2=( $uv2[1,mu2] ); (( mu2 > 0 && $#uh2 > mu2 )) && uh2=( $uh2[1,mu2] )
+  (( mu3 > 0 && $#uv3 > mu3 )) && uv3=( $uv3[1,mu3] ); (( mu3 > 0 && $#uh3 > mu3 )) && uh3=( $uh3[1,mu3] )
+
+  local uhh1 uhh2 uhh3
+  (( $#uv1 )) || uhh1='../*'
+  (( $#uv2 )) || uhh2='../*/*'
+  (( $#uv3 )) || uhh3='../../*'
+  local -a duv1 duh1 duv2 duh2 duv3 duh3
+  _cd_deep_paircols uv1 uh1 duv1 duh1
+  _cd_deep_paircols uv2 uh2 duv2 duh2
+  _cd_deep_paircols uv3 uh3 duv3 duh3
+  (( $#uv1 )) && _wanted up-1   expl '../*'    compadd -Q -U -V up-1   -d duv1 -a uv1
+  (( $#uh1 )) && _wanted up-1-h expl "$uhh1"   compadd -Q -U -V up-1-h -d duh1 -a uh1
+  (( $#uv2 )) && _wanted up-2   expl '../*/*'  compadd -Q -U -V up-2   -d duv2 -a uv2
+  (( $#uh2 )) && _wanted up-2-h expl "$uhh2"   compadd -Q -U -V up-2-h -d duh2 -a uh2
+  (( $#uv3 )) && _wanted up-3   expl '../../*' compadd -Q -U -V up-3   -d duv3 -a uv3
+  (( $#uh3 )) && _wanted up-3-h expl "$uhh3"   compadd -Q -U -V up-3-h -d duh3 -a uh3
+
   local -a stack=( $dirstack )                                         #[what] $dirstack = stack minus $PWD
   (( plen )) && stack=( ${(f)"$(_cd_deep_filter $PREFIX $stack)"} )
   stack=( ${(D)stack} )
@@ -104,8 +143,8 @@ _cd_deep() {
   ordered=( ${(f)"$(_cd_deep_order $s2)"} ); sv2=( ${ordered[1,${ordered[(i)--]}-1]} ); sh2=( ${ordered[${ordered[(i)--]}+1,-1]} )
 
   local ms1 ms2
-  zstyle -s ":completion:${curcontext}" stack-1-max ms1 || ms1=5
-  zstyle -s ":completion:${curcontext}" stack-2-max ms2 || ms2=5
+  zstyle -s ":completion:${curcontext}" stack-1-max ms1 || ms1=6
+  zstyle -s ":completion:${curcontext}" stack-2-max ms2 || ms2=6
   (( ms1 > 0 && $#sv1 > ms1 )) && sv1=( $sv1[1,ms1] )
   (( ms1 > 0 && $#sh1 > ms1 )) && sh1=( $sh1[1,ms1] )
   (( ms2 > 0 && $#sv2 > ms2 )) && sv2=( $sv2[1,ms2] )
@@ -217,10 +256,14 @@ zstyle ':completion:*:cd:*' low-precedence '.git' 'node_modules' '.cache'
 zstyle ':completion:*:cd:*' deprioritize-name 'test'
 zstyle ':completion:*:cd:*' level-1-max 0
 zstyle ':completion:*:cd:*' level-2-max 10
-zstyle ':completion:*:cd:*' level-3-max 5
-zstyle ':completion:*:cd:*' stack-1-max 5
-zstyle ':completion:*:cd:*' stack-2-max 5
+zstyle ':completion:*:cd:*' level-3-max 6
+zstyle ':completion:*:cd:*' stack-1-max 6
+zstyle ':completion:*:cd:*' stack-2-max 6
+zstyle ':completion:*:cd:*' up-1-max 6
+zstyle ':completion:*:cd:*' up-2-max 6
+zstyle ':completion:*:cd:*' up-3-max 6
 zstyle ':completion:*:cd:*' group-order \
   pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h \
+  up-1 up-1-h up-2 up-2-h up-3 up-3-h \
   directory-stack directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
 ##[<] 🤖🤖
