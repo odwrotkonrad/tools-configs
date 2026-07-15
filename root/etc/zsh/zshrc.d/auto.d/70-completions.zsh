@@ -313,30 +313,33 @@ _both_deep() { _deep both }
 ##[<] 🤖🤖
 
 ##[>] 🤖🤖🤖 shared _deep knobs across cd + file args + both args; per-command lines override by specificity
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' low-precedence '.git' 'node_modules' '.cache'
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-1-max 0
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-2-max 12
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-3-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-4-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' stack-1-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' stack-2-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-1-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-2-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-3-max 6
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-4-max 6
+local _dc_all=':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*'
+local _dc_deprio=':completion:*:*:(cd|code|ls|stat):*'
+local _dc_dstack=':completion:*:*:(cd|vim|vi|nano|cat|less|bat):*'
+local _dc_files=':completion:*:*:(vim|vi|nano|cat|less|bat|code|ls|stat):*'
+local _dc_cd=':completion:*:cd:*'
 
-zstyle ':completion:*:*:(cd|code|ls|stat):*' deprioritize-name 'test'
-zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat):*' stack-tag dstack
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat|code|ls|stat):*' group-order \
+zstyle $_dc_all low-precedence '.git' 'node_modules' '.cache'
+zstyle $_dc_all level-1-max 0
+zstyle $_dc_all level-2-max 12
+local _dc_knob
+for _dc_knob ( level-3-max level-4-max stack-1-max stack-2-max up-1-max up-2-max up-3-max up-4-max )
+  zstyle $_dc_all $_dc_knob 6
+
+zstyle $_dc_deprio deprioritize-name 'test'
+zstyle $_dc_dstack stack-tag dstack
+zstyle $_dc_files group-order \
   pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h pwd-3 pwd-3-h \
   up-1 up-1-h up-2 up-2-h up-3 up-3-h up-4 up-4-h \
   directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
 
-zstyle ':completion:*:cd:*' levels 3
-zstyle ':completion:*:cd:*' up-levels 3
-zstyle ':completion:*:cd:*' base-stack true
-zstyle ':completion:*:cd:*' group-order \
+zstyle $_dc_cd levels 3
+zstyle $_dc_cd up-levels 3
+zstyle $_dc_cd base-stack true
+zstyle $_dc_cd group-order \
   pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h \
   up-1 up-1-h up-2 up-2-h up-3 up-3-h \
   directory-stack directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
+
+unset _dc_all _dc_deprio _dc_dstack _dc_files _dc_cd _dc_knob
 ##[<] 🤖🤖🤖
