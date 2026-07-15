@@ -312,61 +312,31 @@ _file_deep() { _deep files }
 _both_deep() { _deep both }
 ##[<] 🤖🤖
 
-##[>] 🤖🤖🤖 cd: dirs, 3 pwd + 3 up levels, base dir-stack group; deprioritize test; count-desc order
-zstyle ':completion:*:cd:*' low-precedence '.git' 'node_modules' '.cache'
-zstyle ':completion:*:cd:*' deprioritize-name 'test'
+##[>] 🤖🤖🤖 shared _deep knobs across cd + file args + both args; per-command lines override by specificity
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' low-precedence '.git' 'node_modules' '.cache'
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-1-max 0
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-2-max 12
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-3-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' level-4-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' stack-1-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' stack-2-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-1-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-2-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-3-max 6
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat|code|ls|stat):*' up-4-max 6
+
+zstyle ':completion:*:*:(cd|code|ls|stat):*' deprioritize-name 'test'
+zstyle ':completion:*:*:(cd|vim|vi|nano|cat|less|bat):*' stack-tag dstack
+zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat|code|ls|stat):*' group-order \
+  pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h pwd-3 pwd-3-h \
+  up-1 up-1-h up-2 up-2-h up-3 up-3-h up-4 up-4-h \
+  directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
+
 zstyle ':completion:*:cd:*' levels 3
 zstyle ':completion:*:cd:*' up-levels 3
 zstyle ':completion:*:cd:*' base-stack true
-zstyle ':completion:*:cd:*' stack-tag dstack
-zstyle ':completion:*:cd:*' level-1-max 0
-zstyle ':completion:*:cd:*' level-2-max 12
-zstyle ':completion:*:cd:*' level-3-max 6
-zstyle ':completion:*:cd:*' stack-1-max 6
-zstyle ':completion:*:cd:*' stack-2-max 6
-zstyle ':completion:*:cd:*' up-1-max 6
-zstyle ':completion:*:cd:*' up-2-max 6
-zstyle ':completion:*:cd:*' up-3-max 6
 zstyle ':completion:*:cd:*' group-order \
   pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h \
   up-1 up-1-h up-2 up-2-h up-3 up-3-h \
   directory-stack directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
 ##[<] 🤖🤖🤖
-
-##[>] 🤖🤖 file args (vim vi nano cat less bat): files, 4 pwd + 4 up levels, no base dir-stack group; mtime order
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' low-precedence '.git' 'node_modules' '.cache'
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' stack-tag dstack
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-1-max 0
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-2-max 12
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-3-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' level-4-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' stack-1-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' stack-2-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-1-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-2-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-3-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' up-4-max 6
-zstyle ':completion:*:*:(vim|vi|nano|cat|less|bat):*' group-order \
-  pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h pwd-3 pwd-3-h \
-  up-1 up-1-h up-2 up-2-h up-3 up-3-h up-4 up-4-h \
-  directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
-##[<] 🤖🤖
-
-##[>] 🤖🤖 both args (code ls stat): files+dirs, 4 pwd + 4 up levels, no base dir-stack group; dirs count-desc + / first, files mtime
-zstyle ':completion:*:*:(code|ls|stat):*' low-precedence '.git' 'node_modules' '.cache'
-zstyle ':completion:*:*:(code|ls|stat):*' deprioritize-name 'test'
-zstyle ':completion:*:*:(code|ls|stat):*' level-1-max 0
-zstyle ':completion:*:*:(code|ls|stat):*' level-2-max 12
-zstyle ':completion:*:*:(code|ls|stat):*' level-3-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' level-4-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' stack-1-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' stack-2-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' up-1-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' up-2-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' up-3-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' up-4-max 6
-zstyle ':completion:*:*:(code|ls|stat):*' group-order \
-  pwd pwd-h pwd-1 pwd-1-h pwd-2 pwd-2-h pwd-3 pwd-3-h \
-  up-1 up-1-h up-2 up-2-h up-3 up-3-h up-4 up-4-h \
-  directory-stack-1 directory-stack-1-h directory-stack-2 directory-stack-2-h
-##[<] 🤖🤖
