@@ -19,6 +19,9 @@ typeset -A keystrokes=(
     altLeft            "${rt_seq[esc]}b"
     altRight           "${rt_seq[esc]}f"
 
+    altUp              "${rt_seq[esc]}p"
+    altDown            "${rt_seq[esc]}n"
+
     backspace          "^H"
     altBackspace       $'\x17'
     cmdBackspace       $'\x15'
@@ -122,4 +125,10 @@ bindkey -A key_map main
 ##[>] 🤖
 bindkey -M menuselect "${rt_seq[esc]}" accept-line
 ##[<] 🤖
+##[>] 🤖🤖 alt+up/down scroll the completion menu 3 rows at a time
+#[why] a user widget bound in menuselect exits menu selection (man zshmodules);
+#[why] a bindkey -s macro re-feeds the native down/up key, each move stays in the menu
+bindkey -M menuselect -s "$keystrokes[altDown]" "$keystrokes[down]$keystrokes[down]$keystrokes[down]"
+bindkey -M menuselect -s "$keystrokes[altUp]"   "$keystrokes[up]$keystrokes[up]$keystrokes[up]"
+##[<] 🤖🤖
 ##[<] zshzle
