@@ -84,8 +84,8 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[bracketedPaste]"   .bracketed-paste
 
     ##[>] 🤖🤖
-    "$keystrokes[up]"               wd-fn-root-fzf-history
-    "$keystrokes[down]"             wd-fn-root-fzf-history
+    "$keystrokes[up]"               wd-fn-root-history-menu
+    "$keystrokes[down]"             wd-fn-root-history-menu
     ##[<] 🤖🤖
     "$keystrokes[right]"            .forward-char
     "$keystrokes[left]"             .backward-char

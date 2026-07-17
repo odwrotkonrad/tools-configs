@@ -473,6 +473,55 @@ _deep_command() {
 }
 ##[<] 🤖🤖🤖
 
+##[>] 🤖🤖🤖
+#[what] history engine: whole-line completion over history, newest-first deduped, fuzzy chars-in-order filter by the typed line via a glob prefilter, one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); accepting replaces the entire buffer (-U with PREFIX/SUFFIX spanning it); entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
+_deep_history() {
+  local curcontext="_deep_history:menu-select::"
+
+  #[what] fill the screen below the prompt, keep 2 blank lines at the bottom
+  local cap=$(( LINES - BUFFERLINES - 2 ))
+  (( cap < 1 )) && cap=1
+
+  PREFIX=$LBUFFER SUFFIX=$RBUFFER IPREFIX= ISUFFIX=
+
+  local pat=
+  [[ -n $PREFIX$SUFFIX ]] && pat="*${(j:*:)${(@b)${(s::)${:-$PREFIX$SUFFIX}}}}*"
+
+  local -a ignore
+  zstyle -a ":completion:${curcontext}:history" ignore-hints ignore
+
+  local -a cands
+  local -A seen
+  local k v key re nl=$'\n'
+  for k in ${(nOk)history}; do
+    (( cap > 0 && $#cands >= cap )) && break
+    v=$history[$k]
+    #[what] dedup key: whitespace-normalized (trimmed, runs squeezed); blank entries dropped
+    key=${(j: :)${=v}}
+    [[ -z $key ]] && continue
+    (( ${+seen[$key]} )) && continue
+    seen[$key]=1
+    [[ $v == *$nl* ]] && continue
+    #[why] matched against the normalized key, so trailing/doubled whitespace cannot dodge a pattern
+    for re in $ignore; do [[ $key =~ $re ]] && continue 2; done
+    #[why] complist pads rows to widest item + 2-space column gap and needs a spare column: a row reaching the last column autowraps into a blank line
+    (( $#v > COLUMNS - 4 )) && continue
+    [[ -n $pat && $v != (#i)${~pat} ]] && continue
+    cands+=( "$v" )
+  done
+  (( $#cands )) || return 1
+
+  local expl
+  _wanted history expl '' compadd -Q -U -V history -a cands
+  (( ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+  (( compstate[nmatches] ))
+}
+#[why] a raw completion function bypasses _main_complete, so the 'menu select' style never arms complist menu selection: wrap it as the sole completer
+_deep_history_widget() { _main_complete _deep_history }
+zmodload zsh/complist
+zle -C wd-fn-root-history-menu menu-select _deep_history_widget
+##[<] 🤖🤖🤖
+
 #[what] home-aware, tail-2-full path: HOME->~, all but the last two segments shrunk to their first char; the git-repo-root segment stays full
 _cd_deep_shortpwd() {
   ##[>] 🤖🤖
@@ -531,4 +580,10 @@ unset _dc
 zstyle ':completion:_deep_command:*' groups scripts alias builtins functions commands
 zstyle ':completion:_deep_command:*' max-hints 6
 zstyle ':completion:_deep_command:*:scripts' path /usr/local/scripts/shell
+##[<] 🤖🤖
+
+##[>] 🤖🤖
+zstyle ':completion:_deep_history:*' sort false
+zstyle ':completion:_deep_history:*:descriptions' format ''
+zstyle ':completion:_deep_history:*:history' ignore-hints '^cd.*' '^echo .*' '^print .*' '^code .*' '^history( .*|$)' '^source .*' '^\. .*' '^[^[:space:]]+$'
 ##[<] 🤖🤖
