@@ -5,7 +5,8 @@
 #   push: always plain (never force in automation); diverged remote -> push fails,
 #     error tails into the log, push manually.
 #   cli: gitlab.com -> glab | github.com -> gh.
-#   upsert: match = open MR/PR whose head commits are in this branch and not yet in main;
+#   upsert: match = open MR/PR whose head commits are patch-equivalent (git cherry) to
+#     commits in this branch and not yet in main;
 #     other-source matches close (superseded) | same-source match -> edit | none -> create.
 #   Usage: git-mr-upsert
 #   Downstream: git-branch-name-upsert, llm-git-mr-suggest, git, glab/gh.
@@ -61,7 +62,7 @@ print -r -- "cli: $cli"
 ##[>] upsert mr/pr 🤖🤖
 git fetch --prune origin
 
-#[what] match = open MR/PR whose head commits are contained in this branch and not yet in origin/main
+#[what] match = open MR/PR whose head commits are patch-equivalent to commits in this branch and not yet in origin/main
 typeset -a open_srcs matched_srcs
 if [[ $cli == glab ]] {
   open_srcs=( ${(f)"$(glab mr list -F json | jq -r '.[].source_branch')"} )
@@ -69,23 +70,32 @@ if [[ $cli == glab ]] {
   open_srcs=( ${(f)"$(gh pr list --json headRefName --jq '.[].headRefName')"} )
 }
 for src in $open_srcs; do
-  if ! sha=$(git rev-parse --quiet --verify origin/$src); then continue; fi
-  if ! git merge-base --is-ancestor $sha HEAD; then continue; fi
-  if git merge-base --is-ancestor $sha origin/main; then continue; fi
+  if ! git rev-parse --quiet --verify origin/$src >/dev/null; then continue; fi
+  if [[ -n ${(M)${(f)"$(git cherry HEAD origin/$src)"}:#+*} ]]; then continue; fi
+  if [[ -z ${(M)${(f)"$(git cherry origin/main origin/$src)"}:#+*} ]]; then continue; fi
   matched_srcs+=( $src )
 done
 print -r -- "open: $open_srcs | matched: $matched_srcs"
 
 #[what] matches on other sources are superseded by this branch: always closed
 if [[ $cli == glab ]] {
-  for src in ${matched_srcs:#$branch}; glab mr close $src 2>/dev/null || true
+  #[why] glab mr close (1.105.0) wrongly enforces merge checks (ci_must_pass): close via api
+  for src in ${matched_srcs:#$branch}; do
+    print -r -- "closing superseded: $src"
+    iid=$(glab mr view $src --output json | jq -r .iid)
+    glab api -X PUT "projects/:id/merge_requests/$iid" -f state_event=close >/dev/null
+    # glab api must be used instead of glab mr close (https://gitlab.com/gitlab-org/cli/-/work_items/8400)
+  done
   if (( ${matched_srcs[(Ie)$branch]} )) {
     glab mr update $branch --title $title --description $description
   } else {
     glab mr create --source-branch $branch --title $title --description $description --yes
   }
 } else {
-  for src in ${matched_srcs:#$branch}; gh pr close $src 2>/dev/null || true
+  for src in ${matched_srcs:#$branch}; do
+    print -r -- "closing superseded: $src"
+    gh pr close $src
+  done
   if (( ${matched_srcs[(Ie)$branch]} )) {
     gh pr edit $branch --title $title --body $description
   } else {
