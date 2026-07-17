@@ -85,6 +85,14 @@ Dashboard for host CPU, memory, disk and network metrics.
 
 [recording](assets/recordings/grafana-host-dashboard.gif) · [more](assets/images/grafana-host-dashboard-pt-2.png)
 
+## Zsh **Deep** Completion
+
+Argument completion for files & directories.
+
+![Zsh deep completion](assets/images/zsh-deep-completion.png)
+
+[recording](assets/recordings/zsh-deep-completion.gif)
+
 ## ☢️ Danger Zone - Loading Configs ☢️
 
 Loading configuration directly modifies the OS, including system, non-user files. If you find anything of interest, prefer copying these pieces into your own config.
