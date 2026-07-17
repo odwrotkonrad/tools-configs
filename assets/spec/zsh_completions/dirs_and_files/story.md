@@ -1,5 +1,5 @@
 <!--[>] 🤖🤖🤖 -->
-## Feature zsh_completions_dirs_and_files
+## Feature zsh_completions/dirs_and_files
 
 ### As a shell user
 

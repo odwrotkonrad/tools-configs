@@ -55,7 +55,7 @@ _deep_deprio_hit() {
   return 1
 }
 
-#[what] partition a dir list into two count-desc streams: visible (normal) then a lone '--' delimiter line then hidden dirs then deprioritized, each by item-count desc; '--' after print's own '--' so an empty visible stream keeps the delimiter
+#[what] partition a dir list into three count-desc streams separated by lone '--' delimiter lines: visible, hidden, deprioritized; first '--' after print's own '--' so an empty visible stream keeps its delimiter
 _cd_deep_order() {
   local -a dirs=( "$@" ) items
   local -a normal hidden demoted
@@ -68,10 +68,10 @@ _cd_deep_order() {
     normal+=( "$n $p" )
   done
   normal=( ${(On)normal} ); hidden=( ${(On)hidden} ); demoted=( ${(On)demoted} )
-  print -l -- ${normal#* } -- ${hidden#* } ${demoted#* }
+  print -l -- ${normal#* } -- ${hidden#* } -- ${demoted#* }
 }
 
-#[what] partition a leaf-file list (already mtime newest-first from the glob) into visible then a lone '--' delimiter then hidden then deprioritized, order preserved
+#[what] partition a leaf-file list (already mtime newest-first from the glob) into visible, hidden, deprioritized streams separated by lone '--' delimiters, order preserved
 _file_deep_order() {
   local -a files=( "$@" )
   local -a normal hidden demoted
@@ -81,7 +81,7 @@ _file_deep_order() {
     if [[ $p == (*/|).[^/]##(|/*) ]] { hidden+=( $p ); continue }
     normal+=( $p )
   done
-  print -l -- $normal -- $hidden $demoted
+  print -l -- $normal -- $hidden -- $demoted
 }
 
 #[what] keep paths whose segments fuzzy-match the pattern segments in typed order, last pattern segment anchored to the path's deepest segment
@@ -119,20 +119,20 @@ _cd_deep_fuzzy() {
 }
 
 ##[>] 🤖🤖
-#[what] right-pad all four arrays' display strings to their shared max width, so a visible/hidden quad under one heading lays out on the same grid
-_cd_deep_quadcols() {
-  local -a src1=( ${(P)1} ) src2=( ${(P)2} ) src3=( ${(P)3} ) src4=( ${(P)4} )
-  local w=0 x
-  for x in $src1 $src2 $src3 $src4; do (( ${#x} > w )) && w=${#x}; done
-  local -a d1 d2 d3 d4
-  for x in $src1; do d1+=( ${(r:w:)x} ); done
-  for x in $src2; do d2+=( ${(r:w:)x} ); done
-  for x in $src3; do d3+=( ${(r:w:)x} ); done
-  for x in $src4; do d4+=( ${(r:w:)x} ); done
-  set -A $5 "${d1[@]}"
-  set -A $6 "${d2[@]}"
-  set -A $7 "${d3[@]}"
-  set -A $8 "${d4[@]}"
+#[what] right-pad all src arrays' display strings to their shared max width, so every stream under one heading lays out on the same grid; args: N src names then N dst names
+_cd_deep_padcols() {
+  local n=$(( $# / 2 )) w=0 x i
+  local -a src
+  for i in {1..$n}; do
+    src=( ${(P)@[i]} )
+    for x in $src; do (( ${#x} > w )) && w=${#x}; done
+  done
+  local -a d
+  for i in {1..$n}; do
+    src=( ${(P)@[i]} ); d=( )
+    for x in $src; do d+=( ${(r:w:)x} ); done
+    set -A $@[n+i] "${d[@]}"
+  done
 }
 ##[<] 🤖🤖
 
@@ -154,12 +154,17 @@ _cd_deep_capshare() {
 }
 ##[<] 🤖🤖
 
-#[what] order a level's file glob (mtime) and dir glob (count-desc) each by its native criterion, splice kinds in _deep_ft order into one visible and one hidden tagged stream, capshare the pair together, split back into dir/file visible+hidden preserving order and stripping the kind tag
+#[what] order a level's file glob (mtime) and dir glob (count-desc) each by its native criterion, splice kinds in _deep_ft order into one visible and one hidden tagged stream (deprioritized of both kinds after hidden of both kinds), capshare the pair together, split back into dir/file visible+hidden preserving order and stripping the kind tag
 _deep_files_order() {
   local files_v=$1 dirs_v=$2 cap=$3
-  local -a fo do fv fh dv dh
-  fo=( ${(f)"$(_file_deep_order ${(P)files_v})"} ); fv=( ${fo[1,${fo[(i)--]}-1]} ); fh=( ${fo[${fo[(i)--]}+1,-1]} )
-  do=( ${(f)"$(_cd_deep_order ${(P)dirs_v})"} );    dv=( ${do[1,${do[(i)--]}-1]} ); dh=( ${do[${do[(i)--]}+1,-1]} )
+  local -a fo do fv fh fd dv dh dd
+  local i j
+  fo=( ${(f)"$(_file_deep_order ${(P)files_v})"} )
+  i=${fo[(i)--]}; j=$(( i + ${fo[i+1,-1][(i)--]} ))
+  fv=( ${fo[1,i-1]} ); fh=( ${fo[i+1,j-1]} ); fd=( ${fo[j+1,-1]} )
+  do=( ${(f)"$(_cd_deep_order ${(P)dirs_v})"} )
+  i=${do[(i)--]}; j=$(( i + ${do[i+1,-1][(i)--]} ))
+  dv=( ${do[1,i-1]} ); dh=( ${do[i+1,j-1]} ); dd=( ${do[j+1,-1]} )
 
   local -a mvis mhid
   local ft
@@ -169,27 +174,40 @@ _deep_files_order() {
       (files) mvis+=( ${fv/#/f:} ); mhid+=( ${fh/#/f:} ) ;;
     }
   done
+  for ft in $_deep_ft; do
+    case $ft {
+      (dirs)  mhid+=( ${dd/#/D:} ) ;;
+      (files) mhid+=( ${fd/#/F:} ) ;;
+    }
+  done
   _cd_deep_capshare mvis mhid $cap
 
   local e
-  local -a odv ofv odh ofh
+  local -a odv ofv odh ofh odd ofd
   for e in $mvis; do [[ $e == d:* ]] && odv+=( ${e#d:} ) || ofv+=( ${e#f:} ); done
-  for e in $mhid; do [[ $e == d:* ]] && odh+=( ${e#d:} ) || ofh+=( ${e#f:} ); done
-  set -A $dirs_v "${odv[@]}"; set -A ${dirs_v}h "${odh[@]}"
-  set -A $files_v "${ofv[@]}"; set -A ${files_v}h "${ofh[@]}"
+  for e in $mhid; do
+    case $e {
+      (d:*) odh+=( ${e#d:} ) ;;
+      (f:*) ofh+=( ${e#f:} ) ;;
+      (D:*) odd+=( ${e#D:} ) ;;
+      (F:*) ofd+=( ${e#F:} ) ;;
+    }
+  done
+  set -A $dirs_v "${odv[@]}"; set -A ${dirs_v}h "${odh[@]}"; set -A ${dirs_v}d "${odd[@]}"
+  set -A $files_v "${ofv[@]}"; set -A ${files_v}h "${ofh[@]}"; set -A ${files_v}d "${ofd[@]}"
 }
 
-#[what] emit one level per kind in _deep_ft order under the shared visible -V tag, then the same under the hidden -V tag; dirs get trailing-/ display and -S / insert; when a stream mixes kinds the compadds under one -V merge into one visual group
+#[what] emit one level per kind in _deep_ft order under the shared visible -V tag, then the same for the hidden stream, then the deprioritized stream last under the hidden tag; dirs get trailing-/ display and -S / insert; when a stream mixes kinds the compadds under one -V merge into one visual group
 #[what] vtag/htag are the completion tags (_wanted, tag-order); vgrp/hgrp are the -V group names (visual grouping, shown in first-compadd order); default vgrp=vtag hgrp=htag so single-name callers pass four args
 _deep_files_emit() {
   local files_v=$1 dirs_v=$2 vtag=$3 htag=$4 vhdr=$5 hhdr=$6 vgrp=${7:-$3} hgrp=${8:-$4}
-  local files_vh=${files_v}h dirs_vh=${dirs_v}h
   local -a fv=( ${(P)files_v} ) dv=( ${(P)dirs_v} )
-  local -a fh=( ${(P)files_vh} ) dh=( ${(P)dirs_vh} )
+  local -a fh=( ${(P)${:-${files_v}h}} ) dh=( ${(P)${:-${dirs_v}h}} )
+  local -a fd=( ${(P)${:-${files_v}d}} ) dd=( ${(P)${:-${dirs_v}d}} )
   local expl ft
-  local -a ddv dfv ddh dfh pddv pdfv pddh pdfh
-  ddv=( ${dv/%//} ); dfv=( $fv ); ddh=( ${dh/%//} ); dfh=( $fh )
-  _cd_deep_quadcols ddv dfv ddh dfh  pddv pdfv pddh pdfh
+  local -a ddv dfv ddh dfh ddd dfd pddv pdfv pddh pdfh pddd pdfd
+  ddv=( ${dv/%//} ); dfv=( $fv ); ddh=( ${dh/%//} ); dfh=( $fh ); ddd=( ${dd/%//} ); dfd=( $fd )
+  _cd_deep_padcols ddv dfv ddh dfh ddd dfd  pddv pdfv pddh pdfh pddd pdfd
   for ft in $_deep_ft; do
     case $ft {
       (dirs)  (( $#dv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -V $vgrp -S / -d pddv -a dv } ;;
@@ -200,6 +218,12 @@ _deep_files_emit() {
     case $ft {
       (dirs)  (( $#dh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp -S / -d pddh -a dh } ;;
       (files) (( $#fh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp        -d pdfh -a fh } ;;
+    }
+  done
+  for ft in $_deep_ft; do
+    case $ft {
+      (dirs)  (( $#dd )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp -S / -d pddd -a dd } ;;
+      (files) (( $#fd )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp        -d pdfd -a fd } ;;
     }
   done
 }
@@ -271,7 +295,7 @@ _deep_files() {
         zstyle -s ":completion:${curcontext}:$g" max-hints cap || cap=6
         (( cap == 0 )) && continue
         fv=_deep_f$gi; dv=_deep_d$gi
-        local -a $fv $dv ${fv}h ${dv}h
+        local -a $fv $dv ${fv}h ${dv}h ${fv}d ${dv}d
         star=; repeat $N star+='../'
         repeat $M star+='*/'
         (( dofiles )) && set -A $fv ${~star}*(-.omDN)
@@ -308,7 +332,7 @@ _deep_files() {
         zstyle -s ":completion:${curcontext}:$g" max-hints cap || cap=6
         (( cap == 0 )) && continue
         fv=_deep_af$gi; dv=_deep_ad$gi
-        local -a $fv $dv ${fv}h ${dv}h
+        local -a $fv $dv ${fv}h ${dv}h ${fv}d ${dv}d
         star=; repeat $M star+='*/'
         (( dofiles )) && set -A $fv ${ebase}${~star}*(-.omDN)
         (( dodirs ))  && set -A $dv ${ebase}${~star}*(-/DN)
@@ -319,11 +343,10 @@ _deep_files() {
         }
         zstyle -a ":completion:${curcontext}:$g" deprioritize-hints deprio || deprio=( test )
         _deep_files_order $fv $dv $cap
-        local -a tmpa; local fvh=${fv}h dvh=${dv}h
-        tmpa=( ${(P)fv} );  set -A $fv "${(D)tmpa[@]}"
-        tmpa=( ${(P)fvh} ); set -A $fvh "${(D)tmpa[@]}"
-        tmpa=( ${(P)dv} );  set -A $dv "${(D)tmpa[@]}"
-        tmpa=( ${(P)dvh} ); set -A $dvh "${(D)tmpa[@]}"
+        local -a tmpa; local a
+        for a in $fv ${fv}h ${fv}d $dv ${dv}h ${dv}d; do
+          tmpa=( ${(P)a} ); set -A $a "${(D)tmpa[@]}"
+        done
         vhdr=${dhdrbase%/}/'*'; repeat $M vhdr+='/*'
         hhdr=; (( ${(P)#fv} + ${(P)#dv} )) || hhdr=$vhdr
         _deep_files_emit $fv $dv $g $g-h "$vhdr" "$hhdr"
@@ -352,7 +375,7 @@ _deep_files() {
         #[what] stack+M: descendants of the stacked dirs, globbed only when a prefix is typed
         (( plen )) || continue
         fv=_deep_sf$gi; dv=_deep_sd$gi
-        local -a $fv $dv ${fv}h ${dv}h
+        local -a $fv $dv ${fv}h ${dv}h ${fv}d ${dv}d
         star=; repeat $((M-1)) star+='*/'
         for d in $allstack; do
           (( dofiles )) && set -A $fv ${(P)fv} ${d%/}/${~star}*(-.omDN)
@@ -362,11 +385,10 @@ _deep_files() {
         (( dodirs ))  && set -A $dv ${(f)"$(_cd_deep_filter $PREFIX ${(P)dv})"}
         zstyle -a ":completion:${curcontext}:$g" deprioritize-hints deprio || deprio=( test )
         _deep_files_order $fv $dv $cap
-        local -a tmpa; local fvh=${fv}h dvh=${dv}h
-        tmpa=( ${(P)fv} );  set -A $fv "${(D)tmpa[@]}"
-        tmpa=( ${(P)fvh} ); set -A $fvh "${(D)tmpa[@]}"
-        tmpa=( ${(P)dv} );  set -A $dv "${(D)tmpa[@]}"
-        tmpa=( ${(P)dvh} ); set -A $dvh "${(D)tmpa[@]}"
+        local -a tmpa; local a
+        for a in $fv ${fv}h ${fv}d $dv ${dv}h ${dv}d; do
+          tmpa=( ${(P)a} ); set -A $a "${(D)tmpa[@]}"
+        done
         vhdr='Stack *'; repeat $M vhdr+='/*'
         hhdr=; (( ${(P)#fv} + ${(P)#dv} )) || hhdr=$vhdr
         _deep_files_emit $fv $dv $g $g-h "$vhdr" "$hhdr"
@@ -408,6 +430,44 @@ _deep_files_tilde() {
 }
 ##[<] 🤖🤖🤖
 
+##[>] 🤖🤖🤖
+#[what] -command- engine: alias/builtins/functions/commands groups, each fuzzy-filtered by the typed word, alphabetical, capped by per-group max-hints; slash-containing words delegate to stock _autocd
+_deep_command() {
+  local curcontext=$curcontext
+  [[ $curcontext == :* ]] && curcontext="_deep_command$curcontext"
+
+  [[ $PREFIX$SUFFIX == *[/~]* ]] && { _autocd; return }
+
+  local -a groups
+  zstyle -a ":completion:${curcontext}:" groups groups ||
+    groups=( alias builtins functions commands )
+
+  local plen=$#PREFIX
+  local g cap n expl
+  local -a names keep
+  for g in $groups; do
+    case $g {
+      (alias)     names=( ${(ok)aliases} ) ;;
+      (builtins)  names=( ${(ok)builtins} ) ;;
+      (functions) names=( ${${(ok)functions}:#_*} ) ;;
+      (commands)  names=( ${(ok)commands} ) ;;
+      (*) continue ;;
+    }
+    if (( plen )) {
+      keep=( )
+      for n in $names; do _cd_deep_fuzzy $PREFIX $n && keep+=( $n ); done
+      names=( $keep )
+    }
+    zstyle -s ":completion:${curcontext}:$g" max-hints cap || cap=6
+    (( cap == 0 )) && continue
+    (( cap > 0 && $#names > cap )) && names=( $names[1,cap] )
+    (( $#names )) && _wanted $g expl "$g" compadd -Q -U -V $g -a names
+  done
+
+  (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+}
+##[<] 🤖🤖🤖
+
 #[what] home-aware, tail-2-full path: HOME->~, all but the last two segments shrunk to their first char
 _cd_deep_shortpwd() {
   ##[>] 🤖🤖
@@ -438,7 +498,9 @@ zstyle "${_dc}:(pwd|absolute)" max-hints -1
 zstyle "${_dc}:(pwd|absolute)+1" max-hints 12
 zstyle "${_dc}:(stack|named-dirs)" max-hints -1
 
-zstyle "${_dc}:*" deprioritize-hints '.git' 'node_modules' 'test'
+zstyle "${_dc}:*" deprioritize-hints '^.git$' 'node_modules' 'test'
+
+zstyle "${_dc}:*" sort false
 
 zstyle "${_dc}:" groups \
   pwd pwd+1 pwd+2 pwd+3 \
@@ -455,3 +517,8 @@ zstyle "${_dc}:cd:*:" groups \
 
 unset _dc
 ##[<] 🤖🤖🤖
+
+##[>] 🤖🤖 shared _deep_command knobs: groups list is membership + order, max-hints per group tag (-1 uncapped)
+zstyle ':completion:_deep_command:*' groups alias builtins functions commands
+zstyle ':completion:_deep_command:*' max-hints 6
+##[<] 🤖🤖

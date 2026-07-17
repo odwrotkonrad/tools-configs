@@ -1,4 +1,4 @@
-## Feature zsh_completions_dirs
+## Feature zsh_completions/dirs
 
 ### As a shell user
 
