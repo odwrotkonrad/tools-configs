@@ -1,9 +1,15 @@
-#[what] shadow rm with trash; drop flags, forward paths only
-#[why] trash is recoverable, rm unlinks irreversibly
+#[what] shadow rm with trash on macos (drop flags, forward paths only); command rm elsewhere
+#[why] trash is recoverable, rm unlinks irreversibly; trash is macos-only
 #[where] $ man trash
 
 function rm {
   emulate -LR zsh
+
+  #[why] trash is a macos-only idiom; elsewhere (linux/ci) fall back to command rm
+  if [[ $(uname -s) != Darwin ]] {
+    command rm "$@"
+    return
+  }
 
   local -a paths
   local arg
