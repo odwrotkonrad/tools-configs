@@ -471,22 +471,26 @@ _deep_command() {
 }
 ##[<] 🤖🤖🤖
 
-#[what] home-aware, tail-2-full path: HOME->~, all but the last two segments shrunk to their first char
+#[what] home-aware, tail-2-full path: HOME->~, all but the last two segments shrunk to their first char; the git-repo-root segment stays full
 _cd_deep_shortpwd() {
   ##[>] 🤖🤖
-  local h=$1
+  local h=$1 root
+  root=$(git -C $1 rev-parse --show-toplevel 2>/dev/null)
   [[ $h == $HOME(|/*) ]] && h="~${h#$HOME}"
-  ##[<] 🤖🤖
+  [[ -n $root && $root == $HOME(|/*) ]] && root="~${root#$HOME}"
   local -a segs=( ${(s:/:)h} ) ; local n=$#segs
-  (( n <= 2 )) && { print -r -- $h; return }
-  local -a out ; local i
+  local ri=0
+  [[ -n $root ]] && ri=${#${(s:/:)root}}
+  local -a out ; local i ; local seg
   for i in {1..$n}; do
-    if (( i > n-2 )); then out+=( $segs[i] )
-    elif [[ $segs[i] == '~' ]]; then out+=( '~' )
-    else out+=( ${segs[i][1]} )
+    if (( i > n-2 || i == ri )) || [[ $segs[i] == '~' ]]; then seg=$segs[i]
+    else seg=${segs[i][1]}
     fi
+    out+=( $seg )
   done
+  [[ $h == /* ]] && out[1]="/$out[1]"
   print -r -- ${(j:/:)out}
+  ##[<] 🤖🤖
 }
 
 ##[>] 🤖🤖🤖 shared _deep_files knobs, scoped on the _deep_files function field so they cover every wrapped command; file-types is kind membership + per-group kind order, the groups list is membership + order, max-hints/deprioritize-hints per group tag, per-command lines override by specificity
