@@ -10,10 +10,8 @@ fn-autoload-functions $funcs
 
 autoload -U compinit && compinit
 
-##[>] 🤖🤖 register after compinit; _cd_deep / _file_deep / _both_deep + their zstyles live in /etc/zsh 70-completions.zsh
-compdef _cd_deep cd
-compdef _file_deep vim vi nano cat less bat
-compdef _both_deep code ls stat
+##[>] 🤖🤖 register after compinit; _deep_files + its zstyles (file-types picks kinds per command) live in /etc/zsh 70-completions.zsh
+compdef _deep_files cd vim vi nano cat less bat code ls stat
 ##[<] 🤖🤖
 
 fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d

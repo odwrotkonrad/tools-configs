@@ -16,11 +16,11 @@ I want completion candidates whose leaf is EITHER a file OR a directory
     5. ../*  6. ../*/*  7. ../../*  8. ../*/*/*
     9. Stack */*  10. Stack */*/*
 
-  within each group, sorted by a per-kind criterion, directories first then files:
+  within each group, sorted by a per-kind criterion, kinds in `file-types`
+  zstyle order (default directories first then files):
     directories ordered by number of items inside, descending
-      with directories containing "test" placed at the end
     files ordered by modification time, newest first
-    then hidden entries (same per-kind order), then low-precedence entries
+    then hidden entries (same per-kind order), then deprioritized entries
 
   to allow searching (fuzzy, path-segment-aware, restricted, typo-tolerant)
   identically to the file and dir completers, across all sources

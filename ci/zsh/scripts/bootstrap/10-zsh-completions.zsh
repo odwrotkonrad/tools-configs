@@ -9,7 +9,7 @@ setopt errexit
 umask 002
 
 ##[>] 🤖🤖
-autoload -Uz fn-log-msg
+autoload -Uz fn-log-msg fn-is-os
 
 comp_dir_user=${XDG_STATE_HOME}/zsh/completions
 comp_dir_root=/etc/zsh/zshrc.d/completions
@@ -24,7 +24,11 @@ comp_file_write() {
     fn-log-msg -t 'completions(write)' -- "$1 -> $dir/$2"
     if [[ $dir == $comp_dir_root ]] {
         #[why] 🤖 install -m 0644: sudo resets umask to root's, so a bare `cp` leaves the file 0600 (root-only) and every other user's compinit fails "permission denied" reading it. mode must be world-readable
-        sudo install -m 0644 /dev/stdin $dir/$2
+        #[why] 🤖 staged via mktemp: BSD install rejects /dev/stdin when it is a pipe ("inappropriate file type or format")
+        local tmp=$(mktemp)
+        cat > $tmp
+        sudo install -m 0644 $tmp $dir/$2
+        rm -f $tmp
         return
     }
     cp -f /dev/stdin $dir/$2
@@ -47,6 +51,9 @@ comp_file_write docker _docker < <(docker completion zsh)
 comp_file_write kind _kind < <(kind completion zsh)
 comp_file_write kubectx _kubectx < "$(asdf where kubectx)/completion/_kubectx.zsh"
 comp_file_write kubens _kubens < "$(asdf where kubectx)/completion/_kubens.zsh"
+
+#[why] 🤖 brew's git formula ships a bash-backed _git in site-functions that breaks under zsh; write the native pure-zsh _git into root-space completions, which precede brew in fpath
+if { fn-is-os mac } { comp_file_write git _git < /usr/share/zsh/${ZSH_VERSION}/functions/_git }
 
 comp_file_fetch go _golang https://raw.githubusercontent.com/zsh-users/zsh-completions/398b4b74775102da7bc6a510a08d0914592f9e62/src/_golang
 comp_file_fetch claude _claude https://raw.githubusercontent.com/wbingli/zsh-claudecode-completion/01f50d4a8a98b91cf6d9359deb37d60668c49806/_claude

@@ -48,7 +48,8 @@ Scenario: directory-stack entries match the typed pattern per path segment
   Then a stack path is shown only when it matches the pattern in a fuzzy way
 
 Scenario: matched stacked dirs expand to child and grandchild groups
-  Given the directory stack holds absolute paths
+  Given the groups zstyle lists stack+1 and stack+2
+  And the directory stack holds absolute paths
   And I have typed a search pattern
   When I press TAB
   Then only stacked dirs matching the pattern are expanded
@@ -57,6 +58,14 @@ Scenario: matched stacked dirs expand to child and grandchild groups
   And each of those groups is capped at 6 items
   And within each group visible candidates precede hidden ones
   And a stack level with only hidden candidates carries its header
+
+Scenario: stack child and grandchild groups are disabled by default
+  Given the groups zstyle lists only the base stack group (this config's default)
+  And the directory stack holds absolute paths
+  And I have typed a search pattern
+  When I press TAB
+  Then the base Stack * group is shown
+  And no Stack */* or Stack */*/* group is shown
 
 Scenario Outline: single-segment pattern matches only the group's own segment
   Given I have typed the search pattern "<pattern>"
@@ -119,6 +128,43 @@ Scenario: no search pattern shows PWD levels, the up groups, and the directory s
   And the ../*, ../*/*, and ../../* groups are shown, capped to 6 candidates each
   And the base Stack * group is shown
   And the Stack */* and Stack */*/* groups are not shown
+
+Scenario: an absolute prefix "/" anchors hints to the root of filesystem
+  Given I have typed an absolute prefix (e.g. / or /usr/)
+  When I press TAB
+  Then the level groups descend from the typed directory (<dir>/*, <dir>/*/*, <dir>/*/*/*)
+  And no relative-up groups are shown
+  And the pattern after the last / filters candidates fuzzily
+  And selecting a candidate inserts its absolute path
+
+Scenario: a ~ prefix anchors hints to the expanded directory
+  Given I have typed ~/ or ~name/ (a named dir)
+  When I press TAB
+  Then the level groups descend from the expanded directory
+  And candidates display and insert in ~ form
+
+Scenario: a bare ~ prefix shows only the named-dirs group
+  Given I have typed ~ or ~pat (no slash)
+  When I press TAB
+  Then only the ~* group is shown
+  And the pattern after ~ filters the names fuzzily
+  And no level, up, or stack groups are shown
+  And ~name/... still completes via the anchored level groups
+
+Scenario: named dirs form their own last group
+  Given named dirs exist (hash -d)
+  And I have typed no prefix or a relative pattern
+  When I press TAB
+  Then a ~* group listing each named dir as ~name appears after all other groups
+  And the typed pattern filters the names fuzzily
+  And a named dir whose target is PWD is not listed
+  And selecting a name inserts ~name/
+
+Scenario: a root stack entry stays a single slash
+  Given / is on the directory stack
+  When I press TAB
+  Then the Stack * group shows /
+  And selecting it inserts exactly /, not //
 
 Scenario: alt+up/down scrolls the open completion menu by 3 rows
   Given the completion menu is open with a selection

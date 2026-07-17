@@ -17,12 +17,12 @@ I want directory completion candidates
     7. Directory stack contents
     8. Directory stack contents PWD+1
     9. Directory stack contents PWD+2
+    10. Named dirs (hash -d), shown last as ~name
 
     and within each segment, I want this specific ordering:
       non-hidden directories, sorted by the number of items inside
-        with directories containing "test" placed at the end
       hidden directories, sorted by the number of items inside
-      configurable low-precedence directories (e.g., .git, node_modules)
+      configurable deprioritized directories (e.g., .git, node_modules, test)
 
   to allow searching for directories
     in a fuzzy, path-segment-aware, and restricted way (e.g., refs matches .git/refs, but not re/fs)
@@ -62,9 +62,27 @@ I want directory completion candidates
     Stack * (directory stack)
       Stack */* (stack+1)
       Stack */*/* (stack+2)
+        where the Stack */* and Stack */*/* groups (stack+1, stack+2) are gated on the groups zstyle, base-only in this config
 
     where each up-group heading names the actual base dir it lists: the `..`-relative prefix then `<basedir>/*`
 
     where groups are prepended with '## name' e.g. `## *`, `## */*`, `## .. <parent>/*`, `## .. <parent>/*/*`, `## ../.. <grandparent>/*`, `## Stack *`, `## Stack */*`
 
     where paths render with `~` for paths under `$HOME`
+
+  to complete absolute and `~` prefixes (`/`, `/usr/`, `~/`, `~name/`)
+    with the same level groups rooted at the typed base (base `*`, base `*/*`, base `*/*/*`)
+      headed `<base>/*`, `<base>/*/*`, ... with the base rendered `~`-style
+    with the same per-level caps and fuzzy filtering applied to the part after the base
+    with no relative-up groups
+    with hints inserted as absolute (or `~`-based) paths
+    with the Stack groups unchanged
+
+  to see named dirs (`hash -d`) as their own `~*` group, placed last
+    listed as `~name`, fuzzy-filtered by the typed pattern, inserting `~name/`
+    skipping the entry whose target is PWD
+
+  to see only the `~*` group for a bare `~` prefix (`~` or `~pat`, no slash)
+    fuzzy-filtered by the pattern after `~`, no level, up, or stack groups
+
+  to see a root `/` stack entry displayed and inserted as `/`, never `//`
