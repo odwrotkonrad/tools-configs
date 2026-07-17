@@ -74,7 +74,6 @@ asdf: root/_home/.config/asdf/.asdfrc
 aws: root/_home/.config/aws/config.ontoHost.tpl
 azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
-fzf: root/etc/zsh/rc.d/20-tools.zsh
 gcloud: root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 golang: root/etc/zshenv
@@ -102,35 +101,32 @@ vim: root/_home/.config/vim/vimrc
 
 ### Wrappers:
 
-`run-sync`: `run-host-delete-broken-links -> run-host-upsert-configs -> run-host-mk-dirs -> run-repo-ci-prepare-hooks -> render-templates -> run-host-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
-`run-sync-full`: `run-sync -> run-host-run-scripts-all` full sync: run-sync then run all profile scripts (installs)
-`run-repo-ci-virt-macos-build-all`: `run-repo-ci-virt-macos-build-base -> run-repo-ci-virt-macos-build`
+`sync`: `host-load-configs -> repo-ci-prepare-hooks -> repo-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
+`sync-install`: `sync -> host-run-install-scripts` full sync: sync then run all profile scripts (installs)
+`repo-ci-virt-macos-build-all`: `repo-ci-virt-macos-build-base -> repo-ci-virt-macos-build`
 
 ### Onto Host:
 
-`run-host-upsert-configs` load configs onto host (profile-selected symlink + copy ops)
-`run-host-delete-broken-links` prune broken symlinks
-`run-host-mk-dirs` required by configuration and tools dirs
-`run-host-render-templates` render *.ontoHost.tpl onto host
-`run-host-run-scripts-all` run all of the detected profile's scripts
-`run-host-run-scripts` run profile scripts whose path matches NAME (substring)
+`host-load-configs` load configs onto host: prune broken symlinks, profile-selected symlink + copy ops, make required dirs, render *.ontoHost.tpl
+`host-run-install-scripts` run all of the detected profile's scripts
+`host-run-scripts` run profile scripts whose path matches NAME (substring)
 
 ### Onto Repo (CI):
 
-`render-templates` render *.ontoRepo.tpl onto repo
-`run-repo-ci-prepare-hooks` install lefthook git hooks
-`run-repo-ci-precommit-all` run pre-commit hooks over all files (not just staged)
-`run-repo-ci-install-deps`
+`repo-render-templates` render *.ontoRepo.tpl onto repo
+`repo-ci-prepare-hooks` install lefthook git hooks
+`repo-ci-run-precommit-all` run pre-commit hooks over all files (not just staged)
+`repo-ci-install-deps`
 
 #### Virt:
 
-`run-repo-ci-virt-macos-build-base` build vanilla base macos image
-`run-repo-ci-virt-macos-build` build configs-local macos image
-`run-repo-ci-virt-macos-test`: `run-repo-ci-virt-macos-build` build the macos image then run the che ops in it (cli/macos profile)
-`run-repo-ci-virt-macos-ssh` ssh into the macos image (auto-starts if stopped)
-`run-repo-ci-virt-linux-build` build the ci-linux image
-`run-repo-ci-virt-linux-test`: `run-repo-ci-virt-linux-build` build the ci-linux image then run the che ops in it (cli/linux profile)
-`run-repo-ci-virt-linux-ssh`: `run-repo-ci-virt-linux-build` build the ci-linux image and open an interactive shell in it
+`repo-ci-virt-macos-build-base` build vanilla base macos image
+`repo-ci-virt-macos-build` build configs-local macos image
+`repo-ci-virt-macos-test`: `repo-ci-virt-macos-build` build the macos image then run the che ops in it (cli/macos profile)
+`repo-ci-virt-macos-ssh` ssh into the macos image (auto-starts if stopped)
+`repo-ci-virt-linux-build` build the ci-linux image
+`repo-ci-virt-linux-test`: `repo-ci-virt-linux-build` build the ci-linux image then run the che ops in it (cli/linux profile)
+`repo-ci-virt-linux-ssh`: `repo-ci-virt-linux-build` build the ci-linux image and open an interactive shell in it
 
 ## Directory Tree
 
@@ -143,9 +139,10 @@ assets
   images
   recordings
   spec
-    zsh_completions_dirs
-    zsh_completions_dirs_and_files
-    zsh_completions_files
+    zsh_completions
+      dirs
+      dirs_and_files
+      files
     zsh_config
 ci
   vm

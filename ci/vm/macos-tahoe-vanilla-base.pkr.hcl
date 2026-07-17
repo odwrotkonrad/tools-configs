@@ -93,7 +93,7 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo -iu ${var.username} make -C ${var.repo_path} run-repo-ci-install-deps",
+      "sudo -iu ${var.username} make -C ${var.repo_path} repo-ci-install-deps",
       "sudo rm -rf '${var.repo_path}'",
     ]
   }

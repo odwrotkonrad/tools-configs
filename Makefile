@@ -3,8 +3,8 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-exec-if)
-WRAPPERS := run-sync run-sync-full run-repo-ci-virt-macos-build-all
-COMMANDS := run-host-upsert-configs run-host-render-templates render-templates run-repo-ci-prepare-hooks run-repo-ci-precommit-all run-host-delete-broken-links run-host-run-scripts-all run-host-run-scripts run-host-mk-dirs run-repo-ci-install-deps run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build run-repo-ci-virt-macos-test run-repo-ci-virt-macos-ssh run-repo-ci-virt-linux-build run-repo-ci-virt-linux-test run-repo-ci-virt-linux-ssh
+WRAPPERS := sync sync-install repo-ci-virt-macos-build-all
+COMMANDS := host-load-configs repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps repo-ci-virt-macos-build-base repo-ci-virt-macos-build repo-ci-virt-macos-test repo-ci-virt-macos-ssh repo-ci-virt-linux-build repo-ci-virt-linux-test repo-ci-virt-linux-ssh
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -22,82 +22,73 @@ export CHE_PROFILE
 
 ##[>] Wrappers [genai-include]
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host)
-run-sync: run-host-delete-broken-links run-host-upsert-configs run-host-mk-dirs run-repo-ci-prepare-hooks render-templates run-host-render-templates
-#[what] full sync: run-sync then run all profile scripts (installs)
-run-sync-full: run-sync run-host-run-scripts-all
-run-repo-ci-virt-macos-build-all: run-repo-ci-virt-macos-build-base run-repo-ci-virt-macos-build
+sync: host-load-configs repo-ci-prepare-hooks repo-render-templates
+#[what] full sync: sync then run all profile scripts (installs)
+sync-install: sync host-run-install-scripts
+repo-ci-virt-macos-build-all: repo-ci-virt-macos-build-base repo-ci-virt-macos-build
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
-#[what] load configs onto host (profile-selected symlink + copy ops)
-run-host-upsert-configs: | run-repo-ci-install-deps
+#[what] load configs onto host: prune broken symlinks, profile-selected symlink + copy ops, make required dirs, render *.ontoHost.tpl
+host-load-configs: | repo-ci-install-deps
+	@$(CHE) prune-links
 	@$(CHE) make-links
 	@$(CHE) make-copies
-
-#[what] prune broken symlinks
-run-host-delete-broken-links: | run-repo-ci-install-deps
-	@$(CHE) prune-links
-
-#[what] required by configuration and tools dirs
-run-host-mk-dirs: | run-repo-ci-install-deps
 	@$(CHE) make-dirs
-
-#[what] render *.ontoHost.tpl onto host
-run-host-render-templates: | run-repo-ci-install-deps
 	@$(CHE) render-templates
 
 #[what] run all of the detected profile's scripts
-run-host-run-scripts-all: | run-repo-ci-install-deps
+host-run-install-scripts: | repo-ci-install-deps
 	@$(CHE) run-scripts
 
 #[what] run profile scripts whose path matches NAME (substring)
-run-host-run-scripts: | run-repo-ci-install-deps
+host-run-scripts: | repo-ci-install-deps
 	@$(CHE) run-scripts $(NAME)
 ##[<] Onto Host
 
 ##[>] Onto Repo (CI) [genai-include]
 #[what] render *.ontoRepo.tpl onto repo
-render-templates: | run-repo-ci-install-deps
+repo-render-templates: | repo-ci-install-deps
 	@che render-templates --profiles=ontoRepo
 
 #[what] install lefthook git hooks
-run-repo-ci-prepare-hooks:
+repo-ci-prepare-hooks:
 	@lefthook install --force
 
 #[what] run pre-commit hooks over all files (not just staged)
-run-repo-ci-precommit-all: | run-repo-ci-install-deps run-repo-ci-prepare-hooks
+repo-ci-run-precommit-all: | repo-ci-install-deps repo-ci-prepare-hooks
 	@lefthook run pre-commit --all-files --force
 
-run-repo-ci-install-deps:
+repo-ci-install-deps:
 	@00-ci-deps.zsh $@
 
 ###[>] Virt
 #[what] build vanilla base macos image
-run-repo-ci-virt-macos-build-base:
+repo-ci-virt-macos-build-base:
 	@vm-build.zsh macos-tahoe-vanilla-base
 
 #[what] build configs-local macos image
-run-repo-ci-virt-macos-build:
+repo-ci-virt-macos-build:
 	@vm-build.zsh macos-tahoe-vanilla-configs
 
 #[what] build the macos image then run the che ops in it (cli/macos profile)
-run-repo-ci-virt-macos-test: run-repo-ci-virt-macos-build
-	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/macos make run-sync-full'
+repo-ci-virt-macos-test: repo-ci-virt-macos-build
+	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/macos make sync-install'
 
 #[what] ssh into the macos image (auto-starts if stopped)
-run-repo-ci-virt-macos-ssh:
+repo-ci-virt-macos-ssh:
 	@virt-ssh-mac.zsh
 
 #[what] build the ci-linux image
-run-repo-ci-virt-linux-build:
+repo-ci-virt-linux-build:
 	@virt-build-linux.zsh
 
 #[what] build the ci-linux image then run the che ops in it (cli/linux profile)
-run-repo-ci-virt-linux-test: run-repo-ci-virt-linux-build
-	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/linux make run-sync-full'
+repo-ci-virt-linux-test: repo-ci-virt-linux-build
+	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/linux make sync-install'
 
 #[what] build the ci-linux image and open an interactive shell in it
-run-repo-ci-virt-linux-ssh: run-repo-ci-virt-linux-build
+repo-ci-virt-linux-ssh: repo-ci-virt-linux-build
 	@virt-ssh-linux.zsh
 
 ###[<] Virt

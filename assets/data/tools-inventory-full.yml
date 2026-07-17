@@ -55,8 +55,6 @@ tools:
       files:
         root/_home/.editorconfig:
 
-  - fzf:
-
   - git:
       files:
         root/_home/.config/git/:

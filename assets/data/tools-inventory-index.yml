@@ -29,7 +29,6 @@ asdf: root/_home/.config/asdf/.asdfrc
 aws: root/_home/.config/aws/config.ontoHost.tpl
 azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
-fzf: root/etc/zsh/rc.d/20-tools.zsh
 gcloud: root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 golang: root/etc/zshenv

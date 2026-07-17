@@ -23,7 +23,7 @@ autoload -Uz fn-annotate-with-sections fn-print-with fn-log-msg
 [[ $1 == -c && -n $2 ]] || exit 0
 typeset line=$2
 
-typeset -a dry_run_exempt=( run-repo-ci-install-deps )
+typeset -a dry_run_exempt=( repo-ci-install-deps )
 if (( ${dry_run_exempt[(Ie)${line##* }]} )) {
   line=${line% *}
 } elif [[ -n $MK_DRY_RUN && ${line%% *} != che ]] {

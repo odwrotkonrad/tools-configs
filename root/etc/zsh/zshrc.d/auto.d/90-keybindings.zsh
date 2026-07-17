@@ -40,6 +40,7 @@ typeset -A keystrokes=(
     cr                 $'\r'
     altCr              "${rt_seq[esc]}"$'\n'
     tab                $'\t'
+    shiftTab           "${rt_seq[csi]}Z"
 
     ctrlV              "^V"
     ctrlX              "^X"
@@ -83,8 +84,8 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[bracketedPaste]"   .bracketed-paste
 
     ##[>] 🤖🤖
-    "$keystrokes[up]"               wd-fn-root-fzf-history
-    "$keystrokes[down]"             wd-fn-root-fzf-history
+    "$keystrokes[up]"               wd-fn-root-history-menu
+    "$keystrokes[down]"             wd-fn-root-history-menu
     ##[<] 🤖🤖
     "$keystrokes[right]"            .forward-char
     "$keystrokes[left]"             .backward-char
@@ -115,6 +116,7 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[cr]"               wd-fn-root-accept-line
     "$keystrokes[altCr]"            .self-insert-unmeta
     "$keystrokes[tab]"              complete-word
+    "$keystrokes[shiftTab]"         .reverse-menu-complete
 
     "$keystrokes[ctrlV]"            wd-fn-root-keystrokes-listen
 )
@@ -124,6 +126,7 @@ bindkey -A key_map main
 
 ##[>] 🤖
 bindkey -M menuselect "${rt_seq[esc]}" accept-line
+bindkey -M menuselect "$keystrokes[shiftTab]" reverse-menu-complete
 ##[<] 🤖
 ##[>] 🤖🤖 alt+arrows mirror the native arrows in the menu: up/down scroll 3 rows, left/right move 1 column
 #[why] a user widget bound in menuselect exits menu selection (man zshmodules);
