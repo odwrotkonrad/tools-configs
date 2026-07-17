@@ -7,7 +7,7 @@ pre-commit:
     - name: docsgen
       env:
         MK_DRY_RUN_RENDER_SECRETS: "true"
-      run: make repo-render-templates && git add assets/data/repo-structure.md assets/data/makefile.agents.md README.md CLAUDE.md AGENTS.md
+      run: make repo-render-templates && git diff --exit-code
 
     - name: validate-yml
       glob: "*.{yml,yaml}"
