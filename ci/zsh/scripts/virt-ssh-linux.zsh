@@ -11,7 +11,7 @@ typeset src=/mnt/configs-src
 typeset workdir=/builds/konradodwrot/configs
 
 (( $+commands[docker] )) || fn-exit-with 1 "${0:t}: docker not found"
-docker image inspect $image >/dev/null 2>&1 || fn-exit-with 1 "${0:t}: $image not built (run: make run-repo-ci-virt-linux-build)"
+docker image inspect $image >/dev/null 2>&1 || fn-exit-with 1 "${0:t}: $image not built (run: make repo-ci-virt-linux-build)"
 
 #[what] -c <line>: run the line in the workdir as ko; else interactive zsh
 #[why] pass the line via env (not arg interpolation) to keep its quoting intact
