@@ -5,7 +5,8 @@
 #   push: always plain (never force in automation); diverged remote -> push fails,
 #     error tails into the log, push manually.
 #   cli: gitlab.com -> glab | github.com -> gh.
-#   upsert: no open MR -> create | open same source -> edit | changed source -> close + recreate.
+#   upsert: match = open MR/PR whose head commits are in this branch and not yet in main;
+#     other-source matches close (superseded) | same-source match -> edit | none -> create.
 #   Usage: git-mr-upsert
 #   Downstream: git-branch-name-upsert, llm-git-mr-suggest, git, glab/gh.
 #   Exit Codes: 22 sync conflicts
@@ -58,24 +59,36 @@ print -r -- "cli: $cli"
 ##[<] cli select 🤖🤖
 
 ##[>] upsert mr/pr 🤖🤖
+git fetch --prune origin
+
+#[what] match = open MR/PR whose head commits are contained in this branch and not yet in origin/main
+typeset -a open_srcs matched_srcs
 if [[ $cli == glab ]] {
-  open_source=$(glab mr view -F json --jq '.source_branch' 2>/dev/null || true)
-  if [[ -z $open_source ]] {
-    glab mr create --source-branch $branch --title $title --description $description --yes
-  } elif [[ $open_source == $branch ]] {
-    glab mr update --title $title --description $description
+  open_srcs=( ${(f)"$(glab mr list -F json | jq -r '.[].source_branch')"} )
+} else {
+  open_srcs=( ${(f)"$(gh pr list --json headRefName --jq '.[].headRefName')"} )
+}
+for src in $open_srcs; do
+  if ! sha=$(git rev-parse --quiet --verify origin/$src); then continue; fi
+  if ! git merge-base --is-ancestor $sha HEAD; then continue; fi
+  if git merge-base --is-ancestor $sha origin/main; then continue; fi
+  matched_srcs+=( $src )
+done
+print -r -- "open: $open_srcs | matched: $matched_srcs"
+
+#[what] matches on other sources are superseded by this branch: always closed
+if [[ $cli == glab ]] {
+  for src in ${matched_srcs:#$branch}; glab mr close $src 2>/dev/null || true
+  if (( ${matched_srcs[(Ie)$branch]} )) {
+    glab mr update $branch --title $title --description $description
   } else {
-    glab mr close 2>/dev/null || true
     glab mr create --source-branch $branch --title $title --description $description --yes
   }
 } else {
-  open_source=$(gh pr view --json headRefName --jq '.headRefName' 2>/dev/null || true)
-  if [[ -z $open_source ]] {
-    gh pr create --head $branch --title $title --body $description
-  } elif [[ $open_source == $branch ]] {
-    gh pr edit --title $title --body $description
+  for src in ${matched_srcs:#$branch}; gh pr close $src 2>/dev/null || true
+  if (( ${matched_srcs[(Ie)$branch]} )) {
+    gh pr edit $branch --title $title --body $description
   } else {
-    gh pr close $open_source 2>/dev/null || true
     gh pr create --head $branch --title $title --body $description
   }
 }
