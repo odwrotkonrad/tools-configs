@@ -431,7 +431,7 @@ _deep_files_tilde() {
 ##[<] 🤖🤖🤖
 
 ##[>] 🤖🤖🤖
-#[what] -command- engine: alias/builtins/functions/commands groups plus custom dir-backed groups (any other group name resolves its path zstyle to executable basenames), each fuzzy-filtered by the typed word, alphabetical, capped by per-group max-hints; slash-containing words delegate to stock _autocd
+#[what] -command- engine: alias/builtins/functions/commands groups plus custom dir-backed groups (any other group name resolves its path zstyle to executable basenames, and its names are dropped from a later commands group), each fuzzy-filtered by the typed word, alphabetical, capped by per-group max-hints; slash-containing words delegate to stock _autocd
 _deep_command() {
   local curcontext=$curcontext
   [[ $curcontext == :* ]] && curcontext="_deep_command$curcontext"
@@ -444,17 +444,19 @@ _deep_command() {
 
   local plen=$#PREFIX
   local g cap n expl
-  local -a names keep
+  local -a names keep custom_names
   for g in $groups; do
     case $g {
       (alias)     names=( ${(ok)aliases} ) ;;
       (builtins)  names=( ${(ok)builtins} ) ;;
       (functions) names=( ${${(ok)functions}:#_*} ) ;;
-      (commands)  names=( ${(ok)commands} ) ;;
+      (commands)  names=( ${(ok)commands} )
+                  names=( ${names:|custom_names} ) ;;
       (*)
         local -a gdirs
         zstyle -a ":completion:${curcontext}:$g" path gdirs || continue
-        names=( ${~^gdirs}/*(-*N:t) ); names=( ${(ou)names} ) ;;
+        names=( ${~^gdirs}/*(-*N:t) ); names=( ${(ou)names} )
+        custom_names+=( $names ) ;;
     }
     if (( plen )) {
       keep=( )
