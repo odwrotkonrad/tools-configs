@@ -10,7 +10,7 @@ zstyle ':completion:*' insert-tab false
 # categorize different type of matches into groups, e.g files into group, commands into group etc.
 zstyle ':completion:*:*:*:*:descriptions' format '%B## %d %b'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
+zstyle ':completion:*:*:-command-:*:*' group-order scripts alias builtins functions commands
 
 # generate completions in order stopping at first that generate matches
 # 1. smart case matches - lowercase -> case insensitive, otherwise case sensitive
@@ -431,7 +431,7 @@ _deep_files_tilde() {
 ##[<] 🤖🤖🤖
 
 ##[>] 🤖🤖🤖
-#[what] -command- engine: alias/builtins/functions/commands groups, each fuzzy-filtered by the typed word, alphabetical, capped by per-group max-hints; slash-containing words delegate to stock _autocd
+#[what] -command- engine: alias/builtins/functions/commands groups plus custom dir-backed groups (any other group name resolves its path zstyle to executable basenames), each fuzzy-filtered by the typed word, alphabetical, capped by per-group max-hints; slash-containing words delegate to stock _autocd
 _deep_command() {
   local curcontext=$curcontext
   [[ $curcontext == :* ]] && curcontext="_deep_command$curcontext"
@@ -451,7 +451,10 @@ _deep_command() {
       (builtins)  names=( ${(ok)builtins} ) ;;
       (functions) names=( ${${(ok)functions}:#_*} ) ;;
       (commands)  names=( ${(ok)commands} ) ;;
-      (*) continue ;;
+      (*)
+        local -a gdirs
+        zstyle -a ":completion:${curcontext}:$g" path gdirs || continue
+        names=( ${~^gdirs}/*(-*N:t) ); names=( ${(ou)names} ) ;;
     }
     if (( plen )) {
       keep=( )
@@ -518,7 +521,8 @@ zstyle "${_dc}:cd:*:" groups \
 unset _dc
 ##[<] 🤖🤖🤖
 
-##[>] 🤖🤖 shared _deep_command knobs: groups list is membership + order, max-hints per group tag (-1 uncapped)
-zstyle ':completion:_deep_command:*' groups alias builtins functions commands
+##[>] 🤖🤖 shared _deep_command knobs: groups list is membership + order (a name outside alias/builtins/functions/commands is a custom group listing executables from its path zstyle), max-hints per group tag (-1 uncapped)
+zstyle ':completion:_deep_command:*' groups scripts alias builtins functions commands
 zstyle ':completion:_deep_command:*' max-hints 6
+zstyle ':completion:_deep_command:*:scripts' path /usr/local/scripts/shell
 ##[<] 🤖🤖
