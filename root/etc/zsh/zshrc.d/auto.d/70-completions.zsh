@@ -242,9 +242,9 @@ _deep_files() {
   local plen=$#PREFIX
   local cap star vhdr hhdr fv dv expl
 
-  #[what] bare ~ prefix (no slash): named-dirs group only, no other scopes
+  #[what] ~pat prefix (chars after ~, no slash): named-dirs group only, no other scopes
   local namedonly=0
-  [[ $PREFIX == '~'[^/]# ]] && namedonly=1
+  [[ $PREFIX == '~'[^/]## ]] && namedonly=1
   local absprefix=0
   [[ $PREFIX == [/~]* ]] && absprefix=1
 
@@ -375,7 +375,7 @@ _deep_files() {
       (named-dirs)
         #[what] hash -d + dynamic, dirs kind only, relative or bare-~ prefix
         local ndok=$namedonly
-        [[ $PREFIX != [/~]* ]] && ndok=1
+        [[ $PREFIX == '~' || $PREFIX != [/~]* ]] && ndok=1
         (( dodirs && ndok )) || continue
         zstyle -s ":completion:${curcontext}:$g" max-hints cap || cap=6
         (( cap == 0 )) && continue
@@ -396,6 +396,15 @@ _deep_files() {
   done
 
   (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+}
+
+#[what] -tilde- context handler: zsh completes ~ and ~pat (no slash) via -tilde-, never the command's function; for _deep_files-wrapped commands fold the ~ back into PREFIX, restore the command field, and run the engine; others keep default _tilde
+_deep_files_tilde() {
+  if [[ $_comps[${words[1]:t}] != _deep_files ]] { _tilde; return }
+  local curcontext=${curcontext/-tilde-/${words[1]:t}}
+  IPREFIX=${IPREFIX%'~'}
+  PREFIX="~$PREFIX"
+  _deep_files
 }
 ##[<] 🤖🤖🤖
 

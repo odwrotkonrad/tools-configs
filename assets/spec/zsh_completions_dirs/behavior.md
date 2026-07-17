@@ -143,8 +143,15 @@ Scenario: a ~ prefix anchors hints to the expanded directory
   Then the level groups descend from the expanded directory
   And candidates display and insert in ~ form
 
-Scenario: a bare ~ prefix shows only the named-dirs group
-  Given I have typed ~ or ~pat (no slash)
+Scenario: an exact ~ prefix completes from home plus named dirs
+  Given I have typed exactly ~ (nothing after)
+  When I press TAB
+  Then the level groups descend from the home directory in ~ form
+  And the ~* group listing every named dir appears after them
+  And no relative-up or stack groups are shown
+
+Scenario: a ~pat prefix shows only the named-dirs group
+  Given I have typed ~pat (one or more chars after ~, no slash)
   When I press TAB
   Then only the ~* group is shown
   And the pattern after ~ filters the names fuzzily

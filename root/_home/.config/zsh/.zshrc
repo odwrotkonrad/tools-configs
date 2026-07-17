@@ -12,6 +12,7 @@ autoload -U compinit && compinit
 
 ##[>] 🤖🤖 register after compinit; _deep_files + its zstyles (file-types picks kinds per command) live in /etc/zsh 70-completions.zsh
 compdef _deep_files cd vim vi nano cat less bat code ls stat
+compdef _deep_files_tilde -tilde-
 ##[<] 🤖🤖
 
 fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
