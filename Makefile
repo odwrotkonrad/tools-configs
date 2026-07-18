@@ -4,7 +4,7 @@ SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-exec-if)
 WRAPPERS := sync sync-install repo-ci-virt-macos-build-all
-COMMANDS := host-load-configs repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps repo-ci-virt-macos-build-base repo-ci-virt-macos-build repo-ci-virt-macos-test repo-ci-virt-macos-ssh repo-ci-virt-linux-build repo-ci-virt-linux-test repo-ci-virt-linux-ssh
+COMMANDS := host-load-configs host-load-configs-install repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps repo-ci-virt-macos-build-base repo-ci-virt-macos-build repo-ci-virt-macos-test repo-ci-virt-macos-ssh repo-ci-virt-linux-build repo-ci-virt-linux-test repo-ci-virt-linux-ssh
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -23,19 +23,19 @@ export CHE_PROFILE
 ##[>] Wrappers [genai-include]
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host)
 sync: host-load-configs repo-ci-prepare-hooks repo-render-templates
-#[what] full sync: sync then run all profile scripts (installs)
-sync-install: sync host-run-install-scripts
+#[what] full sync: full che op sequence per profile (scripts included), hooks, repo renders
+sync-install: host-load-configs-install repo-ci-prepare-hooks repo-render-templates
 repo-ci-virt-macos-build-all: repo-ci-virt-macos-build-base repo-ci-virt-macos-build
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
-#[what] load configs onto host: prune broken symlinks, profile-selected symlink + copy ops, make required dirs, render *.ontoHost.tpl
+#[what] load configs onto host, profile by profile: each profile's full op sequence minus scripts
 host-load-configs: | repo-ci-install-deps
-	@$(CHE) prune-links
-	@$(CHE) make-links
-	@$(CHE) make-copies
-	@$(CHE) make-dirs
-	@$(CHE) render-templates
+	@$(CHE) all --skip-ops=run-scripts
+
+#[what] install configs onto host, profile by profile: each profile's full op sequence, scripts included
+host-load-configs-install: | repo-ci-install-deps
+	@$(CHE) all
 
 #[what] run all of the detected profile's scripts
 host-run-install-scripts: | repo-ci-install-deps
