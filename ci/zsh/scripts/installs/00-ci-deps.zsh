@@ -83,6 +83,7 @@ typeset -A yq_sha=(
 )
 
 prefix=/usr/local
+if [[ ! -d ${prefix}/bin ]] { sudo mkdir -p "${prefix}/bin" }
 
 #[what] extract named binaries from a checksummed .tar.gz into /usr/local/bin
 function install_gitlab_tarball {
