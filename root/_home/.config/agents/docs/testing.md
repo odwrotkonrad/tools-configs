@@ -9,5 +9,5 @@ Asked for tests: write unit tests, unless told otherwise.
 ## Test Types
 
 - **Unit**: scoped to the deliverable, no external interfaces.
-- **Integration**: scoped to the deliverable, with external interfaces.
+- **Integration**: scoped to the deliverable, with direct external interfaces.
 - **E2E**: assertions scoped beyond the deliverable, with external interfaces.
