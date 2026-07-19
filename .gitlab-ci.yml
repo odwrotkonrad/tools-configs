@@ -55,8 +55,6 @@ dry-run-apply-sync:
   ##[>] 🤖🤖
   tags: [saas-macos-medium-m1]
   image: macos-26-xcode-26
-  variables:
-    GIT_CLONE_PATH: $CI_BUILDS_DIR/configs
   ##[<] 🤖🤖
 
 dry-run-apply-macos-desktop:
