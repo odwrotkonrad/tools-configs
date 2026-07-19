@@ -29,4 +29,12 @@ export ANTHROPIC_MODEL="$script_input[opt_model]"
   --tools "" \
   --allowedTools "" \
   --effort low \
-  --json-schema "$script_input[opt_schema]" | jq '.structured_output'
+  --json-schema "$script_input[opt_schema]" | jq '
+##[>] 🤖🤖
+    def unwrap: if type == "string"
+      then ((try fromjson catch null) as $p
+        | if ($p | type) == "object" and ($p | keys) == ["value"] then $p.value else . end)
+      else . end;
+    .structured_output | if type == "object" then map_values(unwrap) else . end
+##[<] 🤖🤖
+  '
