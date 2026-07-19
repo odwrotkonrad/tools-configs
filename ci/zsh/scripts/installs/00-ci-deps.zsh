@@ -43,9 +43,8 @@ function install_go {
 fn-install-if-missing go install_go
 
 ##[>] 🤖🤖
-#[what] prebuilt tools: fetch+checksum published binaries instead of go install (no source compile)
-#   the che tarball bundles che + render-tpl + render-repo-group-index (one fetch, one checksum)
-che_version=0.0.53
+#[what] prebuilt tools: fetch published binaries instead of go install (no source compile)
+#   the che latest tarball bundles che + render-tpl + render-repo-group-index (one fetch, no checksum)
 lefthook_version=2.1.9
 yq_version=4.53.3
 
@@ -63,12 +62,6 @@ if { fn-is-arch x86 } { che_arch=amd64 }
 if { fn-is-arch arm } { lh_arch=arm64 } else { lh_arch=x86_64 }
 
 #[what] per-target sha256 (darwin/linux x arm64/amd64); key = os_arch
-typeset -A che_sha=(
-  darwin_amd64 97ed1b5ad9fb466a45070ec5c3619830e317e15feeb069f32ebe27db0ba5ab2d
-  darwin_arm64 c07f183c3f2914fc382153eaf031226f7095670f9ec5194cda56d477670724d2
-  linux_amd64  b4baa9033235efd1fba582109f840fac53c75994e19827ffd9b229c27df055da
-  linux_arm64  0c7d6f9003558760abc7f08c5996b0dcbb41a3b06bfc06e901a9d9eb9dfb371f
-)
 typeset -A lefthook_sha=(
   Linux_x86_64 0d60b0d350c923963729574f6431171f0277788884ad0c6284fa0160c36e3877
   Linux_arm64  304321997336c450af6b5c0cc641c59141168866fca0b1fc3767e067812600a9
@@ -83,25 +76,17 @@ typeset -A yq_sha=(
 )
 
 prefix=/usr/local
+if [[ ! -d ${prefix}/bin ]] { sudo mkdir -p "${prefix}/bin" }
 
-#[what] extract named binaries from a checksummed .tar.gz into /usr/local/bin
-function install_gitlab_tarball {
-  local project=$1 pkg=$2 archive_bin=$3 version=$4 sha=$5; shift 5
-  local -a bins=("$@")
-  local archive="${archive_bin}_${version}_${che_os}_${che_arch}.tar.gz"
-  local url="https://gitlab.com/api/v4/projects/${project}/packages/generic/${pkg}/${version}/${archive}"
+#[why] one che tarball drops che + the bundled render binaries; the moving latest alias carries no checksum
+function install_che {
+  local archive="che_latest_${che_os}_${che_arch}.tar.gz"
+  local url="https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che/latest/${archive}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
   curl -fsSL -o "$tmp/$archive" "$url"
-  echo "$sha  $tmp/$archive" | shasum -a 256 -c - || fn-exit-with 1 "checksum mismatch: $archive"
-  tar -xzf "$tmp/$archive" -C "$tmp" "${bins[@]}"
-  for bin ( "${bins[@]}" ) sudo install -m 0755 "$tmp/$bin" "$prefix/bin/$bin"
-}
-
-#[why] one che tarball drops che + the bundled render binaries, one checksum
-function install_che {
-  install_gitlab_tarball 'konradodwrot%2Fgo-modules' che che "$che_version" \
-    "${che_sha[${che_os}_${che_arch}]}" "${che_bundle_bins[@]}"
+  tar -xzf "$tmp/$archive" -C "$tmp" "${che_bundle_bins[@]}"
+  for bin ( "${che_bundle_bins[@]}" ) sudo install -m 0755 "$tmp/$bin" "$prefix/bin/$bin"
 }
 
 #[what] lefthook publishes raw binaries (no tarball) on github
@@ -127,13 +112,13 @@ function install_yq {
 }
 
 #[what] version parsers: map raw '--version' output to a bare version
-#   che/render-tpl/lefthook -> '<name> version <ver>'; yq -> '...version v<ver>'
+#   lefthook -> '<name> version <ver>'; yq -> '...version v<ver>'
 function parse_field3   { print -r -- ${${(z)1}[3]} }
 function parse_yq       { local v=${${(z)1}[-1]}; print -r -- ${v#v} }
 
 #[why] reinstall on version drift so pin bumps land over a stale binary
-#   the che pin governs the whole bundle (che + render binaries), one outdated-check
-fn-install-prebuilt-if-outdated che        "$che_version"        install_che        parse_field3
+#   che tracks the moving latest alias instead: installed only when absent, no pin
+fn-install-if-missing           che        install_che
 fn-install-prebuilt-if-outdated lefthook   "$lefthook_version"   install_lefthook   parse_field3
 fn-install-prebuilt-if-outdated yq         "$yq_version"         install_yq         parse_yq
 ##[<] 🤖🤖

@@ -55,6 +55,8 @@ dry-run-apply-sync:
   ##[>] 🤖🤖
   tags: [saas-macos-medium-m1]
   image: macos-26-xcode-26
+  variables:
+    CHE_DEBUG: "1"
   ##[<] 🤖🤖
 
 dry-run-apply-macos-desktop:
@@ -62,7 +64,6 @@ dry-run-apply-macos-desktop:
   stage: dry-run-apply
   variables:
     MK_DRY_RUN: all
-    CHE_DEBUG: "1"
     CHE_PROFILE: desktop/macos
   needs: []
   allow_failure: true

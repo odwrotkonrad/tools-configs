@@ -2,6 +2,7 @@
 #>[what] 🤖🤖
 #   Sync onto main, branch off if on main, stage all, commit with llm message.
 #   amend arg: soft-reset HEAD~1 first (never on main), then re-commit.
+#   nothing staged after add: exit 0 (upsert-all continues to mr-upsert).
 #   Guard: never commit/amend on main.
 #   Usage: git-commit-upsert [amend]
 #   Downstream: git-sync-onto-main, git-branch-name-upsert, llm-git-commit-suggest, git.
@@ -44,6 +45,11 @@ if [[ $mode == amend ]] {
 }
 
 git add .
+
+if { git diff --cached --quiet } {
+  print -r -- "nothing to commit, skipping"
+  exit 0
+}
 
 out=$(llm-git-commit-suggest.zsh)
 subject=$(jq -r .subject <<< $out)
