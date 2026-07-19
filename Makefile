@@ -18,6 +18,12 @@ export MK_DRY_RUN_RENDER_SECRETS
 #[what] force one che profile for host ops, passed as `$ che --profiles --skip-run-if`
 #[vals] desktop/macos|cli/macos|cli/linux
 export CHE_PROFILE
+##[>] 🤖🤖
+#[what] che spec validation mode, error aborts on che.yml schema violations
+#[vals] warn|error
+CHE_VALIDATE_SPEC ?= error
+export CHE_VALIDATE_SPEC
+##[<] 🤖🤖
 ##[<] Environment Variables
 
 ##[>] Wrappers [genai-include]

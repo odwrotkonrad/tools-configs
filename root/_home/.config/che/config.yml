@@ -1,4 +1,5 @@
 ##[>] 🤖🤖
+validateSpec: error
 otel:
   enabled: true
   endpoint: localhost:4317

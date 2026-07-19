@@ -107,5 +107,5 @@ apply-linux-cli:
     ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
-    - sudo -u ko --preserve-env=CI,CHE_PROFILE,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-install
+    - sudo -u ko --preserve-env=CI,CHE_PROFILE,CHE_VALIDATE_SPEC,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-install
     ##[<] 🤖🤖
