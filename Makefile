@@ -2,7 +2,7 @@
 #[why] SHELL is a zsh wrapper (not bare `zsh`) to power MK_DRY_RUN: it prints or omits each target's recipe instead of running it
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
-CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-exec-if)
+CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
 WRAPPERS := sync sync-install repo-ci-virt-macos-build-all
 COMMANDS := host-load-configs host-load-configs-install repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps repo-ci-virt-macos-build-base repo-ci-virt-macos-build repo-ci-virt-macos-test repo-ci-virt-macos-ssh repo-ci-virt-linux-build repo-ci-virt-linux-test repo-ci-virt-linux-ssh
 
@@ -15,7 +15,7 @@ export MK_DRY_RUN
 #[what] render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
 #[vals] true|false
 export MK_DRY_RUN_RENDER_SECRETS
-#[what] force one che profile for host ops, passed as `$ che --profiles --skip-exec-if`
+#[what] force one che profile for host ops, passed as `$ che --profiles --skip-run-if`
 #[vals] desktop/macos|cli/macos|cli/linux
 export CHE_PROFILE
 ##[<] Environment Variables
@@ -31,11 +31,11 @@ repo-ci-virt-macos-build-all: repo-ci-virt-macos-build-base repo-ci-virt-macos-b
 ##[>] Onto Host [genai-include]
 #[what] load configs onto host, profile by profile: each profile's full op sequence minus scripts
 host-load-configs: | repo-ci-install-deps
-	@$(CHE) all --skip-ops=run-scripts
+	@$(CHE) run --skip-ops=run-scripts
 
 #[what] install configs onto host, profile by profile: each profile's full op sequence, scripts included
 host-load-configs-install: | repo-ci-install-deps
-	@$(CHE) all
+	@$(CHE) run
 
 #[what] run all of the detected profile's scripts
 host-run-install-scripts: | repo-ci-install-deps

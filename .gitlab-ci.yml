@@ -44,6 +44,7 @@ dry-run-apply-sync:
   needs: []
   variables:
     MK_DRY_RUN: all
+    CHE_DEBUG: "1"
   parallel:
     matrix:
       - CHE_PROFILE: [desktop/macos, cli/macos, cli/linux]
@@ -62,6 +63,7 @@ dry-run-apply-macos-desktop:
   stage: dry-run-apply
   variables:
     MK_DRY_RUN: all
+    CHE_DEBUG: "1"
     CHE_PROFILE: desktop/macos
   needs: []
   allow_failure: true
