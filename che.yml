@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 options:
-  workingDirectory: root
+  profileWorkingDirectory: root
 base:
   include:
     profiles:
@@ -110,17 +110,17 @@ base-exclude-virt-ssh-keys:
       - _home/.ssh/**
 
 desktop/macos:
-  options: {autoDiscover: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
     profiles: [base, base-exclude-virt-ssh-keys]
 
 cli/macos:
-  options: {autoDiscover: true, execIf: ['builtin:isOs == macos', 'builtin:isVirt']}
+  options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt']}
   include:
     profiles: [base, base-exclude-desktop]
 
 cli/linux:
-  options: {autoDiscover: true, execIf: ['builtin:isOs == linux']}
+  options: {autoDiscover: true, runIf: ['builtin:isOs == linux']}
   include:
     profiles: [base, base-exclude-macos, base-exclude-desktop]
     makeCopies:
@@ -137,7 +137,7 @@ cli/linux:
           - {source: etc/zlogout, dest: [/etc/zsh/zlogout]}
 
 claude-agents:
-  options: {autoDiscover: true, execIf: ['builtin:isVirt']}
+  options: {autoDiscover: true, runIf: ['builtin:isVirt']}
   include:
     renderTemplates:
       - ctx: {repo: Configs}

@@ -11,6 +11,7 @@ assets
       dirs
       dirs_and_files
       files
+      make
     zsh_config
 ci
   vm

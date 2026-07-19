@@ -1,4 +1,10 @@
-zstyle ':completion:*:*:make:*' tag-order 'targets'
+##[>] 🤖🤖 make completion (_make override): every group headed (## targets for the Makefile's own targets, ## <repo> per child repo)
+#[what] allow the repo-<name> tags (not just 'targets'), keep each group visually separate, show every heading
+zstyle ':completion:*:*:make:*' tag-order 'targets repo-*'
+zstyle ':completion:*:*:make:*' group-name ''
+zstyle ':completion:*:*:make:*' verbose true
+zstyle ':completion:*:*:make:*:descriptions' format '%B## %d%b'
+##[<] 🤖🤖
 zstyle ':completion:*' verbose false  # do not show descriptions
 zstyle ':completion:*' menu select    # cycle through options in menu
 zstyle ':completion:*' file-sort modification
@@ -443,15 +449,22 @@ _deep_command() {
     groups=( alias builtins functions commands )
 
   local plen=$#PREFIX
-  local g cap n expl
+  local g cap n expl fpat
   local -a names keep custom_names
   for g in $groups; do
+    #[>] 🤖🤖
+    #[what] parameters group: names from the $parameters assoc (zsh/parameter, non-local params), internal _* dropped; inserts $name (a usable command-position param ref), fuzzy-filtered against the typed word sans a leading $
+    fpat=$PREFIX
+    #[<] 🤖🤖
     case $g {
       (alias)     names=( ${(ok)aliases} ) ;;
       (builtins)  names=( ${(ok)builtins} ) ;;
       (functions) names=( ${${(ok)functions}:#_*} ) ;;
       (commands)  names=( ${(ok)commands} )
                   names=( ${names:|custom_names} ) ;;
+      ##[>] 🤖🤖
+      (parameters) names=( ${${(ok)parameters}:#_*} ); fpat=${PREFIX#\$} ;;
+      ##[<] 🤖🤖
       (*)
         local -a gdirs
         zstyle -a ":completion:${curcontext}:$g" path gdirs || continue
@@ -460,41 +473,45 @@ _deep_command() {
     }
     if (( plen )) {
       keep=( )
-      for n in $names; do _cd_deep_fuzzy $PREFIX $n && keep+=( $n ); done
+      for n in $names; do _cd_deep_fuzzy $fpat $n && keep+=( $n ); done
       names=( $keep )
     }
     zstyle -s ":completion:${curcontext}:$g" max-hints cap || cap=6
     (( cap == 0 )) && continue
     (( cap > 0 && $#names > cap )) && names=( $names[1,cap] )
+    ##[>] 🤖🤖
+    [[ $g == parameters ]] && names=( ${names/#/\$} )
+    ##[<] 🤖🤖
     (( $#names )) && _wanted $g expl "$g" compadd -Q -U -V $g -a names
   done
+
+  #[>] 🤖🤖
+  #[what] history group last => bottom; cap from the _deep_command history scope, ignore-hints from the shared _deep_history context
+  local hcap
+  zstyle -s ":completion:${curcontext}:history" max-hints hcap || hcap=4
+  _deep_history_group $hcap _deep_history
+  #[<] 🤖🤖
 
   (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
 }
 ##[<] 🤖🤖🤖
 
 ##[>] 🤖🤖🤖
-#[what] history engine: whole-line completion over history, newest-first deduped, fuzzy chars-in-order filter by the typed line via a glob prefilter, one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); accepting replaces the entire buffer (-U with PREFIX/SUFFIX spanning it); entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
-_deep_history() {
-  local curcontext="_deep_history:menu-select::"
-
-  #[what] fill the screen below the prompt, keep 2 blank lines at the bottom
-  local cap=$(( LINES - BUFFERLINES - 2 ))
-  (( cap < 1 )) && cap=1
-
-  PREFIX=$LBUFFER SUFFIX=$RBUFFER IPREFIX= ISUFFIX=
+#[what] gather whole-line history candidates into $reply: newest-first deduped, fuzzy chars-in-order prefilter by $PREFIX$SUFFIX (glob *a*b*), blank/multiline/over-wide/ignore-hints entries dropped, filled up to $1 (cap<1 => no cap); $2 is the context for the ignore-hints zstyle lookup
+_deep_history_cands() {
+  local cap=$1 ctx=$2
+  reply=( )
 
   local pat=
   [[ -n $PREFIX$SUFFIX ]] && pat="*${(j:*:)${(@b)${(s::)${:-$PREFIX$SUFFIX}}}}*"
 
   local -a ignore
-  zstyle -a ":completion:${curcontext}:history" ignore-hints ignore
+  zstyle -a ":completion:${ctx}:menu-select:history" ignore-hints ignore
 
-  local -a cands
   local -A seen
   local k v key re nl=$'\n'
   for k in ${(nOk)history}; do
-    (( cap > 0 && $#cands >= cap )) && break
+    (( cap > 0 && $#reply >= cap )) && break
     v=$history[$k]
     #[what] dedup key: whitespace-normalized (trimmed, runs squeezed); blank entries dropped
     key=${(j: :)${=v}}
@@ -507,8 +524,37 @@ _deep_history() {
     #[why] complist pads rows to widest item + 2-space column gap and needs a spare column: a row reaching the last column autowraps into a blank line
     (( $#v > COLUMNS - 4 )) && continue
     [[ -n $pat && $v != (#i)${~pat} ]] && continue
-    cands+=( "$v" )
+    reply+=( "$v" )
   done
+}
+
+#[what] emit a capped history group at the bottom of a normal completion pass: history lines are whole commands, so span the buffer (PREFIX=$LBUFFER SUFFIX=$RBUFFER) only around the compadd and restore after, letting the caller's word-scoped groups keep their view; -U replaces the spanned region on accept, -V history last in call order pins it to the bottom; $1 cap (0 disables), $2 ignore-hints context
+_deep_history_group() {
+  local cap=$1 ctx=$2
+  (( cap == 0 )) && return
+  local opre=$PREFIX oipre=$IPREFIX osuf=$SUFFIX oisuf=$ISUFFIX
+  PREFIX=$LBUFFER SUFFIX=$RBUFFER IPREFIX= ISUFFIX=
+  local -a reply
+  _deep_history_cands $cap $ctx
+  local -a cands=( $reply )
+  local expl
+  (( $#cands )) && _wanted history expl history compadd -Q -U -V history -a cands
+  PREFIX=$opre IPREFIX=$oipre SUFFIX=$osuf ISUFFIX=$oisuf
+}
+
+#[what] history engine: whole-line completion over history, newest-first deduped, fuzzy chars-in-order filter by the typed line via a glob prefilter, one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); accepting replaces the entire buffer (-U with PREFIX/SUFFIX spanning it); entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
+_deep_history() {
+  local curcontext="_deep_history:menu-select::"
+
+  #[what] fill the screen below the prompt, keep 2 blank lines at the bottom
+  local cap=$(( LINES - BUFFERLINES - 2 ))
+  (( cap < 1 )) && cap=1
+
+  PREFIX=$LBUFFER SUFFIX=$RBUFFER IPREFIX= ISUFFIX=
+
+  local -a reply
+  _deep_history_cands $cap _deep_history
+  local -a cands=( $reply )
   (( $#cands )) || return 1
 
   local expl
@@ -577,13 +623,14 @@ unset _dc
 ##[<] 🤖🤖🤖
 
 ##[>] 🤖🤖 shared _deep_command knobs: groups list is membership + order (a name outside alias/builtins/functions/commands is a custom group listing executables from its path zstyle), max-hints per group tag (-1 uncapped)
-zstyle ':completion:_deep_command:*' groups scripts alias builtins functions commands
+zstyle ':completion:_deep_command:*' groups scripts alias builtins functions commands parameters
 zstyle ':completion:_deep_command:*' max-hints 6
 zstyle ':completion:_deep_command:*:scripts' path /usr/local/scripts/shell
+zstyle ':completion:_deep_command:*:history' max-hints 4
 ##[<] 🤖🤖
 
 ##[>] 🤖🤖
 zstyle ':completion:_deep_history:*' sort false
 zstyle ':completion:_deep_history:*:descriptions' format ''
-zstyle ':completion:_deep_history:*:history' ignore-hints '^cd.*' '^echo .*' '^print .*' '^code .*' '^history( .*|$)' '^source .*' '^\. .*' '^[^[:space:]]+$'
+zstyle ':completion:_deep_history:*:history' ignore-hints '^#' '^cd.*' '^echo .*' '^print .*' '^code .*' '^history( .*|$)' '^source .*' '^\. .*' '^[^[:space:]]+$'
 ##[<] 🤖🤖

@@ -12,8 +12,8 @@ function go_install { PATH="${goroot}/bin:${PATH}" go install "$1" }
 
 #[what] own published go tools, host-only: bin -> module@version
 typeset -A own_tools=(
-  get-os-open-files-with    'gitlab.com/konradodwrot/go-modules/get-os-open-files-with@v0.0.14'
-  get-term-open-files-with  'gitlab.com/konradodwrot/go-modules/get-term-open-files-with@v0.0.13'
+  get-os-open-files-with    'gitlab.com/konradodwrot/go-modules/get-os-open-files-with@latest'
+  get-term-open-files-with  'gitlab.com/konradodwrot/go-modules/get-term-open-files-with@latest'
 )
 
 for bin module ( ${(kv)own_tools} ) {

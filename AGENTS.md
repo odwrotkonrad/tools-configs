@@ -27,6 +27,7 @@ Maintains stateful configuration of a system and its tools, optimized for a read
 - `conventions/templates/convention.md`: generating repo docs with che templates: `templates/1-env|2-data|3-audience`, `che.yml` wiring, `make render-templates`.
 - `conventions/ci/convention.md`: lefthook pre-commit hooks (minimal: docs generation check), re-run in a minimal CI validate job.
 - `conventions/license/convention.md`: every public repo carries `LICENSE` (unmodified MIT, creation-year copyright).
+- `conventions/spec-scenarios/convention.md`: behavior specs as markdown feature files: Gherkin-style scenarios, each with a `Status:` line (`todo | implemented | tested`), statuses kept accurate.
 - `conventions/claude-agents/convention.md`: per-repo `RO-<Repo>`/`RW-<Repo>` claude agents, che-rendered into `.claude/` on virt only: shared snippets in `configs`, fetched as remote renderTemplates sources (`@<repo>//<path>` + `ctx`), rendered outputs never committed.
 
 Each convention dir carries a runnable `example/`. This repo itself follows all of these conventions.
@@ -97,17 +98,19 @@ vim: root/_home/.config/vim/vimrc
 
 `MK_DRY_RUN=delta|all` `$ che` - print targets instead of load, if not `$ che` - omit cmd with message
 `MK_DRY_RUN_RENDER_SECRETS=true|false` render: skip templates with op:// secret refs (no vault fetch), leave dests untouched
-`CHE_PROFILE=desktop/macos|cli/macos|cli/linux` force one che profile for host ops, passed as `$ che --profiles --skip-exec-if`
+`CHE_PROFILE=desktop/macos|cli/macos|cli/linux` force one che profile for host ops, passed as `$ che --profiles --skip-run-if`
+`CHE_VALIDATE_SPEC=warn|error` che spec validation mode, error aborts on che.yml schema violations
 
 ### Wrappers:
 
 `sync`: `host-load-configs -> repo-ci-prepare-hooks -> repo-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
-`sync-install`: `sync -> host-run-install-scripts` full sync: sync then run all profile scripts (installs)
+`sync-install`: `host-load-configs-install -> repo-ci-prepare-hooks -> repo-render-templates` full sync: full che op sequence per profile (scripts included), hooks, repo renders
 `repo-ci-virt-macos-build-all`: `repo-ci-virt-macos-build-base -> repo-ci-virt-macos-build`
 
 ### Onto Host:
 
-`host-load-configs` load configs onto host: prune broken symlinks, profile-selected symlink + copy ops, make required dirs, render *.ontoHost.tpl
+`host-load-configs` load configs onto host, profile by profile: each profile's full op sequence minus scripts
+`host-load-configs-install` install configs onto host, profile by profile: each profile's full op sequence, scripts included
 `host-run-install-scripts` run all of the detected profile's scripts
 `host-run-scripts` run profile scripts whose path matches NAME (substring)
 
@@ -143,6 +146,7 @@ assets
       dirs
       dirs_and_files
       files
+      make
     zsh_config
 ci
   vm
