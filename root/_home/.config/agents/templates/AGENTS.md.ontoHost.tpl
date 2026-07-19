@@ -32,3 +32,5 @@ Read docs via:
 - `$ <cmd> --help|-h`
 
 @~/.config/agents/docs/git.md
+
+@~/.config/agents/docs/testing.md
