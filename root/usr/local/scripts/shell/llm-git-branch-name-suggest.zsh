@@ -21,14 +21,14 @@ zparseopts -D -E -- -range:=opt_range
 typeset -A script_input=(
   in_instructions_runtime "$([[ -t 0 ]] || cat)"
 
-  opt_range "${opt_range[2]:-main..$(git rev-parse --abbrev-ref HEAD)}"
+  opt_range "${opt_range[2]:-$(if [[ $(git rev-parse --abbrev-ref HEAD) == main ]] { print origin/main..HEAD } else { print main..HEAD })}"
 )
 ##[<] script input
 
 
 ##[>] template input 🤖
 get_current_branch() { local b=$(git rev-parse --abbrev-ref HEAD); [[ $b == main ]] || echo $b }
-get_recent_commits() { [[ $(git rev-parse --abbrev-ref HEAD) == main ]] || git log --format='%B' --reverse $script_input[opt_range] }
+get_recent_commits() { git log --format='%B' --reverse $script_input[opt_range] }
 get_commit_template() {
   local f=$(git config --get commit.template); f=${f/#\~/$HOME}
   [[ -n $f && -f $f ]] && cat "$f"

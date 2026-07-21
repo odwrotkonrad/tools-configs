@@ -7,12 +7,8 @@ assets
   images
   recordings
   spec
-    zsh_completions
-      dirs
-      dirs_and_files
-      files
-      make
-    zsh_config
+    zsh
+      completions
 ci
   vm
   zsh

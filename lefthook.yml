@@ -7,7 +7,8 @@ pre-commit:
     - name: docsgen
       env:
         MK_DRY_RUN_RENDER_SECRETS: "true"
-      run: make repo-render-templates && git diff --exit-code
+        MK_DRY_RUN: ""
+      run: make repo-render-templates && { git diff --exit-code || { echo "regeneration changed tracked files (diff above), restage and re-commit"; exit 1; } }
 
     - name: validate-yml
       glob: "*.{yml,yaml}"

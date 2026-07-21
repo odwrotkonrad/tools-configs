@@ -5,7 +5,7 @@ wd-fn-root-clear-scrollable() {
 
     # 1. print current input as a comment
     if [[ ${BUFFER} ]] {
-      print -rn -- "$rt_seq[goto-col-1]${(%)PS1}# $BUFFER"
+      print -rn -- "$rt_seq[goto-col-1]${(%%)PS1}# $BUFFER"
     }
     # 2. reset input
     zle reset-prompt
