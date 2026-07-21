@@ -1,9 +1,11 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
-#   Sync onto main, branch off if on main, stage all, commit with llm message.
-#   amend arg: soft-reset HEAD~1 first (never on main), then re-commit.
+#   Sync onto main, stage all, commit with llm message.
+#   on main: commit there first, branch off (name derived from the commit),
+#   then reset local main to origin/main so main stays clean.
+#   amend arg: soft-reset HEAD~1 first, then re-commit. Never amend on main.
 #   nothing staged after add: exit 0 (upsert-all continues to mr-upsert).
-#   Guard: never commit/amend on main.
+#   hook fails leaving an unstaged diff (docsgen regen): restage, retry once.
 #   Usage: git-commit-upsert [amend]
 #   Downstream: git-sync-onto-main, git-branch-name-upsert, llm-git-commit-suggest, git.
 #   Exit Codes: 22 sync conflicts
@@ -29,17 +31,12 @@ mode=${1:-}
 
 git-sync-onto-main.zsh && sync=0 || sync=$?
 (( sync == 22 )) && exit 22
-if (( sync == 23 )) || [[ $(git rev-parse --abbrev-ref HEAD) == main ]] {
-  print -r -- "on main, branching off first"
-  git-branch-name-upsert.zsh
-}
 
-if [[ $(git rev-parse --abbrev-ref HEAD) == main ]] {
-  print -r -- "still on main, refusing to commit"
-  exit 1
-}
+on_main=0
+if [[ $(git rev-parse --abbrev-ref HEAD) == main ]] on_main=1
 
 if [[ $mode == amend ]] {
+  if (( on_main )) { print -r -- "on main, refusing to amend"; exit 1 }
   print -r -- "amend: soft-resetting HEAD~1"
   git reset --soft HEAD~1
 }
@@ -56,5 +53,17 @@ subject=$(jq -r .subject <<< $out)
 description=$(jq -r .description <<< $out)
 print -r -- "subject: $subject"
 
-git commit -m $subject -m $description
+if ! { git commit -m $subject -m $description } {
+  if { git diff --quiet } { exit 1 }
+  print -r -- "hooks regenerated files, restaging and retrying once"
+  git add .
+  git commit -m $subject -m $description
+}
+
+if (( on_main )) {
+  print -r -- "committed on main, moving commit onto a branch"
+  git-branch-name-upsert.zsh
+  git branch -f main origin/main
+  print -r -- "main reset to origin/main"
+}
 ##[<] 🤖🤖
