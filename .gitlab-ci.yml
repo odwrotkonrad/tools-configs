@@ -1,11 +1,13 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 stages:
   - validate
   - dry-run-apply
   - smoke-apply
+  - trigger-image
 
 ##[>] 🤖🤖
 variables:
@@ -32,6 +34,8 @@ variables:
 validate-pre-commit-all:
   extends: .base
   stage: validate
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
     MK_DRY_RUN_RENDER_SECRETS: "true"
   script:
@@ -42,6 +46,8 @@ dry-run-apply-sync:
   extends: .base
   stage: dry-run-apply
   needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
     MK_DRY_RUN: all
     CHE_DEBUG: "1"
@@ -62,6 +68,8 @@ dry-run-apply-sync:
 dry-run-apply-macos-desktop:
   extends: .e2e-macos
   stage: dry-run-apply
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
     MK_DRY_RUN: all
     CHE_PROFILE: desktop/macos
@@ -80,6 +88,8 @@ apply-macos-cli:
   needs: [dry-run-apply-macos-desktop]
   allow_failure: true
   rules:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: never
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
     - when: manual
@@ -96,6 +106,8 @@ apply-linux-cli:
   needs: []
   allow_failure: true
   rules:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: never
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
     - when: manual
@@ -109,3 +121,21 @@ apply-linux-cli:
     ##[>] 🤖🤖
     - sudo -u ko --preserve-env=CI,CHE_PROFILE,CHE_VALIDATE_SPEC,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-install
     ##[<] 🤖🤖
+
+##[>] 🤖🤖
+rebuild-dev-sandbox-image:
+  stage: trigger-image
+  needs: []
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  inherit:
+    variables: false
+  variables:
+    BUILD_DEV_SANDBOX_IMAGES: "true"
+  trigger:
+    project: konradodwrot/infra/oci-images
+    branch: main
+    forward:
+      yaml_variables: true
+      pipeline_variables: false
+##[<] 🤖🤖
