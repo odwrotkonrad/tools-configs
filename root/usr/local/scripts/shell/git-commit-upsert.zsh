@@ -27,6 +27,12 @@ if [[ -t 1 || -n $GIT_WRAPPER_FG ]] {
 ##[<] 🤖🤖
 print -r -- "=== ${0:t} $(date +%FT%T) ==="
 
+##[>] 🤖🤖
+#[why] agent sessions export MK_DRY_RUN=delta: it turns the docsgen hook's render into a
+#   dry-run, so stale generated docs pass `git diff --exit-code` and fail later in CI
+unset MK_DRY_RUN
+##[<] 🤖🤖
+
 mode=${1:-}
 
 git-sync-onto-main.zsh && sync=0 || sync=$?
