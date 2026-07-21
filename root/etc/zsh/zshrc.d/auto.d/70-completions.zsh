@@ -497,21 +497,21 @@ _deep_command() {
 ##[<] 🤖🤖🤖
 
 ##[>] 🤖🤖🤖
-#[what] gather whole-line history candidates into $reply: newest-first deduped, fuzzy chars-in-order prefilter by $PREFIX$SUFFIX (glob *a*b*), blank/multiline/over-wide/ignore-hints entries dropped, filled up to $1 (cap<1 => no cap); $2 is the context for the ignore-hints zstyle lookup
+#[what] gather whole-line history candidates into $reply: newest-first deduped, ranked against $PREFIX$SUFFIX in three tiers (exact-case prefix, ci prefix, ci substring; non-matches dropped, empty query => flat newest-first), blank/multiline/over-wide/ignore-hints entries dropped, truncated to $1 (cap<1 => no cap); $2 is the context for the ignore-hints zstyle lookup
 _deep_history_cands() {
   local cap=$1 ctx=$2
   reply=( )
 
-  local pat=
-  [[ -n $PREFIX$SUFFIX ]] && pat="*${(j:*:)${(@b)${(s::)${:-$PREFIX$SUFFIX}}}}*"
+  local typed=$PREFIX$SUFFIX
 
   local -a ignore
   zstyle -a ":completion:${ctx}:menu-select:history" ignore-hints ignore
 
   local -A seen
+  local -a t1 t2 t3
   local k v key re nl=$'\n'
   for k in ${(nOk)history}; do
-    (( cap > 0 && $#reply >= cap )) && break
+    (( cap > 0 && $#t1 >= cap )) && break
     v=$history[$k]
     #[what] dedup key: whitespace-normalized (trimmed, runs squeezed); blank entries dropped
     key=${(j: :)${=v}}
@@ -523,9 +523,18 @@ _deep_history_cands() {
     for re in $ignore; do [[ $key =~ $re ]] && continue 2; done
     #[why] complist pads rows to widest item + 2-space column gap and needs a spare column: a row reaching the last column autowraps into a blank line
     (( $#v > COLUMNS - 4 )) && continue
-    [[ -n $pat && $v != (#i)${~pat} ]] && continue
-    reply+=( "$v" )
+    if [[ -z $typed ]] {
+      t1+=( "$v" )
+    } elif [[ $v == ${(b)typed}* ]] {
+      t1+=( "$v" )
+    } elif [[ $v == (#i)${(b)typed}* ]] {
+      t2+=( "$v" )
+    } elif [[ $v == (#i)*${(b)typed}* ]] {
+      t3+=( "$v" )
+    }
   done
+  reply=( $t1 $t2 $t3 )
+  (( cap > 0 && $#reply > cap )) && reply=( $reply[1,cap] )
 }
 
 #[what] emit a capped history group at the bottom of a normal completion pass: history lines are whole commands, so span the buffer (PREFIX=$LBUFFER SUFFIX=$RBUFFER) only around the compadd and restore after, letting the caller's word-scoped groups keep their view; -U replaces the spanned region on accept, -V history last in call order pins it to the bottom; $1 cap (0 disables), $2 ignore-hints context
@@ -542,7 +551,7 @@ _deep_history_group() {
   PREFIX=$opre IPREFIX=$oipre SUFFIX=$osuf ISUFFIX=$oisuf
 }
 
-#[what] history engine: whole-line completion over history, newest-first deduped, fuzzy chars-in-order filter by the typed line via a glob prefilter, one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); accepting replaces the entire buffer (-U with PREFIX/SUFFIX spanning it); entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
+#[what] history engine: whole-line completion over history, newest-first deduped, substring filter by the typed line via a glob prefilter, one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); accepting replaces the entire buffer (-U with PREFIX/SUFFIX spanning it); entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
 _deep_history() {
   local curcontext="_deep_history:menu-select::"
 

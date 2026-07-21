@@ -17,9 +17,19 @@ Scenario: Up/Down opens a history completion menu
   When I press Up or Down
   Then a headerless history menu opens, newest first, deduped
   And the list fills the screen below the prompt, leaving 2 blank lines at the bottom
-  And the whole typed line fuzzy-filters the candidates (chars in order, case-insensitive)
+  And the whole typed line substring-filters the candidates (case-insensitive)
   And accepting a candidate replaces the whole line with the full command
   And commands spanning more than one screen line (multiline or wider than the terminal) are omitted
   And commands matching an ignore-hints regex (e.g. ^cd.*) are omitted
   And Up/Down inside the open menu move the selection
+<!--[<] 🤖🤖 -->
+
+<!--[>] 🤖🤖 -->
+Scenario: history candidates rank by match position
+  Given a typed line used as the query
+  When the history menu opens
+  Then candidates whose command starts with the query (exact case) rank first
+  And candidates whose command starts with the query (case-insensitive) rank second
+  And candidates matching the query anywhere (case-insensitive) rank last
+  And within each rank candidates stay newest first, deduped
 <!--[<] 🤖🤖 -->
