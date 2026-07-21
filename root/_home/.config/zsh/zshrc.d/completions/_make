@@ -12,10 +12,21 @@
 
 #[why] pristine zsh options for the whole completion span (restored on return): this
 #   shell's global option set otherwise mangles glob/spec handling in the helpers below
-emulate -LR zsh
+emulate -LR zsh -o extendedglob
 
 #[what] max targets shown per group (diversified so the shown set spans distinct prefixes)
 local -i MAKE_WS_CAP=6
+
+#[what] compadd opts: matcher matching the typed word anywhere in the target name,
+#   case-insensitive; candidates are also pre-filtered the same way so caps count matches
+local -a MAKE_WS_ADDOPTS=( -M 'l:|=* r:|=* m:{[:lower:]}={[:upper:]}' )
+
+#[what] with a typed pattern, skip the matcher-derived common-part insert (a mangled
+#   fragment like `-render-`) and open the menu with the first full candidate instead
+_make_ws_menu() {
+  [[ -n $cur ]] && (( ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+  return 0
+}
 
 #[what] target names from a make database dump ($@ = -C dir args): the union of
 #   .PHONY members (the house-style command/wrapper list) and explicit rule
@@ -82,32 +93,45 @@ _make_ws() {
     [[ $cur == ${r}-* ]] && { matched=$r; break }
   done
 
-  #[what] child targets ($1 = repo name, $2 = cap or 0 for all): diversified, capped, prefixed
+  #[what] child targets ($1 = repo name, $2 = cap or 0 for all): prefixed; typed pattern
+  #   ci-substring-filters the prefixed names before the cap, no pattern diversifies instead
   _make_ws_child() {
     local repo=$1 cap=$2 dir=$root/$path_of[$1]
     local -a t=( ${${(f)"$(_make_ws_targets -C $dir)"}:#(\%*|.*|*\%)} )
-    t=( ${(f)"$(print -rl -- $t | _make_ws_diverse)"} )
+    if [[ -n $cur ]] {
+      t=( ${repo}-${^t} )
+      t=( ${(M)t:#(#i)*${cur}*} )
+    } else {
+      t=( ${(f)"$(print -rl -- $t | _make_ws_diverse)"} )
+      t=( ${repo}-${^t} )
+    }
     (( cap > 0 && $#t > cap )) && t=( $t[1,cap] )
-    print -rl -- ${repo}-${^t}
+    print -rl -- $t
   }
 
   #[what] `<repo>-<partial>`: only that child's targets, uncapped (drilled in), in its own group
   if [[ -n $matched ]]; then
     local -a child=( ${(f)"$(_make_ws_child $matched 0)"} )
-    _wanted "repo-$matched" expl "$matched" compadd -a child && ret=0
+    (( $#child )) && _wanted "repo-$matched" expl "$matched" compadd $MAKE_WS_ADDOPTS -a child && ret=0
+    (( ret )) || _make_ws_menu
     return $ret
   fi
 
   #[what] top level: this Makefile's own targets under `## targets`, then one group per repo
   local -a bare=( ${${(f)"$(_make_ws_targets)"}:#(\%*|.*|*\%)} )
-  bare=( ${(f)"$(print -rl -- $bare | _make_ws_diverse)"} )
+  if [[ -n $cur ]] {
+    bare=( ${(M)bare:#(#i)*${cur}*} )
+  } else {
+    bare=( ${(f)"$(print -rl -- $bare | _make_ws_diverse)"} )
+  }
   (( $#bare > MAKE_WS_CAP )) && bare=( $bare[1,MAKE_WS_CAP] )
-  _wanted targets expl 'targets' compadd -a bare && ret=0
+  (( $#bare )) && _wanted targets expl 'targets' compadd $MAKE_WS_ADDOPTS -a bare && ret=0
   for p in $paths; do
     r=${p:t}
     local -a child=( ${(f)"$(_make_ws_child $r $MAKE_WS_CAP)"} )
-    (( $#child )) && { _wanted "repo-$r" expl "$r" compadd -a child && ret=0 }
+    (( $#child )) && { _wanted "repo-$r" expl "$r" compadd $MAKE_WS_ADDOPTS -a child && ret=0 }
   done
+  (( ret )) || _make_ws_menu
   return $ret
 }
 
@@ -118,8 +142,13 @@ _make_ws && return
 #   specs this shell globs into `bad pattern: *(-/)`); no option flags -> no dir completion
 local -a t=( ${${(f)"$(_make_ws_targets)"}:#(\%*|.*|*\%)} )
 if (( $#t )); then
-  local expl
-  _wanted targets expl 'targets' compadd -a t && return
+  local cur=$PREFIX$SUFFIX expl
+  [[ -n $cur ]] && t=( ${(M)t:#(#i)*${cur}*} )
+  #[why] targets exist but none match the typed pattern: complete nothing quietly, never
+  #   fall into _default file completion (noise + this shell's bad-pattern _files specs)
+  (( $#t )) || return 1
+  _wanted targets expl 'targets' compadd $MAKE_WS_ADDOPTS -a t && _make_ws_menu
+  return
 fi
 _default
 ##[<] 🤖🤖🤖
