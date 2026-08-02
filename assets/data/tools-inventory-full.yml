@@ -33,19 +33,28 @@ tools:
 
   - claude:
       files:
-        root/_home/.config/claude/:
-          CLAUDE.md:
-          settings.json:
-          agents/:
-          rules/:
-          skills/:
-          plugins/:
-            known_marketplaces.json:
-            installed_plugins.json:
+        tools/claude/:
+          che.yml:
+          scripts/01-install-claude.zsh:
+          root/_home/.config/claude/:
+            settings.json.ontoHost.tpl:
+            agents/:
+            rules/:
+            skills/:
+            plugins/:
+              known_marketplaces.json:
+              installed_plugins.json:
+          root/_home/.config/zsh/:
+            zshenv.d/auto.d/claude/30-claude.zsh:
+            zshrc.d/auto.d/claude/20-env.zsh:
 
   - codex:
       files:
-        root/_home/.config/codex/config.toml.ontoHost.tpl:
+        tools/codex/:
+          che.yml:
+          scripts/01-install-codex.zsh:
+          root/_home/.config/codex/config.toml.ontoHost.tpl:
+          root/etc/zsh/zshrc.d/auto.d/codex/10-auth.zsh:
 
   - defaults:
       files:
@@ -57,6 +66,20 @@ tools:
   - editorconfig:
       files:
         root/_home/.editorconfig:
+
+  - gcp:
+      files:
+        tools/gcp/:
+          che.yml:
+          scripts/:
+            01-install-gcloud.zsh:
+            10-check-auth.zsh:
+          root/_home/.config/gcloud/configurations/:
+            config_main.ontoHost.tpl:
+            config_staging.ontoHost.tpl:
+            config_production.ontoHost.tpl:
+          root/_home/.config/zsh/zshenv.d/auto.d/gcp/20-env.zsh:
+          root/etc/zsh/zshenv.d/auto.d/gcp/30-adc.zsh:
 
   - git:
       files:
@@ -121,6 +144,15 @@ tools:
   - nvm:
       files:
         root/_home/.nvmrc:
+
+  - onepassword:
+      files:
+        tools/onepassword/:
+          che.yml:
+          scripts/:
+            01-install-op.zsh:
+            02-init-auth.zsh:
+          root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh:
 
   - prettier:
       files:

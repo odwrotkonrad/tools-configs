@@ -8,20 +8,6 @@ function fn_otel_resource_cwd {
 add-zsh-hook chpwd fn_otel_resource_cwd
 fn_otel_resource_cwd
 
-function fn_auth_codex {
-  codex login status >/dev/null 2>&1 && return 0
-  local key=$(op read "op://ProgrammaticAccess/codex/api_key")
-  [[ -n $key ]] && print -r -- $key | codex login --with-api-key
-}
-
-function fn_preexec_dispatch {
-  case ${1} in
-    codex*) fn_auth_codex ;;
-  esac
-  return 0
-}
-add-zsh-hook preexec fn_preexec_dispatch
-
 add-zsh-hook chpwd  fn-env-autoload
 add-zsh-hook precmd fn-env-autoload
 

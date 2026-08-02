@@ -53,8 +53,8 @@ references:
 ##[>] primary
 agents: root/_home/.config/agents/templates/AGENTS.md.ontoHost.tpl
 ccstatusline: root/_home/.config/ccstatusline/settings.json
-claude: root/_home/.config/claude/settings.json.ontoHost.tpl
-codex: root/_home/.config/codex/config.toml.ontoHost.tpl
+claude: tools/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
+codex: tools/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml
 git: tools/git/root/_home/.config/git/config
@@ -75,7 +75,7 @@ asdf: root/_home/.config/asdf/.asdfrc
 aws: root/_home/.config/aws/config.ontoHost.tpl
 azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
-gcloud: root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
+gcloud: tools/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: tools/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 glab: tools/gitlab/glab/root/_home/.config/glab-cli/config.yml.ontoHost.cp
 golang: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
@@ -85,6 +85,7 @@ man: root/etc/man.conf
 mypy: root/_home/.config/mypy/config
 nvm: root/_home/.nvmrc
 ollama: root/_home/.ollama/server.json
+onepassword: tools/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
 prettier: root/_home/.config/prettier/.prettierrc.yml
 pyenv: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 ruff: root/_home/.config/ruff/ruff.toml
@@ -165,26 +166,6 @@ root
       azure
       ccstatusline
       che
-      claude
-        agent-memory
-        agents
-        commands
-        output-styles
-        plugins
-          marketplaces
-        rules
-          code
-            python
-            zsh
-          config
-            zsh
-          docs
-        skills
-          user-git-ops
-        themes
-      codex
-      gcloud
-        configurations
       homebrew
       kitty
       lefthook
@@ -230,6 +211,62 @@ templates
   agents
     snippets
 tools
+  claude
+    root
+      _home
+        .config
+          claude
+            agent-memory
+            agents
+            commands
+            output-styles
+            plugins
+              marketplaces
+            rules
+              code
+                python
+                zsh
+              config
+                zsh
+              docs
+            skills
+              user-git-ops
+            themes
+          zsh
+            zshenv.d
+              auto.d
+                claude
+            zshrc.d
+              auto.d
+                claude
+    scripts
+  codex
+    root
+      _home
+        .config
+          codex
+      etc
+        zsh
+          zshrc.d
+            auto.d
+              codex
+    scripts
+  gcp
+    root
+      _home
+        .config
+          gcloud
+            configurations
+          zsh
+            zshenv.d
+              auto.d
+                gcp
+      etc
+        zsh
+          zshenv.d
+            auto.d
+              gcp
+    scripts
   git
     root
       _home
@@ -265,6 +302,14 @@ tools
         _home
           .gitlab-runner
       scripts
+  onepassword
+    root
+      etc
+        zsh
+          zshenv.d
+            auto.d
+              onepassword
+    scripts
   ssh
     root
       _home

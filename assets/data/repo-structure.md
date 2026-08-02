@@ -29,26 +29,6 @@ root
       azure
       ccstatusline
       che
-      claude
-        agent-memory
-        agents
-        commands
-        output-styles
-        plugins
-          marketplaces
-        rules
-          code
-            python
-            zsh
-          config
-            zsh
-          docs
-        skills
-          user-git-ops
-        themes
-      codex
-      gcloud
-        configurations
       homebrew
       kitty
       lefthook
@@ -94,6 +74,62 @@ templates
   agents
     snippets
 tools
+  claude
+    root
+      _home
+        .config
+          claude
+            agent-memory
+            agents
+            commands
+            output-styles
+            plugins
+              marketplaces
+            rules
+              code
+                python
+                zsh
+              config
+                zsh
+              docs
+            skills
+              user-git-ops
+            themes
+          zsh
+            zshenv.d
+              auto.d
+                claude
+            zshrc.d
+              auto.d
+                claude
+    scripts
+  codex
+    root
+      _home
+        .config
+          codex
+      etc
+        zsh
+          zshrc.d
+            auto.d
+              codex
+    scripts
+  gcp
+    root
+      _home
+        .config
+          gcloud
+            configurations
+          zsh
+            zshenv.d
+              auto.d
+                gcp
+      etc
+        zsh
+          zshenv.d
+            auto.d
+              gcp
+    scripts
   git
     root
       _home
@@ -129,6 +165,14 @@ tools
         _home
           .gitlab-runner
       scripts
+  onepassword
+    root
+      etc
+        zsh
+          zshenv.d
+            auto.d
+              onepassword
+    scripts
   ssh
     root
       _home

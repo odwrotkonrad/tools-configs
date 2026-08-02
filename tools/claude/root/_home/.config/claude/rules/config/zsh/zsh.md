@@ -78,15 +78,13 @@ paths:
           zshenv.d/auto.d/extras/:
             10-params.zsh.ontoHost.tpl:                     # rendered per host (op secret)
             20-tools-env.zsh:                               # tool env + PATH inserts
-            30-claude.zsh:                                  # man-as-text, clobber; guarded on CLAUDECODE
           zshrc.d/auto.d/extras/:
             10-dirs.zsh.ontoHost.tpl:
-            20-tools.zsh:                                   # nvm, claude env
+            20-tools.zsh:                                   # nvm
         root/etc/zsh/:
           zshenv.d/:
             auto.d/extras/:
               20-tools-env.zsh:
-              30-gcp-adc.zsh:
             functions/:
               fn-load-os-open-files-with:
           zshrc.d/:
