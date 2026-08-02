@@ -102,7 +102,7 @@ apply-linux-cli:
   variables:
     CHE_PROFILE: cli/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
+    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖.
   needs: []
   allow_failure: true
   rules:

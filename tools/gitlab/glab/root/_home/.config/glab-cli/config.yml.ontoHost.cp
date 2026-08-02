@@ -3,7 +3,7 @@ git_protocol: ssh
 editor:
 browser:
 glamour_style: dark
-check_update: true
+check_update: false
 display_hyperlinks: true
 host: gitlab.com
 no_prompt: false
