@@ -113,7 +113,7 @@ apply-linux-cli:
     - when: manual
   before_script:
     ##[>] 🤖🤖
-    #[why] ci-linux carries no user (ko moved to the dev-sandbox image): create it here for the as-user apply
+    #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
     - useradd -m -s /bin/zsh -G root ko && echo 'ko ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/ko
     - chown -R ko "$CI_PROJECT_DIR"
     ##[<] 🤖🤖
@@ -123,7 +123,7 @@ apply-linux-cli:
     ##[<] 🤖🤖
 
 ##[>] 🤖🤖
-rebuild-dev-sandbox-image:
+rebuild-sandbox-image:
   stage: trigger-image
   needs: []
   rules:
@@ -131,9 +131,9 @@ rebuild-dev-sandbox-image:
   inherit:
     variables: false
   variables:
-    BUILD_DEV_SANDBOX_IMAGES: "true"
+    BUILD_SANDBOX_IMAGE: "true"
   trigger:
-    project: konradodwrot/infra/oci-images
+    project: konradodwrot-restricted/sandbox
     branch: main
     forward:
       yaml_variables: true

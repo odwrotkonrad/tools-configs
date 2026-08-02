@@ -3,7 +3,7 @@
 options:
   profileWorkingDirectory: root
 
-gcp:
+gcp/install:
   include:
     makeLinks:
       - etc/**
