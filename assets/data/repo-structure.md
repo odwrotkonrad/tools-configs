@@ -59,14 +59,6 @@ root
       ruff
       tmux
       vim
-      zsh
-        zshenv.d
-          auto.d
-          functions
-        zshrc.d
-          auto.d
-          completions
-          functions
     .gitlab-runner
     .homebrew
     .ollama
@@ -93,14 +85,6 @@ root
     prometheus
     rg
     sudoers.d
-    zsh
-      zshenv.d
-        auto.d
-        functions
-      zshrc.d
-        auto.d
-        completions
-        functions
   usr
     local
       scripts
@@ -113,3 +97,59 @@ templates
   3-audience
   agents
     snippets
+tools
+  zsh
+    base
+      root
+        _home
+          .config
+            zsh
+              zshenv.d
+                functions
+              zshrc.d
+                auto.d
+                  00-base
+                completions
+                functions
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                00-base
+              functions
+            zshrc.d
+              auto.d
+                00-base
+              completions
+              functions
+              static-history.d
+      root-linux
+        etc
+          zsh
+      root-macos
+        etc
+          zsh
+            zshenv.d
+              functions
+      scripts
+    extras
+      root
+        _home
+          .config
+            zsh
+              zshenv.d
+                auto.d
+                  extras
+              zshrc.d
+                auto.d
+                  extras
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                extras
+              functions
+            zshrc.d
+              auto.d
+                extras
+              static-history.d

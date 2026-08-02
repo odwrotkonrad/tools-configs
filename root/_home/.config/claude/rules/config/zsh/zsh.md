@@ -15,59 +15,90 @@ paths:
 ```yml
 - zsh:
     files:
-      root/_home/.config/zsh/:
-        .zshenv:
-        .zprofile:
-        .zshrc:
-        .zlogin:
-        .zlogout:
-        zshenv.d/:                                          # loaded by .zshenv (all shells)
-          auto.d/:                                          # sourced in name order
-            30-params.zsh.ontoHost.tpl:                   # rendered per host
-            81-claude.zsh:                                  # man-as-text, clobber; guarded on CLAUDECODE
-          functions/:                                       # autoloaded
-        zshrc.d/:                                           # loaded by .zshrc (interactive)
-          auto.d/:
-            30-params.zsh:
-            50-dirs.zsh:
-            80-tools.zsh:
-          completions/:
-          functions/:
-      root/etc/:
-        zshenv:
-        zprofile:
-        zshrc:
-        zlogin:
-        zlogout:
-        zsh/:
+      tools/zsh/base/:                                      # bare-minimal profile: zsh + rg only
+        che.yml:                                            # zsh/base, zsh/base-macos, zsh/base-linux profiles
+        scripts/:
+          01-install-zsh.sh:                                # POSIX sh: linux apt-get, macos no-op
+          02-install-rg.zsh:                                # prebuilt rg binary download
+          03-install-brew.zsh:                              # homebrew bootstrap (packages stay in ci installs)
+        root/_home/.config/zsh/:
+          .zshenv:
+          .zprofile:
+          .zshrc:
+          .zlogin:
+          .zlogout:
+          zshenv.d/functions/:                              # autoloaded
+          zshrc.d/:                                         # loaded by .zshrc (interactive)
+            auto.d/00-base/:                                # per-profile subdir, sourced recursively
+              10-params.zsh:
+              20-dirs.zsh:
+            completions/:
+            functions/:
+        root/etc/zsh/:
           zshenv.d/:                                        # loaded by /etc/zshenv (all shells)
             fn-loaders.zsh:                                 # autoload helpers
-            auto.d/:                                        # sourced in name order
-              20-options.zsh:
-              30-params.zsh:
+            auto.d/00-base/:                                # per-profile subdir, sourced recursively in path order
+              10-options.zsh:
+              20-params.zsh:
             functions/:                                     # autoloaded
-              rm:
               fn-exit-with:
               fn-print-with:
+              fn-log-msg:
               fn-is-os:                                     # predicate: mac|linux
-              fn-is-arch:                                    # predicate: arm|x86
+              fn-is-arch:                                   # predicate: arm|x86
+              fn-is-virt:
               fn-is-terminal:                               # predicate: kitty|vscode
-              fn-load-os-open-files-with:
-              fn-ssh-generate-keys:
-              fn-ssh-test-git-connection:
+              fn-install-if-missing:
+              fn-install-prebuilt-if-outdated:
           zshrc.d/:                                         # loaded by /etc/zshrc (interactive)
-            static-history:                                 # items loaded into each interactive shell
-            auto.d/:
-              00-local.zsh:
-              10-functions.zsh:
-              11-functions-zle.zsh:
-              30-params.zsh:
-              40-aliases.zsh:
-              80-tools.zsh:
-              90-keybindings.zsh:
+            static-history.d/:                              # concatenated into each interactive shell, name order
+              00-base:
+            auto.d/00-base/:
+              10-functions-zle.zsh:
+              20-params.zsh:
+              30-aliases.zsh:
+              40-completions.zsh:
+              50-keybindings.zsh:
             completions/:
             functions/:
               fn-load-static-history:
+              fn-env-autoload:
+              fn-open-or-exec:
+        root-linux/etc/zsh/:                                # real loader files (linux links them to /etc/zsh)
+          zshenv:
+          zprofile:
+          zshrc:
+          zlogin:
+          zlogout:
+        root-macos/etc/:                                    # loader symlinks -> ../../root-linux/etc/zsh/<name>
+          zsh/zshenv.d/functions/rm:                        # trash-backed rm (macos-only)
+      tools/zsh/extras/:                                    # tool-coupled zsh config
+        che.yml:                                            # zsh/extras profile
+        root/_home/.config/zsh/:
+          zshenv.d/auto.d/extras/:
+            10-params.zsh.ontoHost.tpl:                     # rendered per host (op secret)
+            20-tools-env.zsh:                               # tool env + PATH inserts
+            30-claude.zsh:                                  # man-as-text, clobber; guarded on CLAUDECODE
+          zshrc.d/auto.d/extras/:
+            10-dirs.zsh.ontoHost.tpl:
+            20-tools.zsh:                                   # nvm, claude env
+        root/etc/zsh/:
+          zshenv.d/:
+            auto.d/extras/:
+              10-params-secrets.zsh:
+              20-tools-env.zsh:
+              30-gcp-adc.zsh:
+            functions/:
+              fn-load-os-open-files-with:
+              fn-ssh-generate-keys:
+              fn-ssh-test-git-connection:
+          zshrc.d/:
+            static-history.d/:
+              50-tools:
+            auto.d/extras/:
+              10-functions.zsh:
+              20-tools-aliases.zsh:
+              30-tools.zsh:                                 # pyenv init
       root/usr/local/scripts/:
         shell/:
           load-defaults-config:
@@ -90,7 +121,7 @@ paths:
 | - | ${ZDOTDIR}/.zlogout           | login shell exit (1st)  |
 | - | /etc/zlogout                  | login shell exit (2nd)  |
 
-Each phase has `<phase>.d/` with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced in name order). `/etc/zshenv` loads `zshenv.d/` (all shells); `/etc/zshrc` loads `zshrc.d/` (interactive); same split in user space. Put always-available helpers in `zshenv.d/`, interactive-only in `zshrc.d/`.
+Each phase has `<phase>.d/` with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced recursively in path name order; each profile owns a subdir, e.g. `auto.d/00-base/`, `auto.d/extras/`). `/etc/zshenv` loads `zshenv.d/` (all shells); `/etc/zshrc` loads `zshrc.d/` (interactive); same split in user space. Put always-available helpers in `zshenv.d/`, interactive-only in `zshrc.d/`.
 
 ### Documentation
 

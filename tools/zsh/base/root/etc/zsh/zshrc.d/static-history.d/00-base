@@ -1,0 +1,24 @@
+##[>] brew [what] The Missing Package Manager for macOS (or Linux)
+brew list                #[what] list all packages installed
+brew update              #[what] update remotes
+brew upgrade             #[what] install upgrades
+brew install             #[what] install from brewfile
+brew install wget        #[what] install pkg
+brew bundle add wget     #[what] add pkg to Brewfile
+brew bundle remove wget  #[what] remove pkg from Brewfile
+##[<] brew
+
+##[>] zsh builtins
+###[>] emulate
+emulate -R zsh  #[what] reset shell opts to defaults for current shell
+emulate -L zsh  #[what] set LOCAL_OPTIONS, LOCAL_PATTERNS and LOCAL_TRAPS for current shell
+###[<] emulate
+
+###[>] setopt
+setopt          #[what] show all enabled shell options
+unsetopt        #[what] show all disabled shell options
+set -o          #[what] show all shell options with on/off status
+###[<] setopt
+
+exec zsh     #[what] reload config by replacing current process (no nested shell); re-runs full startup chain
+##[<] zsh builtins

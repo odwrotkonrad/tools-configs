@@ -67,7 +67,7 @@ prometheus: root/etc/prometheus/prometheus.yml
 rg: root/etc/rg/rgrc
 ssh: root/_home/.ssh/config
 vscode: root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
-zsh: root/etc/zshrc
+zsh: tools/zsh/base/root-linux/etc/zsh/zshrc
 ##[<] primary
 
 ##[>] other
@@ -77,15 +77,15 @@ azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
 gcloud: root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: root/_home/.gitlab-runner/config.toml.ontoHost.tpl
-golang: root/etc/zshenv
-homebrew: root/etc/zshrc
+golang: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
+homebrew: tools/zsh/base/root/_home/.config/zsh/.zshenv
 loki: root/etc/loki/config.yml
 man: root/etc/man.conf
 mypy: root/_home/.config/mypy/config
 nvm: root/_home/.nvmrc
 ollama: root/_home/.ollama/server.json
 prettier: root/_home/.config/prettier/.prettierrc.yml
-pyenv: root/etc/zshenv
+pyenv: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 ruff: root/_home/.config/ruff/ruff.toml
 tmux: root/_home/.config/tmux/tmux.conf
 vim: root/_home/.config/vim/vimrc
@@ -194,14 +194,6 @@ root
       ruff
       tmux
       vim
-      zsh
-        zshenv.d
-          auto.d
-          functions
-        zshrc.d
-          auto.d
-          completions
-          functions
     .gitlab-runner
     .homebrew
     .ollama
@@ -228,14 +220,6 @@ root
     prometheus
     rg
     sudoers.d
-    zsh
-      zshenv.d
-        auto.d
-        functions
-      zshrc.d
-        auto.d
-        completions
-        functions
   usr
     local
       scripts
@@ -248,3 +232,59 @@ templates
   3-audience
   agents
     snippets
+tools
+  zsh
+    base
+      root
+        _home
+          .config
+            zsh
+              zshenv.d
+                functions
+              zshrc.d
+                auto.d
+                  00-base
+                completions
+                functions
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                00-base
+              functions
+            zshrc.d
+              auto.d
+                00-base
+              completions
+              functions
+              static-history.d
+      root-linux
+        etc
+          zsh
+      root-macos
+        etc
+          zsh
+            zshenv.d
+              functions
+      scripts
+    extras
+      root
+        _home
+          .config
+            zsh
+              zshenv.d
+                auto.d
+                  extras
+              zshrc.d
+                auto.d
+                  extras
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                extras
+              functions
+            zshrc.d
+              auto.d
+                extras
+              static-history.d

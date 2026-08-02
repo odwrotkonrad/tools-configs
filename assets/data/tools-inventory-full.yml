@@ -7,13 +7,16 @@ references:
 
 #[what] Shared files referenced by many tools.
 files:
-  root/_home/.config/zsh/rc.d/10-tools.zsh:
-  root/etc/:
+  tools/zsh/base/root-linux/etc/zsh/:
     zshenv:
     zshrc:
-    zsh/rc.d/20-tools.zsh:
-    zsh/rc.d/40-aliases.zsh:
-    zsh/static-history:
+  tools/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh:
+  tools/zsh/extras/root/:
+    _home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh:
+    etc/zsh/:
+      zshenv.d/auto.d/extras/20-tools-env.zsh:
+      zshrc.d/auto.d/extras/20-tools-aliases.zsh:
+      zshrc.d/static-history.d/50-tools:
 
 #>[what] Tool specific files
 tools:
@@ -61,7 +64,7 @@ tools:
           config:
           ignore:
           commit-template:
-        root/etc/zsh/functions/fn-ssh-test-git-connection:
+        tools/zsh/extras/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
 
   - golang:
 
@@ -106,7 +109,7 @@ tools:
         root/etc/rg/:
           rgrc:
           rgignore:
-        root/etc/zsh/functions/fn-load-static-history:
+        tools/zsh/base/root/etc/zsh/zshrc.d/functions/fn-load-static-history:
 
   - ruff:
       files:
@@ -115,7 +118,7 @@ tools:
   - ssh:
       files:
         root/_home/.ssh/config:
-        root/etc/zsh/functions/:
+        tools/zsh/extras/root/etc/zsh/zshenv.d/functions/:
           fn-ssh-generate-keys:
           fn-ssh-test-git-connection:
 
@@ -133,17 +136,28 @@ tools:
 
   - zsh:
       files:
-        root/_home/.config/zsh/:
-          .zshenv:
-          .zprofile:
-          .zshrc:
-          .zlogin:
-          .zlogout:
-          rc.d/00-dirs.zsh:
-        root/etc/:
-          zprofile:
-          zlogin:
-          zlogout:
-          zsh/rc.d/10-shell.zsh:
-          zsh/rc.d/50-keybindings.zsh:
-          zsh/functions/rm:
+        tools/zsh/:
+          base/che.yml:
+          base/scripts/:
+            01-install-zsh.sh:
+            02-install-rg.zsh:
+            03-install-brew.zsh:
+          base/root/_home/.config/zsh/:
+            .zshenv:
+            .zprofile:
+            .zshrc:
+            .zlogin:
+            .zlogout:
+            zshrc.d/auto.d/00-base/20-dirs.zsh:
+          base/root/etc/zsh/:
+            zshenv.d/:
+            zshrc.d/:
+          base/root-linux/etc/zsh/:
+            zshenv:
+            zprofile:
+            zshrc:
+            zlogin:
+            zlogout:
+          base/root-macos/etc/:
+          extras/che.yml:
+          extras/root/:

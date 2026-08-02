@@ -2,9 +2,22 @@
 ##[>] 🤖🤖
 options:
   profileWorkingDirectory: root
+zsh/base:
+  include:
+    profiles:
+      - source: "tools/zsh/base/che.yml::zsh/base-macos"
+      - source: "tools/zsh/base/che.yml::zsh/base-linux"
+
+zsh/extras:
+  include:
+    profiles:
+      - source: "tools/zsh/extras/che.yml::zsh/extras"
+
 base:
   include:
     profiles:
+      - zsh/base
+      - zsh/extras
       - source: "@https://gitlab.com/konradodwrot/workspace.git/che.yml::gitlabGroup"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
@@ -53,26 +66,19 @@ base:
               - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
     makeDirs:
       - directories:
-          - {dest: ["$HOME/.cache/{zsh,homebrew,get-term-open-files-with}"]}
+          - {dest: ["$HOME/.cache/{homebrew,get-term-open-files-with}"]}
           - {dest: [$HOME/.config/codex]}
           - {dest: ["$HOME/.local/{bin,share}"]}
           - {dest: [$HOME/.local/state/che/backups]}
-          - {dest: ["$HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo,zsh/completions}"]}
+          - {dest: ["$HOME/.local/state/{asdf,codex/log,homebrew,log,vim/undo}"]}
           - {dest: [$HOME/ScreenCapture]}
-          - {dest: [/var/root/.cache/zsh]}
           - {dest: [/var/root/.config]}
-          - {dest: [/var/root/.local/state/zsh/completions]}
       - chmod: "2775"
         directories:
           - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
           - {dest: ["/var/custom/cache/dir_size_exporter"]}
           - {dest: ["/var/log/{grafana,prometheus,jaeger,loki}"]}
           - {dest: ["/usr/local/var/{grafana,prometheus}"]}
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0755"
-        directories:
-          - {dest: [/etc/zsh/zshrc.d/completions]}
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
       - ci/zsh/scripts/bootstrap/*.zsh
@@ -89,7 +95,7 @@ base-exclude-desktop:
       - _home/.gitlab-runner/**
       - _home/Library/**
       - Library/LaunchAgents/gitlab-runner.plist*
-      #[why] 🤖🤖 cli/linux-only excludes (cli/macos does not include base-exclude-desktop): the sandbox authenticates to google via ADC (GOOGLE_APPLICATION_CREDENTIALS), not gcloud/aws config files, and the quota project is hardcoded in that profile's 30-params branch: no op:// dependency remains in the pod
+      #[why] 🤖🤖 cli/linux-only excludes (cli/macos does not include base-exclude-desktop): the sandbox authenticates to google via ADC (GOOGLE_APPLICATION_CREDENTIALS), not gcloud/aws config files, and the quota project is hardcoded in that profile's 10-params branch: no op:// dependency remains in the pod
       - _home/.config/gcloud/**
       - _home/.config/aws/config.ontoHost.tpl
     makeDirs:
@@ -123,18 +129,6 @@ cli/linux:
   options: {autoDiscover: true, runIf: ['builtin:isOs == linux']}
   include:
     profiles: [base, base-exclude-macos, base-exclude-desktop]
-    makeCopies:
-      #[why] global rc dir is a zsh compile-time option (--enable-etc-dir): debian builds with /etc/zsh, macos keeps the upstream /etc, so linux needs the loader files mirrored there (they source the shared /etc/zsh/*.d dirs)
-      #[where] debian zsh packaging (debian/rules --enable-etc-dir=/etc/zsh); man zsh STARTUP/SHUTDOWN FILES per OS
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0644"
-        files:
-          - {source: etc/zshenv, dest: [/etc/zsh/zshenv]}
-          - {source: etc/zprofile, dest: [/etc/zsh/zprofile]}
-          - {source: etc/zshrc, dest: [/etc/zsh/zshrc]}
-          - {source: etc/zlogin, dest: [/etc/zsh/zlogin]}
-          - {source: etc/zlogout, dest: [/etc/zsh/zlogout]}
 
 claude-agents:
   options: {autoDiscover: true, runIf: ['builtin:isVirt']}
