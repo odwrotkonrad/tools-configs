@@ -5,18 +5,13 @@ options:
 
 ssh:
   include:
-    profiles:
-      - source: "./che.yml::ssh/keys"
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
-  exclude:
-    makeLinks:
-      - _home/.ssh/*.ontoHost.tpl
 
 #[why] sandbox keypair from 1password, rendered under the standard names the ssh/git config reference; virt only (desktop skips via runIf: never clobber the host's real keys)
-ssh/keys:
-  options: {runIf: ['builtin:isVirt']}
+ssh/virt:
+  options: {runIf: ['builtin:isVirt'], profileWorkingDirectory: root-virt}
   include:
     renderTemplates:
       - chmod: "0600"

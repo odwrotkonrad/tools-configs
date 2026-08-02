@@ -28,7 +28,6 @@ if stage?("formulae")
   brew "gcc"           # GNU compiler collection
   brew "gh"            # GitHub command-line tool
   brew "pcre2"         # Perl compatible regular expressions library with a new API
-  brew "git"           # Distributed revision control system
   brew "goreleaser"    # 🤖 Deliver Go binaries as fast and easily as possible
   brew "htop"          # Improved top (interactive process viewer)
   brew "jq"            # Lightweight and flexible command-line JSON processor

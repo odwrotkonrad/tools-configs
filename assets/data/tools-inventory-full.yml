@@ -60,6 +60,8 @@ tools:
 
   - git:
       files:
+        tools/git/che.yml:
+        tools/git/scripts/01-install-git.zsh:
         tools/git/root/_home/.config/git/:
           config:
           ignore:
@@ -145,7 +147,13 @@ tools:
 
   - ssh:
       files:
+        tools/ssh/che.yml:
         tools/ssh/root/_home/.ssh/config:
+        tools/ssh/root-virt/_home/.ssh/:
+          id_access.ontoHost.tpl:
+          id_access.pub.ontoHost.tpl:
+          id_signing.ontoHost.tpl:
+          id_signing.pub.ontoHost.tpl:
         tools/ssh/root/etc/zsh/zshenv.d/functions/:
           fn-ssh-generate-keys:
           fn-ssh-test-git-connection:

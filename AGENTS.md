@@ -235,6 +235,7 @@ tools
       _home
         .config
           git
+    scripts
   gitlab
     glab
       root
@@ -272,6 +273,9 @@ tools
         zsh
           zshenv.d
             functions
+    root-virt
+      _home
+        .ssh
   zsh
     base
       root

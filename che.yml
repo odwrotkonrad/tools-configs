@@ -27,6 +27,7 @@ ssh:
   include:
     profiles:
       - source: "tools/ssh/che.yml::ssh"
+      - source: "tools/ssh/che.yml::ssh/virt"
 
 gitlab/glab:
   include:

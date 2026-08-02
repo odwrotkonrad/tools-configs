@@ -12,16 +12,17 @@ paths:
 
 ```yml
 tools/ssh/:
-  che.yml:  # ssh profile (config link), ssh/keys profile (virt-only key renders)
+  che.yml:  # ssh profile (host: config link), ssh/virt profile (virt-only key renders)
   root/_home/.ssh/:
     config:  # client config
-    id_access.ontoHost.tpl:  # virt-only sandbox keypair renders (op://)
-    id_access.pub.ontoHost.tpl:
-    id_signing.ontoHost.tpl:
-    id_signing.pub.ontoHost.tpl:
   root/etc/zsh/zshenv.d/functions/:
     fn-ssh-generate-keys:
     fn-ssh-test-git-connection:
+  root-virt/_home/.ssh/:  # virt-only sandbox keypair renders (op://)
+    id_access.ontoHost.tpl:
+    id_access.pub.ontoHost.tpl:
+    id_signing.ontoHost.tpl:
+    id_signing.pub.ontoHost.tpl:
 ```
 
 ### Documentation
