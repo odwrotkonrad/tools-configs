@@ -1,6 +1,6 @@
 # Deep Completion Configuration
 
-`_deep_files` zstyle settings (`root/etc/zsh/zshrc.d/auto.d/70-completions.zsh`).
+`_deep_files` zstyle settings (`tools/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/40-completions.zsh`).
 The engine claims the empty function field of the completion context, so the
 lookup context is `:completion:_deep_files:<completer>:<command>:<argument>:<group>`:
 `:completion:_deep_files:*` scopes a style to every wrapped command,

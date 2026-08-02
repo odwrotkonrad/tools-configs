@@ -1,0 +1,52 @@
+#[what] 1st file sourced
+
+disable log #[why] this builtin would shadow /usr/bin/log binary
+
+export ZDOTDIR=${HOME}/.config/zsh #[why] so $ZDOTDIR/.zshenv (user config, PATH) loads next 🤖🤖
+
+##[>] env
+setopt allexport
+
+XDG_BIN_HOME="${HOME}/.local/bin"               #[what] xdg - bin recommendation
+XDG_CACHE_HOME="${HOME}/.cache"                 #[what] user-specific non-esseintial data
+XDG_CONFIG_HOME="${HOME}/.config"               #[what] user-specific configuration files
+XDG_DATA_HOME="${HOME}/.local/share"            #[what] user-specific data files
+XDG_LOCAL_HOME="${HOME}/.local"
+XDG_STATE_HOME="${HOME}/.local/state"           #[what] user-specific state data
+EDITOR='vim'
+VISUAL='vim'
+LANG='C.UTF-8'
+LC_COLLATE='C.UTF-8'
+LC_CTYPE='C.UTF-8'
+LC_MESSAGES='C.UTF-8'
+LC_NUMERIC='C.UTF-8'
+LC_TIME='C.UTF-8'
+MANPAGER='/usr/bin/less -Is'
+WHATISPAGER='/usr/bin/less -Is'
+
+unsetopt allexport
+##[<] env
+
+
+##[>] ANSI escape sequences
+#[where] https://ecma-international.org/wp-content/uploads/ECMA-48_5th_edition_june_1991.pdf
+typeset -A rt_seq=(
+    esc         $'\u001B'    #[what] ANSI -> ESC: introducer for escape sequences
+    csi         $'\u001B['   #[what] ANSI -> CSI: Control Sequence Introducer
+    dcs         $'\u0090'    #[what] ANSI -> DCS: Device Control String
+
+    goto-col-1  $'\u001B[1G' #[what] ANSI -> CHA: cursor to column 1 of the current row
+    goto-row-1  $'\u001B[H'  #[what] ANSI -> CUP: cursor to row 1, column 1
+)
+##[<] ANSI escape sequences
+
+
+. /etc/zsh/zshenv.d/fn-loaders.zsh
+
+typeset -a funcs=(
+    /etc/zsh/zshenv.d/functions
+)
+
+fn-insert fpath $funcs
+fn-autoload-functions $funcs
+fn-source /etc/zsh/zshenv.d/auto.d
