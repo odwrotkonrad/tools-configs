@@ -85,13 +85,10 @@ paths:
         root/etc/zsh/:
           zshenv.d/:
             auto.d/extras/:
-              10-params-secrets.zsh:
               20-tools-env.zsh:
               30-gcp-adc.zsh:
             functions/:
               fn-load-os-open-files-with:
-              fn-ssh-generate-keys:
-              fn-ssh-test-git-connection:
           zshrc.d/:
             static-history.d/:
               50-tools:

@@ -60,11 +60,39 @@ tools:
 
   - git:
       files:
-        root/_home/.config/git/:
+        tools/git/root/_home/.config/git/:
           config:
           ignore:
           commit-template:
-        tools/zsh/extras/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
+        tools/ssh/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
+
+  - gitlab-projects:
+      files:
+        tools/gitlab/projects/:
+          che.yml:
+          scripts/:
+            10-clone.zsh:
+            20-index.zsh:
+          templates/subgroup-index.md.ontoRepo.tpl:
+          tree/:
+
+  - gitlab-runner:
+      files:
+        tools/gitlab/runner/:
+          che.yml:
+          scripts/01-install-gitlab-runner.zsh:
+          root/_home/.gitlab-runner/config.toml.ontoHost.tpl:
+          root/Library/LaunchAgents/gitlab-runner.plist.ontoHost.tpl:
+
+  - glab:
+      files:
+        tools/gitlab/glab/:
+          che.yml:
+          scripts/01-install-glab.zsh:
+          root/_home/.config/glab-cli/config.yml.ontoHost.cp:
+          root/etc/zsh/:
+            zshenv.d/auto.d/gitlab/10-params-secrets.zsh:
+            zshrc.d/auto.d/gitlab/10-auth.zsh:
 
   - golang:
 
@@ -117,8 +145,8 @@ tools:
 
   - ssh:
       files:
-        root/_home/.ssh/config:
-        tools/zsh/extras/root/etc/zsh/zshenv.d/functions/:
+        tools/ssh/root/_home/.ssh/config:
+        tools/ssh/root/etc/zsh/zshenv.d/functions/:
           fn-ssh-generate-keys:
           fn-ssh-test-git-connection:
 

@@ -29,7 +29,7 @@ claude: root/_home/.config/claude/settings.json.ontoHost.tpl
 codex: root/_home/.config/codex/config.toml.ontoHost.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml
-git: root/_home/.config/git/config
+git: tools/git/root/_home/.config/git/config
 grafana: root/etc/grafana/grafana.ini
 jaeger: root/etc/jaeger/config.yml
 kitty: root/_home/.config/kitty/kitty.conf
@@ -37,7 +37,7 @@ lefthook: root/_home/.config/lefthook/lefthook.yml
 otelcol: root/etc/otelcol/config.yml
 prometheus: root/etc/prometheus/prometheus.yml
 rg: root/etc/rg/rgrc
-ssh: root/_home/.ssh/config
+ssh: tools/ssh/root/_home/.ssh/config
 vscode: root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
 zsh: tools/zsh/base/root-linux/etc/zsh/zshrc
 ##[<] primary
@@ -48,7 +48,8 @@ aws: root/_home/.config/aws/config.ontoHost.tpl
 azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
 gcloud: root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
-gitlab-runner: root/_home/.gitlab-runner/config.toml.ontoHost.tpl
+gitlab-runner: tools/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
+glab: tools/gitlab/glab/root/_home/.config/glab-cli/config.yml.ontoHost.cp
 golang: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 homebrew: tools/zsh/base/root/_home/.config/zsh/.zshenv
 loki: root/etc/loki/config.yml

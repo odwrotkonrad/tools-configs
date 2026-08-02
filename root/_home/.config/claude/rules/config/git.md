@@ -9,10 +9,12 @@ paths:
 ### Files
 
 ```yml
-root/_home/.config/git/:
-  config:
-  ignore:
-  commit-template:  # commit.template; type(scope): subject
+tools/git/:
+  che.yml:  # git profile
+  root/_home/.config/git/:
+    config:
+    ignore:
+    commit-template:  # commit.template; type(scope): subject
 ```
 
 Hooks via lefthook (`root/_home/.config/lefthook/lefthook.yml`)

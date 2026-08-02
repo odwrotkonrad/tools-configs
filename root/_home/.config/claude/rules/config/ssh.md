@@ -11,8 +11,17 @@ paths:
 ### Files
 
 ```yml
-root/_home/.ssh/:
-  config:  # client config
+tools/ssh/:
+  che.yml:  # ssh profile (config link), ssh/keys profile (virt-only key renders)
+  root/_home/.ssh/:
+    config:  # client config
+    id_access.ontoHost.tpl:  # virt-only sandbox keypair renders (op://)
+    id_access.pub.ontoHost.tpl:
+    id_signing.ontoHost.tpl:
+    id_signing.pub.ontoHost.tpl:
+  root/etc/zsh/zshenv.d/functions/:
+    fn-ssh-generate-keys:
+    fn-ssh-test-git-connection:
 ```
 
 ### Documentation

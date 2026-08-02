@@ -2,15 +2,19 @@
 ##[>] 🤖🤖🤖
 
 emulate -LR zsh
-
-##[>] 🤖🤖
-autoload -Uz fn-is-virt fn-is-os
-fn-is-virt && return 0
-fn-is-os mac || return 0
-##[<] 🤖🤖
 setopt errexit pipefail
 
 autoload -Uz fn-log-msg
+
+##[>] 🤖🤖
+fpath=(${0:a:h}/../../../zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
+autoload -Uz fn-install-if-missing
+
+function install_gitlab_runner {
+  brew install gitlab-runner
+}
+fn-install-if-missing gitlab-runner install_gitlab_runner
+##[<] 🤖🤖
 
 ###[>] retire brew gitlab-runner service
 #>[why]

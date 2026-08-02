@@ -29,7 +29,6 @@ if stage?("formulae")
   brew "gh"            # GitHub command-line tool
   brew "pcre2"         # Perl compatible regular expressions library with a new API
   brew "git"           # Distributed revision control system
-  brew "glab"          # Open-source GitLab command-line tool
   brew "goreleaser"    # 🤖 Deliver Go binaries as fast and easily as possible
   brew "htop"          # Improved top (interactive process viewer)
   brew "jq"            # Lightweight and flexible command-line JSON processor
@@ -64,7 +63,6 @@ if stage?("formulae")
     brew "grafana"                             # Metric visualizations and dashboards
     brew "logcli"                              # Run LogQL queries against a Loki server
     brew "loki"                                # Horizontally-scalable log aggregation
-    brew "gitlab-runner"                       # GitLab CI runner that runs jobs on this host
     brew "hashicorp/tap/packer"                # Build identical machine images (vm base)
     if OS.mac? # tart runs VMs on Apple Silicon only 🤖
       brew "cirruslabs/cli/tart"                 # Run macOS and Linux VMs on Apple Silicon

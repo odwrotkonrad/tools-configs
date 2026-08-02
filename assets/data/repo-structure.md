@@ -18,7 +18,6 @@ ci
       installs
 root
   Library
-    LaunchAgents
     LaunchDaemons
   _home
     .config
@@ -50,7 +49,6 @@ root
       codex
       gcloud
         configurations
-      git
       homebrew
       kitty
       lefthook
@@ -59,10 +57,8 @@ root
       ruff
       tmux
       vim
-    .gitlab-runner
     .homebrew
     .ollama
-    .ssh
     Library
       Application Support
         Code
@@ -98,6 +94,48 @@ templates
   agents
     snippets
 tools
+  git
+    root
+      _home
+        .config
+          git
+  gitlab
+    glab
+      root
+        _home
+          .config
+            glab-cli
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                gitlab
+            zshrc.d
+              auto.d
+                gitlab
+      scripts
+    projects
+      scripts
+      templates
+      tree
+        projects
+          gitlab
+            konradodwrot
+    runner
+      root
+        Library
+          LaunchAgents
+        _home
+          .gitlab-runner
+      scripts
+  ssh
+    root
+      _home
+        .ssh
+      etc
+        zsh
+          zshenv.d
+            functions
   zsh
     base
       root
