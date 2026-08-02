@@ -139,9 +139,6 @@ tools
   gitlab
     glab
       root
-        _home
-          .config
-            glab-cli
         etc
           zsh
             zshenv.d

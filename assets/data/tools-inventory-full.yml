@@ -114,7 +114,6 @@ tools:
         tools/gitlab/glab/:
           che.yml:
           scripts/01-install-glab.zsh:
-          root/_home/.config/glab-cli/config.yml.ontoHost.cp:
           root/etc/zsh/:
             zshenv.d/auto.d/gitlab/10-params-secrets.zsh:
             zshrc.d/auto.d/gitlab/10-auth.zsh:

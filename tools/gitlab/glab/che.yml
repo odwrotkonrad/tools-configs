@@ -7,10 +7,6 @@ gitlab/glab:
   include:
     makeLinks:
       - etc/**
-    #[why] copied, not linked: glab rewrites its config at runtime (update timestamps), rewrites must never touch the repo; 0600 because glab refuses configs readable by others
-    makeCopies:
-      - chmod: "0600"
-        files: [{source: _home/**, dest: $HOME/**}]
     runScripts:
       - scripts/01-install-glab.zsh
 ##[<] 🤖🤖

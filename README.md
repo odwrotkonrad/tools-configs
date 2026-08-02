@@ -49,7 +49,7 @@ azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
 gcloud: tools/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: tools/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
-glab: tools/gitlab/glab/root/_home/.config/glab-cli/config.yml.ontoHost.cp
+glab: tools/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
 golang: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 homebrew: tools/zsh/base/root/_home/.config/zsh/.zshenv
 loki: root/etc/loki/config.yml
