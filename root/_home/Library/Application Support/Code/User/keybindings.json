@@ -224,9 +224,14 @@
     "command": "workbench.action.closeQuickOpen",
     "when": "inQuickOpen"
   },
-  //[what] f2 — rename currently opened file
+  //[what] f2 — rename symbol / alt+f2 — rename currently opened file 🤖🤖
   {
     "key": "f2",
+    "command": "editor.action.rename",
+    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+f2",
     "command": "runCommands",
     "args": {
       "commands": [
@@ -235,6 +240,12 @@
       ]
     },
     "when": "editorFocus"
+  },
+  //[what] alt+space — toggle suggestion docs panel (default ^space taken by the system) 🤖🤖
+  {
+    "key": "alt+space",
+    "command": "toggleSuggestionDetails",
+    "when": "suggestWidgetVisible && textInputFocus"
   },
   //[what] esc — unmaximize maximized editor group (regular editors)
   {

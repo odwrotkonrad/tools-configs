@@ -143,6 +143,12 @@
   "editor.scrollBeyondLastLine": false,
   "editor.stickyScroll.maxLineCount": 1,
   "editor.tabSize": 2,
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "strings": "off",
+    "other": "off"
+  },
+  "editor.suggestOnTriggerCharacters": false,
   "editor.suggest.preview": true,
   "editor.suggest.showColors": false,
   "editor.suggest.showStatusBar": true,
@@ -451,7 +457,8 @@
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
     },
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 4
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
