@@ -110,28 +110,6 @@ cli/linux:
   include:
     profiles: [base, base-exclude-macos, base-exclude-desktop]
 
-#[why] the sandbox image bake: secret-free tool set only. ssh comes as the config-links subprofile directly, not the root `ssh` profile: isVirt is true inside a docker build, so the root profile's ssh/virt would fire and try to bake keys
-sandbox-build:
-  include:
-    profiles:
-      - source: "tools/zsh/base/che.yml::zsh/base-linux"
-      - source: "tools/git/che.yml::git"
-      - source: "tools/claude/che.yml::claude"
-      - source: "tools/codex/che.yml::codex"
-      - source: "tools/gcp/che.yml::gcp/install"
-      - source: "tools/gitlab/glab/che.yml::gitlab/glab"
-      - source: "tools/ssh/che.yml::ssh"
-
-#[why] pod-creation time, in the running sandbox: fail fast on missing ADC (gcp/auth), render the ssh keypair from gcp:// (ssh/virt), clone + index the workspace (gitlab/projects; needs GITLAB_TOKEN materialized by the caller, session-create fetches it from $GITLAB_TOKEN_SECRET_PATH via the pod's ADC)
-sandbox-runtime:
-  include:
-    profiles:
-      - source: "tools/gcp/che.yml::gcp/auth"
-      - source: "tools/ssh/che.yml::ssh/virt"
-      - source: "tools/gitlab/projects/che.yml::gitlab/projects"
-        env:
-          GITLAB_GROUPS: "konradodwrot:konradodwrot"
-
 claude-agents:
   options: {autoDiscover: true, runIf: ['builtin:isVirt']}
   include:
