@@ -8,6 +8,11 @@ zsh/base:
       - source: "tools/zsh/base/che.yml::zsh/base-macos"
       - source: "tools/zsh/base/che.yml::zsh/base-linux"
 
+zsh/base-linux:
+  include:
+    profiles:
+      - source: "tools/zsh/base/che.yml::zsh/base-linux"
+
 zsh/extras:
   include:
     profiles:
