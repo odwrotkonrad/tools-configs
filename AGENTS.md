@@ -51,13 +51,13 @@ references:
   assets/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 ##[>] primary
-agents: root/_home/.config/agents/templates/AGENTS.md.ontoHost.tpl
+agents: profiles/llm/base/root/_home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
 ccstatusline: root/_home/.config/ccstatusline/settings.json
-claude: tools/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
-codex: tools/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
+claude: profiles/llm/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
+codex: profiles/llm/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml
-git: tools/git/root/_home/.config/git/config
+git: profiles/git/root/_home/.config/git/config
 grafana: root/etc/grafana/grafana.ini
 jaeger: root/etc/jaeger/config.yml
 kitty: root/_home/.config/kitty/kitty.conf
@@ -65,9 +65,9 @@ lefthook: root/_home/.config/lefthook/lefthook.yml
 otelcol: root/etc/otelcol/config.yml
 prometheus: root/etc/prometheus/prometheus.yml
 rg: root/etc/rg/rgrc
-ssh: tools/ssh/root/_home/.ssh/config
+ssh: profiles/ssh/root/_home/.ssh/config
 vscode: root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
-zsh: tools/zsh/base/root-linux/etc/zsh/zshrc
+zsh: profiles/zsh/base/root-linux/etc/zsh/zshrc
 ##[<] primary
 
 ##[>] other
@@ -75,19 +75,19 @@ asdf: root/_home/.config/asdf/.asdfrc
 aws: root/_home/.config/aws/config.ontoHost.tpl
 azure: root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
-gcloud: tools/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
-gitlab-runner: tools/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
-glab: tools/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
-golang: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
-homebrew: tools/zsh/base/root/_home/.config/zsh/.zshenv
+gcloud: profiles/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
+gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
+glab: profiles/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
+golang: profiles/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
+homebrew: profiles/zsh/base/root/_home/.config/zsh/.zshenv
 loki: root/etc/loki/config.yml
 man: root/etc/man.conf
 mypy: root/_home/.config/mypy/config
 nvm: root/_home/.nvmrc
-ollama: root/_home/.ollama/server.json
-onepassword: tools/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
+ollama: profiles/llm/ollama/root/_home/.ollama/server.json
+onepassword: profiles/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
 prettier: root/_home/.config/prettier/.prettierrc.yml
-pyenv: tools/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
+pyenv: profiles/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 ruff: root/_home/.config/ruff/ruff.toml
 tmux: root/_home/.config/tmux/tmux.conf
 vim: root/_home/.config/vim/vimrc
@@ -153,14 +153,127 @@ ci
     scripts
       bootstrap
       installs
+profiles
+  gcp
+    root
+      etc
+        zsh
+          zshenv.d
+            auto.d
+              gcp
+    scripts
+  git
+    scripts
+  gitlab
+    glab
+      root
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                gitlab
+            zshrc.d
+              auto.d
+                gitlab
+      scripts
+    projects
+      scripts
+      templates
+      tree
+        projects
+          gitlab
+            konradodwrot
+    runner
+      root
+        Library
+          LaunchAgents
+      scripts
+  llm
+    base
+      root
+        etc
+          custom
+        usr
+          local
+            scripts
+              shell
+                lib
+                templates-llm
+    claude
+      scripts
+    codex
+      root
+        etc
+          zsh
+            zshrc.d
+              auto.d
+                codex
+      scripts
+    ollama
+      root
+        usr
+          local
+            scripts
+              shell
+      scripts
+  onepassword
+    root
+      etc
+        zsh
+          zshenv.d
+            auto.d
+              onepassword
+    scripts
+  ssh
+    root
+      etc
+        zsh
+          zshenv.d
+            functions
+      usr
+        local
+          scripts
+            shell
+  zsh
+    base
+      root
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                00-base
+              functions
+            zshrc.d
+              auto.d
+                00-base
+              functions
+              static-history.d
+      root-linux
+        etc
+          zsh
+      root-macos
+        etc
+          zsh
+            zshenv.d
+              functions
+      scripts
+    extras
+      root
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                extras
+              functions
+            zshrc.d
+              auto.d
+                extras
+              static-history.d
 root
   Library
     LaunchDaemons
   _home
     .config
-      agents
-        docs
-        templates
       asdf
       aws
       azure
@@ -175,7 +288,6 @@ root
       tmux
       vim
     .homebrew
-    .ollama
     Library
       Application Support
         Code
@@ -202,174 +314,9 @@ root
     local
       scripts
         shell
-          lib
-          templates-llm
 templates
   1-env
   2-data
   3-audience
   agents
     snippets
-tools
-  claude
-    root
-      _home
-        .config
-          claude
-            agent-memory
-            agents
-            commands
-            output-styles
-            plugins
-              marketplaces
-            rules
-              code
-                python
-                zsh
-              config
-                zsh
-              docs
-            skills
-              user-git-ops
-            themes
-          zsh
-            zshenv.d
-              auto.d
-                claude
-            zshrc.d
-              auto.d
-                claude
-    scripts
-  codex
-    root
-      _home
-        .config
-          codex
-      etc
-        zsh
-          zshrc.d
-            auto.d
-              codex
-    scripts
-  gcp
-    root
-      _home
-        .config
-          gcloud
-            configurations
-          zsh
-            zshenv.d
-              auto.d
-                gcp
-      etc
-        zsh
-          zshenv.d
-            auto.d
-              gcp
-    scripts
-  git
-    root
-      _home
-        .config
-          git
-    scripts
-  gitlab
-    glab
-      root
-        etc
-          zsh
-            zshenv.d
-              auto.d
-                gitlab
-            zshrc.d
-              auto.d
-                gitlab
-      scripts
-    projects
-      scripts
-      templates
-      tree
-        projects
-          gitlab
-            konradodwrot
-    runner
-      root
-        Library
-          LaunchAgents
-        _home
-          .gitlab-runner
-      scripts
-  onepassword
-    root
-      etc
-        zsh
-          zshenv.d
-            auto.d
-              onepassword
-    scripts
-  ssh
-    root
-      _home
-        .ssh
-      etc
-        zsh
-          zshenv.d
-            functions
-    root-virt
-      _home
-        .ssh
-  zsh
-    base
-      root
-        _home
-          .config
-            zsh
-              zshenv.d
-                functions
-              zshrc.d
-                auto.d
-                  00-base
-                completions
-                functions
-        etc
-          zsh
-            zshenv.d
-              auto.d
-                00-base
-              functions
-            zshrc.d
-              auto.d
-                00-base
-              completions
-              functions
-              static-history.d
-      root-linux
-        etc
-          zsh
-      root-macos
-        etc
-          zsh
-            zshenv.d
-              functions
-      scripts
-    extras
-      root
-        _home
-          .config
-            zsh
-              zshenv.d
-                auto.d
-                  extras
-              zshrc.d
-                auto.d
-                  extras
-        etc
-          zsh
-            zshenv.d
-              auto.d
-                extras
-              functions
-            zshrc.d
-              auto.d
-                extras
-              static-history.d

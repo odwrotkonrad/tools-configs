@@ -1,1 +1,0 @@
-#[what] 1st file sourced after login shell exits

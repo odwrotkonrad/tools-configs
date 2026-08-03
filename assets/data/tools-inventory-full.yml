@@ -7,11 +7,11 @@ references:
 
 #[what] Shared files referenced by many tools.
 files:
-  tools/zsh/base/root-linux/etc/zsh/:
+  profiles/zsh/base/root-linux/etc/zsh/:
     zshenv:
     zshrc:
-  tools/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh:
-  tools/zsh/extras/root/:
+  profiles/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh:
+  profiles/zsh/extras/root/:
     _home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh:
     etc/zsh/:
       zshenv.d/auto.d/extras/20-tools-env.zsh:
@@ -33,7 +33,7 @@ tools:
 
   - claude:
       files:
-        tools/claude/:
+        profiles/llm/claude/:
           che.yml:
           scripts/01-install-claude.zsh:
           root/_home/.config/claude/:
@@ -50,7 +50,7 @@ tools:
 
   - codex:
       files:
-        tools/codex/:
+        profiles/llm/codex/:
           che.yml:
           scripts/01-install-codex.zsh:
           root/_home/.config/codex/config.toml.ontoHost.tpl:
@@ -69,7 +69,7 @@ tools:
 
   - gcp:
       files:
-        tools/gcp/:
+        profiles/gcp/:
           che.yml:
           scripts/:
             01-install-gcloud.zsh:
@@ -83,17 +83,17 @@ tools:
 
   - git:
       files:
-        tools/git/che.yml:
-        tools/git/scripts/01-install-git.zsh:
-        tools/git/root/_home/.config/git/:
+        profiles/git/che.yml:
+        profiles/git/scripts/01-install-git.zsh:
+        profiles/git/root/_home/.config/git/:
           config:
           ignore:
           commit-template:
-        tools/ssh/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
+        profiles/ssh/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
 
   - gitlab-projects:
       files:
-        tools/gitlab/projects/:
+        profiles/gitlab/projects/:
           che.yml:
           scripts/:
             10-clone.zsh:
@@ -103,7 +103,7 @@ tools:
 
   - gitlab-runner:
       files:
-        tools/gitlab/runner/:
+        profiles/gitlab/runner/:
           che.yml:
           scripts/01-install-gitlab-runner.zsh:
           root/_home/.gitlab-runner/config.toml.ontoHost.tpl:
@@ -111,7 +111,7 @@ tools:
 
   - glab:
       files:
-        tools/gitlab/glab/:
+        profiles/gitlab/glab/:
           che.yml:
           scripts/01-install-glab.zsh:
           root/etc/zsh/:
@@ -146,7 +146,7 @@ tools:
 
   - onepassword:
       files:
-        tools/onepassword/:
+        profiles/onepassword/:
           che.yml:
           scripts/:
             01-install-op.zsh:
@@ -170,7 +170,7 @@ tools:
         root/etc/rg/:
           rgrc:
           rgignore:
-        tools/zsh/base/root/etc/zsh/zshrc.d/functions/fn-load-static-history:
+        profiles/zsh/base/root/etc/zsh/zshrc.d/functions/fn-load-static-history:
 
   - ruff:
       files:
@@ -178,14 +178,14 @@ tools:
 
   - ssh:
       files:
-        tools/ssh/che.yml:
-        tools/ssh/root/_home/.ssh/config:
-        tools/ssh/root-virt/_home/.ssh/:
+        profiles/ssh/che.yml:
+        profiles/ssh/root/_home/.ssh/config:
+        profiles/ssh/root-virt/_home/.ssh/:
           id_access.ontoHost.tpl:
           id_access.pub.ontoHost.tpl:
           id_signing.ontoHost.tpl:
           id_signing.pub.ontoHost.tpl:
-        tools/ssh/root/etc/zsh/zshenv.d/functions/:
+        profiles/ssh/root/etc/zsh/zshenv.d/functions/:
           fn-ssh-generate-keys:
           fn-ssh-test-git-connection:
 
@@ -203,7 +203,7 @@ tools:
 
   - zsh:
       files:
-        tools/zsh/:
+        profiles/zsh/:
           base/che.yml:
           base/scripts/:
             01-install-zsh.sh:

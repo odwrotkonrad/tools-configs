@@ -6,24 +6,26 @@ options:
 base:
   include:
     profiles:
-      - source: "tools/zsh/base/che.yml::zsh/base-macos"
-      - source: "tools/zsh/base/che.yml::zsh/base-linux"
-      - source: "tools/zsh/extras/che.yml::zsh/extras"
-      - source: "tools/git/che.yml::git"
-      - source: "tools/ssh/che.yml::ssh"
-      - source: "tools/ssh/che.yml::ssh/virt"
-      - source: "tools/claude/che.yml::claude"
-      - source: "tools/codex/che.yml::codex"
-      - source: "tools/onepassword/che.yml::onepassword"
-      - source: "tools/gcp/che.yml::gcp/install"
-      - source: "tools/gcp/che.yml::gcp/configs"
-      - source: "tools/gcp/che.yml::gcp/auth"
-      - source: "tools/gitlab/glab/che.yml::gitlab/glab"
-      - source: "tools/gitlab/runner/che.yml::gitlab/runner"
-      - source: "tools/gitlab/projects/che.yml::gitlab/projects"
+      - source: "profiles/zsh/base/che.yml::zsh/base-macos"
+      - source: "profiles/zsh/base/che.yml::zsh/base-linux"
+      - source: "profiles/zsh/extras/che.yml::zsh/extras"
+      - source: "profiles/git/che.yml::git"
+      - source: "profiles/ssh/che.yml::ssh"
+      - source: "profiles/ssh/che.yml::ssh/virt"
+      - source: "profiles/llm/base/che.yml::llm/base"
+      - source: "profiles/llm/claude/che.yml::llm/claude"
+      - source: "profiles/llm/codex/che.yml::llm/codex"
+      - source: "profiles/llm/ollama/che.yml::llm/ollama"
+      - source: "profiles/onepassword/che.yml::onepassword"
+      - source: "profiles/gcp/che.yml::gcp/install"
+      - source: "profiles/gcp/che.yml::gcp/configs"
+      - source: "profiles/gcp/che.yml::gcp/auth"
+      - source: "profiles/gitlab/glab/che.yml::gitlab/glab"
+      - source: "profiles/gitlab/runner/che.yml::gitlab/runner"
+      - source: "profiles/gitlab/projects/che.yml::gitlab/projects"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
-      - source: "tools/gitlab/projects/che.yml::gitlab/projects-parent-links"
+      - source: "profiles/gitlab/projects/che.yml::gitlab/projects-parent-links"
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
@@ -48,11 +50,6 @@ base:
         chmod: "0440"
         templates:
           - {source: etc/sudoers.d/configs.ontoHost.tpl, dest: [/etc/sudoers.d/configs]}
-      - templates:
-          - source: _home/.config/agents/templates/AGENTS.md.ontoHost.tpl
-            dest:
-              - ~/.config/claude/CLAUDE.md
-              - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
     makeDirs:
       - directories:
           - {dest: ["$HOME/.cache/{homebrew,get-term-open-files-with}"]}
@@ -114,7 +111,7 @@ claude-agents:
   options: {autoDiscover: true, runIf: ['builtin:isVirt']}
   include:
     profiles:
-      - source: "tools/claude/che.yml::claude-agents"
+      - source: "profiles/llm/claude/che.yml::claude-agents"
 
 ontoRepo:
   include:
