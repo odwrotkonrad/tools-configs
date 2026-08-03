@@ -5,44 +5,6 @@ options:
 
 base:
   include:
-    profiles:
-      - source: "profiles/misc/che/che.yml::misc/che"
-      - source: "profiles/shell/zsh/base/che.yml::shell/zsh/base-macos"
-      - source: "profiles/shell/zsh/base/che.yml::shell/zsh/base-linux"
-      - source: "profiles/shell/zsh/extras/che.yml::shell/zsh/extras"
-      - source: "profiles/git/che.yml::git"
-      - source: "profiles/misc/ssh/che.yml::misc/ssh"
-      - source: "profiles/misc/ssh/che.yml::misc/ssh/virt"
-      - source: "profiles/llm/base/che.yml::llm/base"
-      - source: "profiles/llm/claude/che.yml::llm/claude"
-      - source: "profiles/llm/codex/che.yml::llm/codex"
-      - source: "profiles/llm/ollama/che.yml::llm/ollama"
-      - source: "profiles/dev/misc/editorconfig/che.yml::dev/misc/editorconfig"
-      - source: "profiles/dev/python/python/che.yml::dev/python/python"
-      - source: "profiles/dev/python/mypy/che.yml::dev/python/mypy"
-      - source: "profiles/dev/python/ruff/che.yml::dev/python/ruff"
-      - source: "profiles/dev/vscode/mac/che.yml::dev/vscode/mac"
-      - source: "profiles/dev/infra/terraform/che.yml::dev/infra/terraform"
-      - source: "profiles/dev/infra/kubectl/che.yml::dev/infra/kubectl"
-      - source: "profiles/dev/infra/kubectx/che.yml::dev/infra/kubectx"
-      - source: "profiles/dev/infra/kind/che.yml::dev/infra/kind"
-      - source: "profiles/dev/js/nvm/che.yml::dev/js/nvm"
-      - source: "profiles/dev/js/pnpm/che.yml::dev/js/pnpm"
-      - source: "profiles/cloud/aws/che.yml::cloud/aws"
-      - source: "profiles/cloud/aws/che.yml::cloud/aws/configs"
-      - source: "profiles/cloud/azure/che.yml::cloud/azure"
-      - source: "profiles/dev/terminal/kitty/che.yml::dev/terminal/kitty"
-      - source: "profiles/misc/onepassword/che.yml::misc/onepassword"
-      - source: "profiles/cloud/gcp/che.yml::cloud/gcp/install"
-      - source: "profiles/cloud/gcp/che.yml::cloud/gcp/configs"
-      - source: "profiles/cloud/gcp/che.yml::cloud/gcp/auth"
-      - source: "profiles/gitlab/glab/che.yml::gitlab/glab"
-      - source: "profiles/gitlab/runner/che.yml::gitlab/runner"
-      - source: "profiles/gitlab/projects/che.yml::gitlab/projects"
-        env:
-          GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
-      - source: "profiles/gitlab/projects/che.yml::gitlab/projects-parent-links"
-      - source: "profiles/observability/che.yml::observability/host/macos"
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
@@ -87,17 +49,47 @@ base-exclude-macos:
 desktop/macos:
   options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
-    profiles: [base]
+    profiles:
+      - base
+      - source: "profiles/shell/che.yml::shell/host/macos"
+      - source: "profiles/misc/che.yml::misc/host/macos"
+      - source: "profiles/git/che.yml::git/host/macos"
+      - source: "profiles/llm/che.yml::llm/host/macos"
+      - source: "profiles/dev/che.yml::dev/host/macos"
+      - source: "profiles/cloud/che.yml::cloud/host/macos"
+      - source: "profiles/gitlab/che.yml::gitlab/host/macos"
+      - source: "profiles/observability/che.yml::observability/host/macos"
 
 cli/macos:
   options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt']}
   include:
-    profiles: [base, base-exclude-desktop]
+    profiles:
+      - base
+      - base-exclude-desktop
+      - source: "profiles/shell/che.yml::shell/base/macos"
+      - source: "profiles/misc/che.yml::misc/base/macos"
+      - source: "profiles/git/che.yml::git/base/macos"
+      - source: "profiles/llm/che.yml::llm/base/macos"
+      - source: "profiles/dev/che.yml::dev/base/macos"
+      - source: "profiles/cloud/che.yml::cloud/base/macos"
+      - source: "profiles/gitlab/che.yml::gitlab/base/macos"
+      - source: "profiles/observability/che.yml::observability/base/macos"
 
 cli/linux:
   options: {autoDiscover: true, runIf: ['builtin:isOs == linux']}
   include:
-    profiles: [base, base-exclude-macos, base-exclude-desktop]
+    profiles:
+      - base
+      - base-exclude-macos
+      - base-exclude-desktop
+      - source: "profiles/shell/che.yml::shell/virt/linux"
+      - source: "profiles/misc/che.yml::misc/virt/linux"
+      - source: "profiles/git/che.yml::git/virt/linux"
+      - source: "profiles/llm/che.yml::llm/virt/linux"
+      - source: "profiles/dev/che.yml::dev/virt/linux"
+      - source: "profiles/cloud/che.yml::cloud/virt/linux"
+      - source: "profiles/gitlab/che.yml::gitlab/virt/linux"
+      - source: "profiles/observability/che.yml::observability/virt/linux"
 
 claude-agents:
   options: {autoDiscover: true, runIf: ['builtin:isVirt']}

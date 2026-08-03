@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+gitlab/base/macos:
+  options: {runIf: ['builtin:isOs == macos']}
+  include:
+    profiles:
+      - source: "./glab/che.yml::gitlab/glab"
+      - source: "./projects/che.yml::gitlab/projects"
+        env:
+          GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
+
+gitlab/host/macos:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    profiles:
+      - gitlab/base/macos
+      - source: "./runner/che.yml::gitlab/runner"
+      - source: "./projects/che.yml::gitlab/projects-parent-links"
+
+gitlab/virt/linux:
+  options: {runIf: ['builtin:isOs == linux']}
+  include:
+    profiles:
+      - source: "./glab/che.yml::gitlab/glab"
+      - source: "./projects/che.yml::gitlab/projects"
+        env:
+          GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
+##[<] 🤖🤖

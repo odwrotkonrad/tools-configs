@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+dev/base/macos:
+  options: {runIf: ['builtin:isOs == macos']}
+  include:
+    profiles:
+      - source: "./misc/editorconfig/che.yml::dev/misc/editorconfig"
+      - source: "./python/python/che.yml::dev/python/python"
+      - source: "./python/mypy/che.yml::dev/python/mypy"
+      - source: "./python/ruff/che.yml::dev/python/ruff"
+      - source: "./infra/terraform/che.yml::dev/infra/terraform"
+      - source: "./infra/kubectl/che.yml::dev/infra/kubectl"
+      - source: "./infra/kubectx/che.yml::dev/infra/kubectx"
+      - source: "./infra/kind/che.yml::dev/infra/kind"
+      - source: "./js/nvm/che.yml::dev/js/nvm"
+      - source: "./js/pnpm/che.yml::dev/js/pnpm"
+
+dev/host/macos:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    profiles:
+      - dev/base/macos
+      - source: "./vscode/mac/che.yml::dev/vscode/mac"
+      - source: "./terminal/kitty/che.yml::dev/terminal/kitty"
+
+dev/virt/linux:
+  options: {runIf: ['builtin:isOs == linux']}
+  include:
+    profiles:
+      - source: "./misc/editorconfig/che.yml::dev/misc/editorconfig"
+      - source: "./python/python/che.yml::dev/python/python"
+      - source: "./python/mypy/che.yml::dev/python/mypy"
+      - source: "./python/ruff/che.yml::dev/python/ruff"
+      - source: "./infra/terraform/che.yml::dev/infra/terraform"
+      - source: "./infra/kubectl/che.yml::dev/infra/kubectl"
+      - source: "./infra/kubectx/che.yml::dev/infra/kubectx"
+      - source: "./infra/kind/che.yml::dev/infra/kind"
+      - source: "./js/nvm/che.yml::dev/js/nvm"
+      - source: "./js/pnpm/che.yml::dev/js/pnpm"
+##[<] 🤖🤖

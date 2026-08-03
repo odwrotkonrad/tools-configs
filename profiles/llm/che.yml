@@ -1,30 +1,25 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
-options:
-  profileWorkingDirectory: root
-
-git:
-  include:
-    makeLinks:
-      - {source: _home/**, dest: $HOME/**}
-    runScripts:
-      - scripts/01-install-git.zsh
-
-git/base/macos:
+llm/base/macos:
   options: {runIf: ['builtin:isOs == macos']}
   include:
     profiles:
-      - source: "./che.yml::git"
+      - source: "./base/che.yml::llm/base"
+      - source: "./claude/che.yml::llm/claude"
+      - source: "./codex/che.yml::llm/codex"
 
-git/host/macos:
+llm/host/macos:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
     profiles:
-      - git/base/macos
+      - llm/base/macos
+      - source: "./ollama/che.yml::llm/ollama"
 
-git/virt/linux:
+llm/virt/linux:
   options: {runIf: ['builtin:isOs == linux']}
   include:
     profiles:
-      - source: "./che.yml::git"
+      - source: "./base/che.yml::llm/base"
+      - source: "./claude/che.yml::llm/claude"
+      - source: "./codex/che.yml::llm/codex"
 ##[<] 🤖🤖

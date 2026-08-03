@@ -1,11 +1,24 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
-observability/host/macos:
+observability/base/macos:
+  options: {runIf: ['builtin:isOs == macos']}
   include:
     profiles:
       - source: "./otelcol/che.yml::observability/otelcol"
+
+observability/host/macos:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    profiles:
+      - observability/base/macos
       - source: "./grafana/che.yml::observability/grafana"
       - source: "./prometheus/che.yml::observability/prometheus"
       - source: "./jaeger/che.yml::observability/jaeger"
       - source: "./loki/che.yml::observability/loki"
+
+observability/virt/linux:
+  options: {runIf: ['builtin:isOs == linux']}
+  include:
+    profiles:
+      - source: "./otelcol/che.yml::observability/otelcol"
 ##[<] 🤖🤖
