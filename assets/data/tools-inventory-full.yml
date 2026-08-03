@@ -177,7 +177,7 @@ tools:
 
   - prettier:
       files:
-        root/_home/.config/prettier/.prettierrc.yml:
+        profiles/dev/js/prettier/root/_home/.config/prettier/.prettierrc.yml:
 
   - prometheus:
       files:
@@ -221,15 +221,15 @@ tools:
 
   - tmux:
       files:
-        root/_home/.config/tmux/tmux.conf:
+        profiles/dev/terminal/tmux/root/_home/.config/tmux/tmux.conf:
 
   - vim:
       files:
-        root/_home/.config/vim/vimrc:
+        profiles/dev/editors/vim/root/_home/.config/vim/vimrc:
 
   - vscode:
       files:
-        profiles/dev/vscode/mac/:
+        profiles/dev/editors/vscode/mac/:
           che.yml:
           root/_home/Library/Application Support/Code/User/:
             settings.json.ontoHost.tpl:

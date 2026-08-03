@@ -3,11 +3,8 @@
 options:
   profileWorkingDirectory: root
 
-dev/vscode/mac:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+dev/js/prettier:
   include:
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
-    renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
 ##[<] 🤖🤖

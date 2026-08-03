@@ -25,6 +25,21 @@ profiles
                 gcp
       scripts
   dev
+    editors
+      vim
+        root
+          _home
+            .config
+              vim
+      vscode
+        mac
+          root
+            _home
+              Library
+                Application Support
+                  Code
+                    User
+                      .exported
     infra
       kind
         scripts
@@ -38,6 +53,11 @@ profiles
       nvm
       pnpm
         scripts
+      prettier
+        root
+          _home
+            .config
+              prettier
     misc
       editorconfig
     python
@@ -56,15 +76,11 @@ profiles
     terminal
       kitty
         scripts
-    vscode
-      mac
+      tmux
         root
           _home
-            Library
-              Application Support
-                Code
-                  User
-                    .exported
+            .config
+              tmux
   git
     scripts
   gitlab
@@ -124,6 +140,14 @@ profiles
               shell
       scripts
   misc
+    brew
+      root
+        _home
+          .config
+            homebrew
+          .homebrew
+        etc
+          homebrew
     che
     onepassword
       root
@@ -231,19 +255,12 @@ profiles
         completions
 root
   _home
-    .config
-      homebrew
-      prettier
-      tmux
-      vim
-    .homebrew
     Library
       LaunchAgents
     projects
       gitlab
   etc
     custom
-    homebrew
     rg
     sudoers.d
   usr

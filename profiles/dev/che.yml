@@ -14,13 +14,16 @@ dev/base/macos:
       - source: "./infra/kind/che.yml::dev/infra/kind"
       - source: "./js/nvm/che.yml::dev/js/nvm"
       - source: "./js/pnpm/che.yml::dev/js/pnpm"
+      - source: "./js/prettier/che.yml::dev/js/prettier"
+      - source: "./terminal/tmux/che.yml::dev/terminal/tmux"
+      - source: "./editors/vim/che.yml::dev/editors/vim"
 
 dev/host/macos:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
     profiles:
       - dev/base/macos
-      - source: "./vscode/mac/che.yml::dev/vscode/mac"
+      - source: "./editors/vscode/mac/che.yml::dev/editors/vscode/mac"
       - source: "./terminal/kitty/che.yml::dev/terminal/kitty"
 
 dev/virt/linux:
@@ -37,4 +40,7 @@ dev/virt/linux:
       - source: "./infra/kind/che.yml::dev/infra/kind"
       - source: "./js/nvm/che.yml::dev/js/nvm"
       - source: "./js/pnpm/che.yml::dev/js/pnpm"
+      - source: "./js/prettier/che.yml::dev/js/prettier"
+      - source: "./terminal/tmux/che.yml::dev/terminal/tmux"
+      - source: "./editors/vim/che.yml::dev/editors/vim"
 ##[<] 🤖🤖

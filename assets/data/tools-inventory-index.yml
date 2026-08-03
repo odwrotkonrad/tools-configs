@@ -20,7 +20,7 @@ otelcol: profiles/observability/otelcol/root/etc/otelcol/config.yml
 prometheus: profiles/observability/prometheus/root/etc/prometheus/prometheus.yml
 rg: root/etc/rg/rgrc
 ssh: profiles/misc/ssh/root/_home/.ssh/config
-vscode: profiles/dev/vscode/mac/root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
+vscode: profiles/dev/editors/vscode/mac/root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
 zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc
 ##[<] primary
 
@@ -32,7 +32,7 @@ gcloud: profiles/cloud/gcp/root/_home/.config/gcloud/configurations/config_main.
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 glab: profiles/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
 golang: profiles/shell/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
-homebrew: profiles/shell/zsh/base/root/_home/.config/zsh/.zshenv
+homebrew: profiles/misc/brew/root/etc/homebrew/Brewfile
 kind: profiles/dev/infra/kind/scripts/01-install-kind.zsh
 kubectl: profiles/dev/infra/kubectl/scripts/01-install-kubectl.zsh
 kubectx: profiles/dev/infra/kubectx/scripts/01-install-kubectx.zsh
@@ -43,10 +43,10 @@ nvm: profiles/dev/js/nvm/root/_home/.nvmrc
 ollama: profiles/llm/ollama/root/_home/.ollama/server.json
 onepassword: profiles/misc/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
 pnpm: profiles/dev/js/pnpm/scripts/01-install-pnpm.zsh
-prettier: root/_home/.config/prettier/.prettierrc.yml
+prettier: profiles/dev/js/prettier/root/_home/.config/prettier/.prettierrc.yml
 pyenv: profiles/shell/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 ruff: profiles/dev/python/ruff/root/_home/.config/ruff/ruff.toml
 terraform: profiles/dev/infra/terraform/scripts/01-install-terraform.zsh
-tmux: root/_home/.config/tmux/tmux.conf
-vim: root/_home/.config/vim/vimrc
+tmux: profiles/dev/terminal/tmux/root/_home/.config/tmux/tmux.conf
+vim: profiles/dev/editors/vim/root/_home/.config/vim/vimrc
 ##[<] other

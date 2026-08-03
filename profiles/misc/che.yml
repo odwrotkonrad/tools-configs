@@ -5,6 +5,8 @@ misc/base/macos:
   include:
     profiles:
       - source: "./che/che.yml::misc/che"
+      - source: "./brew/che.yml::misc/brew"
+      - source: "./brew/che.yml::misc/brew/macos"
       - source: "./ssh/che.yml::misc/ssh"
       - source: "./ssh/che.yml::misc/ssh/virt"
 
@@ -20,6 +22,7 @@ misc/virt/linux:
   include:
     profiles:
       - source: "./che/che.yml::misc/che"
+      - source: "./brew/che.yml::misc/brew"
       - source: "./ssh/che.yml::misc/ssh"
       - source: "./ssh/che.yml::misc/ssh/virt"
 ##[<] 🤖🤖

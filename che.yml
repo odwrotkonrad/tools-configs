@@ -44,7 +44,6 @@ base-exclude-macos:
   exclude:
     makeLinks:
       - etc/defaults.yml
-      - _home/.config/homebrew/trust.json
 
 desktop/macos:
   options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
