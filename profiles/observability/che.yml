@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+observability/host/macos:
+  include:
+    profiles:
+      - source: "./otelcol/che.yml::observability/otelcol"
+      - source: "./grafana/che.yml::observability/grafana"
+      - source: "./prometheus/che.yml::observability/prometheus"
+      - source: "./jaeger/che.yml::observability/jaeger"
+      - source: "./loki/che.yml::observability/loki"
+##[<] 🤖🤖

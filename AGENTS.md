@@ -58,12 +58,12 @@ codex: profiles/llm/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
 defaults: root/etc/defaults.yml
 duti: root/etc/custom/os-open-files-with.yml
 git: profiles/git/root/_home/.config/git/config
-grafana: root/etc/grafana/grafana.ini
-jaeger: root/etc/jaeger/config.yml
+grafana: profiles/observability/grafana/root/etc/grafana/grafana.ini
+jaeger: profiles/observability/jaeger/root/etc/jaeger/config.yml
 kitty: profiles/dev/terminal/kitty/root/_home/.config/kitty/kitty.conf
 lefthook: profiles/git/root/_home/.config/lefthook/lefthook.yml
-otelcol: root/etc/otelcol/config.yml
-prometheus: root/etc/prometheus/prometheus.yml
+otelcol: profiles/observability/otelcol/root/etc/otelcol/config.yml
+prometheus: profiles/observability/prometheus/root/etc/prometheus/prometheus.yml
 rg: root/etc/rg/rgrc
 ssh: profiles/misc/ssh/root/_home/.ssh/config
 vscode: profiles/dev/vscode/mac/root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
@@ -82,7 +82,7 @@ homebrew: profiles/shell/zsh/base/root/_home/.config/zsh/.zshenv
 kind: profiles/dev/infra/kind/scripts/01-install-kind.zsh
 kubectl: profiles/dev/infra/kubectl/scripts/01-install-kubectl.zsh
 kubectx: profiles/dev/infra/kubectx/scripts/01-install-kubectx.zsh
-loki: root/etc/loki/config.yml
+loki: profiles/observability/loki/root/etc/loki/config.yml
 man: root/etc/man.conf
 mypy: profiles/dev/python/mypy/root/_home/.config/mypy/config
 nvm: profiles/dev/js/nvm/root/_home/.nvmrc
@@ -289,6 +289,48 @@ profiles
           local
             scripts
               shell
+  observability
+    grafana
+      root
+        Library
+          LaunchDaemons
+        etc
+          grafana
+            provisioning
+              dashboards
+                json
+              datasources
+    jaeger
+      root
+        Library
+          LaunchDaemons
+        etc
+          jaeger
+      scripts
+    loki
+      root
+        Library
+          LaunchDaemons
+        etc
+          loki
+    otelcol
+      root
+        Library
+          LaunchDaemons
+        etc
+          otelcol
+        usr
+          local
+            scripts
+              shell
+      scripts
+    prometheus
+      root
+        Library
+          LaunchDaemons
+        etc
+          prometheus
+      scripts
   shell
     zsh
       base
@@ -326,8 +368,6 @@ profiles
                   extras
                 static-history.d
 root
-  Library
-    LaunchDaemons
   _home
     .config
       homebrew
@@ -341,16 +381,7 @@ root
       gitlab
   etc
     custom
-    grafana
-      provisioning
-        dashboards
-          json
-        datasources
     homebrew
-    jaeger
-    loki
-    otelcol
-    prometheus
     rg
     sudoers.d
   usr

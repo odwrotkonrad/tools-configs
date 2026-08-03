@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+observability/jaeger:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    makeLinks:
+      - etc/**
+    makeCopies:
+      - owner: root
+        ownerGroup: "0"
+        chmod: "0644"
+        files:
+          - {source: Library/LaunchDaemons/jaeger.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
+    makeDirs:
+      - chmod: "2775"
+        directories:
+          - {dest: [/var/log/jaeger]}
+    runScripts:
+      - scripts/01-install-jaeger.zsh
+##[<] 🤖🤖

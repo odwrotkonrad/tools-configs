@@ -117,9 +117,11 @@ tools:
 
   - jaeger:
       files:
-        root/etc/jaeger/config.yml:
-        ci/zsh/scripts/installs/92-jaeger.zsh:
-        root/Library/LaunchDaemons/jaeger.plist.ontoHost.cp:
+        profiles/observability/jaeger/:
+          che.yml:
+          scripts/01-install-jaeger.zsh:
+          root/etc/jaeger/config.yml:
+          root/Library/LaunchDaemons/jaeger.plist.ontoHost.cp:
 
   - kind:
       files:
@@ -179,9 +181,11 @@ tools:
 
   - prometheus:
       files:
-        root/etc/prometheus/prometheus.yml:
-        ci/zsh/scripts/installs/93-prometheus.zsh:
-        root/Library/LaunchDaemons/prometheus.plist.ontoHost.cp:
+        profiles/observability/prometheus/:
+          che.yml:
+          scripts/01-install-prometheus.zsh:
+          root/etc/prometheus/prometheus.yml:
+          root/Library/LaunchDaemons/prometheus.plist.ontoHost.cp:
 
   - pyenv:
 

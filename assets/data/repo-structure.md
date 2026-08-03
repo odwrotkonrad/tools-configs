@@ -148,6 +148,48 @@ profiles
           local
             scripts
               shell
+  observability
+    grafana
+      root
+        Library
+          LaunchDaemons
+        etc
+          grafana
+            provisioning
+              dashboards
+                json
+              datasources
+    jaeger
+      root
+        Library
+          LaunchDaemons
+        etc
+          jaeger
+      scripts
+    loki
+      root
+        Library
+          LaunchDaemons
+        etc
+          loki
+    otelcol
+      root
+        Library
+          LaunchDaemons
+        etc
+          otelcol
+        usr
+          local
+            scripts
+              shell
+      scripts
+    prometheus
+      root
+        Library
+          LaunchDaemons
+        etc
+          prometheus
+      scripts
   shell
     zsh
       base
@@ -185,8 +227,6 @@ profiles
                   extras
                 static-history.d
 root
-  Library
-    LaunchDaemons
   _home
     .config
       homebrew
@@ -200,16 +240,7 @@ root
       gitlab
   etc
     custom
-    grafana
-      provisioning
-        dashboards
-          json
-        datasources
     homebrew
-    jaeger
-    loki
-    otelcol
-    prometheus
     rg
     sudoers.d
   usr

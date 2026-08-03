@@ -42,23 +42,13 @@ base:
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot;restricted:restricted"
       - source: "profiles/gitlab/projects/che.yml::gitlab/projects-parent-links"
+      - source: "profiles/observability/che.yml::observability/host/macos"
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
       - usr/**
     makeCopies:
       - files: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0644"
-        files:
-          - {source: Library/LaunchDaemons/otelcol.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
-          - {source: Library/LaunchDaemons/dir-size-exporter.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/dir-size-exporter.plist]}
-          - {source: Library/LaunchDaemons/port-exporter.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/port-exporter.plist]}
-          - {source: Library/LaunchDaemons/grafana.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/grafana.plist]}
-          - {source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
-          - {source: Library/LaunchDaemons/jaeger.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/jaeger.plist]}
-          - {source: Library/LaunchDaemons/loki.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/loki.plist]}
     renderTemplates:
       - templates: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
       - owner: root
@@ -75,12 +65,6 @@ base:
           - {dest: ["$HOME/.local/state/{homebrew,log,vim/undo}"]}
           - {dest: [$HOME/ScreenCapture]}
           - {dest: [/var/root/.config]}
-      - chmod: "2775"
-        directories:
-          - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
-          - {dest: ["/var/custom/cache/dir_size_exporter"]}
-          - {dest: ["/var/log/{grafana,prometheus,jaeger,loki}"]}
-          - {dest: ["/usr/local/var/{grafana,prometheus}"]}
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
       - ci/zsh/scripts/bootstrap/*.zsh
@@ -89,14 +73,8 @@ base-exclude-desktop:
   exclude:
     makeLinks:
       - _home/Library/**
-      - etc/{grafana,prometheus,jaeger,loki}/**
-    makeCopies:
-      - Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*
     renderTemplates:
       - _home/Library/**
-    makeDirs:
-      - /var/log/{grafana,prometheus,jaeger,loki}
-      - /usr/local/var/{grafana,prometheus}
     runScripts:
       - ci/zsh/scripts/installs/80-go-host-tools.zsh
 
