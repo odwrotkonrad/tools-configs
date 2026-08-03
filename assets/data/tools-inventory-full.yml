@@ -29,7 +29,7 @@ tools:
 
   - ccstatusline:
       files:
-        root/_home/.config/ccstatusline/settings.json:
+        profiles/llm/claude/root/_home/.config/ccstatusline/settings.json:
 
   - claude:
       files:

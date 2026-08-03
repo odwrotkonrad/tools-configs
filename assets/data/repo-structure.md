@@ -63,6 +63,10 @@ profiles
                 lib
                 templates-llm
     claude
+      root
+        _home
+          .config
+            ccstatusline
       scripts
     codex
       root
@@ -140,7 +144,6 @@ root
       asdf
       aws
       azure
-      ccstatusline
       che
       homebrew
       kitty

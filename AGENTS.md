@@ -52,7 +52,7 @@ references:
 ---
 ##[>] primary
 agents: profiles/llm/base/root/_home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
-ccstatusline: root/_home/.config/ccstatusline/settings.json
+ccstatusline: profiles/llm/claude/root/_home/.config/ccstatusline/settings.json
 claude: profiles/llm/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
 codex: profiles/llm/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
 defaults: root/etc/defaults.yml
@@ -200,6 +200,10 @@ profiles
                 lib
                 templates-llm
     claude
+      root
+        _home
+          .config
+            ccstatusline
       scripts
     codex
       root
@@ -277,7 +281,6 @@ root
       asdf
       aws
       azure
-      ccstatusline
       che
       homebrew
       kitty
