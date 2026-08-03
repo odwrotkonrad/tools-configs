@@ -6,6 +6,7 @@ options:
 base:
   include:
     profiles:
+      - source: "profiles/che/che.yml::che"
       - source: "profiles/zsh/base/che.yml::zsh/base-macos"
       - source: "profiles/zsh/base/che.yml::zsh/base-linux"
       - source: "profiles/zsh/extras/che.yml::zsh/extras"
@@ -16,6 +17,14 @@ base:
       - source: "profiles/llm/claude/che.yml::llm/claude"
       - source: "profiles/llm/codex/che.yml::llm/codex"
       - source: "profiles/llm/ollama/che.yml::llm/ollama"
+      - source: "profiles/dev/python/python/che.yml::dev/python/python"
+      - source: "profiles/dev/python/mypy/che.yml::dev/python/mypy"
+      - source: "profiles/dev/python/ruff/che.yml::dev/python/ruff"
+      - source: "profiles/dev/vscode/mac/che.yml::dev/vscode/mac"
+      - source: "profiles/aws/che.yml::aws"
+      - source: "profiles/aws/che.yml::aws/configs"
+      - source: "profiles/azure/che.yml::azure"
+      - source: "profiles/kitty/che.yml::kitty"
       - source: "profiles/onepassword/che.yml::onepassword"
       - source: "profiles/gcp/che.yml::gcp/install"
       - source: "profiles/gcp/che.yml::gcp/configs"
@@ -78,8 +87,6 @@ base-exclude-desktop:
       - Library/LaunchDaemons/{grafana,prometheus,jaeger,loki}.plist*
     renderTemplates:
       - _home/Library/**
-      #[why] 🤖🤖 cli/linux-only exclude (cli/macos does not include base-exclude-desktop): the sandbox does not use aws config files: no op:// dependency remains in the pod
-      - _home/.config/aws/config.ontoHost.tpl
     makeDirs:
       - /var/log/{grafana,prometheus,jaeger,loki}
       - /usr/local/var/{grafana,prometheus}

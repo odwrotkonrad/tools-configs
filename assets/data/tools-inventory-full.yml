@@ -130,11 +130,14 @@ tools:
 
   - kitty:
       files:
-        root/_home/.config/kitty/:
-          kitty.conf:
-          dark-theme.auto.conf:
-          light-theme.auto.conf:
-          no-preference-theme.auto.conf:
+        profiles/kitty/:
+          che.yml:
+          scripts/01-install-kitty.zsh:
+          root/_home/.config/kitty/:
+            kitty.conf:
+            dark-theme.auto.conf:
+            light-theme.auto.conf:
+            no-preference-theme.auto.conf:
 
   - man:
       files:
@@ -174,7 +177,7 @@ tools:
 
   - ruff:
       files:
-        root/_home/.config/ruff/ruff.toml:
+        profiles/dev/python/ruff/root/_home/.config/ruff/ruff.toml:
 
   - ssh:
       files:
@@ -199,7 +202,11 @@ tools:
 
   - vscode:
       files:
-        root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl:
+        profiles/dev/vscode/mac/:
+          che.yml:
+          root/_home/Library/Application Support/Code/User/:
+            settings.json.ontoHost.tpl:
+            keybindings.json:
 
   - zsh:
       files:

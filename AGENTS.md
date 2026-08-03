@@ -60,20 +60,20 @@ duti: root/etc/custom/os-open-files-with.yml
 git: profiles/git/root/_home/.config/git/config
 grafana: root/etc/grafana/grafana.ini
 jaeger: root/etc/jaeger/config.yml
-kitty: root/_home/.config/kitty/kitty.conf
+kitty: profiles/kitty/root/_home/.config/kitty/kitty.conf
 lefthook: root/_home/.config/lefthook/lefthook.yml
 otelcol: root/etc/otelcol/config.yml
 prometheus: root/etc/prometheus/prometheus.yml
 rg: root/etc/rg/rgrc
 ssh: profiles/ssh/root/_home/.ssh/config
-vscode: root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
+vscode: profiles/dev/vscode/mac/root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
 zsh: profiles/zsh/base/root-linux/etc/zsh/zshrc
 ##[<] primary
 
 ##[>] other
 asdf: root/_home/.config/asdf/.asdfrc
-aws: root/_home/.config/aws/config.ontoHost.tpl
-azure: root/_home/.config/azure/config
+aws: profiles/aws/root/_home/.config/aws/config.ontoHost.tpl
+azure: profiles/azure/root/_home/.config/azure/config
 editorconfig: root/_home/.editorconfig
 gcloud: profiles/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
@@ -82,13 +82,13 @@ golang: profiles/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-too
 homebrew: profiles/zsh/base/root/_home/.config/zsh/.zshenv
 loki: root/etc/loki/config.yml
 man: root/etc/man.conf
-mypy: root/_home/.config/mypy/config
+mypy: profiles/dev/python/mypy/root/_home/.config/mypy/config
 nvm: root/_home/.nvmrc
 ollama: profiles/llm/ollama/root/_home/.ollama/server.json
 onepassword: profiles/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
 prettier: root/_home/.config/prettier/.prettierrc.yml
 pyenv: profiles/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
-ruff: root/_home/.config/ruff/ruff.toml
+ruff: profiles/dev/python/ruff/root/_home/.config/ruff/ruff.toml
 tmux: root/_home/.config/tmux/tmux.conf
 vim: root/_home/.config/vim/vimrc
 ##[<] other
@@ -154,6 +154,45 @@ ci
       bootstrap
       installs
 profiles
+  aws
+    root
+      _home
+        .config
+          aws
+    scripts
+  azure
+    root
+      _home
+        .config
+          azure
+  che
+    root
+      _home
+        .config
+          che
+  dev
+    python
+      mypy
+        root
+          _home
+            .config
+              mypy
+      python
+        scripts
+      ruff
+        root
+          _home
+            .config
+              ruff
+    vscode
+      mac
+        root
+          _home
+            Library
+              Application Support
+                Code
+                  User
+                    .exported
   gcp
     root
       etc
@@ -188,6 +227,12 @@ profiles
         Library
           LaunchAgents
       scripts
+  kitty
+    root
+      _home
+        .config
+          kitty
+    scripts
   llm
     base
       root
@@ -279,23 +324,13 @@ root
   _home
     .config
       asdf
-      aws
-      azure
-      che
       homebrew
-      kitty
       lefthook
-      mypy
       prettier
-      ruff
       tmux
       vim
     .homebrew
     Library
-      Application Support
-        Code
-          User
-            .exported
       LaunchAgents
     projects
       gitlab

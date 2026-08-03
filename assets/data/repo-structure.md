@@ -17,6 +17,45 @@ ci
       bootstrap
       installs
 profiles
+  aws
+    root
+      _home
+        .config
+          aws
+    scripts
+  azure
+    root
+      _home
+        .config
+          azure
+  che
+    root
+      _home
+        .config
+          che
+  dev
+    python
+      mypy
+        root
+          _home
+            .config
+              mypy
+      python
+        scripts
+      ruff
+        root
+          _home
+            .config
+              ruff
+    vscode
+      mac
+        root
+          _home
+            Library
+              Application Support
+                Code
+                  User
+                    .exported
   gcp
     root
       etc
@@ -51,6 +90,12 @@ profiles
         Library
           LaunchAgents
       scripts
+  kitty
+    root
+      _home
+        .config
+          kitty
+    scripts
   llm
     base
       root
@@ -142,23 +187,13 @@ root
   _home
     .config
       asdf
-      aws
-      azure
-      che
       homebrew
-      kitty
       lefthook
-      mypy
       prettier
-      ruff
       tmux
       vim
     .homebrew
     Library
-      Application Support
-        Code
-          User
-            .exported
       LaunchAgents
     projects
       gitlab

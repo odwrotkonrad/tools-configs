@@ -1,6 +1,6 @@
 #>[where]
 # root/_home/.config/kitty/kitty.conf                                #[what] keystroke producer
-# root/_home/Library/Application Support/Code/User/keybindings.json  #[what] keystroke producer
+# profiles/dev/vscode/mac/root/_home/Library/Application Support/Code/User/keybindings.json  #[what] keystroke producer
 #/[where]
 
 typeset -A keystrokes=(
