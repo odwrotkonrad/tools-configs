@@ -44,13 +44,12 @@ comp_file_fetch() {
 
 comp_file_write rg _rg < <(rg --generate=complete-zsh)
 comp_file_write che _che < <(che completion zsh)
-comp_file_write asdf _asdf < <(asdf completion zsh)
 comp_file_write codex _codex < <(codex completion zsh)
 comp_file_write kubectl _kubectl < <(kubectl completion zsh)
 comp_file_write docker _docker < <(docker completion zsh)
 comp_file_write kind _kind < <(kind completion zsh)
-comp_file_write kubectx _kubectx < "$(asdf where kubectx)/completion/_kubectx.zsh"
-comp_file_write kubens _kubens < "$(asdf where kubectx)/completion/_kubens.zsh"
+comp_file_fetch kubectx _kubectx https://raw.githubusercontent.com/ahmetb/kubectx/v0.11.0/completion/_kubectx.zsh
+comp_file_fetch kubens _kubens https://raw.githubusercontent.com/ahmetb/kubectx/v0.11.0/completion/_kubens.zsh
 
 #[why] 🤖 brew's git formula ships a bash-backed _git in site-functions that breaks under zsh; write the native pure-zsh _git into root-space completions, which precede brew in fpath
 if { fn-is-os mac } { comp_file_write git _git < /usr/share/zsh/${ZSH_VERSION}/functions/_git }

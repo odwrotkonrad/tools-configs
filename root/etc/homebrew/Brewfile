@@ -14,7 +14,6 @@ end
 
 ##[>] formulae
 if stage?("formulae")
-  brew "asdf"          # Extendable version manager (Ruby, Node.js, Erlang & more)
   brew "readline"      # Library for command-line editing
   brew "openssl@3"     # Cryptography and SSL/TLS Toolkit
   brew "bat"           # Clone of cat(1) with syntax highlighting and Git integration

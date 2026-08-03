@@ -61,7 +61,7 @@
 # --line-buffered
 # --line-regexp
 # --max-columns-preview
-# --max-columns=(terminal width - 5) #[where] dynamically set via fn-root-rg in profiles/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh
+# --max-columns=(terminal width - 5) #[where] dynamically set via fn-root-rg in profiles/shell/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh
 # --max-count=NUM
 # --no-filename
 # --no-ignore

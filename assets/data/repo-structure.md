@@ -17,26 +17,34 @@ ci
       bootstrap
       installs
 profiles
-  aws
-    root
-      _home
-        .config
-          aws
-    scripts
-  azure
-    root
-      _home
-        .config
-          azure
-  che
-    root
-      _home
-        .config
-          che
-  dev
-    editorconfig
+  cloud
+    aws
+      scripts
+    azure
+    gcp
       root
-        _home
+        etc
+          zsh
+            zshenv.d
+              auto.d
+                gcp
+      scripts
+  dev
+    infra
+      kind
+        scripts
+      kubectl
+        scripts
+      kubectx
+        scripts
+      terraform
+        scripts
+    js
+      nvm
+      pnpm
+        scripts
+    misc
+      editorconfig
     python
       mypy
         root
@@ -50,6 +58,9 @@ profiles
           _home
             .config
               ruff
+    terminal
+      kitty
+        scripts
     vscode
       mac
         root
@@ -59,14 +70,6 @@ profiles
                 Code
                   User
                     .exported
-  gcp
-    root
-      etc
-        zsh
-          zshenv.d
-            auto.d
-              gcp
-    scripts
   git
     scripts
   gitlab
@@ -93,12 +96,6 @@ profiles
         Library
           LaunchAgents
       scripts
-  kitty
-    root
-      _home
-        .config
-          kitty
-    scripts
   llm
     base
       root
@@ -131,67 +128,68 @@ profiles
             scripts
               shell
       scripts
-  onepassword
-    root
-      etc
-        zsh
-          zshenv.d
-            auto.d
-              onepassword
-    scripts
-  ssh
-    root
-      etc
-        zsh
-          zshenv.d
-            functions
-      usr
-        local
-          scripts
-            shell
-  zsh
-    base
+  misc
+    che
+    onepassword
       root
         etc
           zsh
             zshenv.d
               auto.d
-                00-base
-              functions
-            zshrc.d
-              auto.d
-                00-base
-              functions
-              static-history.d
-      root-linux
-        etc
-          zsh
-      root-macos
-        etc
-          zsh
-            zshenv.d
-              functions
+                onepassword
       scripts
-    extras
+    ssh
       root
         etc
           zsh
             zshenv.d
-              auto.d
-                extras
               functions
-            zshrc.d
-              auto.d
-                extras
-              static-history.d
+        usr
+          local
+            scripts
+              shell
+  shell
+    zsh
+      base
+        root
+          etc
+            zsh
+              zshenv.d
+                auto.d
+                  00-base
+                functions
+              zshrc.d
+                auto.d
+                  00-base
+                functions
+                static-history.d
+        root-linux
+          etc
+            zsh
+        root-macos
+          etc
+            zsh
+              zshenv.d
+                functions
+        scripts
+      extras
+        root
+          etc
+            zsh
+              zshenv.d
+                auto.d
+                  extras
+                functions
+              zshrc.d
+                auto.d
+                  extras
+                static-history.d
 root
   Library
     LaunchDaemons
   _home
     .config
-      asdf
       homebrew
-      lefthook
       prettier
       tmux
       vim

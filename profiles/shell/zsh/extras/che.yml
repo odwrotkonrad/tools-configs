@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+shell/zsh/extras:
+  include:
+    makeLinks:
+      - {source: _home/**, dest: $HOME/**}
+      - etc/**
+    renderTemplates:
+      - templates: [{source: _home/**, dest: $HOME/**}]
+##[<] 🤖🤖

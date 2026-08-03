@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+cloud/gcp/install:
+  include:
+    makeLinks:
+      - etc/**
+    runScripts:
+      - scripts/01-install-gcloud.zsh
+
+cloud/gcp/configs:
+  options: {runIf: ['builtin:isVirt == false']}
+  include:
+    makeLinks:
+      - {source: _home/**/zshenv.d/**, dest: $HOME/**}
+    renderTemplates:
+      - templates: [{source: _home/**, dest: $HOME/**}]
+
+cloud/gcp/auth:
+  options: {runIf: ['builtin:isVirt']}
+  include:
+    runScripts:
+      - scripts/10-check-auth.zsh
+##[<] 🤖🤖

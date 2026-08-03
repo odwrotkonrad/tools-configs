@@ -6,30 +6,36 @@ options:
 base:
   include:
     profiles:
-      - source: "profiles/che/che.yml::che"
-      - source: "profiles/zsh/base/che.yml::zsh/base-macos"
-      - source: "profiles/zsh/base/che.yml::zsh/base-linux"
-      - source: "profiles/zsh/extras/che.yml::zsh/extras"
+      - source: "profiles/misc/che/che.yml::misc/che"
+      - source: "profiles/shell/zsh/base/che.yml::shell/zsh/base-macos"
+      - source: "profiles/shell/zsh/base/che.yml::shell/zsh/base-linux"
+      - source: "profiles/shell/zsh/extras/che.yml::shell/zsh/extras"
       - source: "profiles/git/che.yml::git"
-      - source: "profiles/ssh/che.yml::ssh"
-      - source: "profiles/ssh/che.yml::ssh/virt"
+      - source: "profiles/misc/ssh/che.yml::misc/ssh"
+      - source: "profiles/misc/ssh/che.yml::misc/ssh/virt"
       - source: "profiles/llm/base/che.yml::llm/base"
       - source: "profiles/llm/claude/che.yml::llm/claude"
       - source: "profiles/llm/codex/che.yml::llm/codex"
       - source: "profiles/llm/ollama/che.yml::llm/ollama"
-      - source: "profiles/dev/editorconfig/che.yml::dev/editorconfig"
+      - source: "profiles/dev/misc/editorconfig/che.yml::dev/misc/editorconfig"
       - source: "profiles/dev/python/python/che.yml::dev/python/python"
       - source: "profiles/dev/python/mypy/che.yml::dev/python/mypy"
       - source: "profiles/dev/python/ruff/che.yml::dev/python/ruff"
       - source: "profiles/dev/vscode/mac/che.yml::dev/vscode/mac"
-      - source: "profiles/aws/che.yml::aws"
-      - source: "profiles/aws/che.yml::aws/configs"
-      - source: "profiles/azure/che.yml::azure"
-      - source: "profiles/kitty/che.yml::kitty"
-      - source: "profiles/onepassword/che.yml::onepassword"
-      - source: "profiles/gcp/che.yml::gcp/install"
-      - source: "profiles/gcp/che.yml::gcp/configs"
-      - source: "profiles/gcp/che.yml::gcp/auth"
+      - source: "profiles/dev/infra/terraform/che.yml::dev/infra/terraform"
+      - source: "profiles/dev/infra/kubectl/che.yml::dev/infra/kubectl"
+      - source: "profiles/dev/infra/kubectx/che.yml::dev/infra/kubectx"
+      - source: "profiles/dev/infra/kind/che.yml::dev/infra/kind"
+      - source: "profiles/dev/js/nvm/che.yml::dev/js/nvm"
+      - source: "profiles/dev/js/pnpm/che.yml::dev/js/pnpm"
+      - source: "profiles/cloud/aws/che.yml::cloud/aws"
+      - source: "profiles/cloud/aws/che.yml::cloud/aws/configs"
+      - source: "profiles/cloud/azure/che.yml::cloud/azure"
+      - source: "profiles/dev/terminal/kitty/che.yml::dev/terminal/kitty"
+      - source: "profiles/misc/onepassword/che.yml::misc/onepassword"
+      - source: "profiles/cloud/gcp/che.yml::cloud/gcp/install"
+      - source: "profiles/cloud/gcp/che.yml::cloud/gcp/configs"
+      - source: "profiles/cloud/gcp/che.yml::cloud/gcp/auth"
       - source: "profiles/gitlab/glab/che.yml::gitlab/glab"
       - source: "profiles/gitlab/runner/che.yml::gitlab/runner"
       - source: "profiles/gitlab/projects/che.yml::gitlab/projects"
@@ -66,7 +72,7 @@ base:
           - {dest: [$HOME/.config/codex]}
           - {dest: ["$HOME/.local/{bin,share}"]}
           - {dest: [$HOME/.local/state/che/backups]}
-          - {dest: ["$HOME/.local/state/{asdf,homebrew,log,vim/undo}"]}
+          - {dest: ["$HOME/.local/state/{homebrew,log,vim/undo}"]}
           - {dest: [$HOME/ScreenCapture]}
           - {dest: [/var/root/.config]}
       - chmod: "2775"
