@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+misc/macos:
+  options: {runIf: ['builtin:isOs == macos']}
+  include:
+    makeLinks:
+      - etc/**
+      - usr/**
+
+misc/macos/desktop:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    renderTemplates:
+      - templates: [{source: _home/**, dest: $HOME/**}]
+##[<] 🤖🤖

@@ -9,8 +9,8 @@ agents: profiles/llm/base/root/_home/.config/ai-agents/templates/AGENTS.md.ontoH
 ccstatusline: profiles/llm/claude/root/_home/.config/ccstatusline/settings.json
 claude: profiles/llm/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
 codex: profiles/llm/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
-defaults: root/etc/defaults.yml
-duti: root/etc/custom/os-open-files-with.yml
+defaults: profiles/misc/macos/root/etc/defaults.yml
+duti: profiles/misc/macos/root/etc/custom/os-open-files-with.yml
 git: profiles/git/root/_home/.config/git/config
 grafana: profiles/observability/grafana/root/etc/grafana/grafana.ini
 jaeger: profiles/observability/jaeger/root/etc/jaeger/config.yml
@@ -37,7 +37,7 @@ kind: profiles/dev/infra/kind/scripts/01-install-kind.zsh
 kubectl: profiles/dev/infra/kubectl/scripts/01-install-kubectl.zsh
 kubectx: profiles/dev/infra/kubectx/scripts/01-install-kubectx.zsh
 loki: profiles/observability/loki/root/etc/loki/config.yml
-man: root/etc/man.conf
+man: profiles/shell/man/root/etc/man.conf
 mypy: profiles/dev/python/mypy/root/_home/.config/mypy/config
 nvm: profiles/dev/js/nvm/root/_home/.nvmrc
 ollama: profiles/llm/ollama/root/_home/.ollama/server.json

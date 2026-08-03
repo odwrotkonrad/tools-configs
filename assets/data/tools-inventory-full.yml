@@ -51,10 +51,11 @@ tools:
 
   - defaults:
       files:
-        root/:
-          etc/defaults.yml:
-          usr/local/scripts/shell/load-defaults-config.zsh:
-          Users/ko/Library/LaunchAgents/load-defaults-config.plist:
+        profiles/misc/macos/:
+          che.yml:
+          root/etc/defaults.yml:
+          root/usr/local/scripts/shell/load-defaults-config.zsh:
+          root/_home/Library/LaunchAgents/load-defaults-config.plist.ontoHost.tpl:
 
   - editorconfig:
       files:
@@ -78,6 +79,7 @@ tools:
       files:
         profiles/git/che.yml:
         profiles/git/scripts/01-install-git.zsh:
+        profiles/git/root/usr/local/scripts/shell/conventional-prefix.sh:
         profiles/git/root/_home/.config/git/:
           config:
           ignore:
@@ -154,7 +156,7 @@ tools:
 
   - man:
       files:
-        root/etc/man.conf:
+        profiles/shell/man/root/etc/man.conf:
 
   - nvm:
       files:

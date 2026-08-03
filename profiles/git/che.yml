@@ -7,6 +7,7 @@ git:
   include:
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
+      - usr/**
     runScripts:
       - scripts/01-install-git.zsh
 

@@ -13,14 +13,9 @@ base:
       - files: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
     renderTemplates:
       - templates: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0440"
-        templates:
-          - {source: etc/sudoers.d/configs.ontoHost.tpl, dest: [/etc/sudoers.d/configs]}
     makeDirs:
       - directories:
-          - {dest: ["$HOME/.cache/{homebrew,get-term-open-files-with}"]}
+          - {dest: [$HOME/.cache/homebrew]}
           - {dest: [$HOME/.config/codex]}
           - {dest: ["$HOME/.local/{bin,share}"]}
           - {dest: [$HOME/.local/state/che/backups]}
@@ -39,11 +34,6 @@ base-exclude-desktop:
       - _home/Library/**
     runScripts:
       - ci/zsh/scripts/installs/80-go-host-tools.zsh
-
-base-exclude-macos:
-  exclude:
-    makeLinks:
-      - etc/defaults.yml
 
 desktop/macos:
   options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
@@ -79,7 +69,6 @@ cli/linux:
   include:
     profiles:
       - base
-      - base-exclude-macos
       - base-exclude-desktop
       - source: "profiles/shell/che.yml::shell/virt/linux"
       - source: "profiles/misc/che.yml::misc/virt/linux"

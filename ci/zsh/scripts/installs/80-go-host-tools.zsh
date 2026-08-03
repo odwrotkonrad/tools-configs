@@ -1,5 +1,5 @@
 #!/bin/zsh
-#[what] go install host-only published tools into $GOPATH/bin (get-os/get-term-open-files-with)
+#[what] go install host-only published tools into $GOPATH/bin (get-os-open-files-with)
 
 emulate -LR zsh
 setopt errexit
@@ -13,7 +13,6 @@ function go_install { PATH="${goroot}/bin:${PATH}" go install "$1" }
 #[what] own published go tools, host-only: bin -> module@version
 typeset -A own_tools=(
   get-os-open-files-with    'gitlab.com/konradodwrot/go-modules/get-os-open-files-with@latest'
-  get-term-open-files-with  'gitlab.com/konradodwrot/go-modules/get-term-open-files-with@latest'
 )
 
 for bin module ( ${(kv)own_tools} ) {

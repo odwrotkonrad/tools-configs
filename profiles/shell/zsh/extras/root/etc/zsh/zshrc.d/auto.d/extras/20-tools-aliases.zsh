@@ -6,23 +6,6 @@ alias a-rt-git-stash-all="git stash --include-untracked"
 alias a-rt-git-status-all="git stash --show-stash"
 ##[<] git
 
-##[>] suffix aliases >[what] $ man zshbuiltins (alias -s)
-() {
-  ##[>] 🤖🤖
-  #[why] the cli is a host tool install: absent in the sandbox image
-  (( $+commands[get-term-open-files-with] )) || return 0
-  ##[<] 🤖🤖
-  local terminal=any ext opener
-  [[ $TERM_PROGRAM == vscode ]] && terminal=vscode
-  [[ $TERM == xterm-kitty ]] && terminal=kitty
-  get-term-open-files-with $terminal | while IFS== read -r ext opener; do
-    ##[>] 🤖🤖
-    alias -s -- "$ext"="fn-open-or-exec ${(q)opener}"
-    ##[<] 🤖🤖
-  done
-}
-##[<] suffix aliases
-
 ##[>] claude >[what]
 # --permission-mode dontAsk - skip prompts, deny ungranted
 # --append-system-prompt    - append to default system prompt

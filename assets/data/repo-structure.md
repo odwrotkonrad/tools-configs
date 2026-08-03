@@ -82,6 +82,11 @@ profiles
             .config
               tmux
   git
+    root
+      usr
+        local
+          scripts
+            shell
     scripts
   gitlab
     glab
@@ -149,6 +154,17 @@ profiles
         etc
           homebrew
     che
+    macos
+      root
+        _home
+          Library
+            LaunchAgents
+        etc
+          custom
+        usr
+          local
+            scripts
+              shell
     onepassword
       root
         etc
@@ -213,6 +229,9 @@ profiles
           prometheus
       scripts
   shell
+    man
+      root
+        etc
     zsh
       assets
         images
@@ -254,19 +273,8 @@ profiles
       spec
         completions
 root
-  _home
-    Library
-      LaunchAgents
-    projects
-      gitlab
   etc
-    custom
     rg
-    sudoers.d
-  usr
-    local
-      scripts
-        shell
 templates
   1-env
   2-data

@@ -6,6 +6,7 @@ shell/base/macos:
     profiles:
       - source: "./zsh/base/che.yml::shell/zsh/base-macos"
       - source: "./zsh/extras/che.yml::shell/zsh/extras"
+      - source: "./man/che.yml::shell/man"
 
 shell/host/macos:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
@@ -19,4 +20,5 @@ shell/virt/linux:
     profiles:
       - source: "./zsh/base/che.yml::shell/zsh/base-linux"
       - source: "./zsh/extras/che.yml::shell/zsh/extras"
+      - source: "./man/che.yml::shell/man"
 ##[<] 🤖🤖
