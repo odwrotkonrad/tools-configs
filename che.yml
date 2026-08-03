@@ -13,15 +13,6 @@ base:
       - files: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
     renderTemplates:
       - templates: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
-    makeDirs:
-      - directories:
-          - {dest: [$HOME/.cache/homebrew]}
-          - {dest: [$HOME/.config/codex]}
-          - {dest: ["$HOME/.local/{bin,share}"]}
-          - {dest: [$HOME/.local/state/che/backups]}
-          - {dest: ["$HOME/.local/state/{homebrew,log,vim/undo}"]}
-          - {dest: [$HOME/ScreenCapture]}
-          - {dest: [/var/root/.config]}
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
       - ci/zsh/scripts/bootstrap/*.zsh

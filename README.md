@@ -36,7 +36,7 @@ kitty: profiles/dev/terminal/kitty/root/_home/.config/kitty/kitty.conf
 lefthook: profiles/git/root/_home/.config/lefthook/lefthook.yml
 otelcol: profiles/observability/otelcol/root/etc/otelcol/config.yml
 prometheus: profiles/observability/prometheus/root/etc/prometheus/prometheus.yml
-rg: root/etc/rg/rgrc
+rg: profiles/shell/rg/root/etc/rg/rgrc
 ssh: profiles/misc/ssh/root/_home/.ssh/config
 vscode: profiles/dev/editors/vscode/mac/root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl
 zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc

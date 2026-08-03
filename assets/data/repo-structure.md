@@ -232,6 +232,10 @@ profiles
     man
       root
         etc
+    rg
+      root
+        etc
+          rg
     zsh
       assets
         images
@@ -272,9 +276,6 @@ profiles
                 static-history.d
       spec
         completions
-root
-  etc
-    rg
 templates
   1-env
   2-data

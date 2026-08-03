@@ -11,6 +11,7 @@ llm/codex:
       - templates: [{source: _home/**, dest: $HOME/**}]
     makeDirs:
       - directories:
+          - {dest: [$HOME/.config/codex]}
           - {dest: [$HOME/.local/state/codex/log]}
     runScripts:
       - scripts/01-install-codex.zsh

@@ -193,7 +193,7 @@ tools:
 
   - rg:
       files:
-        root/etc/rg/:
+        profiles/shell/rg/root/etc/rg/:
           rgrc:
           rgignore:
         profiles/shell/zsh/base/root/etc/zsh/zshrc.d/functions/fn-load-static-history:
