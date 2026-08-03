@@ -65,7 +65,7 @@ tools:
 
   - editorconfig:
       files:
-        root/_home/.editorconfig:
+        profiles/dev/editorconfig/root/_home/.editorconfig:
 
   - gcp:
       files:

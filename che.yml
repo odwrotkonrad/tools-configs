@@ -17,6 +17,7 @@ base:
       - source: "profiles/llm/claude/che.yml::llm/claude"
       - source: "profiles/llm/codex/che.yml::llm/codex"
       - source: "profiles/llm/ollama/che.yml::llm/ollama"
+      - source: "profiles/dev/editorconfig/che.yml::dev/editorconfig"
       - source: "profiles/dev/python/python/che.yml::dev/python/python"
       - source: "profiles/dev/python/mypy/che.yml::dev/python/mypy"
       - source: "profiles/dev/python/ruff/che.yml::dev/python/ruff"

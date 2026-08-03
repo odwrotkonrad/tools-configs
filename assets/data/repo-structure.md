@@ -34,6 +34,9 @@ profiles
         .config
           che
   dev
+    editorconfig
+      root
+        _home
     python
       mypy
         root

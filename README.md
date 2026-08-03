@@ -46,7 +46,7 @@ zsh: profiles/zsh/base/root-linux/etc/zsh/zshrc
 asdf: root/_home/.config/asdf/.asdfrc
 aws: profiles/aws/root/_home/.config/aws/config.ontoHost.tpl
 azure: profiles/azure/root/_home/.config/azure/config
-editorconfig: root/_home/.editorconfig
+editorconfig: profiles/dev/editorconfig/root/_home/.editorconfig
 gcloud: profiles/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 glab: profiles/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
