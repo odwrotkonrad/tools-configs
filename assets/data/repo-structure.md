@@ -4,11 +4,6 @@ assets
   data
   docs-agents
   docs-human
-  images
-  recordings
-  spec
-    zsh
-      completions
 ci
   vm
   zsh
@@ -150,6 +145,9 @@ profiles
               shell
   observability
     grafana
+      assets
+        images
+        recordings
       root
         Library
           LaunchDaemons
@@ -192,6 +190,9 @@ profiles
       scripts
   shell
     zsh
+      assets
+        images
+        recordings
       base
         root
           etc
@@ -226,6 +227,8 @@ profiles
                 auto.d
                   extras
                 static-history.d
+      spec
+        completions
 root
   _home
     .config

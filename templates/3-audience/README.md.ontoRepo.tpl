@@ -20,25 +20,25 @@
 
 Dashboard for Claude Code usage, cost and token metrics.
 
-![Claude Code dashboard](assets/images/grafana-claude-code-dashboard-pt-1.png)
+![Claude Code dashboard](profiles/observability/grafana/assets/images/grafana-claude-code-dashboard-pt-1.png)
 
-[recording](assets/recordings/grafana-cc-dashboard.gif) · [more](assets/images/grafana-claude-code-dashboard-pt-2.png)
+[recording](profiles/observability/grafana/assets/recordings/grafana-cc-dashboard.gif) · [more](profiles/observability/grafana/assets/images/grafana-claude-code-dashboard-pt-2.png)
 
 ### Host System
 
 Dashboard for host CPU, memory, disk and network metrics.
 
-![Host system dashboard](assets/images/grafana-host-dashboard-pt-1.png)
+![Host system dashboard](profiles/observability/grafana/assets/images/grafana-host-dashboard-pt-1.png)
 
-[recording](assets/recordings/grafana-host-dashboard.gif) · [more](assets/images/grafana-host-dashboard-pt-2.png)
+[recording](profiles/observability/grafana/assets/recordings/grafana-host-dashboard.gif) · [more](profiles/observability/grafana/assets/images/grafana-host-dashboard-pt-2.png)
 
 ## Zsh **Deep** Completion
 
 Argument completion for files & directories.
 
-![Zsh deep completion](assets/images/zsh-deep-completion.png)
+![Zsh deep completion](profiles/shell/zsh/assets/images/zsh-deep-completion.png)
 
-[recording](assets/recordings/zsh-deep-completion.gif)
+[recording](profiles/shell/zsh/assets/recordings/zsh-deep-completion.gif)
 
 ## ☢️ Danger Zone - Loading Configs ☢️
 

@@ -1,4 +1,16 @@
-# Deep Completion Configuration
+# Zsh
+
+<!--[>] 🤖🤖 -->
+## Deep Completion
+
+Argument completion for files & directories.
+
+![Zsh deep completion](assets/images/zsh-deep-completion.png)
+
+[recording](assets/recordings/zsh-deep-completion.gif)
+<!--[<] 🤖🤖 -->
+
+## Deep Completion Configuration
 
 `_deep_files` zstyle settings (`profiles/shell/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/40-completions.zsh`).
 The engine claims the empty function field of the completion context, so the
