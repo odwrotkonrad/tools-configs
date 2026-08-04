@@ -176,6 +176,7 @@ profiles
               shell
                 lib
                 templates-llm
+      spec
     claude
       root
         _home
