@@ -71,9 +71,60 @@ Scenario: --main reports the latest main pipeline
   And `## Stages`, `## Pipeline Status`, wait polling behave as for an MR
   And with no main pipeline `## Pipeline Status` prints `none`, exits 0
 
+Scenario: pipeline verdict is the exit code
+  Status: implemented
+  When the report finishes
+  Then it exits 0 when the pipeline status is success, or no pipeline/MR exists
+  And exits 1 on any other status (failed, canceled, running via --no-wait), so multi-repo runs flag it ❌
+
 Scenario: branch main implies --main
   Status: implemented
   When I run with `--branch=main`, or from the main branch with no flags
   Then it behaves as `--main`
   And `--main` with any other `--branch` exits 2: `--main excludes --branch`
+
+Feature: exec-for-all-repos.zsh
+
+Scenario: fans a command out over every repo under a directory
+  Status: implemented
+  Given repos nested at any depth under a root directory
+  When I run `exec-for-all-repos.zsh [-C <dir>|--chpwd=<dir>] <command> [args...]`
+  Then repos are discovered recursively from `<dir>` (default pwd) by their `.git` entry (dir or worktree file)
+  And `<dir>` itself being a repo is included, named by its basename
+  And the command runs once per repo, cwd set to the repo, all repos concurrently in the background
+  And each repo's stdout+stderr is captured to `~/.local/state/git-wrappers/exec-for-all-repos/<relative path, / → __>.log`, truncated per run
+  And `GIT_WRAPPER_FG=1` is exported so git-*-upsert wrappers mirror their log into the capture
+
+Scenario: arbitrary command with arguments
+  Status: implemented
+  When I run `exec-for-all-repos.zsh -C <dir> git status -sb`
+  Then everything after the options is executed verbatim as `<cmd> [args...]` in each repo
+
+Scenario: per-repo ✅/❌ report closes the run
+  Status: implemented
+  When all background runs finish
+  Then a `## Report` section lists every repo in discovery order as `<repo>: ✅` or `<repo>: ❌ (exit N)`
+  And each failed repo's captured output prints below under `## Output: <repo>`
+  And the script exits 0 when all succeeded, 1 otherwise
+
+Scenario: --include/--exclude select repos by name or path
+  Status: implemented
+  When I run with `--include=a,b` and/or `--exclude=c,d`
+  Then a token containing `/` matches the repo path relative to the root exactly
+  And a bare token matches the repo directory basename
+  And include empty means all repos, exclude is applied after include
+  And a basename matching more than one discovered repo exits 2, listing the candidates
+
+Scenario: --must-filter targets repos needing attention, AND semantics
+  Status: implemented
+  When I run with `--must-filter=changes,off-main,unsynced` (any subset)
+  Then only repos satisfying every listed condition run:
+  And `changes`: `git status --porcelain` non-empty (tracked or untracked)
+  And `off-main`: current branch is not `main`
+  And `unsynced`: no upstream, or ahead/behind counts vs `@{u}` differ from `0 0`
+
+Scenario: bad invocation exits 2 with usage
+  Status: implemented
+  When I pass an unknown option, or no command after the options
+  Then usage prints on stderr and the script exits 2
 <!--[<] 🤖🤖 -->
