@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+llm/base:
+  include:
+    makeLinks:
+      - {source: _home/**, dest: $HOME/**}
+      - etc/**
+      - usr/**
+    makeDirs:
+      - directories:
+          - {dest: ["$HOME/.config/{claude,codex}"]}
+    renderTemplates:
+      - templates:
+          - source: _home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
+            dest:
+              - ~/.config/claude/CLAUDE.md
+              - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
+##[<] 🤖🤖

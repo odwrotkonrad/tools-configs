@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+misc/brew:
+  include:
+    makeLinks:
+      - etc/**
+    makeDirs:
+      - directories:
+          - {dest: [$HOME/.cache/homebrew]}
+          - {dest: [$HOME/.local/state/homebrew]}
+    runScripts:
+      - scripts/01-install-packages.zsh
+
+misc/brew/macos:
+  options: {runIf: ['builtin:isOs == macos']}
+  include:
+    makeLinks:
+      - {source: _home/**, dest: $HOME/**}
+##[<] 🤖🤖

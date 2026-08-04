@@ -1,6 +1,0 @@
-vm_base_name = "ghcr.io/cirruslabs/macos-tahoe-vanilla:latest"
-vm_name      = "macos-tahoe-vanilla-base"
-pubkey_path  = "{{ env.Getenv "HOME" }}/.ssh/id_vm_access.pub"
-username     = "user"
-repo_path    = "/Users/user/projects/configs"
-password     = "{{ secret "op://ProgrammaticAccess/gitlab_runner/vm_password" }}"

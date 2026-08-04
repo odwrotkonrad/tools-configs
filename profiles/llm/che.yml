@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+llm/base/macos:
+  options: {runIf: ['builtin:isOs == macos']}
+  include:
+    profiles:
+      - source: "./base/che.yml::llm/base"
+      - source: "./claude/che.yml::llm/claude"
+      - source: "./codex/che.yml::llm/codex"
+
+llm/host/macos:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    profiles:
+      - llm/base/macos
+      - source: "./ollama/che.yml::llm/ollama"
+
+llm/virt/linux:
+  options: {runIf: ['builtin:isOs == linux']}
+  include:
+    profiles:
+      - source: "./base/che.yml::llm/base"
+      - source: "./claude/che.yml::llm/claude"
+      - source: "./codex/che.yml::llm/codex"
+##[<] 🤖🤖

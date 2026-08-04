@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+cloud/base/macos:
+  options: {runIf: ['builtin:isOs == macos']}
+  include:
+    profiles:
+      - source: "./aws/che.yml::cloud/aws"
+      - source: "./azure/che.yml::cloud/azure"
+      - source: "./gcp/che.yml::cloud/gcp/install"
+      - source: "./gcp/che.yml::cloud/gcp/configs"
+      - source: "./gcp/che.yml::cloud/gcp/auth"
+
+cloud/host/macos:
+  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  include:
+    profiles:
+      - cloud/base/macos
+      - source: "./aws/che.yml::cloud/aws/configs"
+
+cloud/virt/linux:
+  options: {runIf: ['builtin:isOs == linux']}
+  include:
+    profiles:
+      - source: "./aws/che.yml::cloud/aws"
+      - source: "./azure/che.yml::cloud/azure"
+      - source: "./gcp/che.yml::cloud/gcp/install"
+      - source: "./gcp/che.yml::cloud/gcp/configs"
+##[<] 🤖🤖

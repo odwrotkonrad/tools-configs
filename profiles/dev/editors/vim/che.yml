@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+dev/editors/vim:
+  include:
+    makeLinks:
+      - {source: _home/**, dest: $HOME/**}
+    makeDirs:
+      - directories:
+          - {dest: [$HOME/.local/state/vim/undo]}
+##[<] 🤖🤖

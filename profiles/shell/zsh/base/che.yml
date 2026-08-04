@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: root
+
+shell/zsh/base:
+  include:
+    makeLinks:
+      - {source: _home/**, dest: $HOME/**}
+      - etc/**
+    makeDirs:
+      - directories:
+          - {dest: [$HOME/.cache/zsh]}
+          - {dest: ["$HOME/.local/{bin,share}"]}
+          - {dest: [$HOME/.local/state/log]}
+          - {dest: [$HOME/.local/state/zsh/completions]}
+          - {dest: [$HOME/ScreenCapture]}
+          - {dest: [/var/root/.cache/zsh]}
+          - {dest: [/var/root/.config]}
+          - {dest: [/var/root/.local/state/zsh/completions]}
+      - owner: root
+        ownerGroup: "0"
+        chmod: "0755"
+        directories:
+          - {dest: [/etc/zsh/zshrc.d/completions]}
+    runScripts:
+      - scripts/01-install-zsh.sh
+      - scripts/02-install-rg.zsh
+      - scripts/03-install-brew.zsh
+
+shell/zsh/base-macos:
+  options: {runIf: ['builtin:isOs == macos'], profileWorkingDirectory: root-macos}
+  include:
+    profiles:
+      - source: "./che.yml::shell/zsh/base"
+    makeLinks:
+      - etc/**
+
+shell/zsh/base-linux:
+  options: {runIf: ['builtin:isOs == linux'], profileWorkingDirectory: root-linux}
+  include:
+    profiles:
+      - source: "./che.yml::shell/zsh/base"
+    makeLinks:
+      #[why] global rc dir is a zsh compile-time option (--enable-etc-dir): debian builds with /etc/zsh, macos keeps the upstream /etc, so linux needs the loader files mirrored there (they source the shared /etc/zsh/*.d dirs)
+      #[where] debian zsh packaging (debian/rules --enable-etc-dir=/etc/zsh); man zsh STARTUP/SHUTDOWN FILES per OS
+      - etc/**
+##[<] 🤖🤖

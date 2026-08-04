@@ -7,11 +7,11 @@ references:
 
 #[what] Shared files referenced by many tools.
 files:
-  tools/zsh/base/root-linux/etc/zsh/:
+  profiles/shell/zsh/base/root-linux/etc/zsh/:
     zshenv:
     zshrc:
-  tools/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh:
-  tools/zsh/extras/root/:
+  profiles/shell/zsh/base/root/etc/zsh/zshrc.d/auto.d/00-base/30-aliases.zsh:
+  profiles/shell/zsh/extras/root/:
     _home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh:
     etc/zsh/:
       zshenv.d/auto.d/extras/20-tools-env.zsh:
@@ -20,123 +20,243 @@ files:
 
 #>[what] Tool specific files
 tools:
-  - asdf:
-      files:
-        root/_home/:
-          .config/asdf/.asdfrc:
-          .tool-versions:
-        root/etc/zsh/functions/fn_asdf_install:
-
   - ccstatusline:
       files:
-        root/_home/.config/ccstatusline/settings.json:
+        profiles/llm/claude/root/_home/.config/ccstatusline/settings.json:
 
   - claude:
       files:
-        root/_home/.config/claude/:
-          CLAUDE.md:
-          settings.json:
-          agents/:
-          rules/:
-          skills/:
-          plugins/:
-            known_marketplaces.json:
-            installed_plugins.json:
+        profiles/llm/claude/:
+          che.yml:
+          scripts/01-install-claude.zsh:
+          root/_home/.config/claude/:
+            settings.json.ontoHost.tpl:
+            agents/:
+            rules/:
+            skills/:
+            plugins/:
+              known_marketplaces.json:
+              installed_plugins.json:
+          root/_home/.config/zsh/:
+            zshenv.d/auto.d/claude/30-claude.zsh:
+            zshrc.d/auto.d/claude/20-env.zsh:
 
   - codex:
       files:
-        root/_home/.config/codex/config.toml.ontoHost.tpl:
+        profiles/llm/codex/:
+          che.yml:
+          scripts/01-install-codex.zsh:
+          root/_home/.config/codex/config.toml.ontoHost.tpl:
+          root/etc/zsh/zshrc.d/auto.d/codex/10-auth.zsh:
 
   - defaults:
       files:
-        root/:
-          etc/defaults.yml:
-          usr/local/scripts/shell/load-defaults-config.zsh:
-          Users/ko/Library/LaunchAgents/load-defaults-config.plist:
+        profiles/misc/macos/:
+          che.yml:
+          root/etc/defaults.yml:
+          root/usr/local/scripts/shell/load-defaults-config.zsh:
+          root/_home/Library/LaunchAgents/load-defaults-config.plist.ontoHost.tpl:
+
+  - docker:
+      files:
+        profiles/dev/infra/docker/:
+          che.yml:
+          scripts/01-install-completions.zsh:
 
   - editorconfig:
       files:
-        root/_home/.editorconfig:
+        profiles/dev/misc/editorconfig/root/_home/.editorconfig:
+
+  - gcp:
+      files:
+        profiles/cloud/gcp/:
+          che.yml:
+          scripts/:
+            01-install-gcloud.zsh:
+            10-check-auth.zsh:
+          root/_home/.config/gcloud/configurations/:
+            config_main.ontoHost.tpl:
+            config_staging.ontoHost.tpl:
+            config_production.ontoHost.tpl:
+          root/_home/.config/zsh/zshenv.d/auto.d/gcp/20-env.zsh:
+          root/etc/zsh/zshenv.d/auto.d/gcp/30-adc.zsh:
 
   - git:
       files:
-        root/_home/.config/git/:
+        profiles/git/che.yml:
+        profiles/git/scripts/01-install-git.zsh:
+        profiles/git/root/usr/local/scripts/shell/conventional-prefix.sh:
+        profiles/git/root/_home/.config/git/:
           config:
           ignore:
           commit-template:
-        tools/zsh/extras/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
+        profiles/misc/ssh/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
+
+  - gitlab-projects:
+      files:
+        profiles/gitlab/projects/:
+          che.yml:
+          scripts/:
+            10-clone.zsh:
+            20-index.zsh:
+          templates/subgroup-index.md.ontoRepo.tpl:
+          tree/:
+
+  - gitlab-runner:
+      files:
+        profiles/gitlab/runner/:
+          che.yml:
+          scripts/01-install-gitlab-runner.zsh:
+          root/_home/.gitlab-runner/config.toml.ontoHost.tpl:
+          root/Library/LaunchAgents/gitlab-runner.plist.ontoHost.tpl:
+
+  - glab:
+      files:
+        profiles/gitlab/glab/:
+          che.yml:
+          scripts/01-install-glab.zsh:
+          root/etc/zsh/:
+            zshenv.d/auto.d/gitlab/10-params-secrets.zsh:
+            zshrc.d/auto.d/gitlab/10-auth.zsh:
 
   - golang:
+      files:
+        profiles/dev/golang/:
+          che.yml:
+          scripts/01-install-gopls.zsh:
+          scripts/02-install-completions.zsh:
 
   - homebrew:
 
   - jaeger:
       files:
-        root/etc/jaeger/config.yml:
-        ci/zsh/scripts/installs/92-jaeger.zsh:
-        root/Library/LaunchDaemons/jaeger.plist.ontoHost.cp:
+        profiles/observability/jaeger/:
+          che.yml:
+          scripts/01-install-jaeger.zsh:
+          root/etc/jaeger/config.yml:
+          root/Library/LaunchDaemons/jaeger.plist.ontoHost.cp:
+
+  - kind:
+      files:
+        profiles/dev/infra/kind/:
+          che.yml:
+          scripts/01-install-kind.zsh:
 
   - kitty:
       files:
-        root/_home/.config/kitty/:
-          kitty.conf:
-          dark-theme.auto.conf:
-          light-theme.auto.conf:
-          no-preference-theme.auto.conf:
+        profiles/dev/terminal/kitty/:
+          che.yml:
+          scripts/01-install-kitty.zsh:
+          root/_home/.config/kitty/:
+            kitty.conf:
+            dark-theme.auto.conf:
+            light-theme.auto.conf:
+            no-preference-theme.auto.conf:
+
+  - kubectl:
+      files:
+        profiles/dev/infra/kubectl/:
+          che.yml:
+          scripts/01-install-kubectl.zsh:
+
+  - kubectx:
+      files:
+        profiles/dev/infra/kubectx/:
+          che.yml:
+          scripts/01-install-kubectx.zsh:
 
   - man:
       files:
-        root/etc/man.conf:
+        profiles/shell/man/root/etc/man.conf:
 
   - nvm:
       files:
-        root/_home/.nvmrc:
+        profiles/dev/js/nvm/root/_home/.nvmrc:
+
+  - onepassword:
+      files:
+        profiles/misc/onepassword/:
+          che.yml:
+          scripts/:
+            01-install-op.zsh:
+            02-init-auth.zsh:
+          root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh:
+
+  - pnpm:
+      files:
+        profiles/dev/js/pnpm/:
+          che.yml:
+          scripts/01-install-pnpm.zsh:
 
   - prettier:
       files:
-        root/_home/.config/prettier/.prettierrc.yml:
+        profiles/dev/js/prettier/root/_home/.config/prettier/.prettierrc.yml:
 
   - prometheus:
       files:
-        root/etc/prometheus/prometheus.yml:
-        ci/zsh/scripts/installs/93-prometheus.zsh:
-        root/Library/LaunchDaemons/prometheus.plist.ontoHost.cp:
+        profiles/observability/prometheus/:
+          che.yml:
+          scripts/01-install-prometheus.zsh:
+          root/etc/prometheus/prometheus.yml:
+          root/Library/LaunchDaemons/prometheus.plist.ontoHost.cp:
 
   - pyenv:
 
+  - ruby:
+      files:
+        profiles/dev/ruby/:
+          che.yml:
+          scripts/01-install-ruby-lsp.zsh:
+
   - rg:
       files:
-        root/etc/rg/:
+        profiles/shell/rg/root/etc/rg/:
           rgrc:
           rgignore:
-        tools/zsh/base/root/etc/zsh/zshrc.d/functions/fn-load-static-history:
+        profiles/shell/zsh/base/root/etc/zsh/zshrc.d/functions/fn-load-static-history:
 
   - ruff:
       files:
-        root/_home/.config/ruff/ruff.toml:
+        profiles/dev/python/ruff/root/_home/.config/ruff/ruff.toml:
 
   - ssh:
       files:
-        root/_home/.ssh/config:
-        tools/zsh/extras/root/etc/zsh/zshenv.d/functions/:
+        profiles/misc/ssh/che.yml:
+        profiles/misc/ssh/root/_home/.ssh/config:
+        profiles/misc/ssh/root-virt/_home/.ssh/:
+          id_access.ontoHost.tpl:
+          id_access.pub.ontoHost.tpl:
+          id_signing.ontoHost.tpl:
+          id_signing.pub.ontoHost.tpl:
+        profiles/misc/ssh/root/etc/zsh/zshenv.d/functions/:
           fn-ssh-generate-keys:
           fn-ssh-test-git-connection:
 
+  - terraform:
+      files:
+        profiles/dev/infra/terraform/:
+          che.yml:
+          scripts/01-install-terraform.zsh:
+
   - tmux:
       files:
-        root/_home/.config/tmux/tmux.conf:
+        profiles/dev/terminal/tmux/root/_home/.config/tmux/tmux.conf:
 
   - vim:
       files:
-        root/_home/.config/vim/vimrc:
+        profiles/dev/editors/vim/root/_home/.config/vim/vimrc:
 
   - vscode:
       files:
-        root/_home/Library/Application Support/Code/User/settings.json.ontoHost.tpl:
+        profiles/dev/editors/vscode/mac/:
+          che.yml:
+          root/_home/Library/Application Support/Code/User/:
+            settings.json.ontoHost.tpl:
+            keybindings.json:
 
   - zsh:
       files:
-        tools/zsh/:
+        profiles/shell/zsh/:
           base/che.yml:
           base/scripts/:
             01-install-zsh.sh:

@@ -1,4 +1,5 @@
-!root/**/.*
+!profiles/**/.*
+!.repo/
 
 # project-local vscode workspace settings
 !.vscode/
@@ -15,6 +16,3 @@ __pycache__/
 
 
 /root/etc/**/*local*
-
-# rendered packer variables
-/ci/vm/*.local.pkrvars.hcl
