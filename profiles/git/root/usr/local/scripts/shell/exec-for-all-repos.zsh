@@ -1,13 +1,13 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
-#   Discover every git repo under a root dir (default pwd), run one command in
-#   each concurrently (cwd = repo, GIT_WRAPPER_FG=1 exported, stdout+stderr
-#   captured to ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log),
-#   then print a per-repo ✅/❌ report; failed repos dump their captured
-#   output inline. Exit 0 when all pass, 1 otherwise, 2 on bad invocation.
-#   --include/--exclude match repo basename or root-relative path (comma
-#   lists); ambiguous basename errors. --must-filter=changes,off-main,unsynced
-#   keeps only repos satisfying every listed condition.
+#   Run one command in every git repo under a root dir (default pwd),
+#   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
+#   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. Per-repo ✅/❌
+#   report, failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
+#   invocation.
+#   --include/--exclude: comma lists, basename or root-relative path,
+#   ambiguous basename errors. --must-filter: AND of changes, off-main,
+#   unsynced.
 #   Usage: exec-for-all-repos [-C <dir>|--chpwd=<dir>] [--include=a,b]
 #          [--exclude=a,b] [--must-filter=changes,off-main,unsynced]
 #          <command> [args...]
