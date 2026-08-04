@@ -25,5 +25,4 @@ cloud/virt/linux:
       - source: "./azure/che.yml::cloud/azure"
       - source: "./gcp/che.yml::cloud/gcp/install"
       - source: "./gcp/che.yml::cloud/gcp/configs"
-      - source: "./gcp/che.yml::cloud/gcp/auth"
 ##[<] 🤖🤖

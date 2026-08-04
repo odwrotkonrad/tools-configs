@@ -9,6 +9,9 @@ llm/base:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
       - usr/**
+    makeDirs:
+      - directories:
+          - {dest: ["$HOME/.config/{claude,codex}"]}
     renderTemplates:
       - templates:
           - source: _home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
