@@ -30,6 +30,7 @@ State what changed. Never why. Never explain, justify, or guess. Only what the d
 `description` → the body:
 - what each change does, concretely. wrap ~72 cols, flag breaking changes
 - multi-area change → group under an `area:` heading per area
+- big area carrying several features → subgroup under a `<feature>:` line per feature within the area
 
 ## Examples
 
