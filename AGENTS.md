@@ -73,11 +73,12 @@ zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc
 ##[>] other
 aws: profiles/cloud/aws/root/_home/.config/aws/config.ontoHost.tpl
 azure: profiles/cloud/azure/root/_home/.config/azure/config
+docker: profiles/dev/infra/docker/scripts/01-install-completions.zsh
 editorconfig: profiles/dev/misc/editorconfig/root/_home/.editorconfig
 gcloud: profiles/cloud/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 glab: profiles/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
-golang: profiles/shell/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
+golang: profiles/dev/golang/scripts/01-install-completions.zsh
 homebrew: profiles/misc/brew/root/etc/homebrew/Brewfile
 kind: profiles/dev/infra/kind/scripts/01-install-kind.zsh
 kubectl: profiles/dev/infra/kubectl/scripts/01-install-kubectl.zsh
@@ -155,7 +156,6 @@ ci
   zsh
     functions
     scripts
-      bootstrap
       installs
 profiles
   cloud
@@ -186,7 +186,11 @@ profiles
                   Code
                     User
                       .exported
+    golang
+      scripts
     infra
+      docker
+        scripts
       kind
         scripts
       kubectl
@@ -302,6 +306,7 @@ profiles
         etc
           homebrew
     che
+      scripts
     macos
       root
         _home
@@ -384,6 +389,7 @@ profiles
       root
         etc
           rg
+      scripts
     zsh
       assets
         images

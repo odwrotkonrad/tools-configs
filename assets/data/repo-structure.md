@@ -14,7 +14,6 @@ ci
   zsh
     functions
     scripts
-      bootstrap
       installs
 profiles
   cloud
@@ -45,7 +44,11 @@ profiles
                   Code
                     User
                       .exported
+    golang
+      scripts
     infra
+      docker
+        scripts
       kind
         scripts
       kubectl
@@ -161,6 +164,7 @@ profiles
         etc
           homebrew
     che
+      scripts
     macos
       root
         _home
@@ -243,6 +247,7 @@ profiles
       root
         etc
           rg
+      scripts
     zsh
       assets
         images

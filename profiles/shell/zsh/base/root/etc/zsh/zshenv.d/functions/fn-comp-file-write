@@ -1,0 +1,22 @@
+#[what] fn-comp-file-write <bin> <comp-file>: write stdin as a zsh completion file; user-space bins -> ${XDG_STATE_HOME}/zsh/completions, root-space bins -> /etc/zsh/zshrc.d/completions
+
+##[>] 🤖🤖
+function fn-comp-file-write {
+  emulate -LR zsh
+  autoload -Uz fn-log-msg
+  umask 002
+  local dir=/etc/zsh/zshrc.d/completions
+  if [[ "$(whence -p $1)" == ${HOME}/* ]] dir=${XDG_STATE_HOME}/zsh/completions
+  fn-log-msg -t 'completions(write)' -- "$1 -> $dir/$2"
+  if [[ $dir == /etc/zsh/zshrc.d/completions ]] {
+    #[why] install -m 0644: sudo resets umask to root's, so a bare `cp` leaves the file 0600 (root-only) and every other user's compinit fails "permission denied" reading it. mode must be world-readable
+    #[why] staged via mktemp: BSD install rejects /dev/stdin when it is a pipe ("inappropriate file type or format")
+    local tmp=$(mktemp)
+    cat > $tmp
+    sudo install -m 0644 $tmp $dir/$2
+    command rm -f $tmp
+    return
+  }
+  cp -f /dev/stdin $dir/$2
+}
+##[<] 🤖🤖

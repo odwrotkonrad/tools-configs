@@ -15,7 +15,6 @@ base:
       - templates: [{source: _home/**, dest: $HOME/**}, etc/**, usr/**]
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
-      - ci/zsh/scripts/bootstrap/*.zsh
 
 base-exclude-desktop:
   exclude:

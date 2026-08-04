@@ -57,6 +57,12 @@ tools:
           root/usr/local/scripts/shell/load-defaults-config.zsh:
           root/_home/Library/LaunchAgents/load-defaults-config.plist.ontoHost.tpl:
 
+  - docker:
+      files:
+        profiles/dev/infra/docker/:
+          che.yml:
+          scripts/01-install-completions.zsh:
+
   - editorconfig:
       files:
         profiles/dev/misc/editorconfig/root/_home/.editorconfig:
@@ -114,6 +120,10 @@ tools:
             zshrc.d/auto.d/gitlab/10-auth.zsh:
 
   - golang:
+      files:
+        profiles/dev/golang/:
+          che.yml:
+          scripts/01-install-completions.zsh:
 
   - homebrew:
 
