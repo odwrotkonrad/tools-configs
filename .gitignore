@@ -16,6 +16,3 @@ __pycache__/
 
 
 /root/etc/**/*local*
-
-# rendered packer variables
-/ci/vm/*.local.pkrvars.hcl

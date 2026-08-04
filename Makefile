@@ -3,8 +3,8 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
-WRAPPERS := sync sync-install repo-ci-virt-macos-build-all
-COMMANDS := host-load-configs host-load-configs-install repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps repo-ci-virt-macos-build-base repo-ci-virt-macos-build repo-ci-virt-macos-test repo-ci-virt-macos-ssh repo-ci-virt-linux-build repo-ci-virt-linux-test repo-ci-virt-linux-ssh
+WRAPPERS := sync sync-install
+COMMANDS := host-load-configs host-load-configs-install repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -31,7 +31,6 @@ export CHE_VALIDATE_SPEC
 sync: host-load-configs repo-ci-prepare-hooks repo-render-templates
 #[what] full sync: full che op sequence per profile (scripts included), hooks, repo renders
 sync-install: host-load-configs-install repo-ci-prepare-hooks repo-render-templates
-repo-ci-virt-macos-build-all: repo-ci-virt-macos-build-base repo-ci-virt-macos-build
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
@@ -68,34 +67,4 @@ repo-ci-run-precommit-all: | repo-ci-install-deps repo-ci-prepare-hooks
 repo-ci-install-deps:
 	@00-ci-deps.zsh $@
 
-###[>] Virt
-#[what] build vanilla base macos image
-repo-ci-virt-macos-build-base:
-	@vm-build.zsh macos-tahoe-vanilla-base
-
-#[what] build configs-local macos image
-repo-ci-virt-macos-build:
-	@vm-build.zsh macos-tahoe-vanilla-configs
-
-#[what] build the macos image then run the che ops in it (cli/macos profile)
-repo-ci-virt-macos-test: repo-ci-virt-macos-build
-	@virt-ssh-mac.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/macos make sync-install'
-
-#[what] ssh into the macos image (auto-starts if stopped)
-repo-ci-virt-macos-ssh:
-	@virt-ssh-mac.zsh
-
-#[what] build the ci-linux image
-repo-ci-virt-linux-build:
-	@virt-build-linux.zsh
-
-#[what] build the ci-linux image then run the che ops in it (virt/linux profile)
-repo-ci-virt-linux-test: repo-ci-virt-linux-build
-	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=virt/linux make sync-install'
-
-#[what] build the ci-linux image and open an interactive shell in it
-repo-ci-virt-linux-ssh: repo-ci-virt-linux-build
-	@virt-ssh-linux.zsh
-
-###[<] Virt
 ##[<] Onto Repo

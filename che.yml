@@ -73,6 +73,5 @@ virt/linux:
 ontoRepo:
   include:
     profiles:
-      - source: ".repo/che.yml::repo/genfiles/scan"
       - source: ".repo/che.yml::repo/genfiles"
 ##[<] 🤖🤖

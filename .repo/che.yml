@@ -3,13 +3,6 @@
 options:
   profileWorkingDirectory: ..
 
-repo/genfiles/scan:
-  include:
-    renderTemplates:
-      - templates:
-          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
-          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
-
 repo/genfiles:
   include:
     renderTemplates:

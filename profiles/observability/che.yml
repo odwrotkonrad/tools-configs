@@ -15,6 +15,8 @@ observability/host/macos:
       - source: "./prometheus/che.yml::observability/prometheus"
       - source: "./jaeger/che.yml::observability/jaeger"
       - source: "./loki/che.yml::observability/loki"
+    runScripts:
+      - scripts/01-boot-services.zsh
 
 observability/virt/linux:
   options: {runIf: ['builtin:isOs == linux']}

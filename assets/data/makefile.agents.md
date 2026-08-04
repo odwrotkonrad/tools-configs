@@ -12,7 +12,6 @@
 
 `sync`: `host-load-configs -> repo-ci-prepare-hooks -> repo-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
 `sync-install`: `host-load-configs-install -> repo-ci-prepare-hooks -> repo-render-templates` full sync: full che op sequence per profile (scripts included), hooks, repo renders
-`repo-ci-virt-macos-build-all`: `repo-ci-virt-macos-build-base -> repo-ci-virt-macos-build`
 
 ### Onto Host:
 
@@ -27,13 +26,3 @@
 `repo-ci-prepare-hooks` install lefthook git hooks
 `repo-ci-run-precommit-all` run pre-commit hooks over all files (not just staged)
 `repo-ci-install-deps`
-
-#### Virt:
-
-`repo-ci-virt-macos-build-base` build vanilla base macos image
-`repo-ci-virt-macos-build` build configs-local macos image
-`repo-ci-virt-macos-test`: `repo-ci-virt-macos-build` build the macos image then run the che ops in it (cli/macos profile)
-`repo-ci-virt-macos-ssh` ssh into the macos image (auto-starts if stopped)
-`repo-ci-virt-linux-build` build the ci-linux image
-`repo-ci-virt-linux-test`: `repo-ci-virt-linux-build` build the ci-linux image then run the che ops in it (virt/linux profile)
-`repo-ci-virt-linux-ssh`: `repo-ci-virt-linux-build` build the ci-linux image and open an interactive shell in it

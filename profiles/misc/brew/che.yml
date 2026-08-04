@@ -11,6 +11,8 @@ misc/brew:
       - directories:
           - {dest: [$HOME/.cache/homebrew]}
           - {dest: [$HOME/.local/state/homebrew]}
+    runScripts:
+      - scripts/01-install-packages.zsh
 
 misc/brew/macos:
   options: {runIf: ['builtin:isOs == macos']}

@@ -10,7 +10,6 @@ assets
   docs-agents
   docs-human
 ci
-  vm
   zsh
     functions
     scripts
@@ -81,6 +80,8 @@ profiles
           _home
             .config
               ruff
+    ruby
+      scripts
     terminal
       kitty
         scripts
@@ -163,6 +164,7 @@ profiles
           .homebrew
         etc
           homebrew
+      scripts
     che
       scripts
     macos
@@ -239,6 +241,7 @@ profiles
         etc
           prometheus
       scripts
+    scripts
   shell
     man
       root
