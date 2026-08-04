@@ -16,7 +16,7 @@ export MK_DRY_RUN
 #[vals] true|false
 export MK_DRY_RUN_RENDER_SECRETS
 #[what] force one che profile for host ops, passed as `$ che --profiles --skip-run-if`
-#[vals] desktop/macos|cli/macos|cli/linux
+#[vals] desktop/macos|cli/macos|virt/linux
 export CHE_PROFILE
 ##[>] 🤖🤖
 #[what] che spec validation mode, error aborts on che.yml schema violations
@@ -89,9 +89,9 @@ repo-ci-virt-macos-ssh:
 repo-ci-virt-linux-build:
 	@virt-build-linux.zsh
 
-#[what] build the ci-linux image then run the che ops in it (cli/linux profile)
+#[what] build the ci-linux image then run the che ops in it (virt/linux profile)
 repo-ci-virt-linux-test: repo-ci-virt-linux-build
-	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=cli/linux make sync-install'
+	@virt-ssh-linux.zsh -c 'CI=1 MK_DRY_RUN_RENDER_SECRETS=true CHE_PROFILE=virt/linux make sync-install'
 
 #[what] build the ci-linux image and open an interactive shell in it
 repo-ci-virt-linux-ssh: repo-ci-virt-linux-build

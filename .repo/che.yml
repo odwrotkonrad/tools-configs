@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+##[>] 🤖🤖
+options:
+  profileWorkingDirectory: ..
+
+repo/genfiles/scan:
+  include:
+    renderTemplates:
+      - templates:
+          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
+          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
+
+repo/genfiles:
+  include:
+    renderTemplates:
+      - templates:
+          - source: .repo/templates/1-env/local.env.ontoRepo.tpl
+            dest:
+              - {path: .env, options: {writeType: mergeUpsert}}
+          - {source: .repo/templates/2-data/makefile-agents.md.ontoRepo.tpl, dest: [assets/data/makefile.agents.md]}
+          - {source: .repo/templates/2-data/repo-structure.md.ontoRepo.tpl, dest: [assets/data/repo-structure.md]}
+          - {source: .repo/templates/3-audience/README.md.ontoRepo.tpl, dest: [README.md]}
+          - source: .repo/templates/3-audience/AGENTS.md.ontoRepo.tpl
+            dest:
+              - CLAUDE.md
+              - {path: AGENTS.md, options: {renderReferencedFiles: true}}
+##[<] 🤖🤖

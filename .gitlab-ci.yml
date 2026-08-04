@@ -53,7 +53,7 @@ dry-run-apply-sync:
     CHE_DEBUG: "1"
   parallel:
     matrix:
-      - CHE_PROFILE: [desktop/macos, cli/macos, cli/linux]
+      - CHE_PROFILE: [desktop/macos, cli/macos, virt/linux]
   script:
     - make sync-install
 
@@ -100,7 +100,7 @@ apply-linux-cli:
   extends: .base
   stage: smoke-apply
   variables:
-    CHE_PROFILE: cli/linux
+    CHE_PROFILE: virt/linux
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖.
   needs: []

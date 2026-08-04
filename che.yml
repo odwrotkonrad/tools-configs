@@ -55,7 +55,7 @@ cli/macos:
       - source: "profiles/gitlab/che.yml::gitlab/base/macos"
       - source: "profiles/observability/che.yml::observability/base/macos"
 
-cli/linux:
+virt/linux:
   options: {autoDiscover: true, runIf: ['builtin:isOs == linux']}
   include:
     profiles:
@@ -69,23 +69,11 @@ cli/linux:
       - source: "profiles/cloud/che.yml::cloud/virt/linux"
       - source: "profiles/gitlab/che.yml::gitlab/virt/linux"
       - source: "profiles/observability/che.yml::observability/virt/linux"
-
-claude-agents:
-  options: {autoDiscover: true, runIf: ['builtin:isVirt']}
-  include:
-    profiles:
-      - source: "profiles/llm/claude/che.yml::claude-agents"
-
-repo/in-place:
-  include:
-    renderTemplates:
-      - templates:
-          - {source: ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-base.local.pkrvars.hcl]}
-          - {source: ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl.ontoRepo.tpl, dest: [ci/vm/macos-tahoe-vanilla-configs.local.pkrvars.hcl]}
+      - source: "profiles/llm/claude/che.yml::llm/claude/virt"
 
 ontoRepo:
   include:
     profiles:
-      - repo/in-place
+      - source: ".repo/che.yml::repo/genfiles/scan"
       - source: ".repo/che.yml::repo/genfiles"
 ##[<] 🤖🤖

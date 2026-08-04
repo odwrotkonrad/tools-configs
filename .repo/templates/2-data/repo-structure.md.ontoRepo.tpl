@@ -1,1 +1,1 @@
-{{- renderDirsTree ".." -}}
+{{- renderDirsTree -}}
