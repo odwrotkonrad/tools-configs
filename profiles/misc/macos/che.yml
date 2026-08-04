@@ -15,4 +15,6 @@ misc/macos/desktop:
   include:
     renderTemplates:
       - templates: [{source: _home/**, dest: $HOME/**}]
+    runScripts:
+      - scripts/01-install-go-host-tools.zsh
 ##[<] 🤖🤖

@@ -5,6 +5,7 @@ emulate -LR zsh
 setopt errexit
 
 ##[>] 🤖🤖
+fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
 autoload -Uz fn-log-msg
 
 goroot=/usr/local/go

@@ -5,11 +5,6 @@ base:
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
 
-base-exclude-desktop:
-  exclude:
-    runScripts:
-      - ci/zsh/scripts/installs/80-go-host-tools.zsh
-
 desktop/macos:
   options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
@@ -29,7 +24,6 @@ cli/macos:
   include:
     profiles:
       - base
-      - base-exclude-desktop
       - source: "profiles/shell/che.yml::shell/base/macos"
       - source: "profiles/misc/che.yml::misc/base/macos"
       - source: "profiles/git/che.yml::git/base/macos"
@@ -44,7 +38,6 @@ virt/linux:
   include:
     profiles:
       - base
-      - base-exclude-desktop
       - source: "profiles/shell/che.yml::shell/virt/linux"
       - source: "profiles/misc/che.yml::misc/virt/linux"
       - source: "profiles/git/che.yml::git/virt/linux"

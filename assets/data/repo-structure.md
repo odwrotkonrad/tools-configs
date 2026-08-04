@@ -246,6 +246,7 @@ profiles
           local
             scripts
               shell
+      scripts
     onepassword
       root
         etc
