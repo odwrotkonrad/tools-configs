@@ -641,5 +641,5 @@ zstyle ':completion:_deep_command:*:history' max-hints 4
 ##[>] 🤖🤖
 zstyle ':completion:_deep_history:*' sort false
 zstyle ':completion:_deep_history:*:descriptions' format ''
-zstyle ':completion:_deep_history:*:history' ignore-hints '^#' '^cd.*' '^echo .*' '^print .*' '^code .*' '^history( .*|$)' '^source .*' '^\. .*' '^[^[:space:]]+$'
+zstyle ':completion:_deep_history:*:history' ignore-hints '^#' '^cd.*' '^echo .*' '^print .*' '^code .*' '^history( .*|$)' '^source .*' '^\. .*'
 ##[<] 🤖🤖
