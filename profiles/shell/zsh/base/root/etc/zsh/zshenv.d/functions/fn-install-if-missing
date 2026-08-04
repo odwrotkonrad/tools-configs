@@ -6,7 +6,12 @@ function fn-install-if-missing {
   local cmd=$1 installer=$2
 
   if (( $+commands[$cmd] )) {
-    fn-log-msg -t $cmd -- already installed
+    ##[>] 🤖🤖
+    #[why] best effort: not every tool has --version (go wants `go version`, kubectx has neither), blank falls back to the bare message
+    local ver=$($commands[$cmd] --version 2>/dev/null | head -1)
+    [[ -n $ver ]] || ver=$($commands[$cmd] version 2>/dev/null | head -1)
+    fn-log-msg -t $cmd -- "already installed${ver:+ ($ver)}"
+    ##[<] 🤖🤖
     return
   }
 
