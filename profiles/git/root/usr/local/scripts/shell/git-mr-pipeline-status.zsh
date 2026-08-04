@@ -7,7 +7,10 @@
 #   in-progress pipeline: wait until it fails or succeeds (default), poll 10s,
 #   job-level progress on stderr; --no-wait reports immediately, running jobs
 #   show 🕐 with time elapsed.
-#   Usage: git-mr-pipeline-status [--wait|--no-wait] [--branch=<branch>]
+#   --main: skip MR/branch sections, report the latest push-sourced main
+#   pipeline (merge into main; downstream/schedule/web-sourced ones skipped);
+#   implied by --branch=main, rejects any other --branch.
+#   Usage: git-mr-pipeline-status [--wait|--no-wait] [--main|--branch=<branch>]
 #   Downstream: glab, jq, git.
 #/[what] 🤖🤖
 
@@ -19,70 +22,91 @@ set -o pipefail
 b=$'\e[1m' n=$'\e[0m'
 
 wait_flag=1
+main_flag=0
 sel_branch=
 for arg { case $arg {
   --wait) wait_flag=1 ;;
   --no-wait) wait_flag=0 ;;
+  --main) main_flag=1 ;;
   --branch=*) sel_branch=${arg#*=} ;;
-  *) print -ru2 -- "usage: ${0:t} [--wait|--no-wait] [--branch=<branch>]"; exit 2 ;;
+  *) print -ru2 -- "usage: ${0:t} [--wait|--no-wait] [--main|--branch=<branch>]"; exit 2 ;;
 } }
+if [[ $sel_branch == main ]] { main_flag=1; sel_branch= }
+if (( main_flag )) && [[ -n $sel_branch ]] {
+  print -ru2 -- "${0:t}: --main excludes --branch"; exit 2
+}
 : ${sel_branch:=$(git rev-parse --abbrev-ref HEAD)}
+if [[ $sel_branch == main ]] main_flag=1
 
+repo_section() {
+  print -r -- $'\n'"$b## Repo$n"
+  glab api projects/:id | jq -r '"repo: \(.path_with_namespace)", "url: \(.web_url)"'
+  if (( mr_count <= 1 )) {
+    print -r -- "open mr count: $mr_count"
+  } else {
+    print -r -- $'\n'"$b### ⚠️  Open MR count: $mr_count$n"
+    jq -r --arg cb $sel_branch \
+      'sort_by(.updated_at) | reverse
+      | map(select(.source_branch == $cb)) + map(select(.source_branch != $cb))
+      | to_entries[]
+      | (if .key > 0 then "" else empty end),
+        "name: \(.value.title)", "url: \(.value.web_url)", "update-time: \(.value.updated_at)",
+        (if .value.source_branch == $cb then "current: true" else empty end)' <<< $mrs_json
+  }
+}
 mrs_json=$(glab mr list -F json)
 mr_count=$(jq length <<< $mrs_json)
-if (( mr_count == 0 )) { print -r -- "no open MRs"; exit 0 }
 
-mr_iid=$(jq -r --arg cb $sel_branch \
-  '. as $all | [$all[] | select(.source_branch == $cb)]
-  | if length > 0 then .[0].iid else ($all | sort_by(.updated_at) | last | .iid) end' <<< $mrs_json)
-mr_json=$(glab mr view $mr_iid --output json)
-jq -r --arg b $b --arg n $n \
-  '"\($b)# MR: !\(.iid)\($n)", "name: \(.title)", "url: \(.web_url)", "pipeline-url: \(.head_pipeline.web_url // "none")"' <<< $mr_json
-
-print -r -- $'\n'"$b## Repo$n"
-glab api projects/:id | jq -r '"repo: \(.path_with_namespace)", "url: \(.web_url)"'
-if (( mr_count == 1 )) {
-  print -r -- "open mr count: $mr_count"
+if (( main_flag )) {
+  main_json=$(glab api "projects/:id/pipelines?ref=main&per_page=20" |
+    jq '[.[] | select(.source == "push")] | first // empty')
+  pipe_id=$(jq -r '.id // empty' <<< $main_json)
+  print -r -- "$b# Main Pipeline$n"
+  if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none"; exit 0 }
+  jq -r '"url: \(.web_url)", "sha: \(.sha[0:8])"' <<< $main_json
+  repo_section
 } else {
-  print -r -- $'\n'"$b### ⚠️  Open MR count: $mr_count$n"
-  jq -r --arg cb $sel_branch \
-    'sort_by(.updated_at) | reverse
-    | map(select(.source_branch == $cb)) + map(select(.source_branch != $cb))
-    | to_entries[]
-    | (if .key > 0 then "" else empty end),
-      "name: \(.value.title)", "url: \(.value.web_url)", "update-time: \(.value.updated_at)",
-      (if .value.source_branch == $cb then "current: true" else empty end)' <<< $mrs_json
+  if (( mr_count == 0 )) { print -r -- "no open MRs"; exit 0 }
+
+  mr_iid=$(jq -r --arg cb $sel_branch \
+    '. as $all | [$all[] | select(.source_branch == $cb)]
+    | if length > 0 then .[0].iid else ($all | sort_by(.updated_at) | last | .iid) end' <<< $mrs_json)
+  mr_json=$(glab mr view $mr_iid --output json)
+  jq -r --arg b $b --arg n $n \
+    '"\($b)# MR: !\(.iid)\($n)", "name: \(.title)", "url: \(.web_url)", "pipeline-url: \(.head_pipeline.web_url // "none")"' <<< $mr_json
+
+  repo_section
+
+  branch=$(jq -r .source_branch <<< $mr_json)
+  print -r -- $'\n'"$b## Branch$n"
+  print -r -- $branch
+  git fetch -q --prune origin
+  if ! git rev-parse -q --verify refs/heads/$branch >/dev/null; then
+    print -r -- "origin - local: ⚠️ no local branch"
+    ref=origin/$branch
+  elif ! git rev-parse -q --verify refs/remotes/origin/$branch >/dev/null; then
+    print -r -- "origin - local: ⚠️ no origin branch"
+    ref=$branch
+  else
+    read ahead behind <<< $(git rev-list --left-right --count $branch...origin/$branch)
+    if (( ahead && behind )) {
+      print -r -- "origin - local: ⚠️ diverged (local +$ahead, remote +$behind)"
+    } elif (( ahead )) {
+      print -r -- "origin - local: ⚠️ local ahead ($ahead)"
+    } elif (( behind )) {
+      print -r -- "origin - local: ⚠️ remote ahead ($behind)"
+    } else {
+      print -r -- "origin - local: ✅ synced"
+    }
+    ref=$branch
+  fi
+  read files adds dels <<< $(git diff --numstat origin/main...$ref | awk '{f++; a+=$1; d+=$2} END {print f+0, a+0, d+0}')
+  print -r -- "line changes: +$adds -$dels (~$files files)"
+  print -r -- "commit count: $(git rev-list --count origin/main..$ref)"
+
+  pipe_id=$(jq -r '.head_pipeline.id // empty' <<< $mr_json)
+  if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none"; exit 0 }
 }
-
-branch=$(jq -r .source_branch <<< $mr_json)
-print -r -- $'\n'"$b## Branch$n"
-print -r -- $branch
-git fetch -q --prune origin
-if ! git rev-parse -q --verify refs/heads/$branch >/dev/null; then
-  print -r -- "origin - local: ⚠️ no local branch"
-  ref=origin/$branch
-elif ! git rev-parse -q --verify refs/remotes/origin/$branch >/dev/null; then
-  print -r -- "origin - local: ⚠️ no origin branch"
-  ref=$branch
-else
-  read ahead behind <<< $(git rev-list --left-right --count $branch...origin/$branch)
-  if (( ahead && behind )) {
-    print -r -- "origin - local: ⚠️ diverged (local +$ahead, remote +$behind)"
-  } elif (( ahead )) {
-    print -r -- "origin - local: ⚠️ local ahead ($ahead)"
-  } elif (( behind )) {
-    print -r -- "origin - local: ⚠️ remote ahead ($behind)"
-  } else {
-    print -r -- "origin - local: ✅ synced"
-  }
-  ref=$branch
-fi
-read files adds dels <<< $(git diff --numstat origin/main...$ref | awk '{f++; a+=$1; d+=$2} END {print f+0, a+0, d+0}')
-print -r -- "line changes: +$adds -$dels (~$files files)"
-print -r -- "commit count: $(git rev-list --count origin/main..$ref)"
-
-pipe_id=$(jq -r '.head_pipeline.id // empty' <<< $mr_json)
-if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none"; exit 0 }
 
 jq_defs='def emo: {success:"✅",failed:"❌",canceled:"🚫",skipped:"⏭️ ",manual:"⚙️ ",running:"🕐"}[.] // "⏳";
 def pad2: tostring | if length < 2 then "0" + . else . end;
@@ -101,14 +125,14 @@ if (( wait_flag )) {
   while [[ $(jq -r .status <<< $pipe_json) == (created|preparing|pending|waiting_for_resource|running) ]] {
     if (( ! log_started )) { log_started=1; print -ru2 -- $'\n'"$b## Inprogress Log$n" }
     jobs_json=$(glab api "projects/:id/pipelines/$pipe_id/jobs?per_page=100")
-    for line in ${(f)"$(jq -r "$jq_defs"'sort_by(.id)[]
+    for line (${(f)"$(jq -r "$jq_defs"'sort_by(.id)[]
         | select(.status | IN("success","failed","canceled","skipped"))
-        | "\(.id)\t\(.status | emo) \(job_dur | dur) \(.name)"' <<< $jobs_json)"}; do
+        | "\(.id)\t\(.status | emo) \(job_dur | dur) \(.name)"' <<< $jobs_json)"}) {
       job_id=${line%%$'\t'*}
       (( ${+job_reported[$job_id]} )) && continue
       job_reported[$job_id]=1
       print -ru2 -- "done: ${line#*$'\t'}"
-    done
+    }
     running=$(jq -r "$jq_defs"'[sort_by(.id)[] | select(.status == "running")
       | "\(.name) \(job_dur | dur | gsub("^ +| +$"; ""))"] | join(", ")' <<< $jobs_json)
     print -ru2 -- "waiting: ${running:-no job running yet}"

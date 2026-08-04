@@ -6,3 +6,4 @@ Use the `/user-git-ops` skill as the primary way to interact with git. Never han
 - commit (append `amend`): `$ git-commit-upsert.zsh [amend] &`
 - mr / pr: `$ git-mr-upsert.zsh &`
 - all / ship it / default: `$ git-upsert-all.zsh &`
+- mr|main pipeline / CI status / jobs: `$ git-mr-pipeline-status.zsh [--no-wait] [--main|--branch=<branch>]`

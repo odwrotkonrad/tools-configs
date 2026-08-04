@@ -61,4 +61,19 @@ Scenario: --no-wait takes an instant snapshot mid-run
   When I run with `--no-wait`
   Then it reports at once
   And running jobs show 🕐 with elapsed since start
+
+Scenario: --main reports the latest main pipeline
+  Status: implemented
+  When I run with `--main`
+  Then MR and branch sections are skipped, `## Repo` prints as usual
+  And it picks the latest push-sourced main pipeline (merge into main), other sources skipped
+  And a `# Main Pipeline` header lists `url:`, `sha:`
+  And `## Stages`, `## Pipeline Status`, wait polling behave as for an MR
+  And with no main pipeline `## Pipeline Status` prints `none`, exits 0
+
+Scenario: branch main implies --main
+  Status: implemented
+  When I run with `--branch=main`, or from the main branch with no flags
+  Then it behaves as `--main`
+  And `--main` with any other `--branch` exits 2: `--main excludes --branch`
 <!--[<] 🤖🤖 -->
