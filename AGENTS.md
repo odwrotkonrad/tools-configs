@@ -252,11 +252,17 @@ profiles
         .config
           git
           lefthook
+      etc
+        zsh
+          zshrc.d
+            auto.d
+              git
       usr
         local
           scripts
             shell
     scripts
+    spec
   gitlab
     glab
       root
