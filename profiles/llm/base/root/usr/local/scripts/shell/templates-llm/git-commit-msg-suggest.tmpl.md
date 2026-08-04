@@ -53,6 +53,20 @@ map ctrl+shift+z to send the escape the widget reads
 vscode:
 add the keybinding so the integrated terminal matches
 ```
+
+big area, two features → `feat(zsh): add deep-history widget and recency-sorted completion`:
+
+```
+zsh:
+
+deep-history widget:
+add a ctrl+r widget searching merged local+global history, deduped,
+newest first, bound in zle, kitty, vscode terminals
+
+completion recency:
+sort file completion candidates by mtime via zstyle file-sort
+modification, dirs stay alphabetical
+```
 {{ with getenv "INSTRUCTIONS_RUNTIME" }}
 ## Important
 
