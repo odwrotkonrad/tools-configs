@@ -6,12 +6,20 @@
 
 Write an MR/PR title and description from the commit messages against main. Fill `title` and `description`.
 The commit messages are the source of truth: describe what they change. The diff stats are context for scope and size only.
-Terse, specific, exhaustive: every change the commits state appears, trim words, never changes.
-One line per bullet. No prose, no wrap-around. Drop nothing.
+
+CRITICALLY IMPORTANT: branch commits iterate: later commits rework, rename, move, revert earlier ones. Describe the net effect against main only. Never mention a superseded change; collapse iteration chains into their end state.
+Describe the branch as one single change against main. A later commit "changes"/"renames"/"moves" something an earlier branch commit introduced → it was never in main → state it as added in its final form ("add ⚙️ manual emoji", not "change manual emoji to ⚙️"). Use change/rename/move/fix only against state present in main.
+
+CRITICALLY IMPORTANT: a `### <scope>` area over ~6 bullets MUST split into `#### <feature>` subsections, one per feature, each bullet under its feature. A flat 10+ bullet area is invalid output, flat current description included: regroup, keep bullet wording.
+
+Terse, specific, exhaustive: every change that survives to the final state appears, trim words, never changes.
+One line per bullet. No prose, no wrap-around. Drop nothing that survives; drop everything superseded.
 State what changed. Never why. Never explain, justify, or guess.
 
 - derive everything from the commit messages, the diff stats are secondary context for scope and size only
-- current description present → treat as base. Scale edits to change size: large change may rewrite, small change modifies in place, preserve existing wording, structure, bullet order. Add or adjust bullets only for what the commits change
+- superseded changes (overwritten, renamed, reverted by a later commit) never appear, even when a commit message states them
+- current description present → treat as base. Scale edits to change size: large change may rewrite, small change modifies in place, preserve existing wording, structure, bullet order. Add or adjust bullets only for what the commits change. Exception: a flat base area over ~6 bullets MUST be regrouped into `#### <feature>` subsections, keep bullet wording
+- a base bullet describing a state later commits superseded is stale: rewrite it to the final state as one added change, never keep or append the intermediate step
 - current description empty (first create) → write fresh from the commit messages
 - never write a `## Commits` or `## Changes` heading, the tool injects them; emit only the `### <scope>` groups
 
@@ -21,6 +29,7 @@ State what changed. Never why. Never explain, justify, or guess.
 
 `description` → markdown grouped by area:
 - `### <scope>` heading per area, first-appearance order in the commits
+- big area (more than ~6 bullets) MUST split into `#### <feature>` subsections, one per feature, its bullets under it. Never emit a flat `### <scope>` list longer than ~6 bullets
 - one `- ` bullet per change, reviewer-facing
 - flag breaking changes or migrations
 
@@ -47,6 +56,22 @@ one area → title `config(zsh): restructure zle widgets and naming`:
 - move zle widgets into 31-zle-widgets.zsh, registered via a wd_fn_rt array
 - rename widget functions to the wd-fn-root-* namespace
 - rename keystroke sequences from s_seq to rt_seq
+```
+
+big area, two features → title `feat(zsh): add deep-history widget and recency-sorted completion`:
+
+```
+### zsh
+
+#### deep-history widget
+- add ctrl+r widget searching merged local+global history
+- dedupe entries, newest first
+- bind in zle, kitty, vscode terminals
+
+#### completion recency
+- sort file completion candidates by mtime
+- zstyle file-sort modification for files, keep dirs alphabetical
+- add spec scenario for recency order, status implemented
 ```
 {{ with getenv "INSTRUCTIONS_RUNTIME" }}
 ## Important

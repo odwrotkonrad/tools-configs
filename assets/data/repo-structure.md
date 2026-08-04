@@ -115,16 +115,25 @@ profiles
             .config
               tmux
   git
+    assets
+      images
+      recordings
     root
       _home
         .config
           git
           lefthook
+      etc
+        zsh
+          zshrc.d
+            auto.d
+              git
       usr
         local
           scripts
             shell
     scripts
+    spec
   gitlab
     glab
       root
@@ -167,6 +176,7 @@ profiles
               shell
                 lib
                 templates-llm
+      spec
     claude
       root
         _home
