@@ -6,12 +6,18 @@
 
 Write an MR/PR title and description from the commit messages against main. Fill `title` and `description`.
 The commit messages are the source of truth: describe what they change. The diff stats are context for scope and size only.
-Terse, specific, exhaustive: every change the commits state appears, trim words, never changes.
-One line per bullet. No prose, no wrap-around. Drop nothing.
+
+CRITICALLY IMPORTANT: branch commits iterate. A later commit may rework, rename, move, or revert an earlier one. Describe only the net effect against main, the final state. A change superseded by a later commit never appears; collapse iteration chains into their end state.
+Write the description as if the branch were one single change against main. When a later commit "changes"/"renames"/"moves" something an earlier branch commit introduced, the thing was never in main: describe it as added in its final form ("add ⚙️ manual emoji", not "change manual emoji to ⚙️"). Verbs like change/rename/move/fix are valid only against state that exists in main.
+
+Terse, specific, exhaustive: every change that survives to the final state appears, trim words, never changes.
+One line per bullet. No prose, no wrap-around. Drop nothing that survives; drop everything superseded.
 State what changed. Never why. Never explain, justify, or guess.
 
 - derive everything from the commit messages, the diff stats are secondary context for scope and size only
+- superseded changes (overwritten, renamed, reverted by a later commit) never appear, even when a commit message states them
 - current description present → treat as base. Scale edits to change size: large change may rewrite, small change modifies in place, preserve existing wording, structure, bullet order. Add or adjust bullets only for what the commits change
+- a base bullet describing a state later commits superseded is stale: rewrite it to the final state as one added change, never keep or append the intermediate step
 - current description empty (first create) → write fresh from the commit messages
 - never write a `## Commits` or `## Changes` heading, the tool injects them; emit only the `### <scope>` groups
 
