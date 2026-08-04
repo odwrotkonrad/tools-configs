@@ -51,6 +51,7 @@ Scenario: blocks until the CI verdict, streaming job progress
   Given the head pipeline is in progress
   When I run without flags (or `--wait`)
   Then it polls every 10s until the pipeline fails or succeeds
+  And a bold `## Inprogress Log` header opens the stream after `## Branch`
   And each completed job prints once to stderr: `done: <emoji> <duration> <name>`
   And each poll prints `waiting: <running jobs with elapsed>`, `no job running yet` when none
 

@@ -97,7 +97,9 @@ def stage_dur: [.[] | select(.started_at)]
 pipe_json=$(glab api projects/:id/pipelines/$pipe_id)
 if (( wait_flag )) {
   typeset -A job_reported
+  log_started=0
   while [[ $(jq -r .status <<< $pipe_json) == (created|preparing|pending|waiting_for_resource|running) ]] {
+    if (( ! log_started )) { log_started=1; print -ru2 -- $'\n'"$b## Inprogress Log$n" }
     jobs_json=$(glab api "projects/:id/pipelines/$pipe_id/jobs?per_page=100")
     for line in ${(f)"$(jq -r "$jq_defs"'sort_by(.id)[]
         | select(.status | IN("success","failed","canceled","skipped"))
