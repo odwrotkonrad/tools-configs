@@ -38,11 +38,11 @@ Scenario: slow pipeline stages stand out via wall time
   Then stages follow pipeline order, headed `### <stage> <wall time>`
   And wall time = max finished_at - min started_at over the stage's jobs (now when unfinished), `-` when none ran
   And each job entry is `<emoji> <duration> <name>`, `url:` below, blank line between
-  And manual jobs append ` (manual)`
+  And manual jobs append ` (manual trigger)`, canceled jobs ` (canceled)`
 
 Scenario: job status readable at a glance, columns aligned
   Status: implemented
-  Then emoji: ✅ success, ❌ failed, 🚫 canceled, ⏭️ skipped, ⏸️ manual, 🕐 running, ⏳ otherwise
+  Then emoji: ✅ success, ❌ failed, 🚫 canceled, ⏭️ skipped, ⚙️ manual, 🕐 running, ⏳ otherwise
   And durations are fixed-width `MMmSSs`, space-padded minutes, up to 1h
   And `-` when the job has not run
 

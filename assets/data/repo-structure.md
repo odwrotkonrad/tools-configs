@@ -115,6 +115,8 @@ profiles
             .config
               tmux
   git
+    assets
+      images
     root
       _home
         .config

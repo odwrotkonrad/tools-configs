@@ -83,7 +83,7 @@ print -r -- "commit count: $(git rev-list --count origin/main..$ref)"
 pipe_id=$(jq -r '.head_pipeline.id // empty' <<< $mr_json)
 if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline$n"$'\n'"none"; exit 0 }
 
-jq_defs='def emo: {success:"✅",failed:"❌",canceled:"🚫",skipped:"⏭️ ",manual:"⏸️ ",running:"🕐"}[.] // "⏳";
+jq_defs='def emo: {success:"✅",failed:"❌",canceled:"🚫",skipped:"⏭️ ",manual:"⚙️ ",running:"🕐"}[.] // "⏳";
 def pad2: tostring | if length < 2 then "0" + . else . end;
 def dur: if . == null then " -    "
   else (round | "\(. / 60 | floor | tostring | if length < 2 then " " + . else . end)m\(. % 60 | pad2)s") end;
@@ -122,5 +122,5 @@ glab api "projects/:id/pipelines/$pipe_id/jobs?per_page=100" |
       ((map(.stage) | reduce .[] as $s ([]; if index($s) == null then . + [$s] else . end))[] as $stage
         | ($jobs | map(select(.stage == $stage))) as $stage_jobs
         | "\($b)### \($stage) \($stage_jobs | stage_dur | dur | gsub("^ +| +$"; ""))\($n)",
-          ($stage_jobs[] | "\(.status | emo) \(job_dur | dur) \(.name)\(if .status == "manual" then " (manual)" else "" end)", "url: \(.web_url)", ""))'
+          ($stage_jobs[] | "\(.status | emo) \(job_dur | dur) \(.name)\({manual:" (manual trigger)",canceled:" (canceled)"}[.status] // "")", "url: \(.web_url)", ""))'
 ##[<] 🤖🤖
