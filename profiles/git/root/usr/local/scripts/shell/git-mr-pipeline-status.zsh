@@ -36,7 +36,8 @@ mr_iid=$(jq -r --arg cb $sel_branch \
   '. as $all | [$all[] | select(.source_branch == $cb)]
   | if length > 0 then .[0].iid else ($all | sort_by(.updated_at) | last | .iid) end' <<< $mrs_json)
 mr_json=$(glab mr view $mr_iid --output json)
-jq -r --arg b $b --arg n $n '"\($b)# MR: !\(.iid)\($n)", "name: \(.title)", "url: \(.web_url)"' <<< $mr_json
+jq -r --arg b $b --arg n $n \
+  '"\($b)# MR: !\(.iid)\($n)", "name: \(.title)", "url: \(.web_url)", "pipeline-url: \(.head_pipeline.web_url // "none")"' <<< $mr_json
 
 print -r -- $'\n'"$b## Repo$n"
 glab api projects/:id | jq -r '"repo: \(.path_with_namespace)", "url: \(.web_url)"'
@@ -81,7 +82,7 @@ print -r -- "line changes: +$adds -$dels (~$files files)"
 print -r -- "commit count: $(git rev-list --count origin/main..$ref)"
 
 pipe_id=$(jq -r '.head_pipeline.id // empty' <<< $mr_json)
-if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline$n"$'\n'"none"; exit 0 }
+if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none"; exit 0 }
 
 jq_defs='def emo: {success:"✅",failed:"❌",canceled:"🚫",skipped:"⏭️ ",manual:"⚙️ ",running:"🕐"}[.] // "⏳";
 def pad2: tostring | if length < 2 then "0" + . else . end;
@@ -114,13 +115,14 @@ if (( wait_flag )) {
   }
 }
 
-jq -r --arg b $b --arg n $n "$jq_defs"'
-  "", "\($b)## Pipeline\($n)", "\(.status | emo) \(if .status == "success" then "" else "\(.status) " end)\(.duration | dur)", "url: \(.web_url)"' <<< $pipe_json
 glab api "projects/:id/pipelines/$pipe_id/jobs?per_page=100" |
   jq -r --arg b $b --arg n $n "$jq_defs"'sort_by(.id) | . as $jobs
     | "", "\($b)## Stages\($n)", "",
       ((map(.stage) | reduce .[] as $s ([]; if index($s) == null then . + [$s] else . end))[] as $stage
         | ($jobs | map(select(.stage == $stage))) as $stage_jobs
-        | "\($b)### \($stage) \($stage_jobs | stage_dur | dur | gsub("^ +| +$"; ""))\($n)",
+        | "\($b)### \($stage)\($stage_jobs | stage_dur | if . == null then "" else " \(dur | gsub("^ +| +$"; ""))" end)\($n)",
           ($stage_jobs[] | "\(.status | emo) \(job_dur | dur) \(.name)\({manual:" (manual trigger)",canceled:" (canceled)"}[.status] // "")", "url: \(.web_url)", ""))'
+
+jq -r --arg b $b --arg n $n "$jq_defs"'
+  "\($b)## Pipeline Status\($n)", "\(.status | emo) \(if .status == "success" then "" else "\(.status) " end)\(.duration | dur)"' <<< $pipe_json
 ##[<] 🤖🤖

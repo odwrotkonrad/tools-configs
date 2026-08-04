@@ -249,6 +249,7 @@ profiles
   git
     assets
       images
+      recordings
     root
       _home
         .config

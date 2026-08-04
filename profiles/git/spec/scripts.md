@@ -11,11 +11,11 @@ Scenario: finds the MR you are working on, no arguments needed
 Scenario: one readable report answers "how is my MR doing"
   Status: implemented
   When the report prints
-  Then sections are ANSI-bold markdown: `# MR: !iid`, `## Repo`, `## Branch`, `## Pipeline`, `## Stages`
-  And `# MR` lists `name:`, `url:`
+  Then sections are ANSI-bold markdown: `# MR: !iid`, `## Repo`, `## Branch`, `## Stages`, `## Pipeline Status`
+  And `# MR` lists `name:`, `url:`, `pipeline-url:`
   And `## Repo` lists `repo:`, `url:`, `open mr count: 1`
-  And `## Pipeline` lists status line, `url:`
-  And every url carries the `url: ` designator
+  And `## Pipeline Status` closes the report with only the status line
+  And every url carries a `url: ` designator
 
 Scenario: forgotten open MRs surface before they go stale
   Status: implemented
@@ -36,7 +36,7 @@ Scenario: slow pipeline stages stand out via wall time
   Status: implemented
   When the `## Stages` section prints
   Then stages follow pipeline order, headed `### <stage> <wall time>`
-  And wall time = max finished_at - min started_at over the stage's jobs (now when unfinished), `-` when none ran
+  And wall time = max finished_at - min started_at over the stage's jobs (now when unfinished), omitted when none ran
   And each job entry is `<emoji> <duration> <name>`, `url:` below, blank line between
   And manual jobs append ` (manual trigger)`, canceled jobs ` (canceled)`
 
