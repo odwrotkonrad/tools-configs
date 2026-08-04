@@ -149,10 +149,26 @@ ci
 profiles
   cloud
     aws
+      root
+        _home
+          .config
+            aws
       scripts
     azure
+      root
+        _home
+          .config
+            azure
     gcp
       root
+        _home
+          .config
+            gcloud
+              configurations
+            zsh
+              zshenv.d
+                auto.d
+                  gcp
         etc
           zsh
             zshenv.d
@@ -190,6 +206,8 @@ profiles
         scripts
     js
       nvm
+        root
+          _home
       pnpm
         scripts
       prettier
@@ -199,6 +217,8 @@ profiles
               prettier
     misc
       editorconfig
+        root
+          _home
     python
       mypy
         root
@@ -216,6 +236,10 @@ profiles
       scripts
     terminal
       kitty
+        root
+          _home
+            .config
+              kitty
         scripts
       tmux
         root
@@ -224,6 +248,10 @@ profiles
               tmux
   git
     root
+      _home
+        .config
+          git
+          lefthook
       usr
         local
           scripts
@@ -252,10 +280,17 @@ profiles
       root
         Library
           LaunchAgents
+        _home
+          .gitlab-runner
       scripts
   llm
     base
       root
+        _home
+          .config
+            ai-agents
+              docs
+              templates
         etc
           custom
         usr
@@ -269,11 +304,38 @@ profiles
         _home
           .config
             ccstatusline
+            claude
+              agent-memory
+              agents
+              commands
+              output-styles
+              plugins
+                marketplaces
+              rules
+                code
+                  python
+                  zsh
+                config
+                  zsh
+                docs
+              skills
+                user-git-ops
+              themes
+            zsh
+              zshenv.d
+                auto.d
+                  claude
+              zshrc.d
+                auto.d
+                  claude
       scripts
       templates
         snippets
     codex
       root
+        _home
+          .config
+            codex
         etc
           zsh
             zshrc.d
@@ -282,6 +344,8 @@ profiles
       scripts
     ollama
       root
+        _home
+          .ollama
         usr
           local
             scripts
@@ -298,6 +362,10 @@ profiles
           homebrew
       scripts
     che
+      root
+        _home
+          .config
+            che
       scripts
     macos
       root
@@ -320,6 +388,8 @@ profiles
       scripts
     ssh
       root
+        _home
+          .ssh
         etc
           zsh
             zshenv.d
@@ -328,6 +398,9 @@ profiles
           local
             scripts
               shell
+      root-virt
+        _home
+          .ssh
   observability
     grafana
       assets
@@ -389,6 +462,16 @@ profiles
         recordings
       base
         root
+          _home
+            .config
+              zsh
+                zshenv.d
+                  functions
+                zshrc.d
+                  auto.d
+                    00-base
+                  completions
+                  functions
           etc
             zsh
               zshenv.d
@@ -398,6 +481,7 @@ profiles
               zshrc.d
                 auto.d
                   00-base
+                completions
                 functions
                 static-history.d
         root-linux
@@ -411,6 +495,15 @@ profiles
         scripts
       extras
         root
+          _home
+            .config
+              zsh
+                zshenv.d
+                  auto.d
+                    extras
+                zshrc.d
+                  auto.d
+                    extras
           etc
             zsh
               zshenv.d

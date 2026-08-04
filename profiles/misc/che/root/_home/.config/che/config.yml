@@ -1,0 +1,9 @@
+##[>] 🤖🤖
+validateSpec: error
+otel:
+  enabled: true
+  endpoint: localhost:4317
+  protocol: grpc
+  metrics: true
+  logs: true
+##[<] 🤖🤖

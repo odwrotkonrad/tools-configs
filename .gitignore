@@ -1,4 +1,4 @@
-!root/**/.*
+!profiles/**/.*
 !.repo/
 
 # project-local vscode workspace settings

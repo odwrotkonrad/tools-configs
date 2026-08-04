@@ -1,0 +1,22 @@
+min_version: 2.1.9
+
+output:
+  - summary
+  - failure
+  - execution_info
+  - execution_out
+
+pre-commit:
+  parallel: false
+  jobs:
+    - name: ssh-authenticate.bash
+      run: /usr/local/scripts/shell/ssh-authenticate.bash
+
+    - name: ruff
+      glob: "*.py"
+      run: ruff check --select I --fix {staged_files} && ruff format {staged_files} && git add {staged_files}
+
+commit-msg:
+  jobs:
+    - name: conventional-prefix.sh
+      run: /usr/local/scripts/shell/conventional-prefix.sh {1}

@@ -1,0 +1,34 @@
+##[>] dotfiles
+**/.*/
+**/.*
+##[<] dotfiles
+
+##[>] other
+**/venv/
+**/node_modules/
+
+**/__pycache__/
+.pytest_cache/
+
+**/terraform.tfstate*
+**/CLAUDE.local.md
+##[<] other
+
+##[>] inverse rules
+!**/.github/
+!**/.devcontainer/
+!**/.claude/
+
+!**/.gitignore
+!**/.dockerignore
+!**/.python-version
+!**/.gitlab-ci.yml
+!**/.golangci.yml
+!**/.env.example
+
+**/.claude/settings.local.json
+**/.claude/settings.json
+**/.claude/agents/ro.md
+**/.claude/agents/rw.md
+**/.claude/agent-memory-local/
+##[<] inverse rules

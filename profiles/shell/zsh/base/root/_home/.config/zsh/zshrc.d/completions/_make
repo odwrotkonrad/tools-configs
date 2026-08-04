@@ -1,0 +1,154 @@
+#compdef make gmake
+
+##[>] 🤖🤖🤖
+#[what] make completion override: for the workspace parent Makefile (carries `REPOS`
+#   + `REPO_<name>` dir map), complete its own targets under `## targets` then one named group
+#   per child repo (`<repo>-<target>`, from each child's `make -C <dir> -pRrq`); any
+#   other Makefile completes its own targets directly (same -pRrq scrape).
+#[where] che-linked onto ~/projects, ~/projects/gitlab, ~/projects/gitlab/konradodwrot
+#[why] `<repo>-%` passthrough pattern rules never expand to concrete names, and stock
+#   _make cannot follow `-C` into child Makefiles; replacing stock _make wholesale also
+#   avoids its -C/-I dir completion, whose _files -/ spec this shell globs into a bad pattern
+
+#[why] pristine zsh options for the whole completion span (restored on return): this
+#   shell's global option set otherwise mangles glob/spec handling in the helpers below
+emulate -LR zsh -o extendedglob
+
+#[what] max targets shown per group (diversified so the shown set spans distinct prefixes)
+local -i MAKE_WS_CAP=6
+
+#[what] compadd opts: matcher matching the typed word anywhere in the target name,
+#   case-insensitive; candidates are also pre-filtered the same way so caps count matches
+local -a MAKE_WS_ADDOPTS=( -M 'l:|=* r:|=* m:{[:lower:]}={[:upper:]}' )
+
+#[what] with a typed pattern, skip the matcher-derived common-part insert (a mangled
+#   fragment like `-render-`) and open the menu with the first full candidate instead
+_make_ws_menu() {
+  [[ -n $cur ]] && (( ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+  return 0
+}
+
+#[what] target names from a make database dump ($@ = -C dir args): the union of
+#   .PHONY members (the house-style command/wrapper list) and explicit rule
+#   targets, minus the Makefile files themselves
+_make_ws_targets() {
+  make "$@" -pRrq : 2>/dev/null | awk '
+    /^\.PHONY:/ { for (i = 2; i <= NF; i++) print $i; next }
+    /^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {
+      split($1, a, ":"); split(a[1], b, " ")
+      for (i in b) if (b[i] !~ /^(Makefile|makefile|GNUmakefile)$/) print b[i]
+    }' | sort -u
+}
+
+#[what] read a make variable's value ($1 = var, $2.. = -C dir args)
+_make_ws_var() {
+  local var=$1; shift
+  make "$@" -pRrq : 2>/dev/null \
+    | awk -v v="$var" -F' :?= ' '$1 == v { print $2; exit }'
+}
+
+#[what] reorder targets (stdin, one per line, pre-sorted) so leading items span the most
+#   distinct prefixes: round-robin across first-dash-segment families (one from each per
+#   round, families in first-seen order, members keeping input order within a family)
+#[why] a capped group should tell you what to type next, not 6 near-identical siblings
+_make_ws_diverse() {
+  awk '
+    {
+      key = $0; sub(/-.*/, "", key)     # first dash-segment = family
+      if (!(key in cnt)) fam[++famn] = key
+      memb[key, ++cnt[key]] = $0
+    }
+    END {
+      do {
+        more = 0
+        for (k = 1; k <= famn; k++) {
+          key = fam[k]
+          if (r + 1 <= cnt[key]) { print memb[key, r + 1]; more = 1 }
+        }
+        r++
+      } while (more)
+    }
+  '
+}
+
+#[what] the workspace-aware completer: returns 0 iff this is the workspace parent
+#   Makefile and it added matches, nonzero otherwise (caller completes plain targets)
+_make_ws() {
+  local mf
+  for mf in Makefile makefile GNUmakefile; do [[ -f $mf ]] && break; mf=; done
+  [[ -n $mf ]] && grep -q '^REPOS[[:space:]]*:=' $mf || return 1
+
+  #[what] REPOS holds workspace-root-relative repo paths; a repo's name is its basename;
+  #   ROOT (from the Makefile) makes the paths absolute
+  local -a paths
+  paths=( ${(z)"$(_make_ws_var REPOS)"} )
+  local root=$(_make_ws_var ROOT)
+  local -A path_of                       # name (basename) -> path
+  local p
+  for p in $paths; do path_of[${p:t}]=$p; done
+  local -a repos=( ${(k)path_of} )
+
+  local cur=$PREFIX$SUFFIX r matched= expl ret=1
+  for r in $repos; do
+    [[ $cur == ${r}-* ]] && { matched=$r; break }
+  done
+
+  #[what] child targets ($1 = repo name, $2 = cap or 0 for all): prefixed; typed pattern
+  #   ci-substring-filters the prefixed names before the cap, no pattern diversifies instead
+  _make_ws_child() {
+    local repo=$1 cap=$2 dir=$root/$path_of[$1]
+    local -a t=( ${${(f)"$(_make_ws_targets -C $dir)"}:#(\%*|.*|*\%)} )
+    if [[ -n $cur ]] {
+      t=( ${repo}-${^t} )
+      t=( ${(M)t:#(#i)*${cur}*} )
+    } else {
+      t=( ${(f)"$(print -rl -- $t | _make_ws_diverse)"} )
+      t=( ${repo}-${^t} )
+    }
+    (( cap > 0 && $#t > cap )) && t=( $t[1,cap] )
+    print -rl -- $t
+  }
+
+  #[what] `<repo>-<partial>`: only that child's targets, uncapped (drilled in), in its own group
+  if [[ -n $matched ]]; then
+    local -a child=( ${(f)"$(_make_ws_child $matched 0)"} )
+    (( $#child )) && _wanted "repo-$matched" expl "$matched" compadd $MAKE_WS_ADDOPTS -a child && ret=0
+    (( ret )) || _make_ws_menu
+    return $ret
+  fi
+
+  #[what] top level: this Makefile's own targets under `## targets`, then one group per repo
+  local -a bare=( ${${(f)"$(_make_ws_targets)"}:#(\%*|.*|*\%)} )
+  if [[ -n $cur ]] {
+    bare=( ${(M)bare:#(#i)*${cur}*} )
+  } else {
+    bare=( ${(f)"$(print -rl -- $bare | _make_ws_diverse)"} )
+  }
+  (( $#bare > MAKE_WS_CAP )) && bare=( $bare[1,MAKE_WS_CAP] )
+  (( $#bare )) && _wanted targets expl 'targets' compadd $MAKE_WS_ADDOPTS -a bare && ret=0
+  for p in $paths; do
+    r=${p:t}
+    local -a child=( ${(f)"$(_make_ws_child $r $MAKE_WS_CAP)"} )
+    (( $#child )) && { _wanted "repo-$r" expl "$r" compadd $MAKE_WS_ADDOPTS -a child && ret=0 }
+  done
+  (( ret )) || _make_ws_menu
+  return $ret
+}
+
+_make_ws && return
+
+#[what] any other Makefile: complete all its targets directly (own -pRrq scrape, sorted,
+#   uncapped), never delegate to stock _make (its -C/-I dir completion emits _files -/
+#   specs this shell globs into `bad pattern: *(-/)`); no option flags -> no dir completion
+local -a t=( ${${(f)"$(_make_ws_targets)"}:#(\%*|.*|*\%)} )
+if (( $#t )); then
+  local cur=$PREFIX$SUFFIX expl
+  [[ -n $cur ]] && t=( ${(M)t:#(#i)*${cur}*} )
+  #[why] targets exist but none match the typed pattern: complete nothing quietly, never
+  #   fall into _default file completion (noise + this shell's bad-pattern _files specs)
+  (( $#t )) || return 1
+  _wanted targets expl 'targets' compadd $MAKE_WS_ADDOPTS -a t && _make_ws_menu
+  return
+fi
+_default
+##[<] 🤖🤖🤖

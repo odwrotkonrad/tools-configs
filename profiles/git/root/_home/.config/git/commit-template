@@ -1,0 +1,19 @@
+
+# type(scope): subject
+# <description>
+
+# types:
+#   infra:     provisioning, hosts, services, runtime topology
+#   ci:        pipelines, build/release automation, CI config, git hooks, dev environment
+#   deps:      dependency add/remove/bump, lockfiles
+#   config:    settings/options of an existing tool or app
+#   scaffold:  new project/module skeleton, boilerplate
+#   install:   install scripts, setup steps, bootstrap
+#   docs:      prose, comments, READMEs, doc generation
+#   chore:     housekeeping with no src/behavior change
+#   style:     formatting/whitespace only, no logic change
+#   feat:      new user-facing capability
+#   fix:       corrects wrong behavior
+#   refactor:  restructure, no behavior change
+#   perf:      faster/leaner, same behavior
+#   test:      add/adjust tests only
