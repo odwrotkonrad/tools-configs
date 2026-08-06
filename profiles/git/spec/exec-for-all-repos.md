@@ -8,7 +8,7 @@ Scenario: fans a command out over every repo under a directory
   Then repos are discovered recursively from `<dir>` (default pwd) by their `.git` entry (dir or worktree file)
   And `<dir>` itself being a repo is included, named by its basename
   And the command runs once per repo, cwd set to the repo, all repos concurrently in the background
-  And each repo's stdout+stderr is captured to `~/.local/state/git-wrappers/exec-for-all-repos/<relative path, / → __>.log`, truncated per run
+  And each repo's stdout+stderr is captured to `~/.local/state/git-wrappers/exec-for-all-repos/<run pid>/<relative path, / → __>_<repo pid>.log`, one dir per invocation
   And `GIT_WRAPPER_FG=1` is exported so git-*-upsert wrappers mirror their log into the capture
 
 Scenario: arbitrary command with arguments
@@ -22,15 +22,15 @@ Scenario: interactive progress dashboard refreshes in place
   When repos run
   Then a bold `## Progress <done>/<count> <status> <clock> <bar>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed
   And the bar (`▰▰▰▰▰` → `▰▱▱▱▱`) drains once per second, counting down to the next tail refresh, updated in place on the header line, dropped on the final frame
-  And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock>` block: `process: <pid>`, `log: <log file>`, `tail:` + the log's 3 most recent lines as markdown blockquotes (`> <line>`, CR/ANSI stripped, width-truncated)
-  And the tail always spans exactly 3 blockquote lines, missing lines padded with bare `>`, so block heights stay fixed across redraws
+  And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock> (<pid>)` block: `log: <log file>`, `tail:` + the log's most recent line as a markdown blockquote (`> <line>`, CR/ANSI stripped, width-truncated)
+  And the tail always spans exactly 1 blockquote line, a bare `>` when the log is empty, so block heights stay fixed across redraws
   And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
 
 Scenario: non-interactive progress streams append-only
   Status: implemented
   Given stderr is not a terminal
   When repos run
-  Then `## Progress` lists every repo at spawn as `🕐 <repo>` with `log: <log file>` below
+  Then `## Progress` lists every repo at spawn as `🕐 <repo> (<pid>)` with `log: <log file>` below
   And `done: <✅|❌> <M>m<SS>s <repo>` lines stream in finish order, elapsed counted from that repo's spawn
 
 Scenario: summary report closes the run, failures only

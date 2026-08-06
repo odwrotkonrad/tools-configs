@@ -2,10 +2,11 @@
 #>[what] 🤖🤖
 #   Run one command in every git repo under a root dir (default pwd),
 #   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
-#   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. ## Progress on
-#   stderr: tty => in-place dashboard redrawn every 5s (header done/count +
-#   overall status + clock; per repo `### <repo> <emoji> <clock>`, process:,
-#   log:, tail: last 3 log lines); non-tty => spawn list + `done:` stream.
+#   ~/.local/state/git-wrappers/exec-for-all-repos/<run pid>/<repo>_<pid>.log.
+#   ## Progress on stderr: tty => in-place dashboard redrawn every 5s (header
+#   done/count + overall status + clock + countdown bar; per repo
+#   `### <repo> <emoji> <clock> (<pid>)`, log:, tail: last log line);
+#   non-tty => spawn list + `done:` stream.
 #   ## Report is a one-line summary (counts + total time); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
 #   log lines blockquoted). Exit: 0 all pass, 1 any fail, 2 bad
@@ -116,22 +117,24 @@ if (( $#must )) {
 }
 (( $#repos )) || { print -r -- "no repos matched"; exit 0 }
 
-log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers/exec-for-all-repos
+log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers/exec-for-all-repos/$$
 mkdir -p $log_dir
 
 zmodload zsh/datetime
+zmodload zsh/system
 setopt extendedglob
 fmt_dur() { printf '%dm%02ds' $(( $1 / 60 )) $(( $1 % 60 )) }
 bold=$'\e[1m' unbold=$'\e[0m'
 
-typeset -A pid_of status_of start_of elapsed_of
+typeset -A pid_of status_of start_of elapsed_of log_of
 run_start=$EPOCHSECONDS
 for repo ($repos) {
-  log=$log_dir/${repo//\//__}.log
   start_of[$repo]=$EPOCHSECONDS
-  ( cd $dir_of[$repo] && export GIT_WRAPPER_FG=1 && "$cmd[@]" ) &> $log &
+  ( exec > $log_dir/${repo//\//__}_$sysparams[pid].log 2>&1
+    cd $dir_of[$repo] && export GIT_WRAPPER_FG=1 && "$cmd[@]" ) &
   pid=$!
   pid_of[$repo]=$pid
+  log_of[$repo]=$log_dir/${repo//\//__}_$pid.log
 }
 
 pending=($repos)
@@ -162,13 +165,12 @@ progress_header() {
 
 render_progress() {
   local repo log line emoji clock
-  local -i i
   local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
   : ${cols:=120}
   (( cols -= 4 ))
   draw_lines=( "$(progress_header 5)" "" )
   for repo ($repos) {
-    log=$log_dir/${repo//\//__}.log
+    log=$log_of[$repo]
     if (( ${+status_of[$repo]} )) {
       (( status_of[$repo] )) && emoji=❌ || emoji=✅
       clock=$(fmt_dur $elapsed_of[$repo])
@@ -176,14 +178,10 @@ render_progress() {
       emoji=🕐
       clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
-    draw_lines+=( "${bold}### $repo $emoji $clock${unbold}" "process: $pid_of[$repo]" "log: $log" "tail:" )
-    local -a tail_lines=( ${(f)"$(tail -n 3 $log 2>/dev/null)"} )
-    local -i pad=$(( 3 - $#tail_lines ))
-    for line ($tail_lines) {
-      line=${${line//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
-      draw_lines+=( "> ${line[1,cols]}" )
-    }
-    for (( i = 1; i <= pad; i++ )) draw_lines+=( ">" )
+    draw_lines+=( "${bold}### $repo $emoji $clock ($pid_of[$repo])${unbold}" "log: $log" "tail:" )
+    line=${${:-"$(tail -n 1 $log 2>/dev/null)"}//$'\r'/}
+    line=${line//$'\e'\[[0-9;]#[a-zA-Z]/}
+    if [[ -n $line ]] { draw_lines+=( "> ${line[1,cols]}" ) } else { draw_lines+=( ">" ) }
     draw_lines+=( "" )
   }
 }
@@ -208,8 +206,8 @@ if [[ -t 2 ]] {
 } else {
   print -ru2 -- "## Progress"
   for repo ($repos) {
-    print -ru2 -- "🕐 $repo"
-    print -ru2 -- "log: $log_dir/${repo//\//__}.log"
+    print -ru2 -- "🕐 $repo ($pid_of[$repo])"
+    print -ru2 -- "log: $log_of[$repo]"
     print -ru2 -- ""
   }
   while (( $#pending )) {
@@ -230,7 +228,7 @@ print -r -- "repos: $#repos, ✅ $(( $#repos - $#failed )), ❌ $#failed, total 
 if (( $#failed )) {
   print -r -- $'\n'"${bold}## Failed Executions${unbold}"
   for repo ($failed) {
-    log=$log_dir/${repo//\//__}.log
+    log=$log_of[$repo]
     print -r -- $'\n'"${bold}### $repo ❌ (exit $status_of[$repo]) $(fmt_dur $elapsed_of[$repo])${unbold}"
     print -r -- "log: $log"
     print -r -- "tail:"
