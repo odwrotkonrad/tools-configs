@@ -17,6 +17,12 @@ Scenario: arbitrary command with arguments
   When I run `exec-per-repo.zsh -C <dir> git status -sb`
   Then everything after the options is executed verbatim as `<cmd> [args...]` in each repo
 
+Scenario: a single quoted argument runs as a shell line
+  Status: implemented
+  When I run `exec-per-repo.zsh "sleep 1; echo 123 | tr 1 9"`
+  Then the lone argument executes as `zsh -c <arg>` in each repo, so `;`, pipes, `&&`, globs work
+  And invocations with more than one command word keep executing verbatim
+
 Scenario: interactive progress dashboard refreshes in place
   Status: implemented
   Given stderr is a terminal

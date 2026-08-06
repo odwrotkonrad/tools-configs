@@ -12,6 +12,8 @@
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
 #   log lines blockquoted). Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
+#   A single command arg runs via `zsh -c` (quote a whole shell line: pipes,
+#   `;`, &&); multiple args exec verbatim.
 #   --include/--exclude: comma lists, basename or root-relative path,
 #   ambiguous basename errors. --must-filter: AND of changes, off-main,
 #   unsynced.
@@ -45,7 +47,11 @@ while (( $# )) {
   }
 }
 (( $# )) || usage
-cmd=("$@")
+if (( $# == 1 )) {
+  cmd=(zsh -c $1)
+} else {
+  cmd=("$@")
+}
 
 for f ($must) {
   case $f {
