@@ -17,7 +17,7 @@ function install_terraform {
   local tmp=$(mktemp -d) os arch
   fn-is-os mac && os=darwin || os=linux
   fn-is-arch arm && arch=arm64 || arch=amd64
-  curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -fsSL "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_${os}_${arch}.zip" -o $tmp/terraform.zip
+  curl --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -fsSL "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_${os}_${arch}.zip" -o $tmp/terraform.zip
   unzip -oq $tmp/terraform.zip -d $tmp
   sudo install -m 0755 $tmp/terraform /usr/local/bin/terraform
   rm -rf $tmp

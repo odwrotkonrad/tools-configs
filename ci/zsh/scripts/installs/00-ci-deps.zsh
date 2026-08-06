@@ -29,7 +29,7 @@ function install_go {
   local tmp=$(mktemp -d)
   cd $tmp
   local archive="go${version}.${platform}.tar.gz"
-  curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -fsSL -O "https://go.dev/dl/${archive}"
+  curl --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -fsSL -O "https://go.dev/dl/${archive}"
   shasum -a 256 -c <<< "${sha256}  ${archive}" || fn-exit-with 1 "checksum mismatch: ${archive}"
 
   sudo rm -rf "${goroot}"
@@ -84,7 +84,7 @@ function install_che {
   local url="https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che/latest/${archive}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
-  curl -fsSL --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -o "$tmp/$archive" "$url"
+  curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -o "$tmp/$archive" "$url"
   tar -xzf "$tmp/$archive" -C "$tmp" "${che_bundle_bins[@]}"
   for bin ( "${che_bundle_bins[@]}" ) sudo install -m 0755 "$tmp/$bin" "$prefix/bin/$bin"
 }
@@ -95,7 +95,7 @@ function install_lefthook {
   local url="https://github.com/evilmartians/lefthook/releases/download/v${lefthook_version}/${asset}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
-  curl -fsSL --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -o "$tmp/lefthook" "$url"
+  curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -o "$tmp/lefthook" "$url"
   echo "${lefthook_sha[${lh_os}_${lh_arch}]}  $tmp/lefthook" | shasum -a 256 -c - || fn-exit-with 1 "checksum mismatch: $asset"
   sudo install -m 0755 "$tmp/lefthook" "$prefix/bin/lefthook"
 }
@@ -106,7 +106,7 @@ function install_yq {
   local url="https://github.com/mikefarah/yq/releases/download/v${yq_version}/${asset}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
-  curl -fsSL --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -o "$tmp/yq" "$url"
+  curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -o "$tmp/yq" "$url"
   echo "${yq_sha[${yq_os}_${che_arch}]}  $tmp/yq" | shasum -a 256 -c - || fn-exit-with 1 "checksum mismatch: $asset"
   sudo install -m 0755 "$tmp/yq" "$prefix/bin/yq"
 }

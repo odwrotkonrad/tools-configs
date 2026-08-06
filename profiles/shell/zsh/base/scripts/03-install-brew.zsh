@@ -16,7 +16,7 @@ autoload -Uz fn-install-if-missing
 function install_brew {
   export NONINTERACTIVE=1
   local installer
-  installer=$(curl -fsSL --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh) || return
+  installer=$(curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh) || return
   [[ -n $installer ]] || return 1
   /bin/bash -c "$installer"
 }
