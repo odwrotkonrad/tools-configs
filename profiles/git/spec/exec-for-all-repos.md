@@ -21,7 +21,7 @@ Scenario: interactive progress dashboard refreshes in place
   Given stderr is a terminal
   When repos run
   Then a bold `## Progress <done>/<count> <status> <clock>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed
-  And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock>` block: `process: <pid>`, `log: <log file>`, `tail:` + the log's 3 most recent lines (CR/ANSI stripped, width-truncated)
+  And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock>` block: `process: <pid>`, `log: <log file>`, `tail:` + the log's 3 most recent lines as markdown blockquotes (`> <line>`, CR/ANSI stripped, width-truncated)
   And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
 
 Scenario: non-interactive progress streams append-only

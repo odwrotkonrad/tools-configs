@@ -170,7 +170,7 @@ render_progress() {
     draw_lines+=( "${bold}### $repo $emoji $clock${unbold}" "process: $pid_of[$repo]" "log: $log" "tail:" )
     for line (${(f)"$(tail -n 3 $log 2>/dev/null)"}) {
       line=${${line//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
-      draw_lines+=( "${line[1,cols]}" )
+      draw_lines+=( "> ${line[1,cols]}" )
     }
     draw_lines+=( "" )
   }
