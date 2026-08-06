@@ -20,7 +20,8 @@ Scenario: progress log streams per-repo completion with elapsed time
   Status: implemented
   Given repos running concurrently in the background
   When a repo's run finishes
-  Then a `## Progress` section on stderr streams `done: <✅|❌> <M>m<SS>s <repo>` in finish order
+  Then a `## Progress` section on stderr opens at spawn, listing every repo as `🕐 <repo>` with a ready `log: tail -f <log path>` attach line below, blank line between
+  And `done: <✅|❌> <M>m<SS>s <repo>` lines stream below in finish order
   And elapsed counts from that repo's spawn to its finish
   And finishes are detected by polling every 1s, so lines appear as repos complete, not in discovery order
 

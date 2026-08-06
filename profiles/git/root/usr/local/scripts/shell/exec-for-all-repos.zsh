@@ -3,7 +3,8 @@
 #   Run one command in every git repo under a root dir (default pwd),
 #   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
 #   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. ## Progress on
-#   stderr streams `done: <emoji> <dur> <repo>` in finish order. Per-repo ✅/❌
+#   stderr lists every repo at spawn (🕐 + `log: tail -f <path>` attach line),
+#   then streams `done: <emoji> <dur> <repo>` in finish order. Per-repo ✅/❌
 #   report, failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
 #   --include/--exclude: comma lists, basename or root-relative path,
@@ -123,10 +124,16 @@ for repo ($repos) {
   log=$log_dir/${repo//\//__}.log
   start_of[$repo]=$EPOCHSECONDS
   ( cd $dir_of[$repo] && export GIT_WRAPPER_FG=1 && "$cmd[@]" ) &> $log &
-  pid_of[$repo]=$!
+  pid=$!
+  pid_of[$repo]=$pid
 }
 
 print -ru2 -- "## Progress"
+for repo ($repos) {
+  print -ru2 -- "🕐 $repo"
+  print -ru2 -- "log: tail -f $log_dir/${repo//\//__}.log"
+  print -ru2 -- ""
+}
 pending=($repos)
 while (( $#pending )) {
   for repo ($pending) {
