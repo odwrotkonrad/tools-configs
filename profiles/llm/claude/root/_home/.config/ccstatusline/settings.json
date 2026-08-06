@@ -27,33 +27,12 @@
         "rawValue": true
       }
     ],
-    [
-      {
-        "id": "8cc9c8b4-477b-437e-bc29-c9a08d7c04da",
-        "type": "session-name",
-        "rawValue": true
-      },
-      {
-        "id": "beaf693a-cf66-42ff-b62a-34e1bc9fb028",
-        "type": "separator"
-      },
-      {
-        "id": "69687787-4396-4669-8dae-311568e8ed31",
-        "type": "claude-session-id",
-        "rawValue": true
-      }
-    ],
-    [
-      {
-        "id": "33e527ef-40e9-445c-8879-1d563687d62b",
-        "type": "custom-text",
-        "customText": "🤖"
-      }
-    ]
+    []
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
   "colorLevel": 2,
+  "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
   "gitCacheTtlSeconds": 5,

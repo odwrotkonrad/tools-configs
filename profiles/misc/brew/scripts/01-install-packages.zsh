@@ -1,7 +1,7 @@
 #!/bin/zsh
 #>[what]
 #   brew bundle /etc/homebrew/Brewfile, one stage per call:
-#   tap -> formulae -> npm -> cask -> vscode (taps first; cask/vscode last for code cli).
+#   formulae -> npm -> cask.
 #   Brewfile gates on HOMEBREW_STAGE + HOMEBREW_IS_VIRT.
 #   #[why] brew wipes env (bin/brew: env -i), keeps allowlist + HOMEBREW_*. gate
 #   vars must be HOMEBREW_-prefixed.
@@ -34,8 +34,8 @@ function bundle_stage {
 }
 
 typeset brewfile=/etc/homebrew/Brewfile
-typeset -a stages=( tap formulae npm )
-fn-is-os mac && stages+=( cask vscode ) #[why] casks are macos-only 🤖
+typeset -a stages=( formulae npm )
+fn-is-os mac && stages+=( cask ) #[why] casks are macos-only 🤖
 for stage ( $stages ) bundle_stage $stage
 
 #[why] brew zsh can ride in as a formula dependency and would shadow /usr/bin/zsh with a different compiled-in rc dir (/etc vs debian's /etc/zsh): unlink it, one zsh owns the shell 🤖🤖

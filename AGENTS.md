@@ -92,7 +92,7 @@ onepassword: profiles/misc/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/
 pnpm: profiles/dev/js/pnpm/scripts/01-install-pnpm.zsh
 prettier: profiles/dev/js/prettier/root/_home/.config/prettier/.prettierrc.yml
 pyenv: profiles/shell/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
-ruby: profiles/dev/ruby/scripts/01-install-ruby-lsp.zsh
+ruby: profiles/dev/ruby/scripts/01-install-ruby.zsh
 ruff: profiles/dev/python/ruff/root/_home/.config/ruff/ruff.toml
 terraform: profiles/dev/infra/terraform/scripts/01-install-terraform.zsh
 tmux: profiles/dev/terminal/tmux/root/_home/.config/tmux/tmux.conf
@@ -159,6 +159,7 @@ profiles
         _home
           .config
             azure
+      scripts
     gcp
       root
         _home
@@ -191,9 +192,12 @@ profiles
                   Code
                     User
                       .exported
+          scripts
     golang
       scripts
     infra
+      cilium
+        scripts
       docker
         scripts
       kind
@@ -205,6 +209,8 @@ profiles
       terraform
         scripts
     js
+      node
+        scripts
       nvm
         root
           _home
@@ -251,6 +257,11 @@ profiles
               zshrc.d
                 auto.d
                   tmux
+          usr
+            local
+              scripts
+                shell
+        scripts
   git
     assets
       images
@@ -418,6 +429,7 @@ profiles
       root-virt
         _home
           .ssh
+      scripts
   observability
     grafana
       assets
@@ -432,6 +444,7 @@ profiles
               dashboards
                 json
               datasources
+      scripts
     jaeger
       root
         Library
@@ -445,6 +458,7 @@ profiles
           LaunchDaemons
         etc
           loki
+      scripts
     otelcol
       root
         Library

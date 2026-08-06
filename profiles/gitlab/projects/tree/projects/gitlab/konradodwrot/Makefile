@@ -14,7 +14,7 @@ REPOS := \
   konradodwrot/go-modules \
   konradodwrot/notes \
   konradodwrot/resume-md-pdf \
-  konradodwrot/unrestricted/infra/oci-images \
+  konradodwrot/infra/oci-images \
   restricted/infra \
   restricted/sandbox
 

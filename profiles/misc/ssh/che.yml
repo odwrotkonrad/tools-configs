@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://gitlab.com/konradodwrot/unrestricted/go-modules/-/raw/main/che/assets/data/che.schema.json
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 options:
   profileWorkingDirectory: root
@@ -9,6 +9,8 @@ misc/ssh:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
       - usr/**
+    runScripts:
+      - scripts/01-install-openssh.zsh
 
 #[why] sandbox keypair from 1password, rendered under the standard names the ssh/git config reference; virt only (desktop skips via runIf: never clobber the host's real keys)
 misc/ssh/virt:

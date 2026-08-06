@@ -4,69 +4,36 @@
 def stage?(s) = ENV["HOMEBREW_STAGE"] == s
 def virt?     = ENV["HOMEBREW_IS_VIRT"] == "true"
 
-##[>] tap
-if stage?("tap")
-  tap "azure/azure-cli"
-  tap "hashicorp/tap"
-  tap "cirruslabs/cli" if OS.mac? && !virt?
-end
-##[<] tap
-
 ##[>] formulae
 if stage?("formulae")
   brew "readline"      # Library for command-line editing
   brew "openssl@3"     # Cryptography and SSL/TLS Toolkit
   brew "bat"           # Clone of cat(1) with syntax highlighting and Git integration
   brew "bats-core"     # Bash Automated Testing System
-  brew "cilium-cli"    # 🤖 CLI to install, manage & troubleshoot Kubernetes clusters running Cilium (sandbox CNI)
-  brew "duti" if OS.mac? # Select default apps for documents and URL schemes on macOS
   brew "fd"            # Simple, fast and user-friendly alternative to find
   brew "ffmpeg"        # Play, record, convert, and stream audio and video codecs
   brew "xz"            # General-purpose data compression with high compression ratio
   brew "zstd"          # Zstandard is a real-time compression algorithm
   brew "gcc"           # GNU compiler collection
-  brew "gh"            # GitHub command-line tool
   brew "pcre2"         # Perl compatible regular expressions library with a new API
-  brew "goreleaser"    # 🤖 Deliver Go binaries as fast and easily as possible
   brew "htop"          # Improved top (interactive process viewer)
   brew "jq"            # Lightweight and flexible command-line JSON processor
   brew "sqlite"        # Command-line interface for SQLite
-  brew "python@3.14"   # Interpreted, interactive, object-oriented language
   brew "libtool"       # Generic library support script
   brew "make"          # Utility for directing compilation
   brew "nmap"          # Port scanning utility for large networks
-  brew "node"          # Platform built on V8 to build network applications
-  brew "openssh"       # OpenBSD freely-licensed SSH connectivity tools
   brew "pandoc"        # Swiss-army knife of markup format conversion
-  brew "pipx"          # Execute binaries from Python packages in isolated environments
   brew "pkgconf"       # Package compiler and linker metadata toolkit
   brew "procs"         # Modern replacement for ps written in Rust
   brew "pstree"        # Show ps output as a tree
-  brew "pyenv"         # Python version management
-  brew "ripgrep"       # Search tool like grep and The Silver Searcher
-  brew "ruby", link: false # Powerful, clean, object-oriented scripting language
   brew "shellcheck"    # Static analysis and lint tool, for (ba)sh scripts
   brew "showkey"       # Simple keystroke visualizer
   brew "stow"          # Organize software neatly under a single directory tree
   brew "tcl-tk"        # Tool Command Language
-  brew "tmux"          # Terminal multiplexer
   brew "tree"          # Display directories as trees
-  brew "uv"            # Extremely fast Python package installer and resolver
   brew "watch"         # Executes a program periodically, showing output fullscreen
   brew "yq"            # Process YAML, JSON, XML, CSV and properties from the CLI
   brew "zlib"          # General-purpose lossless data-compression library
-  brew "zig"           # 🤖 Programming language designed for robustness and clarity
-
-  unless virt?
-    brew "grafana"                             # Metric visualizations and dashboards
-    brew "logcli"                              # Run LogQL queries against a Loki server
-    brew "loki"                                # Horizontally-scalable log aggregation
-    brew "hashicorp/tap/packer"                # Build identical machine images (vm base)
-    if OS.mac? # tart runs VMs on Apple Silicon only 🤖
-      brew "cirruslabs/cli/tart"                 # Run macOS and Linux VMs on Apple Silicon
-      brew "cirruslabs/cli/gitlab-tart-executor" # GitLab runner executor for ephemeral Tart VMs
-    end
-  end
 end
 ##[<] formulae
 
@@ -74,40 +41,11 @@ end
 if stage?("npm")
   npm "@github/copilot"
   npm "ccstatusline@2.2.22"
-  npm "corepack"
-  npm "pyright"
-  npm "typescript-language-server"
-  npm "typescript"
 end
 ##[<] npm
 
 ##[>] cask
 if stage?("cask")
-  cask "azure/azure-cli/azure-cli-preview"
   cask "beekeeper-studio" unless virt?     ##[ai] 🤖 SQL GUI (SQLite/Postgres/MySQL/MariaDB)
-  cask "font-jetbrains-mono"
-  cask "visual-studio-code" unless virt?
 end
 ##[<] cask
-
-##[>] vscode
-if stage?("vscode") && !virt?
-  vscode "anthropic.claude-code"
-  vscode "charliermarsh.ruff"
-  vscode "editorconfig.editorconfig"
-  vscode "esbenp.prettier-vscode"
-  vscode "golang.go"
-  vscode "hoovercj.vscode-settings-cycler"
-  vscode "mindaro-dev.file-downloader"
-  vscode "ms-azuretools.vscode-containers"
-  vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
-  vscode "ms-python.debugpy"
-  vscode "ms-python.python"
-  vscode "ms-python.vscode-python-envs"
-  vscode "ms-vscode-remote.remote-containers"
-  vscode "openai.chatgpt"
-  vscode "redhat.vscode-yaml"
-  vscode "tamasfe.even-better-toml"
-  vscode "yzhang.markdown-all-in-one"
-end
-##[<] vscode
