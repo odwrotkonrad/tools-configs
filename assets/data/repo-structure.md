@@ -351,6 +351,7 @@ profiles
       root
         _home
           .config
+      scripts
     man
       root
         etc
