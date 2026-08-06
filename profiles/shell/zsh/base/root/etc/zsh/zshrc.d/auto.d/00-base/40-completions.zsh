@@ -216,20 +216,20 @@ _deep_files_emit() {
   _cd_deep_padcols ddv dfv ddh dfh ddd dfd  pddv pdfv pddh pdfh pddd pdfd
   for ft in $_deep_ft; do
     case $ft {
-      (dirs)  (( $#dv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -V $vgrp -S / -d pddv -a dv } ;;
-      (files) (( $#fv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -V $vgrp        -d pdfv -a fv } ;;
+      (dirs)  (( $#dv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -i "$IPREFIX" -V $vgrp -S / -d pddv -a dv } ;;
+      (files) (( $#fv )) && { _wanted $vtag expl "$vhdr" compadd -Q -U -i "$IPREFIX" -V $vgrp        -d pdfv -a fv } ;;
     }
   done
   for ft in $_deep_ft; do
     case $ft {
-      (dirs)  (( $#dh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp -S / -d pddh -a dh } ;;
-      (files) (( $#fh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp        -d pdfh -a fh } ;;
+      (dirs)  (( $#dh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -i "$IPREFIX" -V $hgrp -S / -d pddh -a dh } ;;
+      (files) (( $#fh )) && { _wanted $htag expl "$hhdr" compadd -Q -U -i "$IPREFIX" -V $hgrp        -d pdfh -a fh } ;;
     }
   done
   for ft in $_deep_ft; do
     case $ft {
-      (dirs)  (( $#dd )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp -S / -d pddd -a dd } ;;
-      (files) (( $#fd )) && { _wanted $htag expl "$hhdr" compadd -Q -U -V $hgrp        -d pdfd -a fd } ;;
+      (dirs)  (( $#dd )) && { _wanted $htag expl "$hhdr" compadd -Q -U -i "$IPREFIX" -V $hgrp -S / -d pddd -a dd } ;;
+      (files) (( $#fd )) && { _wanted $htag expl "$hhdr" compadd -Q -U -i "$IPREFIX" -V $hgrp        -d pdfd -a fd } ;;
     }
   done
 }

@@ -3,6 +3,8 @@
 #   Sync onto main, then create/rename the branch to an llm-suggested name.
 #   on main: checkout -b <name>. on a branch: branch -m <name>.
 #   merged (sync exit 23): leaves you on main, exits 0 (nothing to name).
+#   No-op guard: clean tree, on main, main == origin/main => log
+#   `no new commits`, exit 0 before syncing.
 #   Usage: git-branch-name-upsert
 #   Downstream: git-sync-onto-main, llm-git-branch-name-suggest, git.
 #   Exit Codes: 22 sync conflicts
@@ -23,6 +25,13 @@ if [[ -t 1 || -n $GIT_WRAPPER_FG ]] {
 }
 ##[<] 🤖🤖
 print -r -- "=== ${0:t} $(date +%FT%T) ==="
+
+if [[ -z $(git status --porcelain) &&
+      $(git rev-parse --abbrev-ref HEAD) == main &&
+      -z $(git rev-list origin/main..main 2>/dev/null) ]] {
+  print -r -- "no new commits"
+  exit 0
+}
 
 git-sync-onto-main.zsh && sync=0 || sync=$?
 (( sync == 22 )) && exit 22

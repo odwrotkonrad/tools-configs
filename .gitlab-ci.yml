@@ -55,7 +55,7 @@ dry-run-apply-sync:
     matrix:
       - CHE_PROFILE: [desktop/macos, cli/macos, virt/linux]
   script:
-    - make sync-install
+    - make sync-full
 
 .e2e-macos:
   ##[>] 🤖🤖
@@ -76,7 +76,7 @@ dry-run-apply-macos-desktop:
   needs: []
   allow_failure: true
   script:
-    - make sync-install
+    - make sync-full
 
 apply-macos-cli:
   extends: .e2e-macos
@@ -94,7 +94,7 @@ apply-macos-cli:
       when: never
     - when: manual
   script:
-    - make sync-install
+    - make sync-full
 
 apply-linux-cli:
   extends: .base
@@ -119,7 +119,7 @@ apply-linux-cli:
     ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
-    - sudo -u ko --preserve-env=CI,CHE_PROFILE,CHE_VALIDATE_SPEC,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-install
+    - sudo -u ko --preserve-env=CI,CHE_PROFILE,CHE_VALIDATE_SPEC,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
     ##[<] 🤖🤖
 
 ##[>] 🤖🤖

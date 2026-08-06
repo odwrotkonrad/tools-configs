@@ -128,6 +128,7 @@ profiles
           zshrc.d
             auto.d
               git
+            completions
       usr
         local
           scripts

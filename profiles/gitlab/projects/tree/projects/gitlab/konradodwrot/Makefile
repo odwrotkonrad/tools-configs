@@ -14,7 +14,6 @@ REPOS := \
   konradodwrot/go-modules \
   konradodwrot/notes \
   konradodwrot/resume-md-pdf \
-  konradodwrot/workspace \
   konradodwrot/infra/oci-images \
   restricted/infra \
   restricted/sandbox
@@ -39,5 +38,37 @@ init-note:
 	@$(MAKE) -C $(call repo_dir,notes) init-note
 ##[<] Notes
 
-.PHONY: init-note
+##[>] Multi-Repo [genai-include]
+#[what] commit in every repo with changes (git-commit-upsert per repo)
+commit-all:
+	@exec-per-repo.zsh -C $(ROOT) --must-filter=changes git-commit-upsert.zsh
+
+#[what] upsert MRs in every repo (git-mr-upsert per repo; branches off main first when main carries new commits)
+mr-all:
+	@exec-per-repo.zsh -C $(ROOT) git-mr-upsert.zsh
+
+#[what] full git flow in every repo: commit, branch-name, MR (git-upsert-all per repo; its no-op guard skips untouched repos)
+publish-all:
+	@exec-per-repo.zsh -C $(ROOT) git-upsert-all.zsh
+
+#[what] MR pipeline snapshot for every repo
+pipeline-status-mr-all:
+	@exec-per-repo.zsh -C $(ROOT) git-mr-pipeline-status.zsh --no-wait
+
+#[what] latest main pipeline snapshot for every repo
+pipeline-status-main-all:
+	@exec-per-repo.zsh -C $(ROOT) git-mr-pipeline-status.zsh --no-wait --main
+##[<] Multi-Repo
+
+##[>] Sync [genai-include]
+#[what] configs convenience sync (= configs-sync)
+sync:
+	@$(MAKE) -C $(call repo_dir,configs) sync
+
+#[what] configs full sync, scripts included (= configs-sync-full)
+sync-full:
+	@$(MAKE) -C $(call repo_dir,configs) sync-full
+##[<] Sync
+
+.PHONY: init-note commit-all mr-all publish-all pipeline-status-mr-all pipeline-status-main-all sync sync-full
 ##[<] 🤖🤖

@@ -63,35 +63,42 @@ print -r -- "cli: $cli"
 git fetch --prune origin
 
 #[what] match = open MR/PR whose head commits are patch-equivalent to commits in this branch and not yet in origin/main
-typeset -a open_srcs matched_srcs
-if [[ $cli == glab ]] {
-  open_srcs=( ${(f)"$(glab mr list -F json | jq -r '.[].source_branch')"} )
-} else {
-  open_srcs=( ${(f)"$(gh pr list --json headRefName --jq '.[].headRefName')"} )
+mr_match() {
+  git rev-parse --quiet --verify origin/$1 >/dev/null || return 1
+  [[ -z ${(M)${(f)"$(git cherry HEAD origin/$1)"}:#+*} ]] || return 1
+  [[ -n ${(M)${(f)"$(git cherry origin/main origin/$1)"}:#+*} ]]
 }
-for src in $open_srcs; do
-  if ! git rev-parse --quiet --verify origin/$src >/dev/null; then continue; fi
-  if [[ -n ${(M)${(f)"$(git cherry HEAD origin/$src)"}:#+*} ]]; then continue; fi
-  if [[ -z ${(M)${(f)"$(git cherry origin/main origin/$src)"}:#+*} ]]; then continue; fi
-  matched_srcs+=( $src )
-done
-print -r -- "open: $open_srcs | matched: $matched_srcs"
 
 #[what] matches on other sources are superseded by this branch: always closed
 if [[ $cli == glab ]] {
-  #[why] glab mr close (1.105.0) wrongly enforces merge checks (ci_must_pass): close via api
-  for src in ${matched_srcs:#$branch}; do
-    print -r -- "closing superseded: $src"
-    iid=$(glab mr view $src --output json | jq -r .iid)
-    glab api -X PUT "projects/:id/merge_requests/$iid" -f state_event=close >/dev/null
-    # glab api must be used instead of glab mr close (https://gitlab.com/gitlab-org/cli/-/work_items/8400)
+  #[why] by iid, never branch name: a branch selector is ambiguous when two open MRs share the source branch; the extra same-branch MR closes as superseded too
+  typeset -a open_mrs matched_mrs
+  open_mrs=( ${(f)"$(glab mr list -F json | jq -r '.[] | "\(.iid)\t\(.source_branch)"')"} )
+  for mr in $open_mrs; do
+    mr_match ${mr#*$'\t'} && matched_mrs+=( $mr )
   done
-  if (( ${matched_srcs[(Ie)$branch]} )) {
-    glab mr update $branch --title $title --description $description
+  print -r -- "open: ${open_mrs//$'\t'/:} | matched: ${matched_mrs//$'\t'/:}"
+
+  #[why] glab mr close (1.105.0) wrongly enforces merge checks (ci_must_pass): close via api (https://gitlab.com/gitlab-org/cli/-/work_items/8400)
+  keep_iid=
+  for mr in $matched_mrs; do
+    iid=${mr%%$'\t'*} src=${mr#*$'\t'}
+    if [[ $src == $branch && -z $keep_iid ]] { keep_iid=$iid; continue }
+    print -r -- "closing superseded: !$iid ($src)"
+    glab api -X PUT "projects/:id/merge_requests/$iid" -f state_event=close >/dev/null
+  done
+  if [[ -n $keep_iid ]] {
+    glab mr update $keep_iid --title $title --description $description
   } else {
     glab mr create --source-branch $branch --title $title --description $description --yes
   }
 } else {
+  typeset -a open_srcs matched_srcs
+  open_srcs=( ${(f)"$(gh pr list --json headRefName --jq '.[].headRefName')"} )
+  for src in $open_srcs; do
+    mr_match $src && matched_srcs+=( $src )
+  done
+  print -r -- "open: $open_srcs | matched: $matched_srcs"
   for src in ${matched_srcs:#$branch}; do
     print -r -- "closing superseded: $src"
     gh pr close $src

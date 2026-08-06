@@ -27,7 +27,7 @@ Maintains stateful configuration of a system and its tools, optimized for a read
 - `conventions/templates/convention.md`: generating repo docs with che templates: `templates/1-env|2-data|3-audience`, `che.yml` wiring, `make render-templates`.
 - `conventions/ci/convention.md`: lefthook pre-commit hooks (minimal: docs generation check), re-run in a minimal CI validate job.
 - `conventions/license/convention.md`: every public repo carries `LICENSE` (unmodified MIT, creation-year copyright).
-- `conventions/spec-scenarios/convention.md`: behavior specs as markdown feature files: Gherkin-style scenarios, each with a `Status:` line (`todo | implemented | tested`), statuses kept accurate.
+- `conventions/spec-scenarios/convention.md`: behavior specs as markdown feature files: Gherkin-style scenarios, each with a `Status:` line (`todo | implemented | tested`), statuses kept accurate, each scenario title a value statement for its audience.
 - `conventions/claude-agents/convention.md`: per-repo `RO-<Repo>`/`RW-<Repo>` claude agents, che-rendered into `.claude/` on virt only: shared snippets in `configs`, fetched as remote renderTemplates sources (`@<repo>//<path>` + `ctx`), rendered outputs never committed.
 
 Each convention dir carries a runnable `example/`. This repo itself follows all of these conventions.
@@ -112,7 +112,7 @@ vim: profiles/dev/editors/vim/root/_home/.config/vim/vimrc
 ### Wrappers:
 
 `sync`: `host-load-configs -> repo-ci-prepare-hooks -> repo-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
-`sync-install`: `host-load-configs-install -> repo-ci-prepare-hooks -> repo-render-templates` full sync: full che op sequence per profile (scripts included), hooks, repo renders
+`sync-full`: `host-load-configs-install -> repo-ci-prepare-hooks -> repo-render-templates` full sync: full che op sequence per profile (scripts included), hooks, repo renders
 
 ### Onto Host:
 
@@ -260,6 +260,7 @@ profiles
           zshrc.d
             auto.d
               git
+            completions
       usr
         local
           scripts
