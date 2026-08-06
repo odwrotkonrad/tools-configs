@@ -13,5 +13,7 @@ typeset -A zsh_params=(
 )
 for k v in "${(@kv)zsh_params}"; typeset -g "$k=$v"
 ##[>] 🤖🤖
+#[why] tmux pane border already shows $PWD
+if [[ -n $TMUX ]] PS1='%# '
 if { fn-is-virt } PS1="(virt) $PS1"
 ##[<] 🤖🤖

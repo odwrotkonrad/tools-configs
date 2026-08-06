@@ -81,7 +81,7 @@ if [[ ! -d ${prefix}/bin ]] { sudo mkdir -p "${prefix}/bin" }
 #[why] one che tarball drops che + the bundled render binaries; the moving latest alias carries no checksum
 function install_che {
   local archive="che_latest_${che_os}_${che_arch}.tar.gz"
-  local url="https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che/latest/${archive}"
+  local url="https://gitlab.com/api/v4/projects/konradodwrot%2Funrestricted%2Fgo-modules/packages/generic/che/latest/${archive}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
   curl -fsSL -o "$tmp/$archive" "$url"

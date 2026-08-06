@@ -114,6 +114,11 @@ profiles
           _home
             .config
               tmux
+          etc
+            zsh
+              zshrc.d
+                auto.d
+                  tmux
   git
     assets
       images
