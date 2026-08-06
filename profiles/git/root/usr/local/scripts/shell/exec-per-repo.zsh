@@ -6,7 +6,7 @@
 #   ~/.local/state/git-wrappers/exec-per-repo/<run pid>/<repo>_<pid>.log.
 #   ## Progress on stderr: tty => in-place dashboard redrawn every 5s (header
 #   done/count + overall status + clock + countdown bar; per repo
-#   `### <repo> <emoji> <clock> pid=<pid>`, log:, tail: last log line);
+#   `### <emoji> <clock> pid=<pid> <repo>`, log:, tail: last log line);
 #   non-tty => spawn list + `done:` stream.
 #   ## Done closes the run (Progress-header shape + ✅/❌ counts); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
@@ -186,7 +186,7 @@ render_progress() {
       emoji=🕐
       clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
-    draw_lines+=( "${bold}### $repo $emoji $clock pid=$pid_of[$repo]${unbold}" "log: $log" )
+    draw_lines+=( "${bold}### $emoji $clock pid=$pid_of[$repo] $repo${unbold}" "log: $log" )
     line=""
     for t (${(Oaf)"$(tail -n 15 $log 2>/dev/null)"}) {
       t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
@@ -234,7 +234,7 @@ failed=()
 for repo ($repos) (( status_of[$repo] )) && failed+=($repo)
 
 (( $#failed )) && overall=❌ || overall=✅
-print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) pid=$$ ✅ $(( $#repos - $#failed )) ❌ $#failed${unbold}"
+print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $(( $#repos - $#failed )) ❌ $#failed${unbold}"
 if (( $#failed )) {
   print -r -- $'\n'"${bold}## Failed Executions${unbold}"
   for repo ($failed) {

@@ -29,7 +29,7 @@ Scenario: interactive progress dashboard refreshes in place
   When repos run
   Then a bold `## Progress <done>/<count> <status> <clock> pid=<run pid> <bar>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed, run pid = the exec-per-repo process (the log dir name)
   And the bar (`▱▱▱▱▱` → `▰▰▰▰▱`) fills once per second toward the next tail refresh, updated in place on the header line, dropped on the final frame
-  And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock> pid=<pid>` block: `log: <log file>`, then `tail: > <most recent non-empty log line>` on one line (last 15 lines scanned bottom-up, CR/ANSI stripped, width-truncated, `tail: >` when nothing non-empty), so block heights stay fixed across redraws
+  And each repo renders as a bold `### <✅|❌|🕐> <clock> pid=<pid> <repo>` block: `log: <log file>`, then `tail: > <most recent non-empty log line>` on one line (last 15 lines scanned bottom-up, CR/ANSI stripped, width-truncated, `tail: >` when nothing non-empty), so block heights stay fixed across redraws
   And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
 
 Scenario: non-interactive progress streams append-only
@@ -42,7 +42,7 @@ Scenario: non-interactive progress streams append-only
 Scenario: summary report closes the run, failures only
   Status: implemented
   When all background runs finish
-  Then a bold `## Done <succeeded>/<count> <✅|❌> <clock> pid=<run pid> ✅ <n> ❌ <n>` line closes the run, same shape as the Progress header (per-repo verdicts already streamed in `## Progress`)
+  Then a bold `## Done <succeeded>/<count> <✅|❌> <clock> ✅ <n> ❌ <n>` line closes the run, same shape as the Progress header (per-repo verdicts already streamed in `## Progress`)
   And failures follow under a bold `## Failed Executions` section, each as a bold `### <repo> ❌ (exit N) <M>m<SS>s` block: `log: <log file>`, `tail:` + the log's 10 most recent lines as blockquotes
   And the script exits 0 when all succeeded, 1 otherwise
 
