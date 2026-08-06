@@ -30,7 +30,7 @@ function install_rg {
   local url="https://github.com/BurntSushi/ripgrep/releases/download/${rg_version}/${asset}"
   local tmp=$(mktemp -d)
   trap "rm -rf '$tmp'" EXIT
-  curl -fsSL -o "$tmp/$asset" "$url"
+  curl -fsSL --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -o "$tmp/$asset" "$url"
   echo "${rg_sha[$rg_target]}  $tmp/$asset" | shasum -a 256 -c - || fn-exit-with 1 "checksum mismatch: $asset"
   tar -xzf "$tmp/$asset" -C "$tmp" --strip-components=1 "${asset%.tar.gz}/rg"
   [[ -d ${prefix}/bin ]] || $SUDO mkdir -p "${prefix}/bin"
