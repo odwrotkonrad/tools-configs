@@ -23,6 +23,9 @@ typeset -A keystrokes=(
     altDown            "${rt_seq[esc]}n"
 
     backspace          "^H"
+    ##[>] 🤖🤖 tmux re-emits BSpace as kbs of tmux-256color (DEL)
+    backspaceTmux      "^?"
+    ##[<] 🤖🤖
     altBackspace       $'\x17'
     cmdBackspace       $'\x15'
 
@@ -71,6 +74,7 @@ typeset -A cchars=(
 ##[>] 🤖🤖
 #[why] status/SIGINFO is bsd-only: gnu stty has no such cchar
 if { fn-is-os mac } cchars[status]="$keystrokes[ctrlT]" #[what] Process Status (SIGINFO)
+if [[ -n $TMUX ]] cchars[erase]="$keystrokes[backspaceTmux]"
 ##[<] 🤖🤖
 for action char in ${(kv)cchars}; stty ${action} ${char}
 ##[<] stty
@@ -99,6 +103,9 @@ typeset -A keystrokes_widgets=(
     "$keystrokes[altRight]"         .vi-forward-word
 
     "$keystrokes[backspace]"        .backward-delete-char
+    ##[>] 🤖🤖
+    "$keystrokes[backspaceTmux]"    .backward-delete-char
+    ##[<] 🤖🤖
     "$keystrokes[altBackspace]"     .backward-delete-word
     "$keystrokes[cmdBackspace]"     .backward-kill-line
 

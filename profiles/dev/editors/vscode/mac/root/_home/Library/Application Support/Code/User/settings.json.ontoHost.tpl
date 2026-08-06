@@ -287,7 +287,7 @@
   "terminal.integrated.letterSpacing": 1,
   "terminal.integrated.localEchoEnabled": "on",
   "terminal.integrated.macOptionIsMeta": true,
-  "terminal.integrated.rightClickBehavior": "default",
+  "terminal.integrated.rightClickBehavior": "nothing",
   "terminal.integrated.scrollback": 100000,
   "terminal.integrated.shellIntegration.enabled": false,
   "terminal.integrated.showLinkHover": false,
