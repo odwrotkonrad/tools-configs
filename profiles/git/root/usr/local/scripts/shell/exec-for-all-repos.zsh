@@ -6,8 +6,9 @@
 #   stderr: tty => in-place dashboard redrawn every 5s (header done/count +
 #   overall status + clock; per repo `### <repo> <emoji> <clock>`, process:,
 #   log:, tail: last 3 log lines); non-tty => spawn list + `done:` stream.
-#   ## Report is a one-line summary (counts + total time) plus failed repos
-#   with exit + dur, failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
+#   ## Report is a one-line summary (counts + total time); ## Failed
+#   Executions blocks follow per failed repo (exit + dur, log path, last 10
+#   log lines blockquoted). Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
 #   --include/--exclude: comma lists, basename or root-relative path,
 #   ambiguous basename errors. --must-filter: AND of changes, off-main,
@@ -146,18 +147,25 @@ reap_finished() {
   }
 }
 
-render_progress() {
-  local repo log line emoji clock overall
-  local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
-  : ${cols:=120}
-  (( cols -= 4 ))
+progress_header() {
+  local fill=$1 repo overall
   if (( $#pending )) {
     overall=🕐
   } else {
     overall=✅
     for repo ($repos) (( status_of[$repo] )) && overall=❌
   }
-  draw_lines=( "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start )))${unbold}" "" )
+  local bar="${(pl:$fill::▰:):-}${(pl:$(( 5 - fill ))::▱:):-}"
+  (( $#pending )) || bar=""
+  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) $bar${unbold}"
+}
+
+render_progress() {
+  local repo log line emoji clock
+  local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
+  : ${cols:=120}
+  (( cols -= 4 ))
+  draw_lines=( "$(progress_header 5)" "" )
   for repo ($repos) {
     log=$log_dir/${repo//\//__}.log
     if (( ${+status_of[$repo]} )) {
@@ -186,6 +194,8 @@ if [[ -t 2 ]] {
       (( drawn )) && printf '\e[%dA\e[0J' $drawn >&2
       print -lru2 -- "$draw_lines[@]"
       drawn=$#draw_lines
+    } else {
+      printf '\e[%dA\r\e[2K%s\e[%dB\r' $drawn "$(progress_header $(( 5 - tick % 5 )))" $drawn >&2
     }
     (( $#pending )) || break
     sleep 1
@@ -211,14 +221,19 @@ if [[ -t 2 ]] {
 failed=()
 for repo ($repos) (( status_of[$repo] )) && failed+=($repo)
 
-print -r -- "## Report"
+print -r -- "${bold}## Report${unbold}"
 print -r -- "repos: $#repos, ✅ $(( $#repos - $#failed )), ❌ $#failed, total $(fmt_dur $(( EPOCHSECONDS - run_start )))"
-for repo ($failed) {
-  print -r -- "$repo: ❌ (exit $status_of[$repo]) $(fmt_dur $elapsed_of[$repo])"
-}
-for repo ($failed) {
-  print -r -- $'\n'"## Output: $repo"
-  cat $log_dir/${repo//\//__}.log
+if (( $#failed )) {
+  print -r -- $'\n'"${bold}## Failed Executions${unbold}"
+  for repo ($failed) {
+    log=$log_dir/${repo//\//__}.log
+    print -r -- $'\n'"${bold}### $repo ❌ (exit $status_of[$repo]) $(fmt_dur $elapsed_of[$repo])${unbold}"
+    print -r -- "log: $log"
+    print -r -- "tail:"
+    for line (${(f)"$(tail -n 10 $log)"}) {
+      print -r -- "> ${${line//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}"
+    }
+  }
 }
 (( $#failed )) && exit 1
 exit 0
