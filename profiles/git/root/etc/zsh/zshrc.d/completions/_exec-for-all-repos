@@ -1,0 +1,36 @@
+#compdef exec-for-all-repos.zsh
+##[>] 🤖🤖
+setopt localoptions $_comp_options
+
+zstyle ':completion:_deep_files:*:exec-for-all-repos.zsh:*' file-types dirs
+
+_exec_for_all_repos_repos() {
+  setopt localoptions $_comp_options
+  local root=$PWD d
+  local -i i
+  for (( i = 1; i <= $#words; i++ )) {
+    case $words[i] {
+      (-C) root=$words[i+1] ;;
+      (--chpwd=*) root=${words[i]#*=} ;;
+    }
+  }
+  root=${root/#\~/$HOME}
+  root=${root:A}
+  local -a repos
+  for d (${(f)"$(find $root -name .git -prune -print 2>/dev/null | sort)"}) {
+    d=${d:h}
+    if [[ $d == $root ]] { repos+=( ${root:t} ) } else { repos+=( ${d#$root/} ) }
+  }
+  (( $#repos )) || return 1
+  _values -s , repo $repos
+}
+
+_arguments \
+  '-C[root dir]:dir:_deep_files' \
+  '--chpwd=[root dir]:dir:_deep_files' \
+  '--include=[repo list]:repos:_exec_for_all_repos_repos' \
+  '--exclude=[repo list]:repos:_exec_for_all_repos_repos' \
+  '--must-filter=[repo filters]:filters:_values -s , filter changes off-main unsynced' \
+  '(-)1:command:_deep_command' \
+  '*::arguments:_normal'
+##[<] 🤖🤖

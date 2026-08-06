@@ -2,7 +2,8 @@
 #>[what] 🤖🤖
 #   Run one command in every git repo under a root dir (default pwd),
 #   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
-#   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. Per-repo ✅/❌
+#   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. ## Progress on
+#   stderr streams `done: <emoji> <dur> <repo>` in finish order. Per-repo ✅/❌
 #   report, failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
 #   --include/--exclude: comma lists, basename or root-relative path,
@@ -114,16 +115,29 @@ if (( $#must )) {
 log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers/exec-for-all-repos
 mkdir -p $log_dir
 
-typeset -A pid_of status_of
+zmodload zsh/datetime
+fmt_dur() { printf '%dm%02ds' $(( $1 / 60 )) $(( $1 % 60 )) }
+
+typeset -A pid_of status_of start_of
 for repo ($repos) {
   log=$log_dir/${repo//\//__}.log
+  start_of[$repo]=$EPOCHSECONDS
   ( cd $dir_of[$repo] && export GIT_WRAPPER_FG=1 && "$cmd[@]" ) &> $log &
-  pid=$!
-  pid_of[$repo]=$pid
+  pid_of[$repo]=$!
 }
-for repo ($repos) {
-  wait $pid_of[$repo]
-  status_of[$repo]=$?
+
+print -ru2 -- "## Progress"
+pending=($repos)
+while (( $#pending )) {
+  for repo ($pending) {
+    kill -0 $pid_of[$repo] 2>/dev/null && continue
+    wait $pid_of[$repo]
+    status_of[$repo]=$?
+    (( status_of[$repo] == 0 )) && emoji=✅ || emoji=❌
+    print -ru2 -- "done: $emoji $(fmt_dur $(( EPOCHSECONDS - start_of[$repo] ))) $repo"
+    pending=(${pending:#$repo})
+  }
+  (( $#pending )) && sleep 1
 }
 
 print -r -- "## Report"
