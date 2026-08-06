@@ -187,8 +187,12 @@ render_progress() {
       clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
     draw_lines+=( "${bold}### $repo $emoji $clock ($pid_of[$repo])${unbold}" "log: $log" )
-    line=${${:-"$(tail -n 1 $log 2>/dev/null)"}//$'\r'/}
-    line=${line//$'\e'\[[0-9;]#[a-zA-Z]/}
+    line=""
+    local t
+    for t (${(Oaf)"$(tail -n 15 $log 2>/dev/null)"}) {
+      t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
+      if [[ -n ${t//[[:space:]]/} ]] { line=$t; break }
+    }
     draw_lines+=( "tail: > ${line[1,cols]}" "" )
   }
 }
