@@ -3,11 +3,11 @@
     { "name": "configs", "path": "konradodwrot/configs" },
     { "name": "conventions", "path": "konradodwrot/conventions" },
     { "name": "go-modules", "path": "konradodwrot/go-modules" },
+    { "name": "infra/iac", "path": "konradodwrot/infra/iac" },
     { "name": "infra/oci-images", "path": "konradodwrot/infra/oci-images" },
+    { "name": "infra/sandbox", "path": "konradodwrot/infra/sandbox" },
     { "name": "notes", "path": "konradodwrot/notes" },
-    { "name": "resume-md-pdf", "path": "konradodwrot/resume-md-pdf" },
-    { "name": "r/infra", "path": "restricted/infra" },
-    { "name": "r/sandbox", "path": "restricted/sandbox" }
+    { "name": "resume-md-pdf", "path": "konradodwrot/resume-md-pdf" }
   ],
   "settings": {}
 }
