@@ -69,13 +69,14 @@ Scenario: --main reports the latest main pipeline
   And it picks the latest push-sourced main pipeline (merge into main), other sources skipped
   And a `# Main Pipeline` header lists `url:`, `sha:`
   And `## Stages`, `## Pipeline Status`, wait polling behave as for an MR
-  And with no main pipeline `## Pipeline Status` prints `none`, exits 0
+  And with no main pipeline `## Pipeline Status` prints `none: <reason>`, exits 0
 
 Scenario: pipeline verdict is the exit code
   Status: implemented
   When the report finishes
   Then it exits 1 only when the pipeline errored (failed or canceled), so multi-repo runs flag it ❌
-  And exits 0 on any other status: success, no pipeline/MR, still running via --no-wait, manual/blocked
+  And exits 0 on any other status: success, still running via --no-wait, manual/blocked, no open MRs
+  And no pipeline exits 0 with a `none: <reason>` line naming what was missing
 
 Scenario: branch main implies --main
   Status: implemented

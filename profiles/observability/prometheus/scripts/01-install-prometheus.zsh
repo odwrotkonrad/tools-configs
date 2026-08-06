@@ -23,7 +23,7 @@ function install_prometheus {
   tmpdir=$(mktemp -d)
   trap 'rm -rf "$tmpdir"' EXIT
 
-  curl -L -o "$tmpdir/$archive" "$url"
+  curl -L --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -o "$tmpdir/$archive" "$url"
 
   echo "$sha256  $tmpdir/$archive" | shasum -a 256 -c -
 

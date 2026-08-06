@@ -24,6 +24,7 @@ if { fn-is-os mac } tool_bins+=(
     /opt/X11/bin
     /opt/homebrew/lib/ruby/gems/*/bin(N)
     /opt/homebrew/opt/ruby/bin
+    /opt/homebrew/opt/curl/bin
 )
 
 fn-insert path $tool_bins

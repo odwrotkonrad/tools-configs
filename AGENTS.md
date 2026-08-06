@@ -73,6 +73,7 @@ zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc
 ##[>] other
 aws: profiles/cloud/aws/root/_home/.config/aws/config.ontoHost.tpl
 azure: profiles/cloud/azure/root/_home/.config/azure/config
+curl: profiles/shell/curl/root/_home/.config/curlrc
 docker: profiles/dev/infra/docker/scripts/01-install-completions.zsh
 editorconfig: profiles/dev/misc/editorconfig/root/_home/.editorconfig
 gcloud: profiles/cloud/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
@@ -479,6 +480,11 @@ profiles
       scripts
     scripts
   shell
+    curl
+      root
+        _home
+          .config
+      scripts
     man
       root
         etc

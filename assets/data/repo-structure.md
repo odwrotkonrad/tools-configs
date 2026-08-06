@@ -347,6 +347,11 @@ profiles
       scripts
     scripts
   shell
+    curl
+      root
+        _home
+          .config
+      scripts
     man
       root
         etc

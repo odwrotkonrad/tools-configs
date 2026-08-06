@@ -23,7 +23,7 @@ function install_jaeger {
   tmpdir=$(mktemp -d)
   trap 'rm -rf "$tmpdir"' EXIT
 
-  curl -L -o "$tmpdir/$archive" "$url"
+  curl -L --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -o "$tmpdir/$archive" "$url"
 
   tar -xzf "$tmpdir/$archive" -C "$tmpdir"
 
