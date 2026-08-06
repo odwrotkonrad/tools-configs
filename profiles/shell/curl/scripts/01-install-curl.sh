@@ -2,16 +2,15 @@
 ##[>] 🤖🤖
 set -eu
 
-if command -v curl >/dev/null 2>&1; then
-  echo "curl: already installed ($(command -v curl))"
-  exit 0
-fi
-
 case "$(uname -s)" in
   Darwin)
-    echo "curl: ships with macos, nothing to install"
+    brew list curl >/dev/null 2>&1 || brew install curl
     ;;
   Linux)
+    if command -v curl >/dev/null 2>&1; then
+      echo "curl: already installed ($(command -v curl))"
+      exit 0
+    fi
     SUDO=
     [ "$(id -u)" -ne 0 ] && SUDO=sudo
     export DEBIAN_FRONTEND=noninteractive
