@@ -168,7 +168,7 @@ render_progress() {
   local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
   : ${cols:=120}
   (( cols -= 4 ))
-  draw_lines=( "$(progress_header 5)" "" )
+  draw_lines=( "$(progress_header 0)" "" )
   for repo ($repos) {
     log=$log_of[$repo]
     if (( ${+status_of[$repo]} )) {
@@ -196,7 +196,7 @@ if [[ -t 2 ]] {
       print -lru2 -- "$draw_lines[@]"
       drawn=$#draw_lines
     } else {
-      printf '\e[%dA\r\e[2K%s\e[%dB\r' $drawn "$(progress_header $(( 5 - tick % 5 )))" $drawn >&2
+      printf '\e[%dA\r\e[2K%s\e[%dB\r' $drawn "$(progress_header $(( tick % 5 )))" $drawn >&2
     }
     (( $#pending )) || break
     sleep 1
