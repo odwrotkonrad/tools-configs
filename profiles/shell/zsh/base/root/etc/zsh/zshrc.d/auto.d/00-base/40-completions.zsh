@@ -424,6 +424,7 @@ _deep_files() {
   done
 
   (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+  (( ${+compstate} && compstate[nmatches] ))
 }
 
 #[what] -tilde- context handler: zsh completes ~ and ~pat (no slash) via -tilde-, never the command's function; for _deep_files-wrapped commands fold the ~ back into PREFIX, restore the command field, and run the engine; others keep default _tilde
@@ -493,6 +494,7 @@ _deep_command() {
   #[<] 🤖🤖
 
   (( plen && ${+compstate} && compstate[nmatches] )) && compstate[insert]=menu
+  (( ${+compstate} && compstate[nmatches] ))
 }
 ##[<] 🤖🤖🤖
 

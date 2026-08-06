@@ -133,7 +133,7 @@ rebuild-sandbox-image:
   variables:
     BUILD_SANDBOX_IMAGE: "true"
   trigger:
-    project: konradodwrot/sandbox
+    project: konradodwrot/infra/sandbox
     branch: main
     forward:
       yaml_variables: true
