@@ -6,7 +6,7 @@
 #   ~/.local/state/git-wrappers/exec-per-repo/<run pid>/<repo>_<pid>.log.
 #   ## Progress on stderr: tty => in-place dashboard redrawn every 5s (header
 #   done/count + overall status + clock + countdown bar; per repo
-#   `### <repo> <emoji> <clock> (<pid>)`, log:, tail: last log line);
+#   `### <repo> <emoji> <clock> pid=<pid>`, log:, tail: last log line);
 #   non-tty => spawn list + `done:` stream.
 #   ## Report is a one-line summary (counts + total time); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
@@ -168,11 +168,11 @@ progress_header() {
   }
   local bar="${(pl:$fill::▰:):-}${(pl:$(( 5 - fill ))::▱:):-}"
   (( $#pending )) || bar=""
-  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ($$) $bar${unbold}"
+  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) pid=$$ $bar${unbold}"
 }
 
 render_progress() {
-  local repo log line emoji clock
+  local repo log line emoji clock t
   local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
   : ${cols:=120}
   (( cols -= 4 ))
@@ -186,9 +186,8 @@ render_progress() {
       emoji=🕐
       clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
-    draw_lines+=( "${bold}### $repo $emoji $clock ($pid_of[$repo])${unbold}" "log: $log" )
+    draw_lines+=( "${bold}### $repo $emoji $clock pid=$pid_of[$repo]${unbold}" "log: $log" )
     line=""
-    local t
     for t (${(Oaf)"$(tail -n 15 $log 2>/dev/null)"}) {
       t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
       if [[ -n ${t//[[:space:]]/} ]] { line=$t; break }
@@ -217,7 +216,7 @@ if [[ -t 2 ]] {
 } else {
   print -ru2 -- "## Progress"
   for repo ($repos) {
-    print -ru2 -- "🕐 $repo ($pid_of[$repo])"
+    print -ru2 -- "🕐 $repo pid=$pid_of[$repo]"
     print -ru2 -- "log: $log_of[$repo]"
     print -ru2 -- ""
   }
