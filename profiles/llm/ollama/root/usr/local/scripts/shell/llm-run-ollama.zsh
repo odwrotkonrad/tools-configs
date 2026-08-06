@@ -44,7 +44,7 @@ response=$(jq -n \
   --argjson think "$think" \
   --argjson options "$ollama_options" \
   "$request" \
-  | curl --connect-timeout 30 --retry 5 --retry-delay 2 -s "http://$host/api/chat" -d @-)
+  | curl --connect-timeout 30 --retry 10 --retry-delay 30 -s "http://$host/api/chat" -d @-)
 
 content=$(jq -r '.message.content
   | sub("^```(json)?\\n?"; "") | sub("\\n?```$"; "")' <<< "$response")

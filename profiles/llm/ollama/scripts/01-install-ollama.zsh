@@ -15,7 +15,7 @@ models=(
 )
 
 function install_ollama {
-  curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -fsSL https://ollama.com/install.sh | sh
+  curl --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -fsSL https://ollama.com/install.sh | sh
 }
 fn-install-if-missing ollama install_ollama
 

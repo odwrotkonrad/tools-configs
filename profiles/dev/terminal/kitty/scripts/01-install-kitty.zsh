@@ -18,7 +18,7 @@ prefix=/usr/local
 kitty_app_contents=/Applications/kitty.app/Contents
 
 function install_kitty {
-  curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin \
+  curl --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin \
       launch=n  #[what] no launch
 
   sudo ln -fs "$kitty_app_contents/MacOS/kitten" "$prefix/bin/kitten"
