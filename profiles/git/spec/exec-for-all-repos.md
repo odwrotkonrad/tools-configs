@@ -16,14 +16,20 @@ Scenario: arbitrary command with arguments
   When I run `exec-for-all-repos.zsh -C <dir> git status -sb`
   Then everything after the options is executed verbatim as `<cmd> [args...]` in each repo
 
-Scenario: progress log streams per-repo completion with elapsed time
+Scenario: interactive progress dashboard refreshes in place
   Status: implemented
-  Given repos running concurrently in the background
-  When a repo's run finishes
-  Then a `## Progress` section on stderr opens at spawn, listing every repo as `🕐 <repo>` with a ready `log: tail -f <log path>` attach line below, blank line between
-  And `done: <✅|❌> <M>m<SS>s <repo>` lines stream below in finish order
-  And elapsed counts from that repo's spawn to its finish
-  And finishes are detected by polling every 1s, so lines appear as repos complete, not in discovery order
+  Given stderr is a terminal
+  When repos run
+  Then a bold `## Progress <done>/<count> <status> <clock>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed
+  And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock>` block: `process: <pid>`, `log: <log file>`, `tail:` + the log's 3 most recent lines (CR/ANSI stripped, width-truncated)
+  And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
+
+Scenario: non-interactive progress streams append-only
+  Status: implemented
+  Given stderr is not a terminal
+  When repos run
+  Then `## Progress` lists every repo at spawn as `🕐 <repo>` with `log: <log file>` below
+  And `done: <✅|❌> <M>m<SS>s <repo>` lines stream in finish order, elapsed counted from that repo's spawn
 
 Scenario: summary report closes the run, failures only
   Status: implemented

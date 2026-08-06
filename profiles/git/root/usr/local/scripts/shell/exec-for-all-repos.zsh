@@ -3,10 +3,11 @@
 #   Run one command in every git repo under a root dir (default pwd),
 #   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
 #   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. ## Progress on
-#   stderr lists every repo at spawn (🕐 + `log: tail -f <path>` attach line),
-#   then streams `done: <emoji> <dur> <repo>` in finish order. ## Report is a
-#   one-line summary (counts + total time) plus failed repos with exit + dur,
-#   failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
+#   stderr: tty => in-place dashboard redrawn every 5s (header done/count +
+#   overall status + clock; per repo `### <repo> <emoji> <clock>`, process:,
+#   log:, tail: last 3 log lines); non-tty => spawn list + `done:` stream.
+#   ## Report is a one-line summary (counts + total time) plus failed repos
+#   with exit + dur, failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
 #   --include/--exclude: comma lists, basename or root-relative path,
 #   ambiguous basename errors. --must-filter: AND of changes, off-main,
@@ -118,7 +119,9 @@ log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers/exec-for-all-repos
 mkdir -p $log_dir
 
 zmodload zsh/datetime
+setopt extendedglob
 fmt_dur() { printf '%dm%02ds' $(( $1 / 60 )) $(( $1 % 60 )) }
+bold=$'\e[1m' unbold=$'\e[0m'
 
 typeset -A pid_of status_of start_of elapsed_of
 run_start=$EPOCHSECONDS
@@ -130,24 +133,79 @@ for repo ($repos) {
   pid_of[$repo]=$pid
 }
 
-print -ru2 -- "## Progress"
-for repo ($repos) {
-  print -ru2 -- "🕐 $repo"
-  print -ru2 -- "log: tail -f $log_dir/${repo//\//__}.log"
-  print -ru2 -- ""
-}
 pending=($repos)
-while (( $#pending )) {
+reap_finished() {
+  reply=()
   for repo ($pending) {
     kill -0 $pid_of[$repo] 2>/dev/null && continue
     wait $pid_of[$repo]
     status_of[$repo]=$?
     elapsed_of[$repo]=$(( EPOCHSECONDS - start_of[$repo] ))
-    (( status_of[$repo] == 0 )) && emoji=✅ || emoji=❌
-    print -ru2 -- "done: $emoji $(fmt_dur $elapsed_of[$repo]) $repo"
+    reply+=($repo)
     pending=(${pending:#$repo})
   }
-  (( $#pending )) && sleep 1
+}
+
+render_progress() {
+  local repo log line emoji clock overall
+  local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
+  : ${cols:=120}
+  (( cols -= 4 ))
+  if (( $#pending )) {
+    overall=🕐
+  } else {
+    overall=✅
+    for repo ($repos) (( status_of[$repo] )) && overall=❌
+  }
+  draw_lines=( "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start )))${unbold}" "" )
+  for repo ($repos) {
+    log=$log_dir/${repo//\//__}.log
+    if (( ${+status_of[$repo]} )) {
+      (( status_of[$repo] )) && emoji=❌ || emoji=✅
+      clock=$(fmt_dur $elapsed_of[$repo])
+    } else {
+      emoji=🕐
+      clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
+    }
+    draw_lines+=( "${bold}### $repo $emoji $clock${unbold}" "process: $pid_of[$repo]" "log: $log" "tail:" )
+    for line (${(f)"$(tail -n 3 $log 2>/dev/null)"}) {
+      line=${${line//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
+      draw_lines+=( "${line[1,cols]}" )
+    }
+    draw_lines+=( "" )
+  }
+}
+
+if [[ -t 2 ]] {
+  typeset -a draw_lines
+  drawn=0 tick=0
+  while (( 1 )) {
+    reap_finished
+    if (( tick % 5 == 0 || ! $#pending )) {
+      render_progress
+      (( drawn )) && printf '\e[%dA\e[0J' $drawn >&2
+      print -lru2 -- "$draw_lines[@]"
+      drawn=$#draw_lines
+    }
+    (( $#pending )) || break
+    sleep 1
+    (( tick += 1 ))
+  }
+} else {
+  print -ru2 -- "## Progress"
+  for repo ($repos) {
+    print -ru2 -- "🕐 $repo"
+    print -ru2 -- "log: $log_dir/${repo//\//__}.log"
+    print -ru2 -- ""
+  }
+  while (( $#pending )) {
+    reap_finished
+    for repo ($reply) {
+      (( status_of[$repo] == 0 )) && emoji=✅ || emoji=❌
+      print -ru2 -- "done: $emoji $(fmt_dur $elapsed_of[$repo]) $repo"
+    }
+    (( $#pending )) && sleep 1
+  }
 }
 
 failed=()
