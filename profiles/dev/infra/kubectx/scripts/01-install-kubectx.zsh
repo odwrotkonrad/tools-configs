@@ -15,7 +15,7 @@ function install_kubectx {
   fn-is-os mac && os=darwin || os=linux
   fn-is-arch arm && arch=arm64 || arch=x86_64
   for bin ( kubectx kubens ) {
-    curl -fsSL "https://github.com/ahmetb/kubectx/releases/download/v${version}/${bin}_v${version}_${os}_${arch}.tar.gz" | tar -xzf - -C $tmp $bin
+    curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -fsSL "https://github.com/ahmetb/kubectx/releases/download/v${version}/${bin}_v${version}_${os}_${arch}.tar.gz" | tar -xzf - -C $tmp $bin
     sudo install -m 0755 $tmp/$bin /usr/local/bin/$bin
   }
   rm -rf $tmp

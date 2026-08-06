@@ -10,6 +10,6 @@ function fn-comp-file-fetch {
     fn-log-msg -t 'completions(skip)' -- "$1 -> $2 cached"
     return
   }
-  fn-comp-file-write $1 $2 < <(curl -fsSL $3)
+  fn-comp-file-write $1 $2 < <(curl -fsSL --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors $3)
 }
 ##[<] 🤖🤖

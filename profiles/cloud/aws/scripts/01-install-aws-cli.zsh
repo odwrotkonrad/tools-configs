@@ -13,7 +13,7 @@ function install_aws {
   cd $tmp
 
   if { fn-is-os mac } {
-    curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+    curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
     sudo installer -pkg AWSCLIV2.pkg -target /
     return
   }
@@ -27,7 +27,7 @@ function install_aws {
     (*) fn-exit-with 1 "unknown arch: $(uname -m)" ;;
   }
 
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-${arch}.zip" -o "awscliv2.zip"
+  curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors "https://awscli.amazonaws.com/awscli-exe-linux-${arch}.zip" -o "awscliv2.zip"
   unzip awscliv2.zip
   sudo ./aws/install --update
 }

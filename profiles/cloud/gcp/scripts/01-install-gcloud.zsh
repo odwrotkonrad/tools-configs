@@ -29,7 +29,7 @@ function install_gcloud {
   local tmp=$(mktemp -d)
   cd $tmp
   local archive="google-cloud-cli-${version}-${platform}.tar.gz"
-  curl -fsSL -O "https://storage.googleapis.com/cloud-sdk-release/${archive}"
+  curl --connect-timeout 30 --retry 5 --retry-delay 2 --retry-all-errors -fsSL -O "https://storage.googleapis.com/cloud-sdk-release/${archive}"
   shasum -a 256 -c <<< "${sha256}  ${archive}" || fn-exit-with 1 "checksum mismatch: ${archive}"
 
   #[why] rm first: clean reinstall, idempotent
