@@ -77,7 +77,5 @@ if ! { git commit -m $subject -m $description } {
 if (( on_main )) {
   print -r -- "committed on main, moving commit onto a branch"
   git-branch-name-upsert.zsh
-  git branch -f main origin/main
-  print -r -- "main reset to origin/main"
 }
 ##[<] 🤖🤖

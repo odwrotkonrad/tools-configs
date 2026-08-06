@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
 #   Sync onto main, then create/rename the branch to an llm-suggested name.
-#   on main: checkout -b <name>. on a branch: branch -m <name>.
+#   on main: checkout -b <name>, then reset local main to origin/main.
+#   on a branch: branch -m <name>.
 #   merged (sync exit 23): leaves you on main, exits 0 (nothing to name).
 #   No-op guard: clean tree, on main, main == origin/main => log
 #   `no new commits`, exit 0 before syncing.
@@ -42,6 +43,8 @@ print -r -- "suggested name: $name"
 
 if [[ $(git rev-parse --abbrev-ref HEAD) == main ]] {
   git checkout -b $name
+  git branch -f main origin/main
+  print -r -- "main reset to origin/main"
 } else {
   git branch -m $name
 }
