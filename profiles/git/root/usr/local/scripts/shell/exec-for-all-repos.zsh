@@ -160,7 +160,7 @@ progress_header() {
   }
   local bar="${(pl:$fill::▰:):-}${(pl:$(( 5 - fill ))::▱:):-}"
   (( $#pending )) || bar=""
-  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) $bar${unbold}"
+  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ($$) $bar${unbold}"
 }
 
 render_progress() {
@@ -178,11 +178,10 @@ render_progress() {
       emoji=🕐
       clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
-    draw_lines+=( "${bold}### $repo $emoji $clock ($pid_of[$repo])${unbold}" "log: $log" "tail:" )
+    draw_lines+=( "${bold}### $repo $emoji $clock ($pid_of[$repo])${unbold}" "log: $log" )
     line=${${:-"$(tail -n 1 $log 2>/dev/null)"}//$'\r'/}
     line=${line//$'\e'\[[0-9;]#[a-zA-Z]/}
-    if [[ -n $line ]] { draw_lines+=( "> ${line[1,cols]}" ) } else { draw_lines+=( ">" ) }
-    draw_lines+=( "" )
+    draw_lines+=( "tail: > ${line[1,cols]}" "" )
   }
 }
 
