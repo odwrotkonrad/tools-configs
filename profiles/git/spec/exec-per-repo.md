@@ -42,7 +42,7 @@ Scenario: non-interactive progress streams append-only
 Scenario: summary report closes the run, failures only
   Status: implemented
   When all background runs finish
-  Then a bold `## Report` section prints one summary line: `repos: N, ✅ N, ❌ N, total <M>m<SS>s` (per-repo verdicts already streamed in `## Progress`)
+  Then a bold `## Done <succeeded>/<count> <✅|❌> <clock> pid=<run pid> ✅ <n> ❌ <n>` line closes the run, same shape as the Progress header (per-repo verdicts already streamed in `## Progress`)
   And failures follow under a bold `## Failed Executions` section, each as a bold `### <repo> ❌ (exit N) <M>m<SS>s` block: `log: <log file>`, `tail:` + the log's 10 most recent lines as blockquotes
   And the script exits 0 when all succeeded, 1 otherwise
 

@@ -8,7 +8,7 @@
 #   done/count + overall status + clock + countdown bar; per repo
 #   `### <repo> <emoji> <clock> pid=<pid>`, log:, tail: last log line);
 #   non-tty => spawn list + `done:` stream.
-#   ## Report is a one-line summary (counts + total time); ## Failed
+#   ## Done closes the run (Progress-header shape + ✅/❌ counts); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
 #   log lines blockquoted). Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
@@ -233,8 +233,8 @@ if [[ -t 2 ]] {
 failed=()
 for repo ($repos) (( status_of[$repo] )) && failed+=($repo)
 
-print -r -- "${bold}## Report${unbold}"
-print -r -- "repos: $#repos, ✅ $(( $#repos - $#failed )), ❌ $#failed, total $(fmt_dur $(( EPOCHSECONDS - run_start )))"
+(( $#failed )) && overall=❌ || overall=✅
+print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) pid=$$ ✅ $(( $#repos - $#failed )) ❌ $#failed${unbold}"
 if (( $#failed )) {
   print -r -- $'\n'"${bold}## Failed Executions${unbold}"
   for repo ($failed) {
