@@ -25,6 +25,13 @@ function fn-install-prebuilt-if-outdated {
     fn-log-msg -t $bin -- "installing $want"
   }
 
-  $installer
+  ##[>] 🤖🤖
+  local rc=0
+  $installer || rc=$?
+  if (( rc )) {
+    fn-log-msg -t $bin -- "install failed ($rc)"
+    return $rc
+  }
+  ##[<] 🤖🤖
   fn-log-msg -t $bin -- installed
 }
