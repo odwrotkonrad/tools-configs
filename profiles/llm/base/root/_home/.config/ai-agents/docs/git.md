@@ -10,7 +10,7 @@ Use the `/user-git-ops` skill as the primary way to interact with git. Never han
 
 ### Multi-Repo
 
-Run a command, script, or git wrapper across every repo under a directory via `exec-for-all-repos.zsh [-C <dir>] [--include=a,b] [--exclude=a,b] [--must-filter=changes,off-main,unsynced] <cmd> [args...]`: recursive repo discovery, concurrent runs, per-repo ✅/❌ report, failed output inline.
+Run a command, script, or git wrapper across every repo under a directory via `exec-per-repo.zsh [-C <dir>] [--include=a,b] [--exclude=a,b] [--must-filter=changes,off-main,unsynced] <cmd> [args...]`: recursive repo discovery, concurrent runs, per-repo ✅/❌ report, failed output inline.
 
-- pipeline status everywhere: `$ exec-for-all-repos.zsh -C ~/projects/gitlab git-mr-pipeline-status.zsh --no-wait`
-- ship all repos with changes: `$ exec-for-all-repos.zsh -C ~/projects/gitlab --must-filter=changes git-upsert-all.zsh`
+- pipeline status everywhere: `$ exec-per-repo.zsh -C ~/projects/gitlab git-mr-pipeline-status.zsh --no-wait`
+- ship all repos with changes: `$ exec-per-repo.zsh -C ~/projects/gitlab --must-filter=changes git-upsert-all.zsh`

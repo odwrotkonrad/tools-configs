@@ -1,26 +1,27 @@
 <!--[>] 🤖🤖 -->
-Feature: exec-for-all-repos.zsh
+Feature: exec-per-repo.zsh
 
 Scenario: fans a command out over every repo under a directory
   Status: implemented
   Given repos nested at any depth under a root directory
-  When I run `exec-for-all-repos.zsh [-C <dir>|--chpwd=<dir>] <command> [args...]`
+  When I run `exec-per-repo.zsh [-C <dir>|--chpwd=<dir>] <command> [args...]`
   Then repos are discovered recursively from `<dir>` (default pwd) by their `.git` entry (dir or worktree file)
   And `<dir>` itself being a repo is included, named by its basename
-  And the command runs once per repo, cwd set to the repo, all repos concurrently in the background
-  And each repo's stdout+stderr is captured to `~/.local/state/git-wrappers/exec-for-all-repos/<run pid>/<relative path, / → __>_<repo pid>.log`, one dir per invocation
+  And the command runs once per repo in a background subshell, cwd set to the repo, all repos concurrent
+  And each repo's stdout+stderr is captured to `~/.local/state/git-wrappers/exec-per-repo/<run pid>/<relative path, / → __>_<repo pid>.log`, one dir per invocation, the repo pid self-named by the subshell
+  And captured logs end plain text: `NO_COLOR=1 CLICOLOR=0 TERM=dumb` exported, remaining ANSI escapes stripped in place when the repo finishes
   And `GIT_WRAPPER_FG=1` is exported so git-*-upsert wrappers mirror their log into the capture
 
 Scenario: arbitrary command with arguments
   Status: implemented
-  When I run `exec-for-all-repos.zsh -C <dir> git status -sb`
+  When I run `exec-per-repo.zsh -C <dir> git status -sb`
   Then everything after the options is executed verbatim as `<cmd> [args...]` in each repo
 
 Scenario: interactive progress dashboard refreshes in place
   Status: implemented
   Given stderr is a terminal
   When repos run
-  Then a bold `## Progress <done>/<count> <status> <clock> (<run pid>) <bar>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed, run pid = the exec-for-all-repos process (the log dir name)
+  Then a bold `## Progress <done>/<count> <status> <clock> (<run pid>) <bar>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed, run pid = the exec-per-repo process (the log dir name)
   And the bar (`▱▱▱▱▱` → `▰▰▰▰▱`) fills once per second toward the next tail refresh, updated in place on the header line, dropped on the final frame
   And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock> (<pid>)` block: `log: <log file>`, then `tail: > <most recent log line>` on one line (CR/ANSI stripped, width-truncated, `tail: >` when the log is empty), so block heights stay fixed across redraws
   And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
@@ -60,11 +61,11 @@ Scenario: bad invocation exits 2 with usage
   When I pass an unknown option, or no command after the options
   Then usage prints on stderr and the script exits 2
 
-SubFeature: exec-for-all-repos.zsh completions
+SubFeature: exec-per-repo.zsh completions
 
 Scenario: first positional arg completes via the deep command engine
   Status: implemented
-  Given the `_exec-for-all-repos` completion file is on fpath
+  Given the `_exec-per-repo` completion file is on fpath
   When I complete the first positional arg
   Then the deep `-command-` engine offers scripts, aliases, builtins, functions, commands, fuzzy-filtered and capped
   And no files or dirs are offered
@@ -72,7 +73,7 @@ Scenario: first positional arg completes via the deep command engine
 
 Scenario: words after the command complete as the inner command's own
   Status: implemented
-  When I complete a word after the command, e.g. `exec-for-all-repos.zsh git chec<TAB>`
+  When I complete a word after the command, e.g. `exec-per-repo.zsh git chec<TAB>`
   Then the remaining words re-dispatch as their own command line (`checkout` offered)
 
 Scenario: root dir options complete deep dirs

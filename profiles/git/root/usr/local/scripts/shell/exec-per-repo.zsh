@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
 #   Run one command in every git repo under a root dir (default pwd),
-#   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
-#   ~/.local/state/git-wrappers/exec-for-all-repos/<run pid>/<repo>_<pid>.log.
+#   concurrently: cwd = repo, GIT_WRAPPER_FG=1, colors off (NO_COLOR,
+#   CLICOLOR, TERM=dumb), ANSI stripped at finish, stdout+stderr →
+#   ~/.local/state/git-wrappers/exec-per-repo/<run pid>/<repo>_<pid>.log.
 #   ## Progress on stderr: tty => in-place dashboard redrawn every 5s (header
 #   done/count + overall status + clock + countdown bar; per repo
 #   `### <repo> <emoji> <clock> (<pid>)`, log:, tail: last log line);
@@ -14,10 +15,10 @@
 #   --include/--exclude: comma lists, basename or root-relative path,
 #   ambiguous basename errors. --must-filter: AND of changes, off-main,
 #   unsynced.
-#   Usage: exec-for-all-repos [-C <dir>|--chpwd=<dir>] [--include=a,b]
+#   Usage: exec-per-repo [-C <dir>|--chpwd=<dir>] [--include=a,b]
 #          [--exclude=a,b] [--must-filter=changes,off-main,unsynced]
 #          <command> [args...]
-#   Downstream: git.
+#   Downstream: git, perl.
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖
@@ -117,7 +118,7 @@ if (( $#must )) {
 }
 (( $#repos )) || { print -r -- "no repos matched"; exit 0 }
 
-log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers/exec-for-all-repos/$$
+log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers/exec-per-repo/$$
 mkdir -p $log_dir
 
 zmodload zsh/datetime
@@ -131,7 +132,7 @@ run_start=$EPOCHSECONDS
 for repo ($repos) {
   start_of[$repo]=$EPOCHSECONDS
   ( exec > $log_dir/${repo//\//__}_$sysparams[pid].log 2>&1
-    cd $dir_of[$repo] && export GIT_WRAPPER_FG=1 && "$cmd[@]" ) &
+    cd $dir_of[$repo] && export GIT_WRAPPER_FG=1 NO_COLOR=1 CLICOLOR=0 TERM=dumb && "$cmd[@]" ) &
   pid=$!
   pid_of[$repo]=$pid
   log_of[$repo]=$log_dir/${repo//\//__}_$pid.log
@@ -145,6 +146,7 @@ reap_finished() {
     wait $pid_of[$repo]
     status_of[$repo]=$?
     elapsed_of[$repo]=$(( EPOCHSECONDS - start_of[$repo] ))
+    perl -i -pe 's/\e\[[0-9;?]*[A-Za-z]//g' $log_of[$repo] 2>/dev/null
     reply+=($repo)
     pending=(${pending:#$repo})
   }
