@@ -25,10 +25,11 @@ Scenario: progress log streams per-repo completion with elapsed time
   And elapsed counts from that repo's spawn to its finish
   And finishes are detected by polling every 1s, so lines appear as repos complete, not in discovery order
 
-Scenario: per-repo ✅/❌ report closes the run
+Scenario: summary report closes the run, failures only
   Status: implemented
   When all background runs finish
-  Then a `## Report` section lists every repo in discovery order as `<repo>: ✅` or `<repo>: ❌ (exit N)`
+  Then a `## Report` section prints one summary line: `repos: N, ✅ N, ❌ N, total <M>m<SS>s`
+  And only failed repos list below as `<repo>: ❌ (exit N) <M>m<SS>s` (per-repo verdicts already streamed in `## Progress`)
   And each failed repo's captured output prints below under `## Output: <repo>`
   And the script exits 0 when all succeeded, 1 otherwise
 

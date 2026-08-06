@@ -4,8 +4,9 @@
 #   concurrently: cwd = repo, GIT_WRAPPER_FG=1, stdout+stderr →
 #   ~/.local/state/git-wrappers/exec-for-all-repos/<repo>.log. ## Progress on
 #   stderr lists every repo at spawn (🕐 + `log: tail -f <path>` attach line),
-#   then streams `done: <emoji> <dur> <repo>` in finish order. Per-repo ✅/❌
-#   report, failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
+#   then streams `done: <emoji> <dur> <repo>` in finish order. ## Report is a
+#   one-line summary (counts + total time) plus failed repos with exit + dur,
+#   failed logs dumped inline. Exit: 0 all pass, 1 any fail, 2 bad
 #   invocation.
 #   --include/--exclude: comma lists, basename or root-relative path,
 #   ambiguous basename errors. --must-filter: AND of changes, off-main,
@@ -119,7 +120,8 @@ mkdir -p $log_dir
 zmodload zsh/datetime
 fmt_dur() { printf '%dm%02ds' $(( $1 / 60 )) $(( $1 % 60 )) }
 
-typeset -A pid_of status_of start_of
+typeset -A pid_of status_of start_of elapsed_of
+run_start=$EPOCHSECONDS
 for repo ($repos) {
   log=$log_dir/${repo//\//__}.log
   start_of[$repo]=$EPOCHSECONDS
@@ -140,22 +142,21 @@ while (( $#pending )) {
     kill -0 $pid_of[$repo] 2>/dev/null && continue
     wait $pid_of[$repo]
     status_of[$repo]=$?
+    elapsed_of[$repo]=$(( EPOCHSECONDS - start_of[$repo] ))
     (( status_of[$repo] == 0 )) && emoji=✅ || emoji=❌
-    print -ru2 -- "done: $emoji $(fmt_dur $(( EPOCHSECONDS - start_of[$repo] ))) $repo"
+    print -ru2 -- "done: $emoji $(fmt_dur $elapsed_of[$repo]) $repo"
     pending=(${pending:#$repo})
   }
   (( $#pending )) && sleep 1
 }
 
-print -r -- "## Report"
 failed=()
-for repo ($repos) {
-  if (( status_of[$repo] == 0 )) {
-    print -r -- "$repo: ✅"
-  } else {
-    print -r -- "$repo: ❌ (exit $status_of[$repo])"
-    failed+=($repo)
-  }
+for repo ($repos) (( status_of[$repo] )) && failed+=($repo)
+
+print -r -- "## Report"
+print -r -- "repos: $#repos, ✅ $(( $#repos - $#failed )), ❌ $#failed, total $(fmt_dur $(( EPOCHSECONDS - run_start )))"
+for repo ($failed) {
+  print -r -- "$repo: ❌ (exit $status_of[$repo]) $(fmt_dur $elapsed_of[$repo])"
 }
 for repo ($failed) {
   print -r -- $'\n'"## Output: $repo"
