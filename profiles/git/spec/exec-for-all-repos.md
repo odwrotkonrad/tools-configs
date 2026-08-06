@@ -23,6 +23,7 @@ Scenario: interactive progress dashboard refreshes in place
   Then a bold `## Progress <done>/<count> <status> <clock> <bar>` header shows overall state: 🕐 while running, then ✅ or ❌, clock = total elapsed
   And the bar (`▰▰▰▰▰` → `▰▱▱▱▱`) drains once per second, counting down to the next tail refresh, updated in place on the header line, dropped on the final frame
   And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock>` block: `process: <pid>`, `log: <log file>`, `tail:` + the log's 3 most recent lines as markdown blockquotes (`> <line>`, CR/ANSI stripped, width-truncated)
+  And the tail always spans exactly 3 blockquote lines, missing lines padded with bare `>`, so block heights stay fixed across redraws
   And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
 
 Scenario: non-interactive progress streams append-only

@@ -162,6 +162,7 @@ progress_header() {
 
 render_progress() {
   local repo log line emoji clock
+  local -i i
   local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
   : ${cols:=120}
   (( cols -= 4 ))
@@ -176,10 +177,13 @@ render_progress() {
       clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
     draw_lines+=( "${bold}### $repo $emoji $clock${unbold}" "process: $pid_of[$repo]" "log: $log" "tail:" )
-    for line (${(f)"$(tail -n 3 $log 2>/dev/null)"}) {
+    local -a tail_lines=( ${(f)"$(tail -n 3 $log 2>/dev/null)"} )
+    local -i pad=$(( 3 - $#tail_lines ))
+    for line ($tail_lines) {
       line=${${line//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
       draw_lines+=( "> ${line[1,cols]}" )
     }
+    for (( i = 1; i <= pad; i++ )) draw_lines+=( ">" )
     draw_lines+=( "" )
   }
 }
