@@ -7,7 +7,7 @@
 #   ## Progress on stderr: tty => in-place dashboard redrawn every 5s (header
 #   done/count + overall status + clock + countdown bar; per repo
 #   `### <repo padded> <emoji> <clock> pid=<pid>`, log:, tail: last log line);
-#   non-tty => spawn list + `done:` stream.
+#   non-tty => the same frames appended every 5s, bold/bar dropped.
 #   ## Done closes the run (Progress-header shape + ✅/❌ counts); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
 #   log lines blockquoted). Exit: 0 all pass, 1 any fail, 2 bad
@@ -137,7 +137,7 @@ repo_w=0
 for repo ($repos) (( $#repo > repo_w )) && repo_w=$#repo
 (( repo_w += 2 ))
 
-typeset -A pid_of status_of start_of elapsed_of log_of
+typeset -A pid_of status_of start_of elapsed_of log_of done_drawn
 run_start=$EPOCHSECONDS
 for repo ($repos) {
   start_of[$repo]=$EPOCHSECONDS
@@ -171,17 +171,25 @@ progress_header() {
     for repo ($repos) (( status_of[$repo] )) && overall=❌
   }
   local bar="${(pl:$fill::▰:):-}${(pl:$(( 5 - fill ))::▱:):-}"
-  (( $#pending )) || bar=""
+  (( $#pending && tty )) || bar=""
   print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) pid=$$ $bar${unbold}"
 }
 
 render_progress() {
-  local repo log line emoji clock t
-  local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
-  : ${cols:=120}
-  (( cols -= 4 ))
+  local repo log line emoji clock t cols
+  if (( tty )) {
+    cols=${COLUMNS:-$(tput cols 2>/dev/null)}
+    : ${cols:=120}
+    (( cols -= 4 ))
+  } else {
+    cols=10000
+  }
   draw_lines=( "$(progress_header 0)" "" )
   for repo ($repos) {
+    if (( ! tty && ${+status_of[$repo]} )) {
+      (( ${+done_drawn[$repo]} )) && continue
+      done_drawn[$repo]=1
+    }
     log=$log_of[$repo]
     if (( ${+status_of[$repo]} )) {
       (( status_of[$repo] )) && emoji=❌ || emoji=✅
@@ -200,38 +208,25 @@ render_progress() {
   }
 }
 
-if [[ -t 2 ]] {
-  typeset -a draw_lines
-  drawn=0 tick=0
-  while (( 1 )) {
-    reap_finished
-    if (( tick % 5 == 0 || ! $#pending )) {
-      render_progress
-      (( drawn )) && printf '\e[%dA\e[0J' $drawn >&2
-      print -lru2 -- "$draw_lines[@]"
-      drawn=$#draw_lines
-    } else {
-      printf '\e[%dA\r\e[2K%s\e[%dB\r' $drawn "$(progress_header $(( tick % 5 )))" $drawn >&2
-    }
-    (( $#pending )) || break
-    sleep 1
-    (( tick += 1 ))
+tty=0
+[[ -t 2 ]] && tty=1
+(( tty )) || { bold='' unbold='' }
+
+typeset -a draw_lines
+drawn=0 tick=0
+while (( 1 )) {
+  reap_finished
+  if (( tick % 5 == 0 || ! $#pending )) {
+    render_progress
+    (( tty && drawn )) && printf '\e[%dA\e[0J' $drawn >&2
+    print -lru2 -- "$draw_lines[@]"
+    drawn=$#draw_lines
+  } elif (( tty )) {
+    printf '\e[%dA\r\e[2K%s\e[%dB\r' $drawn "$(progress_header $(( tick % 5 )))" $drawn >&2
   }
-} else {
-  print -ru2 -- "## Progress"
-  for repo ($repos) {
-    print -ru2 -- "🕐 $repo pid=$pid_of[$repo]"
-    print -ru2 -- "log: $log_of[$repo]"
-    print -ru2 -- ""
-  }
-  while (( $#pending )) {
-    reap_finished
-    for repo ($reply) {
-      (( status_of[$repo] == 0 )) && emoji=✅ || emoji=❌
-      print -ru2 -- "done: $emoji $(fmt_dur $elapsed_of[$repo]) $repo"
-    }
-    (( $#pending )) && sleep 1
-  }
+  (( $#pending )) || break
+  sleep 1
+  (( tick += 1 ))
 }
 
 failed=()

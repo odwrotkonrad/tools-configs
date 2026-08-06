@@ -11,7 +11,7 @@
 ### Wrappers:
 
 `sync`: `host-load-configs -> repo-ci-prepare-hooks -> repo-render-templates` convenience sync: configs, dirs, hooks, all template renders (repo + host)
-`sync-install`: `host-load-configs-install -> repo-ci-prepare-hooks -> repo-render-templates` full sync: full che op sequence per profile (scripts included), hooks, repo renders
+`sync-full`: `host-load-configs-install -> repo-ci-prepare-hooks -> repo-render-templates` full sync: full che op sequence per profile (scripts included), hooks, repo renders
 
 ### Onto Host:
 

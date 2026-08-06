@@ -3,7 +3,7 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
-WRAPPERS := sync sync-install
+WRAPPERS := sync sync-full
 COMMANDS := host-load-configs host-load-configs-install repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
@@ -30,7 +30,7 @@ export CHE_VALIDATE_SPEC
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host)
 sync: host-load-configs repo-ci-prepare-hooks repo-render-templates
 #[what] full sync: full che op sequence per profile (scripts included), hooks, repo renders
-sync-install: host-load-configs-install repo-ci-prepare-hooks repo-render-templates
+sync-full: host-load-configs-install repo-ci-prepare-hooks repo-render-templates
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]

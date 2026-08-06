@@ -32,12 +32,13 @@ Scenario: interactive progress dashboard refreshes in place
   And each repo renders as a bold `### <repo> <✅|❌|🕐> <clock> pid=<pid>` block, the repo name right-padded to the longest repo + 2 so status columns align: `log: <log file>`, then `tail: > <most recent non-empty log line>` on one line (last 15 lines scanned bottom-up, CR/ANSI stripped, width-truncated, `tail: >` when nothing non-empty), so block heights stay fixed across redraws
   And the dashboard redraws in place every 5s (state polled every 1s), clearing the previous frame, the final frame stays on screen
 
-Scenario: non-interactive progress streams append-only
+Scenario: non-interactive progress appends full frames
   Status: implemented
   Given stderr is not a terminal
   When repos run
-  Then `## Progress` lists every repo at spawn as `🕐 <repo> pid=<pid>` with `log: <log file>` below
-  And `done: <✅|❌> <M>m<SS>s <repo>` lines stream in finish order, elapsed counted from that repo's spawn
+  Then the same `## Progress` frame as interactive appends every 5s, each after the previous, no screen clearing
+  And ANSI bold, the countdown bar, and width truncation are dropped, so redirected logs stay plain text
+  And a finished repo's block appears in exactly one frame (the first after it finished), later frames list running repos only
 
 Scenario: summary report closes the run, failures only
   Status: implemented
