@@ -6,6 +6,8 @@
 #   amend arg: soft-reset HEAD~1 first, then re-commit. Never amend on main.
 #   nothing staged after add: exit 0 (upsert-all continues to mr-upsert).
 #   hook fails leaving an unstaged diff (docsgen regen): restage, retry once.
+#   repo has lefthook.yml but no installed pre-commit hook: install via
+#   make repo-ci-prepare-hooks, fallback lefthook install.
 #   Usage: git-commit-upsert [amend]
 #   Downstream: git-sync-onto-main, git-branch-name-upsert, llm-git-commit-suggest, git.
 #   Exit Codes: 22 sync conflicts
@@ -41,6 +43,18 @@ if [[ $mode == amend ]] {
   git reset --soft HEAD~1
 }
 
+repo_root=$(git rev-parse --show-toplevel)
+hook_path=$(git rev-parse --git-path hooks/pre-commit)
+if [[ -f $repo_root/lefthook.yml && ! -e $hook_path ]] {
+  print -r -- "lefthook.yml present, hooks missing: installing"
+  if { make -C $repo_root -n repo-ci-prepare-hooks &>/dev/null } {
+    make -C $repo_root repo-ci-prepare-hooks
+  } else {
+    print -r -- "warning: no repo-ci-prepare-hooks make target, falling back to lefthook install"
+    lefthook install
+  }
+}
+
 git add .
 
 if { git diff --cached --quiet } {
@@ -63,7 +77,5 @@ if ! { git commit -m $subject -m $description } {
 if (( on_main )) {
   print -r -- "committed on main, moving commit onto a branch"
   git-branch-name-upsert.zsh
-  git branch -f main origin/main
-  print -r -- "main reset to origin/main"
 }
 ##[<] 🤖🤖
