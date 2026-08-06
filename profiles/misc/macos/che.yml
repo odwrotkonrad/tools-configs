@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://gitlab.com/konradodwrot/unrestricted/go-modules/-/raw/main/che/assets/data/che.schema.json
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 options:
   profileWorkingDirectory: root
@@ -9,6 +9,8 @@ misc/macos:
     makeLinks:
       - etc/**
       - usr/**
+    runScripts:
+      - scripts/02-install-duti.zsh
 
 misc/macos/desktop:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}

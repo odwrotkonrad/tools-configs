@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://gitlab.com/konradodwrot/unrestricted/go-modules/-/raw/main/che/assets/data/che.schema.json
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 gitlab/base/macos:
   options: {runIf: ['builtin:isOs == macos']}
@@ -7,7 +7,7 @@ gitlab/base/macos:
       - source: "./glab/che.yml::gitlab/glab"
       - source: "./projects/che.yml::gitlab/projects"
         env:
-          GITLAB_GROUPS: "konradodwrot/unrestricted:konradodwrot;konradodwrot/restricted:restricted"
+          GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
 gitlab/host/macos:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
@@ -24,5 +24,5 @@ gitlab/virt/linux:
       - source: "./glab/che.yml::gitlab/glab"
       - source: "./projects/che.yml::gitlab/projects"
         env:
-          GITLAB_GROUPS: "konradodwrot/unrestricted:konradodwrot;konradodwrot/restricted:restricted"
+          GITLAB_GROUPS: "konradodwrot:konradodwrot"
 ##[<] 🤖🤖

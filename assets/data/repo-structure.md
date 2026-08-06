@@ -27,6 +27,7 @@ profiles
         _home
           .config
             azure
+      scripts
     gcp
       root
         _home
@@ -59,9 +60,12 @@ profiles
                   Code
                     User
                       .exported
+          scripts
     golang
       scripts
     infra
+      cilium
+        scripts
       docker
         scripts
       kind
@@ -73,6 +77,8 @@ profiles
       terraform
         scripts
     js
+      node
+        scripts
       nvm
         root
           _home
@@ -119,6 +125,11 @@ profiles
               zshrc.d
                 auto.d
                   tmux
+          usr
+            local
+              scripts
+                shell
+        scripts
   git
     assets
       images
@@ -286,6 +297,7 @@ profiles
       root-virt
         _home
           .ssh
+      scripts
   observability
     grafana
       assets
@@ -300,6 +312,7 @@ profiles
               dashboards
                 json
               datasources
+      scripts
     jaeger
       root
         Library
@@ -313,6 +326,7 @@ profiles
           LaunchDaemons
         etc
           loki
+      scripts
     otelcol
       root
         Library

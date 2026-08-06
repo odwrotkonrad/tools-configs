@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://gitlab.com/konradodwrot/unrestricted/go-modules/-/raw/main/che/assets/data/che.schema.json
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 dev/base/macos:
   options: {runIf: ['builtin:isOs == macos']}
@@ -13,8 +13,10 @@ dev/base/macos:
       - source: "./infra/kubectx/che.yml::dev/infra/kubectx"
       - source: "./infra/kind/che.yml::dev/infra/kind"
       - source: "./infra/docker/che.yml::dev/infra/docker"
+      - source: "./infra/cilium/che.yml::dev/infra/cilium"
       - source: "./golang/che.yml::dev/golang"
       - source: "./ruby/che.yml::dev/ruby"
+      - source: "./js/node/che.yml::dev/js/node"
       - source: "./js/nvm/che.yml::dev/js/nvm"
       - source: "./js/pnpm/che.yml::dev/js/pnpm"
       - source: "./js/prettier/che.yml::dev/js/prettier"
@@ -42,8 +44,10 @@ dev/virt/linux:
       - source: "./infra/kubectx/che.yml::dev/infra/kubectx"
       - source: "./infra/kind/che.yml::dev/infra/kind"
       - source: "./infra/docker/che.yml::dev/infra/docker"
+      - source: "./infra/cilium/che.yml::dev/infra/cilium"
       - source: "./golang/che.yml::dev/golang"
       - source: "./ruby/che.yml::dev/ruby"
+      - source: "./js/node/che.yml::dev/js/node"
       - source: "./js/nvm/che.yml::dev/js/nvm"
       - source: "./js/pnpm/che.yml::dev/js/pnpm"
       - source: "./js/prettier/che.yml::dev/js/prettier"

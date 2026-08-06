@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://gitlab.com/konradodwrot/unrestricted/go-modules/-/raw/main/che/assets/data/che.schema.json
+# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 options:
   profileWorkingDirectory: .
@@ -6,5 +6,6 @@ options:
 dev/python/python:
   include:
     runScripts:
-      - scripts/01-install-python.zsh
+      - scripts/01-install-toolchain.zsh
+      - scripts/02-install-python.zsh
 ##[<] 🤖🤖

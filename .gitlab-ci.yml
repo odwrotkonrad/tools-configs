@@ -11,7 +11,7 @@ stages:
 
 ##[>] 🤖🤖
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/unrestricted/infra/oci-images/ci-linux:latest
+  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/oci-images/ci-linux:latest
 ##[<] 🤖🤖
 
 .base:
@@ -133,7 +133,7 @@ rebuild-sandbox-image:
   variables:
     BUILD_SANDBOX_IMAGE: "true"
   trigger:
-    project: konradodwrot/restricted/sandbox
+    project: konradodwrot/sandbox
     branch: main
     forward:
       yaml_variables: true

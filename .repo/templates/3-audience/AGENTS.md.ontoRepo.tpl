@@ -4,7 +4,7 @@ Dotfiles extended into root OS space, loaded onto the host from one root/ tree b
 
 @assets/docs-agents/purpose.md
 
-{{ remoteFile "gitlab.com/konradodwrot/unrestricted/conventions//conventions/conventions.md" }}
+{{ remoteFile "gitlab.com/konradodwrot/conventions//conventions/conventions.md" }}
 
 @assets/docs-agents/file-naming.md
 
