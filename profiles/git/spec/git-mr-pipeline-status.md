@@ -74,8 +74,8 @@ Scenario: --main reports the latest main pipeline
 Scenario: pipeline verdict is the exit code
   Status: implemented
   When the report finishes
-  Then it exits 0 when the pipeline status is success, or no pipeline/MR exists
-  And exits 1 on any other status (failed, canceled, running via --no-wait), so multi-repo runs flag it ❌
+  Then it exits 1 only when the pipeline errored (failed or canceled), so multi-repo runs flag it ❌
+  And exits 0 on any other status: success, no pipeline/MR, still running via --no-wait, manual/blocked
 
 Scenario: branch main implies --main
   Status: implemented

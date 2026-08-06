@@ -10,7 +10,8 @@
 #   --main: skip MR/branch sections, report the latest push-sourced main
 #   pipeline (merge into main; downstream/schedule/web-sourced ones skipped);
 #   implied by --branch=main, rejects any other --branch.
-#   Exit 0 on pipeline success or none, 1 on any other final status.
+#   Exit 1 only on an errored pipeline (failed | canceled); success, none,
+#   still-running (--no-wait), manual/blocked all exit 0.
 #   Usage: git-mr-pipeline-status [--wait|--no-wait] [--main|--branch=<branch>]
 #   Downstream: glab, jq, git.
 #/[what] 🤖🤖
@@ -152,5 +153,6 @@ glab api "projects/:id/pipelines/$pipe_id/jobs?per_page=100" |
 
 jq -r --arg b $b --arg n $n "$jq_defs"'
   "\($b)## Pipeline Status\($n)", "\(.status | emo) \(if .status == "success" then "" else "\(.status) " end)\(.duration | dur)"' <<< $pipe_json
-[[ $(jq -r .status <<< $pipe_json) == success ]] || exit 1
+[[ $(jq -r .status <<< $pipe_json) == (failed|canceled) ]] && exit 1
+exit 0
 ##[<] 🤖🤖
