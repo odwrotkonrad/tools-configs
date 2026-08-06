@@ -44,9 +44,9 @@ init-note:
 commit-all:
 	@exec-per-repo.zsh -C $(ROOT) --must-filter=changes git-commit-upsert.zsh
 
-#[what] upsert MRs in every repo off main (git-mr-upsert per repo)
+#[what] upsert MRs in every repo (git-mr-upsert per repo; branches off main first when main carries new commits)
 mr-all:
-	@exec-per-repo.zsh -C $(ROOT) --must-filter=off-main git-mr-upsert.zsh
+	@exec-per-repo.zsh -C $(ROOT) git-mr-upsert.zsh
 
 #[what] full git flow in every repo: commit, branch-name, MR (git-upsert-all per repo; its no-op guard skips untouched repos)
 publish-all:
