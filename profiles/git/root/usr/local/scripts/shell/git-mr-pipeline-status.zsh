@@ -10,8 +10,9 @@
 #   --main: skip MR/branch sections, report the latest push-sourced main
 #   pipeline (merge into main; downstream/schedule/web-sourced ones skipped);
 #   implied by --branch=main, rejects any other --branch.
-#   Exit 1 on an errored pipeline (failed | canceled) or no pipeline at all
-#   (none); success, still-running (--no-wait), manual/blocked exit 0.
+#   Exit 1 only on an errored pipeline (failed | canceled); success,
+#   still-running (--no-wait), manual/blocked, and no pipeline (logged
+#   "none: <reason>") exit 0.
 #   Usage: git-mr-pipeline-status [--wait|--no-wait] [--main|--branch=<branch>]
 #   Downstream: glab, jq, git.
 #/[what] 🤖🤖
@@ -64,7 +65,7 @@ if (( main_flag )) {
     jq '[.[] | select(.source == "push")] | first // empty')
   pipe_id=$(jq -r '.id // empty' <<< $main_json)
   print -r -- "$b# Main Pipeline$n"
-  if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none"; exit 1 }
+  if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none: no push-sourced pipeline on main (repo may not run main pipelines)"; exit 0 }
   jq -r '"url: \(.web_url)", "sha: \(.sha[0:8])"' <<< $main_json
   repo_section
 } else {
@@ -107,7 +108,7 @@ if (( main_flag )) {
   print -r -- "commit count: $(git rev-list --count origin/main..$ref)"
 
   pipe_id=$(jq -r '.head_pipeline.id // empty' <<< $mr_json)
-  if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none"; exit 1 }
+  if [[ -z $pipe_id ]] { print -r -- $'\n'"$b## Pipeline Status$n"$'\n'"none: MR !$mr_iid has no pipeline"; exit 0 }
 }
 
 jq_defs='def emo: {success:"✅",failed:"❌",canceled:"🚫",skipped:"⏭️ ",manual:"⚙️ ",running:"🕐"}[.] // "⏳";
