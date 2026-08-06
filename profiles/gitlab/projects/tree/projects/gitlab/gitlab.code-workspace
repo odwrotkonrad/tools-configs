@@ -6,7 +6,6 @@
     { "name": "infra/oci-images", "path": "konradodwrot/infra/oci-images" },
     { "name": "notes", "path": "konradodwrot/notes" },
     { "name": "resume-md-pdf", "path": "konradodwrot/resume-md-pdf" },
-    { "name": "workspace", "path": "konradodwrot/workspace" },
     { "name": "r/infra", "path": "restricted/infra" },
     { "name": "r/sandbox", "path": "restricted/sandbox" }
   ],
