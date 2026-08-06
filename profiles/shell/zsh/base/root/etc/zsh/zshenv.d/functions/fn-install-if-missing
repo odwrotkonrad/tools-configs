@@ -16,6 +16,13 @@ function fn-install-if-missing {
   }
 
   fn-log-msg -t $cmd -- installing
-  $installer
+  ##[>] 🤖🤖
+  local rc=0
+  $installer || rc=$?
+  if (( rc )) {
+    fn-log-msg -t $cmd -- "install failed ($rc)"
+    return $rc
+  }
+  ##[<] 🤖🤖
   fn-log-msg -t $cmd -- installed
 }
