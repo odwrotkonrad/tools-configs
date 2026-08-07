@@ -7,6 +7,6 @@ shell/rg:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-completions.zsh
+    installPackages:
+      - rg
 ##[<] 🤖🤖

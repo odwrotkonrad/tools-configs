@@ -7,6 +7,4 @@ dev/infra/kind:
   include:
     installPackages:
       - kind
-    runScripts:
-      - scripts/02-install-completions.zsh
 ##[<] 🤖🤖

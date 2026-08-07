@@ -62,13 +62,9 @@ profiles
     infra
       cilium
       docker
-        scripts
       kind
-        scripts
       kubectl
-        scripts
       kubectx
-        scripts
       terraform
     js
       node
@@ -212,7 +208,6 @@ profiles
               zshrc.d
                 auto.d
                   claude
-      scripts
       templates
         snippets
     codex
@@ -249,7 +244,6 @@ profiles
         _home
           .config
             che
-      scripts
     macos
       root
         _home
@@ -343,7 +337,6 @@ profiles
       root
         etc
           rg
-      scripts
     zsh
       assets
         images

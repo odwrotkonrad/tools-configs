@@ -4,11 +4,6 @@ options:
   profileWorkingDirectory: .
 
 dev/golang:
-  options:
-    packages:
-      completions:
-        enabled: true
-        installDestinationCandidates: ~/.local/state/zsh/completions
   include:
     installPackages:
       - go

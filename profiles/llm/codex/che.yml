@@ -17,5 +17,4 @@ llm/codex:
       - codex
     runScripts:
       - scripts/00-check-prerequisites.zsh
-      - scripts/02-install-completions.zsh
 ##[<] 🤖🤖
