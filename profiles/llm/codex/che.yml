@@ -15,6 +15,4 @@ llm/codex:
           - {dest: [$HOME/.local/state/codex/log]}
     installPackages:
       - codex
-    runScripts:
-      - scripts/00-check-prerequisites.zsh
 ##[<] 🤖🤖

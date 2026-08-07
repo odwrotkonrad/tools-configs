@@ -25,9 +25,8 @@ shell/zsh/base:
           - {dest: [/etc/zsh/zshrc.d/completions]}
     installPackages:
       - brew
-    runScripts:
-      - scripts/01-install-zsh.sh
-      - scripts/02-install-rg.zsh
+      - zsh
+      - rg
 
 shell/zsh/base-macos:
   options: {runIf: ['builtin:isOs == macos'], profileWorkingDirectory: root-macos}

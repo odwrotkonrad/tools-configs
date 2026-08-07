@@ -238,7 +238,6 @@ profiles
           _home
             .config
               kitty
-        scripts
       tmux
         root
           _home
@@ -358,7 +357,6 @@ profiles
             zshrc.d
               auto.d
                 codex
-      scripts
     ollama
       root
         _home
@@ -367,7 +365,6 @@ profiles
           local
             scripts
               shell
-      scripts
   misc
     brew
       root
@@ -467,7 +464,6 @@ profiles
       root
         _home
           .config
-      scripts
     man
       root
         etc
@@ -511,7 +507,6 @@ profiles
             zsh
               zshenv.d
                 functions
-        scripts
       extras
         root
           _home
