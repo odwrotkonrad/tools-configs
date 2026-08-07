@@ -5,6 +5,10 @@ options:
 
 dev/js/node:
   include:
-    runScripts:
-      - scripts/01-install-node.zsh
+    installPackages:
+      - node
+      - npm
+      - corepack
+      - tsc
+      - typescript-language-server
 ##[<] 🤖🤖

@@ -28,6 +28,8 @@ When in doubt: MARK IT.
 
 Emit zero comments in AI-generated code: no explanatory, convention-label, header/banner, schema-note, TODO/FIXME, docstring, inline, or commented-out code. Every file type. Put explanations in chat.
 
+🚫 NEVER clarify code with comments. ZERO. No doc comments on types/functions, no field annotations, no allowed-value lists, no restating the line below. "Documents the API" is NOT permission: names and types ARE the docs. Unclear name → rename, NEVER annotate. Every clarifying comment is a defect: delete on sight.
+
 Before writing/editing ANY file, check for a comment; delete it, move to chat. Catch an added comment → remove immediately, unasked.
 
 Add comments ONLY when the current request explicitly says "comment" (or equivalent). A comment-full file, convention doc, or "explain/document/annotate" request is NOT permission.

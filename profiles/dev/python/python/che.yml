@@ -5,7 +5,12 @@ options:
 
 dev/python/python:
   include:
-    runScripts:
-      - scripts/01-install-toolchain.zsh
-      - scripts/02-install-python.zsh
+    installPackages:
+      - pyenv
+      - python3
+      - python3-pip
+      - python3-venv
+      - pipx
+      - uv
+      - pyright
 ##[<] 🤖🤖

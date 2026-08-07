@@ -8,8 +8,9 @@ observability/loki:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-loki.zsh
+    installPackages:
+      - loki
+      - logcli
     makeCopies:
       - owner: root
         ownerGroup: "0"

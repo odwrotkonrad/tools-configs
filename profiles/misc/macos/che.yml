@@ -9,15 +9,15 @@ misc/macos:
     makeLinks:
       - etc/**
       - usr/**
-    runScripts:
-      - scripts/02-install-duti.zsh
+    installPackages:
+      - duti
 
 misc/macos/desktop:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
     renderTemplates:
       - templates: [{source: _home/**, dest: $HOME/**}]
-    runScripts:
-      - scripts/01-install-go-host-tools.zsh
-      - scripts/03-install-beekeeper.zsh
+    installPackages:
+      - get-os-open-files-with
+      - beekeeper-studio
 ##[<] 🤖🤖

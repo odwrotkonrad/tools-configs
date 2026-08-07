@@ -4,14 +4,8 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-autoload -Uz fn-log-msg
-
-##[>] 🤖🤖
 fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
-autoload -Uz fn-install
-
-fn-install gitlab-runner
-##[<] 🤖🤖
+autoload -Uz fn-log-msg
 
 ###[>] retire brew gitlab-runner service
 #>[why]

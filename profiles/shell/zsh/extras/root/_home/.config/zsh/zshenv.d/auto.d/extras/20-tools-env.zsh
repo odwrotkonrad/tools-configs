@@ -13,7 +13,6 @@ typeset -a tool_bins=(
     ${GOPATH}/bin
     ${PYENV_ROOT}/bin
     ${PYENV_ROOT}/shims
-    /usr/local/go/bin
     /usr/local/scripts/shell
     /usr/local/scripts/python
 )

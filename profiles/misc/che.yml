@@ -7,7 +7,6 @@ misc/base/macos:
       - source: "./che/che.yml::misc/che"
       - source: "./brew/che.yml::misc/brew"
       - source: "./brew/che.yml::misc/brew/macos"
-      - source: "./packages/che.yml::misc/packages"
       - source: "./macos/che.yml::misc/macos"
       - source: "./ssh/che.yml::misc/ssh"
       - source: "./ssh/che.yml::misc/ssh/virt"
@@ -25,7 +24,6 @@ misc/virt/linux:
   include:
     profiles:
       - source: "./che/che.yml::misc/che"
-      - source: "./packages/che.yml::misc/packages"
       - source: "./ssh/che.yml::misc/ssh"
       - source: "./ssh/che.yml::misc/ssh/virt"
 ##[<] 🤖🤖

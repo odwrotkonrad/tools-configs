@@ -20,7 +20,6 @@ paths:
         scripts/:
           01-install-zsh.sh:                                # POSIX sh: linux apt-get, macos no-op
           02-install-rg.zsh:                                # prebuilt rg binary download
-          03-install-brew.zsh:                              # homebrew bootstrap (packages stay in ci installs)
         root/_home/.config/zsh/:
           .zshenv:
           .zprofile:

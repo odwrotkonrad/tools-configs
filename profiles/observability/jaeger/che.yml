@@ -18,6 +18,8 @@ observability/jaeger:
       - chmod: "2775"
         directories:
           - {dest: [/var/log/jaeger]}
+    installPackages:
+      - jaeger
     runScripts:
-      - scripts/01-install-jaeger.zsh
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

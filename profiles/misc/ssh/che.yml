@@ -9,8 +9,8 @@ misc/ssh:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
       - usr/**
-    runScripts:
-      - scripts/01-install-openssh.zsh
+    installPackages:
+      - openssh
 
 #[why] sandbox keypair from 1password, rendered under the standard names the ssh/git config reference; virt only (desktop skips via runIf: never clobber the host's real keys)
 misc/ssh/virt:

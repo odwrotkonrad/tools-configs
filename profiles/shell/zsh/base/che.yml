@@ -23,10 +23,11 @@ shell/zsh/base:
         chmod: "0755"
         directories:
           - {dest: [/etc/zsh/zshrc.d/completions]}
+    installPackages:
+      - brew
     runScripts:
       - scripts/01-install-zsh.sh
       - scripts/02-install-rg.zsh
-      - scripts/03-install-brew.zsh
 
 shell/zsh/base-macos:
   options: {runIf: ['builtin:isOs == macos'], profileWorkingDirectory: root-macos}

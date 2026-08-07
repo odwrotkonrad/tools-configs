@@ -8,8 +8,8 @@ observability/grafana:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-grafana.zsh
+    installPackages:
+      - grafana
     makeCopies:
       - owner: root
         ownerGroup: "0"

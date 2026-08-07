@@ -5,8 +5,8 @@ options:
 
 cloud/aws:
   include:
-    runScripts:
-      - scripts/01-install-aws-cli.zsh
+    installPackages:
+      - aws
 
 #[why] op:// template, real host only: virt (cli/macos vm, sandbox pod) has no op and no use for aws config
 cloud/aws/configs:

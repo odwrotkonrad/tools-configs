@@ -7,6 +7,6 @@ cloud/azure:
   include:
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
-    runScripts:
-      - scripts/01-install-azure-cli.zsh
+    installPackages:
+      - az
 ##[<] 🤖🤖

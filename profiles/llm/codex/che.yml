@@ -13,8 +13,9 @@ llm/codex:
       - directories:
           - {dest: [$HOME/.config/codex]}
           - {dest: [$HOME/.local/state/codex/log]}
+    installPackages:
+      - codex
     runScripts:
       - scripts/00-check-prerequisites.zsh
-      - scripts/01-install-codex.zsh
       - scripts/02-install-completions.zsh
 ##[<] 🤖🤖

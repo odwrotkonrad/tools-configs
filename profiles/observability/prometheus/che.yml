@@ -19,6 +19,8 @@ observability/prometheus:
         directories:
           - {dest: [/var/log/prometheus]}
           - {dest: [/usr/local/var/prometheus]}
+    installPackages:
+      - prometheus
     runScripts:
-      - scripts/01-install-prometheus.zsh
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

@@ -3,7 +3,7 @@ brew list                #[what] list all packages installed
 brew update              #[what] update remotes
 brew upgrade             #[what] install upgrades
 brew install wget        #[what] install pkg
-fn-install wget          #[what] install pkg via packages.yml (canonical name)
+che packages install wget  #[what] install pkg via packages.yml (canonical name)
 ##[<] brew
 
 ##[>] zsh builtins

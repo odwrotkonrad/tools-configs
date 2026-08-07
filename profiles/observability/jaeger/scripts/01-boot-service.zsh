@@ -10,8 +10,6 @@ fn-is-os mac || return 0
 
 setopt errexit pipefail
 
-autoload -Uz fn-install fn-boot-service
-
-fn-install prometheus
-fn-boot-service prometheus
+autoload -Uz fn-boot-service
+fn-boot-service jaeger
 ##[<] 🤖🤖

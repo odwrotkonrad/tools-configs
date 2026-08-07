@@ -21,13 +21,11 @@ profiles
         _home
           .config
             aws
-      scripts
     azure
       root
         _home
           .config
             azure
-      scripts
     gcp
       root
         _home
@@ -60,12 +58,9 @@ profiles
                   Code
                     User
                       .exported
-          scripts
     golang
-      scripts
     infra
       cilium
-        scripts
       docker
         scripts
       kind
@@ -75,15 +70,12 @@ profiles
       kubectx
         scripts
       terraform
-        scripts
     js
       node
-        scripts
       nvm
         root
           _home
       pnpm
-        scripts
       prettier
         root
           _home
@@ -100,14 +92,12 @@ profiles
             .config
               mypy
       python
-        scripts
       ruff
         root
           _home
             .config
               ruff
     ruby
-      scripts
     terminal
       kitty
         root
@@ -129,7 +119,6 @@ profiles
             local
               scripts
                 shell
-        scripts
   git
     assets
       images
@@ -162,7 +151,6 @@ profiles
             zshrc.d
               auto.d
                 gitlab
-      scripts
       spec
     projects
       scripts
@@ -273,7 +261,6 @@ profiles
           local
             scripts
               shell
-      scripts
     onepassword
       root
         etc
@@ -282,13 +269,6 @@ profiles
               auto.d
                 onepassword
       scripts
-    packages
-      root
-        _home
-          .config
-            packages
-      scripts
-      spec
     ssh
       root
         _home
@@ -304,7 +284,6 @@ profiles
       root-virt
         _home
           .ssh
-      scripts
   observability
     grafana
       assets
@@ -319,7 +298,6 @@ profiles
               dashboards
                 json
               datasources
-      scripts
     jaeger
       root
         Library
@@ -333,7 +311,6 @@ profiles
           LaunchDaemons
         etc
           loki
-      scripts
     otelcol
       root
         Library
