@@ -15,9 +15,6 @@ export CHE_RENDER_TEMPLATES_SKIP_SECRETS=$MK_DRY_RUN_RENDER_SECRETS
 autoload -Uz fn-is-virt
 if [[ -z ${CHE_IS_VIRT-} ]] { fn-is-virt && export CHE_IS_VIRT=true || export CHE_IS_VIRT=false }
 
-autoload -Uz fn-is-os
-if { fn-is-os linux } export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
-
 autoload -Uz fn-annotate-with-sections fn-print-with fn-log-msg
 
 [[ $1 == -c && -n $2 ]] || exit 0

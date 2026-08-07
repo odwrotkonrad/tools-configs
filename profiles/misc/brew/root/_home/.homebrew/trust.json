@@ -2,7 +2,8 @@
   "trustedtaps": [
     "azure/azure-cli",
     "cirruslabs/cli",
-    "hashicorp/tap"
+    "hashicorp/tap",
+    "konradodwrot/tap"
   ],
   "trustedformulae": [
     "cirruslabs/cli/gitlab-tart-executor",

@@ -9,10 +9,6 @@ typeset -a bins=(
 if { fn-is-os mac } bins+=(
     /opt/homebrew/bin
 )
-
-if { fn-is-os linux } bins+=(
-    /home/linuxbrew/.linuxbrew/bin
-)
 ##[<] 🤖🤖
 
 bins+=(

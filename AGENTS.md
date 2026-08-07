@@ -71,6 +71,7 @@ zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc
 ##[<] primary
 
 ##[>] other
+packages: profiles/misc/packages/root/_home/.config/packages/packages.yml
 aws: profiles/cloud/aws/root/_home/.config/aws/config.ontoHost.tpl
 azure: profiles/cloud/azure/root/_home/.config/azure/config
 curl: profiles/shell/curl/root/_home/.config/curlrc
@@ -296,6 +297,7 @@ profiles
               auto.d
                 gitlab
       scripts
+      spec
     projects
       scripts
       templates
@@ -415,6 +417,13 @@ profiles
               auto.d
                 onepassword
       scripts
+    packages
+      root
+        _home
+          .config
+            packages
+      scripts
+      spec
     ssh
       root
         _home

@@ -4,8 +4,8 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-typeset -a pkgs=( node corepack typescript typescript-language-server )
-for pkg ( $pkgs ) {
-  brew list $pkg >/dev/null 2>&1 || brew install $pkg
-}
+fpath=(${0:a:h}/../../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
+autoload -Uz fn-install
+
+fn-install node npm corepack tsc typescript-language-server
 ##[<] 🤖🤖

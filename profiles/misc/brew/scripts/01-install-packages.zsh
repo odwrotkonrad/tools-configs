@@ -12,7 +12,7 @@ setopt errexit pipefail
 
 ##[>] 🤖🤖
 fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
-autoload -Uz fn-log-msg fn-is-virt fn-is-os
+autoload -Uz fn-log-msg fn-is-virt
 
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ASK=1
@@ -34,10 +34,6 @@ function bundle_stage {
 }
 
 typeset brewfile=/etc/homebrew/Brewfile
-typeset -a stages=( formulae npm )
-fn-is-os mac && stages+=( cask ) #[why] casks are macos-only 🤖
+typeset -a stages=( formulae npm cask )
 for stage ( $stages ) bundle_stage $stage
-
-#[why] brew zsh can ride in as a formula dependency and would shadow /usr/bin/zsh with a different compiled-in rc dir (/etc vs debian's /etc/zsh): unlink it, one zsh owns the shell 🤖🤖
-if { fn-is-os linux && brew list zsh >/dev/null 2>&1 } brew unlink zsh
 ##[<] 🤖🤖

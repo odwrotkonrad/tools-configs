@@ -1,0 +1,168 @@
+#[what] fn-install <pkg>...: install packages by canonical name from $XDG_CONFIG_HOME/packages/packages.yml; each entry lists managers in preference order, inline (`pkg: [brew, {apt: name}]`) or block (`- brew` / `- {apt: name}` / `- binary:` with url, version, bin, sha256 per os-arch); first manager applicable on this host wins (brew=macos, apt=linux, npm=wherever present, binary=sha256 present for this os-arch); bare manager = canonical name, {manager: name} = per-manager name
+#[what] binary entries: url expands {version} {os} {arch} {arch_x} (linux|darwin, amd64|arm64, x86_64|aarch64), download is sha256-verified, tar archives extract the `bin` member, the result installs as /usr/local/bin/<pkg>
+#[why] one file maps canonical names to per-manager names, install scripts stay one line; resolution runs in rounds with rehash between manager batches, so a manager installed earlier in the same call (apt npm -> npm pkgs) serves later packages
+
+##[>] 🤖🤖🤖
+function fn-install {
+  emulate -LR zsh
+  setopt localoptions errexit pipefail extendedglob
+  autoload -Uz fn-log-msg fn-is-os fn-is-arch
+
+  local cfg=${XDG_CONFIG_HOME:-$HOME/.config}/packages/packages.yml
+  if [[ ! -r $cfg ]] { fn-log-msg -t install -- "missing $cfg"; return 1 }
+  local -a lines=( ${(f)"$(<$cfg)"} )
+
+  local os=linux arch=amd64 arch_x=x86_64
+  fn-is-os mac && os=darwin
+  if { fn-is-arch arm } { arch=arm64 arch_x=aarch64 }
+  local shakey=$os-$arch
+
+  local -a sudo_cmd=( )
+  (( UID )) && sudo_cmd=( sudo )
+  local -a shacmd=( shasum -a 256 )
+  (( $+commands[sha256sum] )) && shacmd=( sha256sum )
+
+  local -a pending=( $@ ) still
+  local -A batch
+  local progress=1
+  local pkg i j l line spec item mgr name cur sub picked url tmp asset member p n
+  local -A bprops
+  local -a items miss
+
+  while (( $#pending && progress )); do
+    progress=0 still=( ) batch=( )
+
+    for pkg in $pending; do
+      i=${lines[(i)(  ${(b)pkg}: *|  ${(b)pkg}:)]}
+      if (( i > $#lines )) { fn-log-msg -t install -- "unknown package: $pkg (add it to $cfg)"; return 1 }
+      line=$lines[i]
+      items=( ) bprops=( )
+      if [[ $line == *\[* ]] {
+        spec=${${${line#*: }#\[}%\]}
+        for item in ${(s:,:)spec}; do items+=( ${${item## #}%% #} ); done
+      } else {
+        j=$(( i + 1 )) cur= sub=
+        while (( j <= $#lines )); do
+          l=$lines[j]
+          [[ $l == '    '* ]] || break
+          if [[ $l == '    - binary:' ]] {
+            items+=( binary ); cur=binary
+          } elif [[ $l == '    - '* ]] {
+            items+=( ${l#'    - '} ); cur=
+          } elif [[ $cur == binary ]] {
+            item=${l##[[:space:]]#}
+            if [[ $item == 'sha256:' ]] {
+              sub=sha256
+            } elif [[ $sub == sha256 && $l == '          '* ]] {
+              bprops[sha256-${item%%:*}]=${${item#*: }## #}
+            } else {
+              bprops[${item%%:*}]=${${item#*: }## #}; sub=
+            }
+          }
+          (( j++ ))
+        done
+      }
+
+      picked=
+      for item in $items; do
+        if [[ $item == binary ]] {
+          [[ -n ${bprops[sha256-$shakey]-} ]] || continue
+          picked=binary
+          if (( $+commands[$pkg] )) {
+            fn-log-msg -t binary -- "already installed: $pkg"
+            break
+          }
+          url=${bprops[url]}
+          url=${url//'{version}'/${bprops[version]-}}
+          url=${url//'{os}'/$os}
+          url=${url//'{arch}'/$arch}
+          url=${url//'{arch_x}'/$arch_x}
+          tmp=$(mktemp -d) asset=${url:t}
+          {
+            curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors -o $tmp/$asset $url
+            print -r -- "${bprops[sha256-$shakey]}  $tmp/$asset" | $shacmd -c - >/dev/null
+            if [[ $asset == (*.tar.gz|*.tgz|*.tar.xz) ]] {
+              member=${bprops[bin]:-$pkg}
+              tar -x -C $tmp -f $tmp/$asset $member
+              $sudo_cmd install -m 0755 $tmp/$member /usr/local/bin/$pkg
+            } else {
+              $sudo_cmd install -m 0755 $tmp/$asset /usr/local/bin/$pkg
+            }
+          } always {
+            rm -rf $tmp
+          }
+          rehash
+          fn-log-msg -t binary -- "installed: $pkg"
+          break
+        }
+        if [[ $item == \{*\}* ]] {
+          item=${${item#\{}%\}}
+          mgr=${item%%:*}
+          name=${${${item#*: }#\"}%\"}
+        } else {
+          mgr=$item name=$pkg
+        }
+        case $mgr {
+          (brew) [[ $os == darwin ]] && (( $+commands[brew] )) || continue ;;
+          (apt)  [[ $os == linux ]] && (( $+commands[apt-get] )) || continue ;;
+          (npm)  (( $+commands[npm] )) || continue ;;
+          (*) fn-log-msg -t install -- "unknown manager for $pkg: $mgr"; return 1 ;;
+        }
+        batch[$mgr]+=" $name"
+        picked=$mgr
+        break
+      done
+
+      if [[ -n $picked ]] { progress=1 } else { still+=( $pkg ) }
+    done
+
+    if (( ${+batch[brew]} )) {
+      miss=( )
+      for p in ${=batch[brew]}; do brew list $p >/dev/null 2>&1 || miss+=( $p ); done
+      if (( $#miss )) {
+        brew install $miss
+        fn-log-msg -t brew -- "installed: $miss"
+      } else {
+        fn-log-msg -t brew -- "already installed:${batch[brew]}"
+      }
+    }
+    if (( ${+batch[apt]} )) {
+      miss=( )
+      for p in ${=batch[apt]}; do dpkg -s $p >/dev/null 2>&1 || miss+=( $p ); done
+      if (( $#miss )) {
+        export DEBIAN_FRONTEND=noninteractive
+        $sudo_cmd apt-get update
+        $sudo_cmd apt-get install --yes --no-install-recommends $miss
+        fn-log-msg -t apt -- "installed: $miss"
+      } else {
+        fn-log-msg -t apt -- "already installed:${batch[apt]}"
+      }
+    }
+    if (( ${+batch[npm]} )) {
+      miss=( )
+      for p in ${=batch[npm]}; do
+        n=${p%@*}
+        [[ -n $n ]] || n=$p
+        (( $+commands[${n:t}] )) && continue
+        npm ls --global --depth=0 $n >/dev/null 2>&1 || miss+=( $p )
+      done
+      if (( $#miss )) {
+        local -a npm_sudo=( )
+        [[ $os == linux ]] && (( UID )) && npm_sudo=( sudo )
+        $npm_sudo npm install --global $miss
+        fn-log-msg -t npm -- "installed: $miss"
+      } else {
+        fn-log-msg -t npm -- "already installed:${batch[npm]}"
+      }
+    }
+    rehash
+
+    pending=( $still )
+  done
+
+  for pkg in $pending; do
+    fn-log-msg -t install -- "skip $pkg: no applicable manager"
+  done
+  return 0
+}
+##[<] 🤖🤖🤖

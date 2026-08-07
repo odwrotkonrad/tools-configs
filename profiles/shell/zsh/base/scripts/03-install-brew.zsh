@@ -1,6 +1,7 @@
 #!/bin/zsh
 #>[what]
-#   install Homebrew. packages come from ci/zsh/scripts/installs/41-brew-packages.zsh,
+#   install Homebrew, macos only. packages come from
+#   profiles/misc/brew/scripts/01-install-packages.zsh,
 #   a fresh shell picking up /opt/homebrew/bin via zshenv.
 #/[what]
 
@@ -9,8 +10,10 @@ setopt errexit pipefail
 
 ##[>] 🤖🤖
 fpath=(${0:a:h}/../root/etc/zsh/zshenv.d/functions $fpath)
+autoload -Uz fn-install-if-missing fn-is-os
+
+if { ! fn-is-os mac } { echo "brew: macos only, skipping"; exit 0 }
 ##[<] 🤖🤖
-autoload -Uz fn-install-if-missing
 
 ##[>] 🤖
 function install_brew {

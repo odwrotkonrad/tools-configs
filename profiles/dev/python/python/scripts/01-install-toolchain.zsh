@@ -4,8 +4,8 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-typeset -a pkgs=( pyenv python@3.14 pipx uv pyright )
-for pkg ( $pkgs ) {
-  brew list $pkg >/dev/null 2>&1 || brew install $pkg
-}
+fpath=(${0:a:h}/../../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
+autoload -Uz fn-install
+
+fn-install pyenv python3 python3-pip python3-venv pipx uv pyright
 ##[<] 🤖🤖

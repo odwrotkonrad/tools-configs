@@ -4,5 +4,8 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-brew list ruby >/dev/null 2>&1 || brew install ruby
+fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
+autoload -Uz fn-install
+
+fn-install ruby ruby-dev
 ##[<] 🤖🤖

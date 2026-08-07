@@ -163,6 +163,7 @@ profiles
               auto.d
                 gitlab
       scripts
+      spec
     projects
       scripts
       templates
@@ -282,6 +283,13 @@ profiles
               auto.d
                 onepassword
       scripts
+    packages
+      root
+        _home
+          .config
+            packages
+      scripts
+      spec
     ssh
       root
         _home

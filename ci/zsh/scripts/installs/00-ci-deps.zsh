@@ -1,5 +1,5 @@
 #!/bin/zsh
-#[what] ci build deps: go toolchain (https://go.dev/dl/) + prebuilt lefthook, yq, che (bundles the render binaries)
+#[what] ci build deps: go toolchain (https://go.dev/dl/) + prebuilt lefthook, yq, che (mac: brew tap formula, linux: tarball bundling the render binaries)
 
 emulate -LR zsh
 setopt errexit
@@ -44,7 +44,7 @@ fn-install-if-missing go install_go
 
 ##[>] 🤖🤖
 #[what] prebuilt tools: fetch published binaries instead of go install (no source compile)
-#   the che latest tarball bundles che + render-tpl + render-repo-group-index (one fetch, no checksum)
+#   che on mac: brew formula from konradodwrot/tap; on linux: the latest tarball bundles che + render-tpl + render-repo-group-index (one fetch, no checksum)
 lefthook_version=2.1.9
 yq_version=4.53.3
 
@@ -78,8 +78,14 @@ typeset -A yq_sha=(
 prefix=/usr/local
 if [[ ! -d ${prefix}/bin ]] { sudo mkdir -p "${prefix}/bin" }
 
-#[why] one che tarball drops che + the bundled render binaries; the moving latest alias carries no checksum
+#[why] mac: brew formula installs che + the render binaries (tap trusted first: HOMEBREW_REQUIRE_TAP_TRUST defaults on)
+#   linux: one che tarball drops che + the bundled render binaries; the moving latest alias carries no checksum
 function install_che {
+  if { fn-is-os mac } {
+    brew trust --tap konradodwrot/tap
+    brew install konradodwrot/tap/che
+    return
+  }
   local archive="che_latest_${che_os}_${che_arch}.tar.gz"
   local url="https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che/latest/${archive}"
   local tmp=$(mktemp -d)
