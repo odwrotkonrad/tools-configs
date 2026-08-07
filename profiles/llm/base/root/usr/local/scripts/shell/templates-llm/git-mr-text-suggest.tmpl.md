@@ -10,7 +10,7 @@ The commit messages are the source of truth: describe what they change. The diff
 CRITICALLY IMPORTANT: branch commits iterate: later commits rework, rename, move, revert earlier ones. Describe the net effect against main only. Never mention a superseded change; collapse iteration chains into their end state.
 Describe the branch as one single change against main. A later commit "changes"/"renames"/"moves" something an earlier branch commit introduced → it was never in main → state it as added in its final form ("add ⚙️ manual emoji", not "change manual emoji to ⚙️"). Use change/rename/move/fix only against state present in main.
 
-CRITICALLY IMPORTANT: a `### <scope>` area over ~6 bullets MUST split into `#### <feature>` subsections, one per feature, each bullet under its feature. A flat 10+ bullet area is invalid output, flat current description included: regroup, keep bullet wording.
+CRITICALLY IMPORTANT: no list over ~6 bullets, anywhere. Oversized `### <scope>` → split into `#### <feature>` subsections. Oversized `####` → split into finer sibling `####`s. One catch-all `####` is as invalid as a flat area, flat base included: regroup, keep bullet wording. A feature = one capability (a subcommand, a config key, a rename), never the whole change.
 
 Terse, specific, exhaustive: every change that survives to the final state appears, trim words, never changes.
 One line per bullet. No prose, no wrap-around. Drop nothing that survives; drop everything superseded.
@@ -29,7 +29,7 @@ State what changed. Never why. Never explain, justify, or guess.
 
 `description` → markdown grouped by area:
 - `### <scope>` heading per area, first-appearance order in the commits
-- big area (more than ~6 bullets) MUST split into `#### <feature>` subsections, one per feature, its bullets under it. Never emit a flat `### <scope>` list longer than ~6 bullets
+- over ~6 bullets → `#### <feature>` subsections, one per feature; applies at both `###` and `####` level, split finer instead of growing a list
 - one `- ` bullet per change, reviewer-facing
 - flag breaking changes or migrations
 
@@ -72,6 +72,29 @@ big area, two features → title `feat(zsh): add deep-history widget and recency
 - sort file completion candidates by mtime
 - zstyle file-sort modification for files, keep dirs alphabetical
 - add spec scenario for recency order, status implemented
+```
+
+one big feature → sub-features, no catch-all → title `feat(che): add packages command family`:
+
+```
+### che
+
+#### install subcommand
+- add `che packages install [pkg...]`, no args installs every profile's include.installPackages
+- add --update, --if-missing, --packages-file, --packages-override flags
+- resolve managers in rounds: one installed earlier serves later packages
+
+#### check subcommands
+- add check-present, check-upgradable, check-not-shadowed, check-single-present
+- check-present auto-runs after a real install, warn-only
+
+#### builtin packages.yml
+- embed a builtin packages database, used when no packages file exists
+- pin every entry to an exact version, sha256 per platform on archives
+
+#### spec wiring
+- add include.installPackages to profile specs, ordered before run-scripts
+- add install-packages to --skip-ops values
 ```
 {{ with getenv "INSTRUCTIONS_RUNTIME" }}
 ## Important
