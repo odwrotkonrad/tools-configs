@@ -8,12 +8,9 @@ autoload -Uz fn-log-msg
 
 ##[>] 🤖🤖
 fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
-autoload -Uz fn-install-if-missing
+autoload -Uz fn-install
 
-function install_gitlab_runner {
-  brew install gitlab-runner
-}
-fn-install-if-missing gitlab-runner install_gitlab_runner
+fn-install gitlab-runner
 ##[<] 🤖🤖
 
 ###[>] retire brew gitlab-runner service

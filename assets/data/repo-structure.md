@@ -256,7 +256,6 @@ profiles
           .homebrew
         etc
           homebrew
-      scripts
     che
       root
         _home

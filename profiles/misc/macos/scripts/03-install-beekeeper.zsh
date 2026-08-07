@@ -7,5 +7,5 @@ setopt errexit pipefail
 fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
 autoload -Uz fn-install
 
-fn-install grafana
+fn-install beekeeper-studio
 ##[<] 🤖🤖

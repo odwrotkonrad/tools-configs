@@ -53,7 +53,7 @@ gcloud: profiles/cloud/gcp/root/_home/.config/gcloud/configurations/config_main.
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 glab: profiles/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
 golang: profiles/dev/golang/scripts/01-install-gopls.zsh
-homebrew: profiles/misc/brew/root/etc/homebrew/Brewfile
+homebrew: profiles/misc/brew/root/etc/homebrew/brew.env
 kind: profiles/dev/infra/kind/scripts/01-install-kind.zsh
 kubectl: profiles/dev/infra/kubectl/scripts/01-install-kubectl.zsh
 kubectx: profiles/dev/infra/kubectx/scripts/01-install-kubectx.zsh

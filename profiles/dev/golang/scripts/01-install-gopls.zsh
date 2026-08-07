@@ -4,5 +4,8 @@
 emulate -LR zsh
 setopt errexit pipefail
 
-PATH="/usr/local/go/bin:${PATH}" GOPATH=${HOME}/go go install golang.org/x/tools/gopls@latest
+fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
+autoload -Uz fn-install
+
+fn-install gopls
 ##[<] 🤖🤖

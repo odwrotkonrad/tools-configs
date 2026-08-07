@@ -8,8 +8,10 @@ Scenario: a config author declares every package once, under one canonical name
   Status: implemented
   Given a package entry `pkg: [npm, brew, apt]` in packages.yml
   When any install script runs `fn-install pkg`
-  Then the first manager applicable on this host installs it (brew binds to macos, apt to linux, npm to wherever npm is present)
+  Then the first manager applicable on this host installs it (brew binds to macos, apt to linux, npm/go/gem to wherever their command is present)
   And the managers are tried in the entry's listed order
+  And a brew item written `{brew: {cask: name}}` installs as a cask
+  And go items name module paths (`gopls: [{go: "golang.org/x/tools/gopls@latest"}]`)
   And a package shipping a CLI is named after its CLI program (`claude`, `tsc`, `sqlite3`), so presence checks and /usr/local/bin install names stay honest
 
 Scenario: a package keeps one canonical name even where a manager names it differently
@@ -39,8 +41,9 @@ Scenario: a prebuilt binary installs declaratively: url, sha256, done
   Given a `- binary:` entry carrying version, a url templated with {version} {os} {arch} {arch_x}, optional `bin` archive member, and sha256 per os-arch
   When fn-install picks it (no earlier manager applied and a sha256 exists for this os-arch)
   Then the asset downloads, its sha256 verifies or the install aborts
-  And a tar asset extracts the `bin` member, a bare asset installs as-is
-  And the result lands executable at /usr/local/bin/<canonical-name>
+  And a tar or zip asset extracts each space-separated `bin` member (templates expand in members too), a bare asset installs as-is
+  And each result lands executable at /usr/local/bin under its basename
+  And an installed tool whose `--version` reports older than the pinned version reinstalls, a newer one stays
 
 Scenario: one call installs a manager and then packages through it
   Status: implemented

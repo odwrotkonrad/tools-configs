@@ -19,4 +19,5 @@ misc/macos/desktop:
       - templates: [{source: _home/**, dest: $HOME/**}]
     runScripts:
       - scripts/01-install-go-host-tools.zsh
+      - scripts/03-install-beekeeper.zsh
 ##[<] 🤖🤖

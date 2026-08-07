@@ -1,28 +1,11 @@
 #!/bin/zsh
-#[what] go install host-only published tools into $GOPATH/bin (get-os-open-files-with)
+##[>] 🤖🤖
 
 emulate -LR zsh
-setopt errexit
+setopt errexit pipefail
 
-##[>] 🤖🤖
 fpath=(${0:a:h}/../../../shell/zsh/base/root/etc/zsh/zshenv.d/functions $fpath)
-autoload -Uz fn-log-msg
+autoload -Uz fn-install
 
-goroot=/usr/local/go
-function go_install { PATH="${goroot}/bin:${PATH}" go install "$1" }
-
-#[what] own published go tools, host-only: bin -> module@version
-typeset -A own_tools=(
-  get-os-open-files-with    'gitlab.com/konradodwrot/go-modules/get-os-open-files-with@latest'
-)
-
-for bin module ( ${(kv)own_tools} ) {
-  if (( $+commands[$bin] )) {
-    fn-log-msg -t "$bin" -- already installed
-    continue
-  }
-  fn-log-msg -t "$bin" -- installing
-  go_install "$module"
-  fn-log-msg -t "$bin" -- installed
-}
+fn-install get-os-open-files-with
 ##[<] 🤖🤖
