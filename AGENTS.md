@@ -204,6 +204,11 @@ profiles
       nvm
         root
           _home
+            .config
+              zsh
+                zshrc.d
+                  auto.d
+                    nvm
       pnpm
       prettier
         root

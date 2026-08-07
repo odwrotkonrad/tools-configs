@@ -7,7 +7,7 @@ unsetopt allexport
 ##[<] env
 
 ##[>] 🤖🤖
-#[why] nvm is a mac/brew install: absent on linux hosts and in the sandbox image
+#[why] guarded: nvm installs via che packages (dev/js/node profile), absent until that profile ran
 [[ -f "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
 [[ -f "$NVM_DIR/bash_completion" ]] && autoload -Uz bashcompinit && bashcompinit && . "$NVM_DIR/bash_completion"
 ##[<] 🤖🤖
