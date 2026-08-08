@@ -59,7 +59,6 @@ tools:
       files:
         profiles/dev/infra/docker/:
           che.yml:
-          scripts/01-install-completions.zsh:
 
   - editorconfig:
       files:
@@ -69,9 +68,7 @@ tools:
       files:
         profiles/cloud/gcp/:
           che.yml:
-          scripts/:
-            01-install-gcloud.zsh:
-            10-check-auth.zsh:
+          scripts/10-check-auth.zsh:
           root/_home/.config/gcloud/configurations/:
             config_main.ontoHost.tpl:
             config_staging.ontoHost.tpl:
@@ -119,7 +116,6 @@ tools:
       files:
         profiles/dev/golang/:
           che.yml:
-          scripts/02-install-completions.zsh:
 
   - homebrew:
 
@@ -140,7 +136,6 @@ tools:
       files:
         profiles/dev/terminal/kitty/:
           che.yml:
-          scripts/01-install-kitty.zsh:
           root/_home/.config/kitty/:
             kitty.conf:
             dark-theme.auto.conf:
@@ -245,10 +240,6 @@ tools:
       files:
         profiles/shell/zsh/:
           base/che.yml:
-          base/scripts/:
-            01-install-zsh.sh:
-            02-install-rg.zsh:
-            03-install-brew.zsh:
           base/root/_home/.config/zsh/:
             .zshenv:
             .zprofile:

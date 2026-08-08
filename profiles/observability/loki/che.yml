@@ -21,4 +21,6 @@ observability/loki:
       - chmod: "2775"
         directories:
           - {dest: [/var/log/loki]}
+    runScripts:
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

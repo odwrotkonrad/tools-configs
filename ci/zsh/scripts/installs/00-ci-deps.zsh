@@ -5,8 +5,9 @@ emulate -LR zsh
 setopt errexit
 
 ##[>] 🤖🤖
-if (( ! ${+commands[che]} )) {
+if { (( ! ${+commands[che]} )) || ! che packages --help &> /dev/null } {
   curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors https://konradodwrot.gitlab.io/go-modules/install.sh | sh
 }
+unset CHE_PROFILE
 che packages install go
 ##[<] 🤖🤖

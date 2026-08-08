@@ -6,7 +6,7 @@ setopt errexit pipefail nonomatch
 ##[>] 🤖🤖
 typeset root=$(git -C ${0:A:h} rev-parse --show-toplevel)
 
-export FPATH=$root/ci/zsh/functions:$FPATH
+export FPATH=$root/ci/zsh/functions:$root/profiles/shell/zsh/base/root/etc/zsh/zshenv.d/functions:$FPATH
 export PATH=$root/ci/zsh/scripts:$root/ci/zsh/scripts/installs:${GOPATH:-$HOME/go}/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 export CHE_DRY_RUN=$MK_DRY_RUN
 export CHE_RENDER_TEMPLATES_SKIP_SECRETS=$MK_DRY_RUN_RENDER_SECRETS

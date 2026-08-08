@@ -46,7 +46,7 @@ zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc
 aws: profiles/cloud/aws/root/_home/.config/aws/config.ontoHost.tpl
 azure: profiles/cloud/azure/root/_home/.config/azure/config
 curl: profiles/shell/curl/root/_home/.config/curlrc
-docker: profiles/dev/infra/docker/scripts/01-install-completions.zsh
+docker: profiles/dev/infra/docker/che.yml
 editorconfig: profiles/dev/misc/editorconfig/root/_home/.editorconfig
 gcloud: profiles/cloud/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl

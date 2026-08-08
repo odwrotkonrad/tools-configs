@@ -21,4 +21,6 @@ observability/grafana:
         directories:
           - {dest: [/var/log/grafana]}
           - {dest: [/usr/local/var/grafana]}
+    runScripts:
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

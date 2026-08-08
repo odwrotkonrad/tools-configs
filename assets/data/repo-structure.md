@@ -294,6 +294,7 @@ profiles
               dashboards
                 json
               datasources
+      scripts
     jaeger
       root
         Library
@@ -307,6 +308,7 @@ profiles
           LaunchDaemons
         etc
           loki
+      scripts
     otelcol
       root
         Library
