@@ -39,6 +39,13 @@ base:
       - yq
       - zlib
       - zstd
+    #[why] ci/zsh/functions rides FPATH (make-run-target.zsh): compaudit calls an fpath dir
+    #   insecure when it is group/other-writable or owned by neither root nor the user, and
+    #   compinit then prompts in every shell; 0755 keeps the dir secure without manual chmod
+    makeDirs:
+      - chmod: "0755"
+        directories:
+          - {dest: [$PWD/ci/zsh/functions]}
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
 
