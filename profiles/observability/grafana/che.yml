@@ -8,8 +8,8 @@ observability/grafana:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-grafana.zsh
+    installPackages:
+      - grafana
     makeCopies:
       - owner: root
         ownerGroup: "0"
@@ -21,4 +21,6 @@ observability/grafana:
         directories:
           - {dest: [/var/log/grafana]}
           - {dest: [/usr/local/var/grafana]}
+    runScripts:
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

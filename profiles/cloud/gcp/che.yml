@@ -7,8 +7,8 @@ cloud/gcp/install:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-gcloud.zsh
+    installPackages:
+      - gcloud
 
 cloud/gcp/configs:
   options: {runIf: ['builtin:isVirt == false']}

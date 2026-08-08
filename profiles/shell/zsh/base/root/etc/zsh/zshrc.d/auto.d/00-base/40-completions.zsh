@@ -499,12 +499,12 @@ _deep_command() {
 ##[<] 🤖🤖🤖
 
 ##[>] 🤖🤖🤖
-#[what] gather whole-line history candidates into $reply: newest-first deduped, ranked against $PREFIX$SUFFIX in three tiers (exact-case prefix, ci prefix, ci substring; non-matches dropped, empty query => flat newest-first), blank/multiline/over-wide/ignore-hints entries dropped, truncated to $1 (cap<1 => no cap); $2 is the context for the ignore-hints zstyle lookup
+#[what] gather whole-line history candidates into $reply: newest-first deduped, ranked against the query ($3 when given, else $PREFIX$SUFFIX) in three tiers (exact-case prefix, ci prefix, ci substring; non-matches dropped, empty query => flat newest-first), blank/multiline/over-wide/ignore-hints entries dropped, truncated to $1 (cap<1 => no cap); $2 is the context for the ignore-hints zstyle lookup
 _deep_history_cands() {
   local cap=$1 ctx=$2
   reply=( )
 
-  local typed=$PREFIX$SUFFIX
+  local typed=${3-$PREFIX$SUFFIX}
 
   local -a ignore
   zstyle -a ":completion:${ctx}:menu-select:history" ignore-hints ignore
@@ -553,7 +553,7 @@ _deep_history_group() {
   PREFIX=$opre IPREFIX=$oipre SUFFIX=$osuf ISUFFIX=$oisuf
 }
 
-#[what] history engine: whole-line completion over history, newest-first deduped, substring filter by the typed line via a glob prefilter, one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); accepting replaces the entire buffer (-U with PREFIX/SUFFIX spanning it); entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
+#[what] history engine: whole-line completion over history, newest-first deduped, ranked against the stashed typed line ($_deep_history_typed), one flat headerless list sized to the screen (LINES - prompt - 2 bottom blanks); the wrapper widget empties the buffer first, so every candidate inserts into an empty line and no typed word survives beside it; entries that would span more than one screen line (multiline or wider than COLUMNS) or match an ignore-hints regex are omitted
 _deep_history() {
   local curcontext="_deep_history:menu-select::"
 
@@ -561,10 +561,8 @@ _deep_history() {
   local cap=$(( LINES - BUFFERLINES - 2 ))
   (( cap < 1 )) && cap=1
 
-  PREFIX=$LBUFFER SUFFIX=$RBUFFER IPREFIX= ISUFFIX=
-
   local -a reply
-  _deep_history_cands $cap _deep_history
+  _deep_history_cands $cap _deep_history "$_deep_history_typed"
   local -a cands=( $reply )
   (( $#cands )) || return 1
 
@@ -576,7 +574,18 @@ _deep_history() {
 #[why] a raw completion function bypasses _main_complete, so the 'menu select' style never arms complist menu selection: wrap it as the sole completer
 _deep_history_widget() { _main_complete _deep_history }
 zmodload zsh/complist
-zle -C wd-fn-root-history-menu menu-select _deep_history_widget
+zle -C _deep_history_menu menu-select _deep_history_widget
+#[what] user-widget wrapper: stash the typed line, empty the buffer, then run the menu completion; candidates rank against the stash while insertion lands on an empty line (a mid-line cursor would otherwise keep the typed words beside the inserted one: completion replaces only the current word); no candidates => typed line restored untouched
+wd-fn-root-history-menu() {
+  typeset -g _deep_history_typed=$BUFFER
+  local cur=$CURSOR
+  BUFFER= CURSOR=0
+  zle _deep_history_menu
+  local ret=$?
+  if (( ret )) { BUFFER=$_deep_history_typed; CURSOR=$cur }
+  return ret
+}
+zle -N wd-fn-root-history-menu
 ##[<] 🤖🤖🤖
 
 #[what] home-aware, tail-2-full path: HOME->~, all but the last two segments shrunk to their first char; the git-repo-root segment stays full

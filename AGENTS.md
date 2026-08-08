@@ -74,28 +74,28 @@ zsh: profiles/shell/zsh/base/root-linux/etc/zsh/zshrc
 aws: profiles/cloud/aws/root/_home/.config/aws/config.ontoHost.tpl
 azure: profiles/cloud/azure/root/_home/.config/azure/config
 curl: profiles/shell/curl/root/_home/.config/curlrc
-docker: profiles/dev/infra/docker/scripts/01-install-completions.zsh
+docker: profiles/dev/infra/docker/che.yml
 editorconfig: profiles/dev/misc/editorconfig/root/_home/.editorconfig
 gcloud: profiles/cloud/gcp/root/_home/.config/gcloud/configurations/config_main.ontoHost.tpl
 gitlab-runner: profiles/gitlab/runner/root/_home/.gitlab-runner/config.toml.ontoHost.tpl
 glab: profiles/gitlab/glab/root/etc/zsh/zshrc.d/auto.d/gitlab/10-auth.zsh
-golang: profiles/dev/golang/scripts/01-install-gopls.zsh
-homebrew: profiles/misc/brew/root/etc/homebrew/Brewfile
-kind: profiles/dev/infra/kind/scripts/01-install-kind.zsh
-kubectl: profiles/dev/infra/kubectl/scripts/01-install-kubectl.zsh
-kubectx: profiles/dev/infra/kubectx/scripts/01-install-kubectx.zsh
+golang: profiles/dev/golang/che.yml
+homebrew: profiles/misc/brew/root/etc/homebrew/brew.env
+kind: profiles/dev/infra/kind/che.yml
+kubectl: profiles/dev/infra/kubectl/che.yml
+kubectx: profiles/dev/infra/kubectx/che.yml
 loki: profiles/observability/loki/root/etc/loki/config.yml
 man: profiles/shell/man/root/etc/man.conf
 mypy: profiles/dev/python/mypy/root/_home/.config/mypy/config
 nvm: profiles/dev/js/nvm/root/_home/.nvmrc
 ollama: profiles/llm/ollama/root/_home/.ollama/server.json
 onepassword: profiles/misc/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
-pnpm: profiles/dev/js/pnpm/scripts/01-install-pnpm.zsh
+pnpm: profiles/dev/js/pnpm/che.yml
 prettier: profiles/dev/js/prettier/root/_home/.config/prettier/.prettierrc.yml
 pyenv: profiles/shell/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
-ruby: profiles/dev/ruby/scripts/01-install-ruby.zsh
+ruby: profiles/dev/ruby/che.yml
 ruff: profiles/dev/python/ruff/root/_home/.config/ruff/ruff.toml
-terraform: profiles/dev/infra/terraform/scripts/01-install-terraform.zsh
+terraform: profiles/dev/infra/terraform/che.yml
 tmux: profiles/dev/terminal/tmux/root/_home/.config/tmux/tmux.conf
 vim: profiles/dev/editors/vim/root/_home/.config/vim/vimrc
 ##[<] other
@@ -154,13 +154,11 @@ profiles
         _home
           .config
             aws
-      scripts
     azure
       root
         _home
           .config
             azure
-      scripts
     gcp
       root
         _home
@@ -193,30 +191,25 @@ profiles
                   Code
                     User
                       .exported
-          scripts
     golang
-      scripts
     infra
       cilium
-        scripts
       docker
-        scripts
       kind
-        scripts
       kubectl
-        scripts
       kubectx
-        scripts
       terraform
-        scripts
     js
       node
-        scripts
       nvm
         root
           _home
+            .config
+              zsh
+                zshrc.d
+                  auto.d
+                    nvm
       pnpm
-        scripts
       prettier
         root
           _home
@@ -233,21 +226,18 @@ profiles
             .config
               mypy
       python
-        scripts
       ruff
         root
           _home
             .config
               ruff
     ruby
-      scripts
     terminal
       kitty
         root
           _home
             .config
               kitty
-        scripts
       tmux
         root
           _home
@@ -262,7 +252,6 @@ profiles
             local
               scripts
                 shell
-        scripts
   git
     assets
       images
@@ -295,7 +284,7 @@ profiles
             zshrc.d
               auto.d
                 gitlab
-      scripts
+      spec
     projects
       scripts
       templates
@@ -356,7 +345,6 @@ profiles
               zshrc.d
                 auto.d
                   claude
-      scripts
       templates
         snippets
     codex
@@ -369,7 +357,6 @@ profiles
             zshrc.d
               auto.d
                 codex
-      scripts
     ollama
       root
         _home
@@ -378,7 +365,6 @@ profiles
           local
             scripts
               shell
-      scripts
   misc
     brew
       root
@@ -388,13 +374,11 @@ profiles
           .homebrew
         etc
           homebrew
-      scripts
     che
       root
         _home
           .config
             che
-      scripts
     macos
       root
         _home
@@ -406,7 +390,6 @@ profiles
           local
             scripts
               shell
-      scripts
     onepassword
       root
         etc
@@ -430,7 +413,6 @@ profiles
       root-virt
         _home
           .ssh
-      scripts
   observability
     grafana
       assets
@@ -484,7 +466,6 @@ profiles
       root
         _home
           .config
-      scripts
     man
       root
         etc
@@ -492,7 +473,6 @@ profiles
       root
         etc
           rg
-      scripts
     zsh
       assets
         images
@@ -529,7 +509,6 @@ profiles
             zsh
               zshenv.d
                 functions
-        scripts
       extras
         root
           _home

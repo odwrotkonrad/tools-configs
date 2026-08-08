@@ -9,6 +9,6 @@ dev/terminal/tmux:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
       - usr/**
-    runScripts:
-      - scripts/01-install-tmux.zsh
+    installPackages:
+      - tmux
 ##[<] 🤖🤖

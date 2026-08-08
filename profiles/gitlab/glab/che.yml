@@ -7,6 +7,6 @@ gitlab/glab:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-glab.zsh
+    installPackages:
+      - glab
 ##[<] 🤖🤖

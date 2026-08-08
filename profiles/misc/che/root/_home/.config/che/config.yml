@@ -1,5 +1,10 @@
 ##[>] 🤖🤖
 validateSpec: error
+packages:
+  completions:
+    zsh:
+      enabled: true
+      installDestinationCandidates: ~/.local/state/zsh/completions
 otel:
   enabled: true
   endpoint: localhost:4317

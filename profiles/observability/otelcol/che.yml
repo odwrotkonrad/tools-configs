@@ -21,6 +21,8 @@ observability/otelcol:
         directories:
           - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
           - {dest: ["/var/custom/cache/dir_size_exporter"]}
+    installPackages:
+      - otelcol
     runScripts:
-      - scripts/01-install-otelcol.zsh
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

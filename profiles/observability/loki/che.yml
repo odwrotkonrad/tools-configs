@@ -8,8 +8,9 @@ observability/loki:
   include:
     makeLinks:
       - etc/**
-    runScripts:
-      - scripts/01-install-loki.zsh
+    installPackages:
+      - loki
+      - logcli
     makeCopies:
       - owner: root
         ownerGroup: "0"
@@ -20,4 +21,6 @@ observability/loki:
       - chmod: "2775"
         directories:
           - {dest: [/var/log/loki]}
+    runScripts:
+      - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

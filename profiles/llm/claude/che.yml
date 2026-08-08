@@ -9,9 +9,8 @@ llm/claude:
       - {source: _home/**, dest: $HOME/**}
     renderTemplates:
       - templates: [{source: _home/**, dest: $HOME/**}]
-    runScripts:
-      - scripts/01-install-claude.zsh
-      - scripts/02-install-completions.zsh
+    installPackages:
+      - claude
 
 llm/claude/virt:
   options: {profileWorkingDirectory: .}

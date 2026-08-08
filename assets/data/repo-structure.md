@@ -21,13 +21,11 @@ profiles
         _home
           .config
             aws
-      scripts
     azure
       root
         _home
           .config
             azure
-      scripts
     gcp
       root
         _home
@@ -60,30 +58,25 @@ profiles
                   Code
                     User
                       .exported
-          scripts
     golang
-      scripts
     infra
       cilium
-        scripts
       docker
-        scripts
       kind
-        scripts
       kubectl
-        scripts
       kubectx
-        scripts
       terraform
-        scripts
     js
       node
-        scripts
       nvm
         root
           _home
+            .config
+              zsh
+                zshrc.d
+                  auto.d
+                    nvm
       pnpm
-        scripts
       prettier
         root
           _home
@@ -100,21 +93,18 @@ profiles
             .config
               mypy
       python
-        scripts
       ruff
         root
           _home
             .config
               ruff
     ruby
-      scripts
     terminal
       kitty
         root
           _home
             .config
               kitty
-        scripts
       tmux
         root
           _home
@@ -129,7 +119,6 @@ profiles
             local
               scripts
                 shell
-        scripts
   git
     assets
       images
@@ -162,7 +151,7 @@ profiles
             zshrc.d
               auto.d
                 gitlab
-      scripts
+      spec
     projects
       scripts
       templates
@@ -223,7 +212,6 @@ profiles
               zshrc.d
                 auto.d
                   claude
-      scripts
       templates
         snippets
     codex
@@ -236,7 +224,6 @@ profiles
             zshrc.d
               auto.d
                 codex
-      scripts
     ollama
       root
         _home
@@ -245,7 +232,6 @@ profiles
           local
             scripts
               shell
-      scripts
   misc
     brew
       root
@@ -255,13 +241,11 @@ profiles
           .homebrew
         etc
           homebrew
-      scripts
     che
       root
         _home
           .config
             che
-      scripts
     macos
       root
         _home
@@ -273,7 +257,6 @@ profiles
           local
             scripts
               shell
-      scripts
     onepassword
       root
         etc
@@ -297,7 +280,6 @@ profiles
       root-virt
         _home
           .ssh
-      scripts
   observability
     grafana
       assets
@@ -351,7 +333,6 @@ profiles
       root
         _home
           .config
-      scripts
     man
       root
         etc
@@ -359,7 +340,6 @@ profiles
       root
         etc
           rg
-      scripts
     zsh
       assets
         images
@@ -396,7 +376,6 @@ profiles
             zsh
               zshenv.d
                 functions
-        scripts
       extras
         root
           _home

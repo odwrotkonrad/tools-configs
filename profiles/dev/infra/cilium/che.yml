@@ -5,6 +5,6 @@ options:
 
 dev/infra/cilium:
   include:
-    runScripts:
-      - scripts/01-install-cilium-cli.zsh
+    installPackages:
+      - cilium
 ##[<] 🤖🤖

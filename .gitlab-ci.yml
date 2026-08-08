@@ -25,7 +25,6 @@ variables:
     - key:
         files:
           - ci/zsh/scripts/installs/00-ci-deps.zsh
-          - profiles/misc/macos/scripts/01-install-go-host-tools.zsh
       paths:
         - .cache/go-mod
         - .cache/go-build

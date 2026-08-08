@@ -10,6 +10,6 @@ misc/che:
     makeDirs:
       - directories:
           - {dest: [$HOME/.local/state/che/backups]}
-    runScripts:
-      - scripts/01-install-completions.zsh
+    installPackages:
+      - che
 ##[<] 🤖🤖

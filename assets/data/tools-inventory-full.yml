@@ -28,7 +28,6 @@ tools:
       files:
         profiles/llm/claude/:
           che.yml:
-          scripts/01-install-claude.zsh:
           root/_home/.config/claude/:
             settings.json.ontoHost.tpl:
             agents/:
@@ -45,7 +44,6 @@ tools:
       files:
         profiles/llm/codex/:
           che.yml:
-          scripts/01-install-codex.zsh:
           root/_home/.config/codex/config.toml.ontoHost.tpl:
           root/etc/zsh/zshrc.d/auto.d/codex/10-auth.zsh:
 
@@ -61,7 +59,6 @@ tools:
       files:
         profiles/dev/infra/docker/:
           che.yml:
-          scripts/01-install-completions.zsh:
 
   - editorconfig:
       files:
@@ -71,9 +68,7 @@ tools:
       files:
         profiles/cloud/gcp/:
           che.yml:
-          scripts/:
-            01-install-gcloud.zsh:
-            10-check-auth.zsh:
+          scripts/10-check-auth.zsh:
           root/_home/.config/gcloud/configurations/:
             config_main.ontoHost.tpl:
             config_staging.ontoHost.tpl:
@@ -84,7 +79,6 @@ tools:
   - git:
       files:
         profiles/git/che.yml:
-        profiles/git/scripts/01-install-git.zsh:
         profiles/git/root/usr/local/scripts/shell/conventional-prefix.sh:
         profiles/git/root/_home/.config/git/:
           config:
@@ -106,7 +100,7 @@ tools:
       files:
         profiles/gitlab/runner/:
           che.yml:
-          scripts/01-install-gitlab-runner.zsh:
+          scripts/01-boot-service.zsh:
           root/_home/.gitlab-runner/config.toml.ontoHost.tpl:
           root/Library/LaunchAgents/gitlab-runner.plist.ontoHost.tpl:
 
@@ -114,7 +108,6 @@ tools:
       files:
         profiles/gitlab/glab/:
           che.yml:
-          scripts/01-install-glab.zsh:
           root/etc/zsh/:
             zshenv.d/auto.d/gitlab/10-params-secrets.zsh:
             zshrc.d/auto.d/gitlab/10-auth.zsh:
@@ -123,8 +116,6 @@ tools:
       files:
         profiles/dev/golang/:
           che.yml:
-          scripts/01-install-gopls.zsh:
-          scripts/02-install-completions.zsh:
 
   - homebrew:
 
@@ -132,7 +123,7 @@ tools:
       files:
         profiles/observability/jaeger/:
           che.yml:
-          scripts/01-install-jaeger.zsh:
+          scripts/01-boot-service.zsh:
           root/etc/jaeger/config.yml:
           root/Library/LaunchDaemons/jaeger.plist.ontoHost.cp:
 
@@ -140,13 +131,11 @@ tools:
       files:
         profiles/dev/infra/kind/:
           che.yml:
-          scripts/01-install-kind.zsh:
 
   - kitty:
       files:
         profiles/dev/terminal/kitty/:
           che.yml:
-          scripts/01-install-kitty.zsh:
           root/_home/.config/kitty/:
             kitty.conf:
             dark-theme.auto.conf:
@@ -157,13 +146,11 @@ tools:
       files:
         profiles/dev/infra/kubectl/:
           che.yml:
-          scripts/01-install-kubectl.zsh:
 
   - kubectx:
       files:
         profiles/dev/infra/kubectx/:
           che.yml:
-          scripts/01-install-kubectx.zsh:
 
   - man:
       files:
@@ -177,16 +164,13 @@ tools:
       files:
         profiles/misc/onepassword/:
           che.yml:
-          scripts/:
-            01-install-op.zsh:
-            02-init-auth.zsh:
+          scripts/02-init-auth.zsh:
           root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh:
 
   - pnpm:
       files:
         profiles/dev/js/pnpm/:
           che.yml:
-          scripts/01-install-pnpm.zsh:
 
   - prettier:
       files:
@@ -196,7 +180,7 @@ tools:
       files:
         profiles/observability/prometheus/:
           che.yml:
-          scripts/01-install-prometheus.zsh:
+          scripts/01-boot-service.zsh:
           root/etc/prometheus/prometheus.yml:
           root/Library/LaunchDaemons/prometheus.plist.ontoHost.cp:
 
@@ -206,7 +190,6 @@ tools:
       files:
         profiles/dev/ruby/:
           che.yml:
-          scripts/01-install-ruby-lsp.zsh:
 
   - rg:
       files:
@@ -236,7 +219,6 @@ tools:
       files:
         profiles/dev/infra/terraform/:
           che.yml:
-          scripts/01-install-terraform.zsh:
 
   - tmux:
       files:
@@ -258,10 +240,6 @@ tools:
       files:
         profiles/shell/zsh/:
           base/che.yml:
-          base/scripts/:
-            01-install-zsh.sh:
-            02-install-rg.zsh:
-            03-install-brew.zsh:
           base/root/_home/.config/zsh/:
             .zshenv:
             .zprofile:

@@ -4,8 +4,12 @@
 function fn-boot-service {
   emulate -LR zsh
   setopt errexit pipefail
-  autoload -Uz fn-log-msg
+  autoload -Uz fn-log-msg fn-is-os fn-is-virt
   local name=$1
+
+  if ! fn-is-os mac || fn-is-virt; then
+    return 0
+  fi
 
   local daemon=/Library/LaunchDaemons/$name.plist
   local agent=/Library/LaunchAgents/$name.plist

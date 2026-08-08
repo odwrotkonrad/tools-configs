@@ -7,6 +7,6 @@ shell/curl:
   include:
     makeLinks:
       - {source: _home/**, dest: 's:^_home:$HOME:'}
-    runScripts:
-      - scripts/01-install-curl.sh
+    installPackages:
+      - curl
 ##[<] 🤖🤖

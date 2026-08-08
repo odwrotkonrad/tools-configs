@@ -7,6 +7,6 @@ dev/terminal/kitty:
   include:
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
-    runScripts:
-      - scripts/01-install-kitty.zsh
+    installPackages:
+      - kitty
 ##[<] 🤖🤖

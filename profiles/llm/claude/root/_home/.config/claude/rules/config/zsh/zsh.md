@@ -17,10 +17,6 @@ paths:
     files:
       profiles/shell/zsh/base/:                                      # bare-minimal profile: zsh + rg only
         che.yml:                                            # zsh/base, zsh/base-macos, zsh/base-linux profiles
-        scripts/:
-          01-install-zsh.sh:                                # POSIX sh: linux apt-get, macos no-op
-          02-install-rg.zsh:                                # prebuilt rg binary download
-          03-install-brew.zsh:                              # homebrew bootstrap (packages stay in ci installs)
         root/_home/.config/zsh/:
           .zshenv:
           .zprofile:
@@ -48,8 +44,8 @@ paths:
               fn-is-arch:                                   # predicate: arm|x86
               fn-is-virt:
               fn-is-terminal:                               # predicate: kitty|vscode
-              fn-install-if-missing:
-              fn-install-prebuilt-if-outdated:
+              fn-boot-service:
+              fn-comp-file-write:
           zshrc.d/:                                         # loaded by /etc/zshrc (interactive)
             static-history.d/:                              # concatenated into each interactive shell, name order
               00-base:

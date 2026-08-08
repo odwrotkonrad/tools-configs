@@ -2,6 +2,49 @@
 ##[>] 🤖🤖
 base:
   include:
+    installPackages:
+      - bat
+      - bats
+      - ccstatusline
+      - che
+      - claude
+      - codex
+      - copilot
+      - corepack
+      - fd
+      - ffmpeg
+      - gcc
+      - htop
+      - jq
+      - lefthook
+      - libtool
+      - make
+      - nmap
+      - openssl
+      - pandoc
+      - pcre2
+      - pkgconf
+      - procs
+      - pstree
+      - readline
+      - shellcheck
+      - showkey
+      - sqlite3
+      - stow
+      - tcl
+      - tree
+      - unzip
+      - watch
+      - xz
+      - yq
+      - zlib
+      - zstd
+    makeDirs:
+      - chmod: "0755"
+        directories:
+          - {dest: [$PWD/ci]}
+          - {dest: [$PWD/ci/zsh]}
+          - {dest: [$PWD/ci/zsh/functions]}
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
 

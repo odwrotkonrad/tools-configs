@@ -8,7 +8,8 @@ misc/onepassword:
   include:
     makeLinks:
       - etc/**
+    installPackages:
+      - op
     runScripts:
-      - scripts/01-install-op.zsh
       - scripts/02-init-auth.zsh
 ##[<] 🤖🤖

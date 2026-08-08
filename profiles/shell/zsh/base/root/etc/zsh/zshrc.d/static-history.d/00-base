@@ -2,10 +2,8 @@
 brew list                #[what] list all packages installed
 brew update              #[what] update remotes
 brew upgrade             #[what] install upgrades
-brew install             #[what] install from brewfile
 brew install wget        #[what] install pkg
-brew bundle add wget     #[what] add pkg to Brewfile
-brew bundle remove wget  #[what] remove pkg from Brewfile
+che packages install wget  #[what] install pkg via packages.yml (canonical name)
 ##[<] brew
 
 ##[>] zsh builtins

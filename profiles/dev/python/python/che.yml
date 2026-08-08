@@ -5,7 +5,9 @@ options:
 
 dev/python/python:
   include:
-    runScripts:
-      - scripts/01-install-toolchain.zsh
-      - scripts/02-install-python.zsh
+    installPackages:
+      - {name: python3, versions: [3.14.5], globalVersion: 3.14.5}
+      - pipx
+      - uv
+      - pyright
 ##[<] 🤖🤖

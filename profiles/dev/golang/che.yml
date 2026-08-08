@@ -5,8 +5,9 @@ options:
 
 dev/golang:
   include:
-    runScripts:
-      - scripts/01-install-gopls.zsh
-      - scripts/02-install-completions.zsh
-      - scripts/03-install-release-toolchain.zsh
+    installPackages:
+      - go
+      - gopls
+      - goreleaser
+      - zig
 ##[<] 🤖🤖

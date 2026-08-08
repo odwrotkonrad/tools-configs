@@ -12,6 +12,10 @@
 
 **/terraform.tfstate*
 **/CLAUDE.local.md
+
+# go coverage covdata (GOCOVERDIR)
+**/covcounters.*
+**/covmeta.*
 ##[<] other
 
 ##[>] inverse rules
