@@ -3,7 +3,7 @@
 #   Sync onto main, stage all, commit with llm message.
 #   on main: commit there first, branch off (name derived from the commit),
 #   then reset local main to origin/main so main stays clean.
-#   amend arg: soft-reset HEAD~1 first, then re-commit. Never amend on main.
+#   amend arg: git commit --amend, message from HEAD~1..staged diff. Never amend on main.
 #   nothing staged after add: exit 0 (upsert-all continues to mr-upsert).
 #   hook fails leaving an unstaged diff (docsgen regen): restage, retry once.
 #   repo has lefthook.yml but no installed pre-commit hook: install via
@@ -37,10 +37,12 @@ git-sync-onto-main.zsh && sync=0 || sync=$?
 on_main=0
 if [[ $(git rev-parse --abbrev-ref HEAD) == main ]] on_main=1
 
+typeset -a commit_args diff_base
 if [[ $mode == amend ]] {
   if (( on_main )) { print -r -- "on main, refusing to amend"; exit 1 }
-  print -r -- "amend: soft-resetting HEAD~1"
-  git reset --soft HEAD~1
+  print -r -- "amend: amending HEAD"
+  commit_args=(--amend)
+  diff_base=(HEAD~1)
 }
 
 repo_root=$(git rev-parse --show-toplevel)
@@ -57,21 +59,21 @@ if [[ -f $repo_root/lefthook.yml && ! -e $hook_path ]] {
 
 git add .
 
-if { git diff --cached --quiet } {
+if [[ $mode != amend ]] && { git diff --cached --quiet } {
   print -r -- "nothing to commit, skipping"
   exit 0
 }
 
-out=$(llm-git-commit-suggest.zsh)
+out=$(llm-git-commit-suggest.zsh $diff_base)
 subject=$(jq -r .subject <<< $out)
 description=$(jq -r .description <<< $out)
 print -r -- "subject: $subject"
 
-if ! { git commit -m $subject -m $description } {
+if ! { git commit $commit_args -m $subject -m $description } {
   if { git diff --quiet } { exit 1 }
   print -r -- "hooks regenerated files, restaging and retrying once"
   git add .
-  git commit -m $subject -m $description
+  git commit $commit_args -m $subject -m $description
 }
 
 if (( on_main )) {
