@@ -91,6 +91,7 @@ nvm: profiles/dev/js/nvm/root/_home/.nvmrc
 ollama: profiles/llm/ollama/root/_home/.ollama/server.json
 onepassword: profiles/misc/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
 pnpm: profiles/dev/js/pnpm/che.yml
+podman: profiles/dev/infra/podman/che.yml
 prettier: profiles/dev/js/prettier/root/_home/.config/prettier/.prettierrc.yml
 pyenv: profiles/shell/zsh/extras/root/_home/.config/zsh/zshenv.d/auto.d/extras/20-tools-env.zsh
 ruby: profiles/dev/ruby/che.yml
@@ -198,6 +199,7 @@ profiles
       kind
       kubectl
       kubectx
+      podman
       terraform
     js
       node
@@ -273,6 +275,7 @@ profiles
             shell
     scripts
     spec
+      unvetted_ai
   gitlab
     glab
       root
@@ -285,6 +288,7 @@ profiles
               auto.d
                 gitlab
       spec
+        unvetted_ai
     projects
       scripts
       templates
@@ -316,6 +320,7 @@ profiles
                 lib
                 templates-llm
       spec
+        unvetted_ai
     claude
       root
         _home
@@ -336,6 +341,8 @@ profiles
                   zsh
                 docs
               skills
+                humanize-prose
+                  scripts
                 user-git-ops
               themes
             zsh
@@ -531,4 +538,5 @@ profiles
                   extras
                 static-history.d
       spec
-        completions
+        unvetted_ai
+          completions

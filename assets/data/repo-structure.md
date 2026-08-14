@@ -65,6 +65,7 @@ profiles
       kind
       kubectl
       kubectx
+      podman
       terraform
     js
       node
@@ -140,6 +141,7 @@ profiles
             shell
     scripts
     spec
+      unvetted_ai
   gitlab
     glab
       root
@@ -152,6 +154,7 @@ profiles
               auto.d
                 gitlab
       spec
+        unvetted_ai
     projects
       scripts
       templates
@@ -183,6 +186,7 @@ profiles
                 lib
                 templates-llm
       spec
+        unvetted_ai
     claude
       root
         _home
@@ -203,6 +207,8 @@ profiles
                   zsh
                 docs
               skills
+                humanize-prose
+                  scripts
                 user-git-ops
               themes
             zsh
@@ -398,4 +404,5 @@ profiles
                   extras
                 static-history.d
       spec
-        completions
+        unvetted_ai
+          completions
