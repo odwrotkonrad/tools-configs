@@ -1,7 +1,4 @@
 ##[>] 🤖🤖
-downstream:
-  - {name: zsh/base-linux, type: che-profile}
-  - {name: llm/claude, type: ai-prose}
 upstream:
   - prose/repo-prose
   - prose/conventions-doc
@@ -9,5 +6,7 @@ upstream:
   - prose/license
   - go-modules/che
   - infra/oci-images/ci-linux
-  - {consumes: prose/repo-prose, into: llm/claude}
+downstream:
+  - {name: zsh/base-linux, type: che-profile}
+  - {name: llm/claude, type: ai-prose}
 ##[<] 🤖🤖
