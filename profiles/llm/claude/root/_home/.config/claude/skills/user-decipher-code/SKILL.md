@@ -24,15 +24,15 @@ Lang: `$lang` (empty → none). When set, apply these design principles to every
 
 ## Procedure
 
-1. Read the targets whole. Go over each symbol and each comment, understand the purpose of every one. Read clarifying comments as evidence: each marks a spot where the code failed to speak for itself.
+1. Read the targets whole. Understand the purpose of every symbol and every comment. Clarifying comments are evidence: each marks a spot where the code failed to speak for itself.
 2. Fold that understanding back into the code:
    - Rename. Give each symbol a name carrying what the comment had to explain: pack max info, `noun_noun_verb`, max 3 parts.
-   - Use common conventional names, aggressively: industry-standard idiomatic nomenclature over invented terms (`src`/`dst`, `count`, `path`, `parse`, `render`). Hunt invented nomenclature and replace it: any term coined for this codebase that has an industry-standard equivalent gets the standard name, everywhere it appears. Minimize the vocabulary: reuse one word per concept across all symbols, never synonyms for the same thing.
-   - Rearrange. Order and group code so it reads top-down as a narrative: intent first, detail below, related things adjacent.
+   - Use conventional names, aggressively: industry-standard idiomatic nomenclature over invented terms (`src`/`dst`, `count`, `path`, `parse`, `render`). Hunt coined terms, replace each with the standard equivalent, everywhere it appears. Minimize the vocabulary: one word per concept across all symbols, never synonyms.
+   - Rearrange. Order and group code so it reads top-down: intent first, detail below, related things adjacent.
    - Reduce comments. Once a name or structure says it, delete the comment. Keep only what code cannot express.
 3. Re-read as a first-time reader. Any spot needing a comment or a pause to decode: rename or rearrange again.
 
-Goal: reading the code is a pleasure. A reader understands each piece from its name and position alone.
+Goal: reading the code is a pleasure. Each piece is understood from its name and position alone.
 
 ## Constraints
 
@@ -44,8 +44,8 @@ If tests cover a target, run them after changes.
 
 ## Bugs
 
-If the procedure surfaces a bug, notify the user and let them decide the action. In a non-interactive session, intervene with best judgment, e.g. provide a fix, and report what you fixed and why.
+Surfaced a bug: tell the user, let them decide. Non-interactive session: use best judgment, fix it, report what and why.
 
 ## Inconsistencies
 
-If the procedure surfaces an inconsistency (something inaccurate, contradictory, or out of sync with the rest of the repo), notify the user and let them decide the action. In a non-interactive session, intervene: resolve it with best judgment to keep the repository state coherent, and report what you resolved and why.
+Surfaced an inconsistency (inaccurate, contradictory, out of sync with the repo): tell the user, let them decide. Non-interactive session: resolve it with best judgment, keep the repo coherent, report what and why.

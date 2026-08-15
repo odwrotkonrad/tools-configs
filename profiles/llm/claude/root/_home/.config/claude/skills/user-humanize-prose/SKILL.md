@@ -22,7 +22,7 @@ Rewrite each target in place, same medium.
 
 ## Instructions
 
-Rewrite aggressively. Do not preserve the original wording, sentence order, or structure out of caution: if a sentence can be tighter, rewrite it. "Already decent" is not a reason to skip. Apply all of:
+Rewrite aggressively. Never preserve wording, sentence order, or structure out of caution: if a sentence can be tighter, rewrite it. "Already decent" is not a reason to skip. Apply all of:
 
 - Shorten. Cut filler, hedges, preamble, postamble, restated context. Keep only what changes what the reader does or knows.
 - Deduplicate. Remove redundant prose: points repeated in other words. Say it once, in the best spot.
@@ -40,4 +40,4 @@ Output only the rewritten prose. No commentary unless asked.
 
 ## Inconsistencies
 
-If the rewrite surfaces an inconsistency (something inaccurate, contradictory, or out of sync with the rest of the repo), notify the user and let them decide the action. In a non-interactive session, intervene: resolve it with best judgment to keep the repository state coherent, and report what you resolved and why.
+Surfaced an inconsistency (inaccurate, contradictory, out of sync with the repo): tell the user, let them decide. Non-interactive session: resolve it with best judgment, keep the repo coherent, report what and why.

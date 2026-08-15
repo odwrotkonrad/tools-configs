@@ -15,9 +15,6 @@ paths:
 
 ```yml
 root/_home/.config/claude/:
-  CLAUDE.md:                # global instructions, all projects
-  comments.md:              # @-included by CLAUDE.md
-  git.md:                   # @-included by CLAUDE.md
   settings.json.ontoHost.tpl:
   agents/:
   agent-memory/:
@@ -25,14 +22,30 @@ root/_home/.config/claude/:
   output-styles/:
     interactive-code.md:
   skills/:
-    user-git-branch-name-upsert/:
-    user-git-commit/:
-    user-git-mr-upsert/:
-    user-git-upsert-all/:
+    user-decipher-code/:
+      SKILL.md:
+      scripts/:
+        print-lang-principles.sh:
+        resolve-scope.sh:
+    user-git-ops/:
+      SKILL.md:
+    user-humanize-prose/:
+      SKILL.md:
+      scripts/:
+        resolve-scope.sh:
+    user-junior-wrote-this-code-refactor-redesign/:
+      SKILL.md:
+    user-prettify-code/:
+      SKILL.md:
+      scripts/:
+        print-lang-principles.sh:
+        resolve-scope.sh:
   themes/:
   rules/:
     code/:
       code.md:
+      go/:
+        principles.md:
       python/:
         python.md:
         scripts.md:
@@ -44,8 +57,8 @@ root/_home/.config/claude/:
       ssh.md:
       vscode.md:
       zsh/:
-        zsh.md:
         functions.md:
+        zsh.md:
     docs/:
       prose.md:
   plugins/:
@@ -53,6 +66,8 @@ root/_home/.config/claude/:
     known_marketplaces.json:
     marketplaces/:
 ```
+
+Global instructions (`~/.config/claude/CLAUDE.md`) are not in this tree: rendered onto the host from `root/_home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl` (llm/base profile). It `@`-includes `~/.config/ai-agents/docs/`: `comments.md`, `git.md`, `testing.md`.
 
 Project instructions live in `<repo>/.claude/` (preferred) or `<repo>/CLAUDE.md`.
 

@@ -116,6 +116,8 @@ apply-linux-cli:
     #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
     - useradd -m -s /bin/zsh -G root ko && echo 'ko ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/ko
     - chown -R ko "$CI_PROJECT_DIR"
+    #[why] GOPATH is the image's root-owned /usr/local/go-tools: `go install` as ko cannot create pkg/sumdb there, so pre-create the tree and hand it over
+    - mkdir -p "$GOPATH/bin" "$GOPATH/pkg" && chown -R ko "$GOPATH"
     ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
