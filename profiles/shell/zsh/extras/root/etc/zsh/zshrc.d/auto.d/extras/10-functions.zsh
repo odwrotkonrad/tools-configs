@@ -2,11 +2,11 @@
 
 autoload -Uz add-zsh-hook
 
-function fn_otel_resource_cwd {
+function fn-otel-resource-cwd {
   export OTEL_RESOURCE_ATTRIBUTES="cwd=${PWD},project=${PWD:t}"
 }
-add-zsh-hook chpwd fn_otel_resource_cwd
-fn_otel_resource_cwd
+add-zsh-hook chpwd fn-otel-resource-cwd
+fn-otel-resource-cwd
 
 add-zsh-hook chpwd  fn-env-autoload
 add-zsh-hook precmd fn-env-autoload
@@ -16,7 +16,7 @@ function zshaddhistory {
   emulate -L zsh
   [[ $1 != [[:space:]]#[${histchars}]* ]]
 }
-##[<]
+##[<] 🤖🤖
 
 function command_not_found_handler {
   if [[ -e $1 && -o interactive && -t 0 ]]; then

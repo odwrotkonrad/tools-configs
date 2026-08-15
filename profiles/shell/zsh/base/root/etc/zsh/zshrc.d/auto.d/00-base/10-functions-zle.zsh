@@ -3,18 +3,14 @@
 wd-fn-root-clear-scrollable() {
     #[what] abort current input and clear screen in a way it can be scrolled above to see what inputs was aborted
 
-    # 1. print current input as a comment
     if [[ ${BUFFER} ]] {
       print -rn -- "$rt_seq[goto-col-1]${(%%)PS1}# $BUFFER"
     }
-    # 2. reset input
     zle reset-prompt
     BUFFER=
 
-    # 3. fill terminal with new lines
     print -n ${(pl:$LINES::\n:)}
 
-    # 4. move empty prompt line to first terminal row
     print -n $rt_seq[goto-row-1]
 }
 
@@ -54,10 +50,12 @@ zle-intr() {
     }
 }
 
-typeset -a wd_fn_rt=(
+##[>] 🤖
+typeset -a widgets_custom=(
    wd-fn-root-job-foreground
    wd-fn-root-accept-line
    wd-fn-root-clear-scrollable
    wd-fn-root-keystrokes-listen
 )
-for widget ( $wd_fn_rt ) zle -N $widget
+for widget ( $widgets_custom ) zle -N $widget
+##[<] 🤖

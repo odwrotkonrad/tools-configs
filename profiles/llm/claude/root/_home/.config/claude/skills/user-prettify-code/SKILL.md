@@ -44,6 +44,10 @@ Keep existing comment notation intact: label prefixes (`[where]`, `[why]`, `[wha
 
 If tests cover a target, run them after changes.
 
+## Bugs
+
+If the procedure surfaces a bug, notify the user and let them decide the action. In a non-interactive session, intervene with best judgment, e.g. provide a fix, and report what you fixed and why.
+
 ## Inconsistencies
 
 If the procedure surfaces an inconsistency (something inaccurate, contradictory, or out of sync with the rest of the repo), notify the user and let them decide the action. In a non-interactive session, intervene: resolve it with best judgment to keep the repository state coherent, and report what you resolved and why.

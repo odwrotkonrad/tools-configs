@@ -34,9 +34,9 @@ if [[ -z $(git status --porcelain) &&
   exit 0
 }
 
-git-sync-onto-main.zsh && sync=0 || sync=$?
-(( sync == 22 )) && exit 22
-(( sync == 23 )) && { print -r -- "merged onto main, nothing to name"; exit 0 }
+git-sync-onto-main.zsh && rc=0 || rc=$?
+(( rc == 22 )) && exit 22
+(( rc == 23 )) && { print -r -- "merged onto main, nothing to name"; exit 0 }
 
 name=$(llm-git-branch-name-suggest.zsh | jq -r .name)
 print -r -- "suggested name: $name"

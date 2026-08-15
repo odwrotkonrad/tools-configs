@@ -4,19 +4,18 @@
 function fn-annotate-with-sections {
   emulate -LR zsh
 
-  ##[>] 🤖🤖 label: command line (skip leading sudo), basename of argv[1], capped to fit the line
+  ##[>] 🤖🤖
   local -a words=( "$@" )
   [[ ${words[1]} == sudo ]] && shift words
   words[1]=${words[1]:t}
   local label=${(j: :)words}
-  #[what] fit the marker to the tty width; no width (0, e.g. CI/pipe) -> keep the full label
+  #[why] no usable tty width (COLUMNS 0, e.g. CI/pipe) -> keep the full label
   local cap=$(( COLUMNS - 7 ))  #[what] room for '##[>] ' + '…'
   (( COLUMNS >= 20 && ${#label} > cap )) && label="${label[1,cap-1]}…"
-  ##[<]
 
-  #[what] 🤖🤖 frame the command's output in bold repo section markers ([>] open, [<] close)
   print -P -- "%B##[>] ${label}%b"
   "$@"; local rc=$?
   print -P -- "%B##[<] ${label}%b"
   return $rc
+  ##[<] 🤖🤖
 }

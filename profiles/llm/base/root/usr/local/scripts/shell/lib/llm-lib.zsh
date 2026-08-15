@@ -5,20 +5,19 @@
 #   Usage: source ${0:A:h}/lib/llm-lib.zsh
 #     read -r llm_script llm_model llm_template <<<"$(lib-llm-config-load <script-name>)"
 #     lib-llm-env-export <script-name>
-#     prompt=$(lib-llm-prompt-fill <template> <assoc-name>)
+#     prompt=$(lib-llm-prompt-render <template> <assoc-name>)
 #/[what]
 
-lib_llm_config=/etc/custom/llm.yml
+llm_config_path=/etc/custom/llm.yml
 
 ##[>] lib-llm-config-load 🤖🤖
-#[what] print script, model, template, space-separated
 lib-llm-config-load() {
   local name=$1
   name=$name yq '
     .scripts[strenv(name)] as $s
     | (.providers[$s.provider.id] * ($s.provider.config // {})) as $p
     | [$p.script, $p.model, $s.template] | join(" ")
-  ' "$lib_llm_config"
+  ' "$llm_config_path"
 }
 ##[<] lib-llm-config-load 🤖🤖
 
@@ -30,21 +29,20 @@ lib-llm-env-export() {
     .scripts[strenv(name)] as $s
     | (.providers[$s.provider.id] * ($s.provider.config // {})) as $p
     | (($p.env // {}) * ($s.env // {})) | to_entries | .[] | .key + "=" + .value
-  ' "$lib_llm_config")}"; do
+  ' "$llm_config_path")}"; do
     key=${kv%%=*}
     [[ -n $kv && ! -v $key ]] && export "$kv"
   done
 }
 ##[<] lib-llm-env-export 🤖🤖
 
-##[>] lib-llm-prompt-fill 🤖🤖
-#[what] render templates-llm/<template> with the named assoc's pairs as env vars (render-tpl engine)
-lib-llm-prompt-fill() {
+##[>] lib-llm-prompt-render 🤖🤖
+lib-llm-prompt-render() {
   local template=$1 assoc=$2
-  local base=${${(%):-%x}:A:h:h}
+  local scripts_dir=${${(%):-%x}:A:h:h}
   local -A vars=("${(@kv)${(P)assoc}}")
 
   for k v in "${(@kv)vars}"; do export "$k"="$v"; done
-  render-tpl -f "$base/templates-llm/$template"
+  render-tpl -f "$scripts_dir/templates-llm/$template"
 }
-##[<] lib-llm-prompt-fill 🤖🤖
+##[<] lib-llm-prompt-render 🤖🤖

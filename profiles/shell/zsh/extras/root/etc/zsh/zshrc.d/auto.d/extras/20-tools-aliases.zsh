@@ -3,7 +3,7 @@ alias a-rt-git-interactive-rebase="git rebase --interactive HEAD~10"
 alias a-rt-git-log-pretty="git log --pretty=format:'%h %ar %s' --decorate -n 10"
 alias a-rt-git-remotes-all-list="git remote --verbose"
 alias a-rt-git-stash-all="git stash --include-untracked"
-alias a-rt-git-status-all="git stash --show-stash"
+alias a-rt-git-status-all="git status --show-stash"
 ##[<] git
 
 ##[>] claude >[what]
@@ -12,7 +12,7 @@ alias a-rt-git-status-all="git stash --show-stash"
 #/[what]
 
 #[why] claude still asks questions in dontAsk mode
-alias a-rt-claude-no-ask='claude --permission-mode dontAsk --append-system-prompt "IMPORTANT! Never ask user any questions! User your best judgement when in doubt!"'
+alias a-rt-claude-no-ask='claude --permission-mode dontAsk --append-system-prompt "IMPORTANT! Never ask user any questions! Use your best judgement when in doubt!"'
 ##[<] claude
 
 ##[>] processes

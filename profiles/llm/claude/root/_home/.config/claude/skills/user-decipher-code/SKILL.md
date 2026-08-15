@@ -21,6 +21,7 @@ Code files only: skip docs, data, lockfiles, generated files, content-unchanged 
 1. Read the targets whole. Go over each symbol and each comment, understand the purpose of every one. Read clarifying comments as evidence: each marks a spot where the code failed to speak for itself.
 2. Fold that understanding back into the code:
    - Rename. Give each symbol a name carrying what the comment had to explain: pack max info, `noun_noun_verb`, max 3 parts.
+   - Use common conventional names, aggressively: industry-standard idiomatic nomenclature over invented terms (`src`/`dst`, `count`, `path`, `parse`, `render`). Hunt invented nomenclature and replace it: any term coined for this codebase that has an industry-standard equivalent gets the standard name, everywhere it appears. Minimize the vocabulary: reuse one word per concept across all symbols, never synonyms for the same thing.
    - Rearrange. Order and group code so it reads top-down as a narrative: intent first, detail below, related things adjacent.
    - Reduce comments. Once a name or structure says it, delete the comment. Keep only what code cannot express.
 3. Re-read as a first-time reader. Any spot needing a comment or a pause to decode: rename or rearrange again.
@@ -34,6 +35,10 @@ Preserve behavior: same inputs, same outputs, same side effects.
 Keep existing comment notation intact where a comment survives: label prefixes (`[where]`, `[why]`, `[what]`), `[>]`/`[<]` section markers, 🤖 marks. Add no new comments.
 
 If tests cover a target, run them after changes.
+
+## Bugs
+
+If the procedure surfaces a bug, notify the user and let them decide the action. In a non-interactive session, intervene with best judgment, e.g. provide a fix, and report what you fixed and why.
 
 ## Inconsistencies
 

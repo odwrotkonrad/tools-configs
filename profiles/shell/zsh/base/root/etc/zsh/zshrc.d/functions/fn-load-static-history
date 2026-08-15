@@ -1,25 +1,26 @@
 #>[what]
-# purpose of this function is to load commands from /etc/zsh/zshrc.d/static-history.d/* and ${ZDOTDIR}/zshrc.d/static-history.d/* (name order) into in memory history list
-# comment lines are removed
-# whitespace before comments is folded into two spaces
+#   load /etc/zsh/zshrc.d/static-history.d/* and ${ZDOTDIR}/zshrc.d/static-history.d/*
+#   (name order) into the in-memory history list; comment lines dropped,
+#   whitespace before an inline comment folded to two spaces
 #/[what]
 
 function fn-load-static-history {
   emulate -LR zsh
 
-  local TEMP_HIST=$(mktemp)
-  local RGX_LINE='^(\w.*)'  #[what] match commands (starting with a word character)
-  local RGX_COMMENT='\s+(#)' #[what] match whitespace before comment (#)
   ##[>] 🤖🤖
+  local tmp=$(mktemp)
+  local cmd_line_re='^(\w.*)'
+  local inline_comment_re='\s+(#)'
   local -a hist_files=(
     /etc/zsh/zshrc.d/static-history.d/*(N)
     ${ZDOTDIR:-${HOME}/.config/zsh}/zshrc.d/static-history.d/*(N)
   )
   (( $#hist_files )) || return 0
 
-  rg $RGX_LINE --no-line-number --no-filename --no-multiline $hist_files \
-    | rg $RGX_COMMENT -r '  $1' --passthru >| "$TEMP_HIST"
-  ##[<] 🤖🤖
+  rg $cmd_line_re --no-line-number --no-filename --no-multiline $hist_files \
+    | rg $inline_comment_re -r '  $1' --passthru >| "$tmp"
 
-  fc -R "$TEMP_HIST"
+  fc -R "$tmp"
+  rm -f "$tmp"
+  ##[<] 🤖🤖
 }

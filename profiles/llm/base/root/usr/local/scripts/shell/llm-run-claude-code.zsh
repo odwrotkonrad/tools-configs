@@ -2,9 +2,9 @@
 #>[what]
 #   Headless claude -p wrapper for llm-* scripts.
 #   Usage: <prompt-on-stdin> | llm-run-claude-code --model <model> --schema <schema>
-#   Sets ANTHROPIC_MODEL, caller-exported env (e.g. CLAUDE_CODE_*) wins.
+#   Sets ANTHROPIC_MODEL from --model.
 #   Auth: default claude.ai login (no ANTHROPIC_API_KEY).
-#   Upstream: llm-git-* scripts. Downstream: prompt on stdin, --model, --schema.
+#   Upstream: llm-git-* scripts. In: prompt on stdin, --model, --schema.
 #   Out: structured output object.
 #/[what]
 
@@ -14,7 +14,7 @@ set -e
 ##[>] script input
 zparseopts -D -E -- -model:=opt_model -schema:=opt_schema
 typeset -A script_input=(
-  in_instructions "$(<&0)"
+  in_prompt "$(<&0)"
 
   opt_model "${opt_model[2]}"
   opt_schema "${opt_schema[2]}"
@@ -23,7 +23,7 @@ typeset -A script_input=(
 
 export ANTHROPIC_MODEL="$script_input[opt_model]"
 
-<<< "$script_input[in_instructions]" claude -p \
+<<< "$script_input[in_prompt]" claude -p \
   --system-prompt '' \
   --output-format json \
   --tools "" \

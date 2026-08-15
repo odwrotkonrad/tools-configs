@@ -31,8 +31,8 @@ print -r -- "=== ${0:t} $(date +%FT%T) ==="
 
 mode=${1:-}
 
-git-sync-onto-main.zsh && sync=0 || sync=$?
-(( sync == 22 )) && exit 22
+git-sync-onto-main.zsh && rc=0 || rc=$?
+(( rc == 22 )) && exit 22
 
 on_main=0
 if [[ $(git rev-parse --abbrev-ref HEAD) == main ]] on_main=1

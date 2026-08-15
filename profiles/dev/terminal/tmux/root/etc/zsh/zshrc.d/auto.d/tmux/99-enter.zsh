@@ -1,5 +1,5 @@
 ##[>] 🤖🤖
 if [[ -z ${TMUX} ]] {
-  exec tmux
+  exec tmux new-session -A -s "${${PWD:t}//[.:]/_}"
 }
 ##[<] 🤖🤖

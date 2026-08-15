@@ -4,7 +4,9 @@ set -euo pipefail
 name="${1}"
 keyfile="$HOME/.ssh/$name"
 if [ ! -f "$keyfile" ]; then
-	>&2 <<< "key doesn't exist: $keyfile"
+##[>] 🤖🤖
+	echo "key doesn't exist: $keyfile" >&2
+##[<] 🤖🤖
 	exit 1
 fi
 

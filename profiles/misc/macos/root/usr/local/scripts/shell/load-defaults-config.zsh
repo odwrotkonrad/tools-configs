@@ -1,8 +1,4 @@
 #!/bin/zsh
-#>[what]
-#   Load macOS defaults from YAML on stdin.
-#   Each domain/key via `defaults write` typed by YAML tag, then restart `.apps`.
-#/[what]
 
 set -o pipefail
 
@@ -11,7 +7,6 @@ yq=/opt/homebrew/bin/yq
 yaml=$(</dev/stdin)  #[where] /etc/defaults.yml
 
 
-#[what] apply settings
 while IFS=$'\t' read -r domain key tag value; do
   case $tag in
     '!!str')   defaults write  "$domain" "$key" -string "$value" ;;
@@ -25,5 +20,6 @@ done < <($yq -r '
   [$d, .key, (.value | tag), (.value | tostring)] | @tsv
 ' <<<"$yaml")
 
-#[what] restart apps
-xargs -n1 killall || true < <($yq -r '.apps[]' <<<"$yaml")
+##[>] 🤖🤖
+$yq -r '.apps[]' <<<"$yaml" | xargs -n1 killall || true
+##[<] 🤖🤖

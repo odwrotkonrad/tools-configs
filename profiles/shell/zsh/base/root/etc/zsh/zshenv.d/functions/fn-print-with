@@ -1,13 +1,13 @@
-#[what] 🤖🤖 fn-print-with <modifier> <text> — styled wrapper over print
+#[what] 🤖🤖 fn-print-with <style> <text> — styled wrapper over print
 #   bold: %B/%b · title: text between dash bars sized to COLUMNS, or fixed --- if no tty width
 
 function fn-print-with {
   emulate -LR zsh
   setopt errexit pipefail
 
-  local modifier=$1 text=$2 bar n
+  local style=$1 text=$2 bar n
 
-  case ${modifier} {
+  case ${style} {
     (bold)  text="%B${text}%b" ;;
     (title) bar="---"; (( COLUMNS > ${#text} + 2 )) && { n=$(( (COLUMNS - ${#text} - 2) / 2 )); bar=${(l:n::-:)} }; text="${bar} %B${text}%b ${bar}" ;;
     (*) return 2 ;;

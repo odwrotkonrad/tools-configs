@@ -14,8 +14,7 @@ if [[ -z ${GITLAB_TOKEN-} ]] {
   return 0
 }
 
-#[what] parse $GITLAB_GROUPS (';'/newline-separated <group>:<host_dir> pairs, empty host_dir -> group);
-#   fall back to the single $GITLAB_GROUP/$HOST_DIR_GITLAB_GROUP when unset.
+#[what] parse $GITLAB_GROUPS: ';'/newline-separated <group>:<host_dir> pairs, empty host_dir -> group
 typeset -a groups
 if [[ -n ${GITLAB_GROUPS-} ]] {
   typeset entry group host_dir
@@ -54,7 +53,7 @@ function sync_project {
   git -C $dest fetch --prune origin
 
   if { ! git -C $dest rev-parse --verify --quiet origin/$branch >/dev/null } {
-    print -r -- "sync(no-changes): $dest"
+    print -r -- "skip(no-remote-branch): $dest"
     return 0
   }
 
@@ -80,7 +79,7 @@ function sync_project {
   print -r -- "sync(updated): $dest"
 }
 
-#[what] CI/token: clone over https with the token (no ssh key); else ssh url
+#[why] CI has no ssh key: clone over https with the token
 typeset url_field=ssh_url_to_repo
 if (( ${+CI} )) url_field=http_url_to_repo
 
@@ -91,12 +90,11 @@ for pair in $groups; do
 
   glab api --paginate \
     "groups/${group}/projects?include_subgroups=true&archived=false" \
-    | jq -r ".[] | [.path_with_namespace, .default_branch, .${url_field}] | @tsv" \
+    | jq -r ".[] | select(.marked_for_deletion_on == null) | [.path_with_namespace, .default_branch, .${url_field}] | @tsv" \
     | while IFS=$'\t' read -r ns branch url; do
-        #[what] map remote path <group>/<subpath> to host dir <host_dir>/<subpath>
-        local rel=${host_dir}/${ns#${group}/}
+        local dest_rel=${host_dir}/${ns#${group}/}
         if (( ${+CI} )) url=${url/#https:\/\//https://oauth2:${GITLAB_TOKEN}@}
-        if { ! sync_project $rel $branch $url } print -r -- "sync(fail): ${root}/${rel}"
+        if { ! sync_project $dest_rel $branch $url } print -r -- "sync(fail): ${root}/${dest_rel}"
       done
 done
 ##[<] 🤖🤖🤖

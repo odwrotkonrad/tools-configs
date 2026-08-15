@@ -7,7 +7,7 @@ Scenario: any shell resolves the gitlab token from the right backend without con
   When a virt shell (sandbox pod, macos-vm) needs the token
   Then it resolves `gcp://konradodwrot-sandbox-auth/sandbox-gitlab-group-token` via the injected ADC
   And a host shell resolves `op://ProgrammaticAccess/gitlab/access_token` via op
-  And every consumer (fn_auth_glab, render-tpl) stays context-agnostic
+  And every consumer (fn-auth-glab, render-tpl) stays context-agnostic
 
 Scenario: a sandbox reaches github read-only with no credential to leak
   Status: todo

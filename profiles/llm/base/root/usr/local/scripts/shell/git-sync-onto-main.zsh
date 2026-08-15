@@ -28,18 +28,18 @@ if [[ $branch == main ]] {
 
 git fetch origin main:main
 
-if git merge-base --is-ancestor main HEAD; then
+if { git merge-base --is-ancestor main HEAD } {
   fn-exit-with 0 "up to date, sync skipped"
-fi
+}
 
-if git merge-base --is-ancestor HEAD main; then
+if { git merge-base --is-ancestor HEAD main } {
   git checkout main
   fn-exit-with 23 "branch '$branch' already merged; switched to main"
-fi
+}
 
-if ! git rebase --autostash main; then
+if ! { git rebase --autostash main } {
   print -u2 "rebase conflicts:"
   git diff --name-only --diff-filter=U | sed 's/^/  /' >&2
   fn-exit-with 22 "resolve conflicts, then \`git rebase --continue\` (or \`--abort\`)"
-fi
+}
 ##[<] 🤖🤖

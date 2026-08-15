@@ -9,7 +9,7 @@ PYTHONPATH="/usr/local/scripts/python"
 
 unsetopt allexport
 
-typeset -a tool_bins=(
+typeset -a bin_dirs=(
     ${GOPATH}/bin
     ${PYENV_ROOT}/bin
     ${PYENV_ROOT}/shims
@@ -17,7 +17,7 @@ typeset -a tool_bins=(
     /usr/local/scripts/python
 )
 
-if { fn-is-os mac } tool_bins+=(
+if { fn-is-os mac } bin_dirs+=(
     /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Support
     /opt/local/bin
     /opt/X11/bin
@@ -26,6 +26,6 @@ if { fn-is-os mac } tool_bins+=(
     /opt/homebrew/opt/curl/bin
 )
 
-fn-insert path $tool_bins
+fn-insert path $bin_dirs
 fn-insert path ${XDG_BIN_HOME}
 ##[<] 🤖🤖

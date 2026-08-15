@@ -5,7 +5,7 @@ set -u
 host=localhost
 port=9101
 
-ephemeral_floor=49152
+ephemeral_port_min=49152
 
 collect() {
   echo "# HELP listening_port Local TCP port in LISTEN state (value always 1)."
@@ -19,14 +19,14 @@ collect() {
       R) ppid=${line:1} ;;
       n)
         local addr=${line:1}
-        local p=${addr##*:}
-        case $p in
+        local port=${addr##*:}
+        case $port in
           ''|*[!0-9]*) continue ;;
         esac
-        if [ "$p" -lt "$ephemeral_floor" ]; then
-          local safe_cmd=${cmd//\\/}
-          safe_cmd=${safe_cmd//\"/}
-          echo "listening_port{port=\"$p\",process=\"$safe_cmd\",pid=\"$pid\",ppid=\"$ppid\"} 1"
+        if [ "$port" -lt "$ephemeral_port_min" ]; then
+          local escaped_cmd=${cmd//\\/}
+          escaped_cmd=${escaped_cmd//\"/}
+          echo "listening_port{port=\"$port\",process=\"$escaped_cmd\",pid=\"$pid\",ppid=\"$ppid\"} 1"
         fi
         ;;
     esac
