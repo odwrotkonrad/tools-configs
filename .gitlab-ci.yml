@@ -58,8 +58,8 @@ dry-run-apply-sync:
 
 .e2e-macos:
   ##[>] 🤖🤖
-  tags: [darwin]
-  image: ghcr.io/cirruslabs/macos-tahoe-base:latest
+  tags: [saas-macos-medium-m1]
+  image: macos-15-xcode-16
   variables:
     CHE_DEBUG: "1"
   ##[<] 🤖🤖

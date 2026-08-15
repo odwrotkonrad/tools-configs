@@ -24,7 +24,6 @@ shell/zsh/base:
         directories:
           - {dest: [/etc/zsh/zshrc.d/completions]}
     installPackages:
-      - brew
       - zsh
       - rg
 
@@ -35,6 +34,8 @@ shell/zsh/base-macos:
       - source: "./che.yml::shell/zsh/base"
     makeLinks:
       - etc/**
+    installPackages:
+      - brew
 
 shell/zsh/base-linux:
   options: {runIf: ['builtin:isOs == linux'], profileWorkingDirectory: root-linux}

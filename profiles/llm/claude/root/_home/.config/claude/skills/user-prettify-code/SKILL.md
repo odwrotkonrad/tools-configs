@@ -1,8 +1,8 @@
 ---
 name: user-prettify-code
 description: Refactor code for quality without changing behavior, reduce complexity, remove antipatterns, idiomatic target-language code, modern syntax, commonize repeated code, remove dead code. Use when the user wants code cleaned up, simplified, modernized, deduplicated, or de-antipatterned. Keywords: prettify, refactor, clean up, simplify, dedupe, modernize, idiomatic, antipattern, dead code, /user-prettify-code.
-argument-hint: "[uncommited-changes|diff-from-main|<path>]"
-arguments: [scope]
+argument-hint: "[all-repo|uncommited-changes|diff-from-main|<path>] [lang]"
+arguments: [scope, lang]
 allowed-tools: "Bash(${CLAUDE_SKILL_DIR}/scripts/*)"
 ---
 
@@ -15,6 +15,12 @@ Scope: `$scope` (empty → `diff-from-main`). Resolved target files:
 !`${CLAUDE_SKILL_DIR}/scripts/resolve-scope.sh $scope`
 
 Code files only: skip docs, data, lockfiles, generated files, content-unchanged renames.
+
+## Language Principles
+
+Lang: `$lang` (empty → none). When set, apply these design principles to every target in that language:
+
+!`${CLAUDE_SKILL_DIR}/scripts/print-lang-principles.sh $lang`
 
 ## Procedure
 

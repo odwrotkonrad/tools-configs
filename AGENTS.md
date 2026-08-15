@@ -335,6 +335,7 @@ profiles
                 marketplaces
               rules
                 code
+                  go
                   python
                   zsh
                 config
@@ -346,6 +347,7 @@ profiles
                 user-git-ops
                 user-humanize-prose
                   scripts
+                user-junior-wrote-this-code-refactor-redesign
                 user-prettify-code
                   scripts
               themes
