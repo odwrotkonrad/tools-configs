@@ -75,7 +75,6 @@ dry-run-apply-macos:
     matrix:
       - CHE_PROFILE: [desktop/macos, cli/macos]
   needs: []
-  allow_failure: true
   script:
     - make sync-full
 
