@@ -68,6 +68,8 @@ dry-run-apply-macos:
   extends: .e2e-macos
   stage: dry-run-apply
   rules:
+    - if: $ENABLE_DARWIN_CI != "true"
+      when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
     MK_DRY_RUN: all
@@ -87,6 +89,8 @@ apply-macos-cli:
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs: [dry-run-apply-macos]
   rules:
+    - if: $ENABLE_DARWIN_CI != "true"
+      when: never
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
