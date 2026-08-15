@@ -6,6 +6,7 @@ upstream:
   - prose/license
   - go-modules/che
   - infra/oci-images/ci-linux
+  - control/workspace
 downstream:
   - {name: zsh/base-linux, type: che-profile}
   - {name: llm/claude, type: ai-prose}

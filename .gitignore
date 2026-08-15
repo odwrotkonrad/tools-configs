@@ -16,3 +16,12 @@ __pycache__/
 
 
 /root/etc/**/*local*
+##[>] 🤖
+/AGENTS.md
+/CLAUDE.md
+/assets/data/makefile.agents.md
+/assets/data/repo-structure.md
+/assets/data/conventions.md
+/assets/docs-agents/purpose.md
+/assets/docs-agents/file-naming.md
+##[<] 🤖

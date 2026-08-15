@@ -5,7 +5,7 @@ gitlab/base/macos:
   include:
     profiles:
       - source: "./glab/che.yml::gitlab/glab"
-      - source: "./projects/che.yml::gitlab/projects"
+      - source: "$HOME/projects/gitlab/konradodwrot/control/workspace/che.yml::gitlab/projects"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
@@ -15,14 +15,14 @@ gitlab/host/macos:
     profiles:
       - gitlab/base/macos
       - source: "./runner/che.yml::gitlab/runner"
-      - source: "./projects/che.yml::gitlab/projects-parent-links"
+      - source: "$HOME/projects/gitlab/konradodwrot/control/workspace/che.yml::gitlab/projects-parent-links"
 
 gitlab/virt/linux:
   options: {runIf: ['builtin:isOs == linux']}
   include:
     profiles:
       - source: "./glab/che.yml::gitlab/glab"
-      - source: "./projects/che.yml::gitlab/projects"
+      - source: "$HOME/projects/gitlab/konradodwrot/control/workspace/che.yml::gitlab/projects"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
 ##[<] 🤖🤖
