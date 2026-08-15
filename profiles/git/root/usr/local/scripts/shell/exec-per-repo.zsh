@@ -5,8 +5,8 @@
 #   CLICOLOR, TERM=dumb), ANSI stripped at finish, stdout+stderr →
 #   ~/.local/state/git-wrappers/exec-per-repo/<run pid>/<repo>_<pid>.log.
 #   ## Progress on stderr: tty => in-place dashboard redrawn every 5s (header
-#   done/count + overall status + clock + countdown bar; per repo
-#   `### <repo padded> <emoji> <clock> pid=<pid>`, log:, tail: last log line);
+#   done/count + overall status + dur + countdown bar; per repo
+#   `### <repo padded> <emoji> <dur> pid=<pid>`, log:, tail: last log line);
 #   non-tty => the same frames appended every 5s, bold/bar dropped.
 #   ## Done closes the run (Progress-header shape + ✅/❌ counts); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
@@ -34,14 +34,14 @@ usage() {
 }
 
 root=$PWD
-include=() exclude=() must=()
+include=() exclude=() filters=()
 while (( $# )) {
   case $1 {
     -C) (( $# >= 2 )) || usage; root=$2; shift 2 ;;
     --chpwd=*) root=${1#*=}; shift ;;
     --include=*) include+=(${(s:,:)${1#*=}}); shift ;;
     --exclude=*) exclude+=(${(s:,:)${1#*=}}); shift ;;
-    --must-filter=*) must+=(${(s:,:)${1#*=}}); shift ;;
+    --must-filter=*) filters+=(${(s:,:)${1#*=}}); shift ;;
     -*) usage ;;
     *) break ;;
   }
@@ -53,10 +53,10 @@ if (( $# == 1 )) {
   cmd=("$@")
 }
 
-for f ($must) {
-  case $f {
+for filter ($filters) {
+  case $filter {
     changes|off-main|unsynced) ;;
-    *) print -ru2 -- "$self: unknown --must-filter value: $f"; exit 2 ;;
+    *) print -ru2 -- "$self: unknown --must-filter value: $filter"; exit 2 ;;
   }
 }
 
@@ -65,8 +65,8 @@ root=${root:A}
 
 repos=()
 typeset -A dir_of
-for gitent (${(f)"$(find $root -name .git -prune -print 2>/dev/null | sort)"}) {
-  dir=${gitent:h}
+for git_dir (${(f)"$(find $root -name .git -prune -print 2>/dev/null | sort)"}) {
+  dir=${git_dir:h}
   rel=${dir#$root/}
   [[ $dir == $root ]] && rel=${root:t}
   repos+=($rel)
@@ -76,38 +76,38 @@ for gitent (${(f)"$(find $root -name .git -prune -print 2>/dev/null | sort)"}) {
 
 resolve_selector() {
   local tok=$1
-  hit=
+  match=
   if [[ $tok == */* ]] {
-    [[ -n ${repos[(r)$tok]} ]] && hit=$tok
+    [[ -n ${repos[(r)$tok]} ]] && match=$tok
     return
   }
-  local hits=(${(M)repos:#(*/|)$tok})
-  if (( $#hits > 1 )) {
-    print -ru2 -- "$self: ambiguous name '$tok' matches: ${(j:, :)hits}"
+  local matches=(${(M)repos:#(*/|)$tok})
+  if (( $#matches > 1 )) {
+    print -ru2 -- "$self: ambiguous name '$tok' matches: ${(j:, :)matches}"
     exit 2
   }
-  (( $#hits )) && hit=$hits[1]
+  (( $#matches )) && match=$matches[1]
 }
 
 if (( $#include )) {
   selected=()
   for tok ($include) {
     resolve_selector $tok
-    [[ -z $hit || -n ${selected[(r)$hit]} ]] || selected+=($hit)
+    [[ -z $match || -n ${selected[(r)$match]} ]] || selected+=($match)
   }
   repos=(${repos:*selected})
 }
 for tok ($exclude) {
   resolve_selector $tok
-  [[ -n $hit ]] && repos=(${repos:#$hit})
+  [[ -n $match ]] && repos=(${repos:#$match})
 }
 
-if (( $#must )) {
+if (( $#filters )) {
   kept=()
   for repo ($repos) {
     ok=1
-    for f ($must) {
-      case $f {
+    for filter ($filters) {
+      case $filter {
         changes)
           [[ -n $(git -C $dir_of[$repo] status --porcelain) ]] || ok=0 ;;
         off-main)
@@ -131,7 +131,7 @@ zmodload zsh/datetime
 zmodload zsh/system
 setopt extendedglob
 fmt_dur() { printf '%dm%02ds' $(( $1 / 60 )) $(( $1 % 60 )) }
-bold=$'\e[1m' unbold=$'\e[0m'
+bold=$'\e[1m' reset=$'\e[0m'
 
 repo_w=0
 for repo ($repos) (( $#repo > repo_w )) && repo_w=$#repo
@@ -172,11 +172,11 @@ progress_header() {
   }
   local bar="${(pl:$fill::▰:):-}${(pl:$(( 5 - fill ))::▱:):-}"
   (( $#pending && tty )) || bar=""
-  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) pid=$$ $bar${unbold}"
+  print -r -- "${bold}## Progress $(( $#repos - $#pending ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) pid=$$ $bar${reset}"
 }
 
 render_progress() {
-  local repo log line emoji clock t cols
+  local repo log line emoji dur t cols
   if (( tty )) {
     cols=${COLUMNS:-$(tput cols 2>/dev/null)}
     : ${cols:=120}
@@ -193,12 +193,12 @@ render_progress() {
     log=$log_of[$repo]
     if (( ${+status_of[$repo]} )) {
       (( status_of[$repo] )) && emoji=❌ || emoji=✅
-      clock=$(fmt_dur $elapsed_of[$repo])
+      dur=$(fmt_dur $elapsed_of[$repo])
     } else {
       emoji=🕐
-      clock=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
+      dur=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
-    draw_lines+=( "${bold}### ${(r:$repo_w:)repo} $emoji $clock pid=$pid_of[$repo]${unbold}" "log: $log" )
+    draw_lines+=( "${bold}### ${(r:$repo_w:)repo} $emoji $dur pid=$pid_of[$repo]${reset}" "log: $log" )
     line=""
     for t (${(Oaf)"$(tail -n 15 $log 2>/dev/null)"}) {
       t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
@@ -210,7 +210,7 @@ render_progress() {
 
 tty=0
 [[ -t 2 ]] && tty=1
-(( tty )) || { bold='' unbold='' }
+(( tty )) || { bold='' reset='' }
 
 typeset -a draw_lines
 drawn=0 tick=0
@@ -233,12 +233,12 @@ failed=()
 for repo ($repos) (( status_of[$repo] )) && failed+=($repo)
 
 (( $#failed )) && overall=❌ || overall=✅
-print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $(( $#repos - $#failed )) ❌ $#failed${unbold}"
+print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $(( $#repos - $#failed )) ❌ $#failed${reset}"
 if (( $#failed )) {
-  print -r -- $'\n'"${bold}## Failed Executions${unbold}"
+  print -r -- $'\n'"${bold}## Failed Executions${reset}"
   for repo ($failed) {
     log=$log_of[$repo]
-    print -r -- $'\n'"${bold}### $repo ❌ (exit $status_of[$repo]) $(fmt_dur $elapsed_of[$repo])${unbold}"
+    print -r -- $'\n'"${bold}### $repo ❌ (exit $status_of[$repo]) $(fmt_dur $elapsed_of[$repo])${reset}"
     print -r -- "log: $log"
     print -r -- "tail:"
     for line (${(f)"$(tail -n 10 $log)"}) {

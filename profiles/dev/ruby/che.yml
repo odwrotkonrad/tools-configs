@@ -7,6 +7,5 @@ dev/ruby:
   include:
     installPackages:
       - ruby
-      - ruby-dev
       - ruby-lsp
 ##[<] 🤖🤖

@@ -81,8 +81,8 @@ for action char in ${(kv)cchars}; stty ${action} ${char}
 
 
 ##[>] zshzle #[where] man zshzle > bindkey
-bindkey -N key_map
-bindkey -M key_map -R "^@"-"~" self-insert
+bindkey -N keymap
+bindkey -M keymap -R "^@"-"~" self-insert
 
 typeset -A keystrokes_widgets=(
     "$keystrokes[bracketedPaste]"   .bracketed-paste
@@ -127,9 +127,9 @@ typeset -A keystrokes_widgets=(
 
     "$keystrokes[ctrlV]"            wd-fn-root-keystrokes-listen
 )
-for key wid in ${(kv)keystrokes_widgets}; bindkey -M key_map "${key}" "${wid}"
+for key wid in ${(kv)keystrokes_widgets}; bindkey -M keymap "${key}" "${wid}"
 
-bindkey -A key_map main
+bindkey -A keymap main
 
 ##[>] 🤖
 bindkey -M menuselect "${rt_seq[esc]}" accept-line

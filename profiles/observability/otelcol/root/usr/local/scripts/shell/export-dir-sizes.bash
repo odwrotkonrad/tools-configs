@@ -7,11 +7,11 @@ port=9102
 
 interval=300
 
-size_floor=$((10 * 1024 * 1024))
+min_bytes=$((10 * 1024 * 1024))
 
 cache=/var/custom/cache/dir_size_exporter/dir_sizes.prom
 
-walk_roots=(
+roots=(
   /opt
   /usr/local
   /Library
@@ -24,45 +24,45 @@ for home in /Users/*; do
   case ${home##*/} in
     Shared | .localized) continue ;;
   esac
-  [ -d "$home" ] && walk_roots+=("$home")
+  [ -d "$home" ] && roots+=("$home")
 done
 
-render() {
+collect() {
   echo "# HELP dir_size_bytes Directory size in bytes (du)."
   echo "# TYPE dir_size_bytes gauge"
 
-  local -a wpaths=() wbytes=()
+  local -a paths=() sizes=()
   local root kib path
-  for root in "${walk_roots[@]}"; do
+  for root in "${roots[@]}"; do
     [ -d "$root" ] || continue
     while IFS=$'\t' read -r kib path; do
       [ -n "$kib" ] || continue
       local bytes=$((kib * 1024))
-      [ "$bytes" -ge "$size_floor" ] || continue
-      wpaths+=("$path")
-      wbytes+=("$bytes")
+      [ "$bytes" -ge "$min_bytes" ] || continue
+      paths+=("$path")
+      sizes+=("$bytes")
     done < <(du -d 3 -x "$root" 2>/dev/null)
   done
 
-  local i j n=${#wpaths[@]} is_ancestor
+  local i j n=${#paths[@]} is_ancestor
   for ((i = 0; i < n; i++)); do
     is_ancestor=0
     for ((j = 0; j < n; j++)); do
       [ "$i" -eq "$j" ] && continue
-      case "${wpaths[j]}/" in
-        "${wpaths[i]}/"*) is_ancestor=1; break ;;
+      case "${paths[j]}/" in
+        "${paths[i]}/"*) is_ancestor=1; break ;;
       esac
     done
     [ "$is_ancestor" -eq 1 ] && continue
-    local safe=${wpaths[i]//\\/}
-    safe=${safe//\"/}
-    echo "dir_size_bytes{path=\"$safe\"} ${wbytes[i]}"
+    local escaped_path=${paths[i]//\\/}
+    escaped_path=${escaped_path//\"/}
+    echo "dir_size_bytes{path=\"$escaped_path\"} ${sizes[i]}"
   done
 }
 
 refresh_cache() {
   local tmp="$cache.tmp.$$"
-  render > "$tmp" 2>/dev/null
+  collect > "$tmp" 2>/dev/null
   mv -f "$tmp" "$cache"
 }
 
@@ -77,19 +77,19 @@ if [ "${1:-}" = "--serve" ]; then
     [ -z "$req" ] && break
   done
 
-  local_body=""
-  [ -f "$cache" ] && local_body=$(cat "$cache")
-  if [ -z "$local_body" ]; then
-    local_body=$'# HELP dir_size_bytes Directory size in bytes (du).\n# TYPE dir_size_bytes gauge'
+  body=""
+  [ -f "$cache" ] && body=$(cat "$cache")
+  if [ -z "$body" ]; then
+    body=$'# HELP dir_size_bytes Directory size in bytes (du).\n# TYPE dir_size_bytes gauge'
   fi
-  len=${#local_body}
+  len=${#body}
 
   printf 'HTTP/1.0 200 OK\r\n'
   printf 'Content-Type: text/plain; version=0.0.4\r\n'
   printf 'Content-Length: %d\r\n' "$len"
   printf 'Connection: close\r\n'
   printf '\r\n'
-  printf '%s' "$local_body"
+  printf '%s' "$body"
   exit 0
 fi
 

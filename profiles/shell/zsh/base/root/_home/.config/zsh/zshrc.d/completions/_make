@@ -14,12 +14,11 @@
 #   shell's global option set otherwise mangles glob/spec handling in the helpers below
 emulate -LR zsh -o extendedglob
 
-#[what] max targets shown per group (diversified so the shown set spans distinct prefixes)
-local -i MAKE_WS_CAP=6
+local -i max_targets=6
 
 #[what] compadd opts: matcher matching the typed word anywhere in the target name,
 #   case-insensitive; candidates are also pre-filtered the same way so caps count matches
-local -a MAKE_WS_ADDOPTS=( -M 'l:|=* r:|=* m:{[:lower:]}={[:upper:]}' )
+local -a compadd_opts=( -M 'l:|=* r:|=* m:{[:lower:]}={[:upper:]}' )
 
 #[what] with a typed pattern, skip the matcher-derived common-part insert (a mangled
 #   fragment like `-render-`) and open the menu with the first full candidate instead
@@ -51,7 +50,7 @@ _make_ws_var() {
 #   distinct prefixes: round-robin across first-dash-segment families (one from each per
 #   round, families in first-seen order, members keeping input order within a family)
 #[why] a capped group should tell you what to type next, not 6 near-identical siblings
-_make_ws_diverse() {
+_make_ws_interleave() {
   awk '
     {
       key = $0; sub(/-.*/, "", key)     # first dash-segment = family
@@ -94,7 +93,7 @@ _make_ws() {
   done
 
   #[what] child targets ($1 = repo name, $2 = cap or 0 for all): prefixed; typed pattern
-  #   ci-substring-filters the prefixed names before the cap, no pattern diversifies instead
+  #   ci-substring-filters the prefixed names before the cap, no pattern interleaves instead
   _make_ws_child() {
     local repo=$1 cap=$2 dir=$root/$path_of[$1]
     local -a t=( ${${(f)"$(_make_ws_targets -C $dir)"}:#(\%*|.*|*\%)} )
@@ -102,7 +101,7 @@ _make_ws() {
       t=( ${repo}-${^t} )
       t=( ${(M)t:#(#i)*${cur}*} )
     } else {
-      t=( ${(f)"$(print -rl -- $t | _make_ws_diverse)"} )
+      t=( ${(f)"$(print -rl -- $t | _make_ws_interleave)"} )
       t=( ${repo}-${^t} )
     }
     (( cap > 0 && $#t > cap )) && t=( $t[1,cap] )
@@ -112,7 +111,7 @@ _make_ws() {
   #[what] `<repo>-<partial>`: only that child's targets, uncapped (drilled in), in its own group
   if [[ -n $matched ]]; then
     local -a child=( ${(f)"$(_make_ws_child $matched 0)"} )
-    (( $#child )) && _wanted "repo-$matched" expl "$matched" compadd $MAKE_WS_ADDOPTS -a child && ret=0
+    (( $#child )) && _wanted "repo-$matched" expl "$matched" compadd $compadd_opts -a child && ret=0
     (( ret )) || _make_ws_menu
     return $ret
   fi
@@ -122,14 +121,14 @@ _make_ws() {
   if [[ -n $cur ]] {
     bare=( ${(M)bare:#(#i)*${cur}*} )
   } else {
-    bare=( ${(f)"$(print -rl -- $bare | _make_ws_diverse)"} )
+    bare=( ${(f)"$(print -rl -- $bare | _make_ws_interleave)"} )
   }
-  (( $#bare > MAKE_WS_CAP )) && bare=( $bare[1,MAKE_WS_CAP] )
-  (( $#bare )) && _wanted targets expl 'targets' compadd $MAKE_WS_ADDOPTS -a bare && ret=0
+  (( $#bare > max_targets )) && bare=( $bare[1,max_targets] )
+  (( $#bare )) && _wanted targets expl 'targets' compadd $compadd_opts -a bare && ret=0
   for p in $paths; do
     r=${p:t}
-    local -a child=( ${(f)"$(_make_ws_child $r $MAKE_WS_CAP)"} )
-    (( $#child )) && { _wanted "repo-$r" expl "$r" compadd $MAKE_WS_ADDOPTS -a child && ret=0 }
+    local -a child=( ${(f)"$(_make_ws_child $r $max_targets)"} )
+    (( $#child )) && { _wanted "repo-$r" expl "$r" compadd $compadd_opts -a child && ret=0 }
   done
   (( ret )) || _make_ws_menu
   return $ret
@@ -147,7 +146,7 @@ if (( $#t )); then
   #[why] targets exist but none match the typed pattern: complete nothing quietly, never
   #   fall into _default file completion (noise + this shell's bad-pattern _files specs)
   (( $#t )) || return 1
-  _wanted targets expl 'targets' compadd $MAKE_WS_ADDOPTS -a t && _make_ws_menu
+  _wanted targets expl 'targets' compadd $compadd_opts -a t && _make_ws_menu
   return
 fi
 _default

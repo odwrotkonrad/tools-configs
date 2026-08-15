@@ -18,5 +18,4 @@ compdef _deep_command -command-
 
 fn-source ${XDG_CONFIG_HOME}/zsh/zshrc.d/auto.d
 
-# had to be disabled for loading configs, renabling here
 setopt localoptions localtraps

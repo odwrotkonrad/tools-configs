@@ -1,15 +1,15 @@
 ##[>] 🤖🤖
 function fn-open-or-exec {
   emulate -LR zsh
-  local opener=$1 f=$2
+  local opener=$1 cmd=$2
   shift
-  if (( $+commands[$f] )) {
+  if (( $+commands[$cmd] )) {
     "$@"
-  } elif [[ -x $f && ! -d $f ]] {
-    "${f:a}" "${@:2}"
+  } elif [[ -x $cmd && ! -d $cmd ]] {
+    "${cmd:a}" "${@:2}"
   } else {
-    local -a op=( ${(Q)${(z)opener}} )
-    "${op[@]}" "$@"
+    local -a opener_argv=( ${(Q)${(z)opener}} )
+    "${opener_argv[@]}" "$@"
   }
 }
 ##[<] 🤖🤖

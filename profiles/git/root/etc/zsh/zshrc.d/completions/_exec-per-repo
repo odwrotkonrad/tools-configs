@@ -4,7 +4,7 @@ setopt localoptions $_comp_options
 
 zstyle ':completion:_deep_files:*:exec-per-repo.zsh:*' file-types dirs
 
-_exec_for_all_repos_repos() {
+_exec_per_repo_repos() {
   setopt localoptions $_comp_options
   local root=$PWD d
   local -i i
@@ -28,8 +28,8 @@ _exec_for_all_repos_repos() {
 _arguments \
   '-C[root dir]:dir:_deep_files' \
   '--chpwd=[root dir]:dir:_deep_files' \
-  '--include=[repo list]:repos:_exec_for_all_repos_repos' \
-  '--exclude=[repo list]:repos:_exec_for_all_repos_repos' \
+  '--include=[repo list]:repos:_exec_per_repo_repos' \
+  '--exclude=[repo list]:repos:_exec_per_repo_repos' \
   '--must-filter=[repo filters]:filters:_values -s , filter changes off-main unsynced' \
   '(-)1:command:_deep_command' \
   '*::arguments:_normal'

@@ -151,6 +151,41 @@
     "sonnet",
     "haiku"
   ],
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{ [ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_attention yes; } 2>/dev/null; true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{ [ -n \"$TMUX_PANE\" ] && tmux set-option -p -t \"$TMUX_PANE\" @claude_attention yes; } 2>/dev/null; true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{ [ -n \"$TMUX_PANE\" ] && tmux set-option -p -u -t \"$TMUX_PANE\" @claude_attention; } 2>/dev/null; true",
+            "async": true
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "ccstatusline",
@@ -173,6 +208,7 @@
     }
   },
   "outputStyle": "Interactive Code",
+  "preferredNotifChannel": "terminal_bell",
   "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,

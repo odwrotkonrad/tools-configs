@@ -33,9 +33,9 @@ if [[ -z $(git status --porcelain) &&
   exit 0
 }
 
-pre_branch=$(git rev-parse --abbrev-ref HEAD)
+prev_branch=$(git rev-parse --abbrev-ref HEAD)
 git-commit-upsert.zsh "$@"
-if [[ $(git rev-parse --abbrev-ref HEAD) == $pre_branch ]] {
+if [[ $(git rev-parse --abbrev-ref HEAD) == $prev_branch ]] {
   git-branch-name-upsert.zsh
 }
 git-mr-upsert.zsh

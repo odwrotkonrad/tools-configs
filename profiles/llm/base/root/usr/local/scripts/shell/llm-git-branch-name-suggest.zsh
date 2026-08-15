@@ -4,7 +4,7 @@
 #   Usage: <extra-instructions-on-stdin> | llm-git-branch-name-suggest [--range <range>]
 #   extra-instructions: optional, read from stdin when piped.
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
-#   Upstream: git-branch-name-upsert. Downstream: git commit messages.
+#   Upstream: git-branch-name-upsert. Downstream: llm run script from llm.yml.
 #   Out: { "name": ... }.
 #/[what]
 
@@ -26,7 +26,7 @@ typeset -A script_input=(
 ##[<] script input
 
 
-##[>] template input 🤖
+##[>] template vars 🤖
 get_current_branch() { local b=$(git rev-parse --abbrev-ref HEAD); [[ $b == main ]] || echo $b }
 get_recent_commits() { git log --format='%B' --reverse $script_input[opt_range] }
 get_commit_template() {
@@ -34,27 +34,26 @@ get_commit_template() {
   [[ -n $f && -f $f ]] && cat "$f"
 }
 
-typeset -A template_input=(
+typeset -A template_vars=(
   CURRENT_BRANCH "$(get_current_branch)"
   COMMIT_TEMPLATE "$(get_commit_template)"
   RECENT_COMMITS "$(get_recent_commits)"
   INSTRUCTIONS_RUNTIME "$script_input[in_instructions_runtime]"
 )
-##[<] template input 🤖
+##[<] template vars 🤖
 
-#[what] no commits, skip llm
-if [[ -z $template_input[RECENT_COMMITS] ]]; then
+if [[ -z $template_vars[RECENT_COMMITS] ]]; then
   fn-log-msg -t "${0:t}" "no commits in $script_input[opt_range], emitting scratch name" >&2
   jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
   exit 0
 fi
-fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model, current branch ${template_input[CURRENT_BRANCH]:-none}" >&2
+fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model, current branch ${template_vars[CURRENT_BRANCH]:-none}" >&2
 
 
-##[>] fill template 🤖
-prompt=$(lib-llm-prompt-fill "$llm_template" template_input)
+##[>] render prompt 🤖
+prompt=$(lib-llm-prompt-render "$llm_template" template_vars)
 fn-log-msg -t "${0:t}" "prompt: ${#prompt} chars, calling llm ..." >&2
-##[<] fill template 🤖
+##[<] render prompt 🤖
 
 
 ##[>] llm invocation

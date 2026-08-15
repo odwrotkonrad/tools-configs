@@ -45,14 +45,14 @@ Settings:
 | Setting | Tag | Default | Meaning |
 | - | - | - | - |
 | `groups` | `:completion:_deep_files:...:` (empty tag) | `pwd`..`pwd+3`, `absolute`..`absolute+3`, `pwd-1`..`pwd-1+2`, `pwd-2` | membership + display order, the single list of groups that run |
-| `file-types` | `:completion:_deep_files:...:` (empty tag) | `dirs files` | list of kinds (`dirs`, `files`) the engine globs; membership selects kinds, list order sets per-group kind emission order (`files dirs` = files before dirs inside each group); unknown values ignored |
-| `max-hints` | `<group>` | 6, this config: `:completion:_deep_files:*:*` 6, `pwd`/`absolute`/`stack`/`named-dirs` -1, `pwd+1`/`absolute+1` 12 | group cap, shared visible+hidden+demoted; -1 uncapped, 0 disables the group (as if absent from `groups`); narrower tag patterns override the `*` default |
-| `deprioritize-hints` | `<group>` | test | segment patterns sorted last, after hidden, share the group's `max-hints`; case-insensitive substring of any path segment, `^` pins segment start, `$` pins segment end (`'^.git$'` exact) |
+| `file-types` | `:completion:_deep_files:...:` (empty tag) | `dirs files` | list of kinds (`dirs`, `files`) the engine globs. Membership selects kinds, list order sets per-group kind emission order (`files dirs` = files before dirs inside each group). Unknown values ignored |
+| `max-hints` | `<group>` | 6, this config: `:completion:_deep_files:*:*` 6, `pwd`/`absolute`/`stack`/`named-dirs` -1, `pwd+1`/`absolute+1` 12 | group cap, shared visible+hidden+demoted. -1 uncapped, 0 disables the group (as if absent from `groups`). Narrower tag patterns override the `*` default |
+| `deprioritize-hints` | `<group>` | test | segment patterns sorted last, after hidden, share the group's `max-hints`. Case-insensitive substring of any path segment, `^` pins segment start, `$` pins segment end (`'^.git$'` exact) |
 
 Lists: `groups`, `file-types`, `deprioritize-hints`. Scalar: `max-hints`.
 Per-group tags support wildcards, most specific pattern wins.
 Routing: `absolute*` groups run only on a `/` or `~` prefix, `pwd*` groups
-only otherwise; a bare `~name` prefix shows `named-dirs` only; `stack+M`
+only otherwise. A bare `~name` prefix shows `named-dirs` only. `stack+M`
 globs only when a pattern is typed.
 
 Examples:
