@@ -86,13 +86,12 @@ apply-macos-cli:
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
   needs: [dry-run-apply-macos]
-  allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
-    - when: manual
+    - when: on_success
   script:
     - make sync-full
 
@@ -104,13 +103,12 @@ apply-linux-cli:
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖.
   needs: []
-  allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
-    - when: manual
+    - when: on_success
   before_script:
     ##[>] 🤖🤖
     #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
