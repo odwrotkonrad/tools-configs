@@ -24,4 +24,13 @@ __pycache__/
 /assets/data/conventions.md
 /assets/docs-agents/purpose.md
 /assets/docs-agents/file-naming.md
+
+#[why] AI prose payloads: authored in prose, rendered here by repo/genfiles, loaded onto the host from this tree
+/profiles/llm/base/root/_home/.config/ai-agents/docs/*.md
+/profiles/llm/base/root/_home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
+/profiles/llm/base/root/usr/local/scripts/shell/templates-llm/*.tmpl.md
+/profiles/llm/claude/root/_home/.config/claude/output-styles/*.md
+/profiles/llm/claude/root/_home/.config/claude/rules/**/*.md
+/profiles/llm/claude/root/_home/.config/claude/skills/*/SKILL.md
+/profiles/llm/claude/templates/snippets/*.md
 ##[<] 🤖
