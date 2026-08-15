@@ -2,10 +2,11 @@
 
 Asked for tests: write unit tests, unless told otherwise.
 
-1. Unit - software deliverable (function, class, command, subcommand etc.)
-2. Test type is determined by its use of external interfaces and assertion scope.
-3. Process - a running instance of a program, as in OS nomenclature.
-4. External interface - anything outside the process that a unit within it can communicate with (e.g. services, filesystem, db, OS operations).
+- Unit: software deliverable (function, class, command, subcommand etc.)
+- Process: a running instance of a program, as in OS nomenclature.
+- External interface: anything outside the process that a unit within it can communicate with (services, filesystem, db, OS operations).
+
+Test type is determined by external interface use and assertion scope.
 
 ## Test Types
 

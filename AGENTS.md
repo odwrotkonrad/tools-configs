@@ -11,7 +11,7 @@ Git-tracked dotfiles extended into root OS space: every option explicitly config
 
 ## Why It Exists
 
-Maintains stateful configuration of a system and its tools, optimized for a reader and future reference, not frequent software updates: comprehensive explicit configuration, modified settings separated from defaults, annotated choices.
+Records a system's stateful configuration for reading and future reference, not frequent software updates: explicit configuration, modified settings separated from defaults, annotated choices.
 
 ## Goals
 
@@ -40,7 +40,7 @@ kebab-case all files.
 Executables by kind:
 
 - script: bare descriptive name (`export-dir-sizes`, `git-sync-onto-main`)
-- function: `fn-<name>` (`fn-log-msg`, `fn-is-os`); a bare name overrides a command (`rm`)
+- function: `fn-<name>` (`fn-log-msg`, `fn-is-os`), a bare name overrides a command (`rm`)
 - launchd: `d-<space>-<name>`, space = `root` (LaunchDaemons) · `user` (LaunchAgents)
 - command override: bare name (`rm`, `prometheus`)
 
@@ -118,7 +118,7 @@ vim: profiles/dev/editors/vim/root/_home/.config/vim/vimrc
 
 ### Onto Host:
 
-`host-load-configs` load configs onto host, profile by profile: each profile's full op sequence minus scripts
+`host-load-configs` load configs onto host, profile by profile: each profile's full op sequence minus scripts and package installs
 `host-load-configs-install` install configs onto host, profile by profile: each profile's full op sequence, scripts included
 `host-run-install-scripts` run all of the detected profile's scripts
 `host-run-scripts` run profile scripts whose path matches NAME (substring)
@@ -341,9 +341,13 @@ profiles
                   zsh
                 docs
               skills
-                humanize-prose
+                user-decipher-code
                   scripts
                 user-git-ops
+                user-humanize-prose
+                  scripts
+                user-prettify-code
+                  scripts
               themes
             zsh
               zshenv.d

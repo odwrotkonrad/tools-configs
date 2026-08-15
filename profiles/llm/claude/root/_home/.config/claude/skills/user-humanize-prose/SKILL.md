@@ -1,6 +1,6 @@
 ---
-name: humanize-prose
-description: Rewrite AI-written prose shorter, terser, more abrupt, human, idiomatic. Use when the user wants prose tightened, humanized, or de-AI-flavored, in chat replies, docs, commit text, MR descriptions, README sections. Keywords: humanize, tersify, shorten, tighten, abrupt, de-AI, idiomatic, natural, /humanize-prose.
+name: user-humanize-prose
+description: Rewrite AI-written prose shorter, terser, more abrupt, human, idiomatic. Use when the user wants prose tightened, humanized, or de-AI-flavored, in chat replies, docs, commit text, MR descriptions, README sections, code comments. Keywords: humanize, tersify, shorten, tighten, abrupt, de-AI, idiomatic, natural, /user-humanize-prose.
 argument-hint: "[session|selection|uncommited-changes|diff-from-main|all-repo-prose]"
 arguments: [scope]
 allowed-tools: "Bash(${CLAUDE_SKILL_DIR}/scripts/*)"
@@ -14,7 +14,9 @@ Scope: `$scope` (empty → `diff-from-main`). Resolved target files:
 
 !`${CLAUDE_SKILL_DIR}/scripts/resolve-scope.sh $scope`
 
-For `session` scope: rewrite prose you wrote this session (the last response, or the file the user points at). For `selection` scope: rewrite the selected text, the IDE selection in context, or the text pasted with the command; if it comes from a file, edit that file in place at the selection only. Otherwise: rewrite the prose files from the list above (markdown, docs), skip code files and content-unchanged renames.
+For `session` scope: rewrite prose you wrote this session (the last response, or the file the user points at). For `selection` scope: rewrite the selected text, the IDE selection in context, or the text pasted with the command. If it comes from a file, edit that file in place at the selection only. Otherwise: rewrite the prose files from the list above (markdown, docs) and the comments in code files, skip content-unchanged renames.
+
+In code files, rewrite comment prose only: leave code untouched. Apply the same rules to every comment kind (inline, block, doc comments, config annotations). Delete comments that restate the code or add nothing. Preserve comment notation: label prefixes (`[where]`, `[why]`, `[what]`), `[>]`/`[<]` section markers, 🤖 marks.
 
 Rewrite each target in place, same medium.
 
@@ -35,3 +37,7 @@ Rewrite aggressively. Do not preserve the original wording, sentence order, or s
 Preserve facts, code, commands, paths, numbers, meaning. Never trade correctness for brevity.
 
 Output only the rewritten prose. No commentary unless asked.
+
+## Inconsistencies
+
+If the rewrite surfaces an inconsistency (something inaccurate, contradictory, or out of sync with the rest of the repo), notify the user and let them decide the action. In a non-interactive session, intervene: resolve it with best judgment to keep the repository state coherent, and report what you resolved and why.

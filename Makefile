@@ -34,9 +34,9 @@ sync-full: host-load-configs-install repo-ci-prepare-hooks repo-render-templates
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
-#[what] load configs onto host, profile by profile: each profile's full op sequence minus scripts
+#[what] load configs onto host, profile by profile: each profile's full op sequence minus scripts and package installs
 host-load-configs: | repo-ci-install-deps
-	@$(CHE) run --skip-ops=run-scripts
+	@$(CHE) run --skip-ops=run-scripts,install-packages
 
 #[what] install configs onto host, profile by profile: each profile's full op sequence, scripts included
 host-load-configs-install: | repo-ci-install-deps

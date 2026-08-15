@@ -207,9 +207,13 @@ profiles
                   zsh
                 docs
               skills
-                humanize-prose
+                user-decipher-code
                   scripts
                 user-git-ops
+                user-humanize-prose
+                  scripts
+                user-prettify-code
+                  scripts
               themes
             zsh
               zshenv.d

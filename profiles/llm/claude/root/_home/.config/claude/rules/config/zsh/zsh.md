@@ -112,28 +112,28 @@ paths:
 | - | ${ZDOTDIR}/.zlogout           | login shell exit (1st)  |
 | - | /etc/zlogout                  | login shell exit (2nd)  |
 
-Each phase has `<phase>.d/` with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced recursively in path name order; each profile owns a subdir, e.g. `auto.d/00-base/`, `auto.d/extras/`). `/etc/zshenv` loads `zshenv.d/` (all shells); `/etc/zshrc` loads `zshrc.d/` (interactive); same split in user space. Put always-available helpers in `zshenv.d/`, interactive-only in `zshrc.d/`.
+Each phase has `<phase>.d/` with `functions/` (autoloaded onto `fpath`) and `auto.d/` (sourced recursively in path name order, each profile owning a subdir, e.g. `auto.d/00-base/`, `auto.d/extras/`). `/etc/zshenv` loads `zshenv.d/` (all shells), `/etc/zshrc` loads `zshrc.d/` (interactive), same split in user space. Put always-available helpers in `zshenv.d/`, interactive-only in `zshrc.d/`.
 
 ### Documentation
 
 `$ man`:
 
-- `zshzle` — line editor, keymaps, widgets, bindkey, highlighting
-- `zshall` — all-in-one, concatenation, searchable, every section, other zsh pages
-- `zshparam` — parameters, arrays, positional, scalars, shell variables
-- `zshoptions` — setopt, completion, globbing, history, emulation
-- `zshbuiltins` — builtin commands, autoload, setopt, zstyle, bindkey
-- `zsh` — overview, invocation, startup files, compatibility, manpage index
-- `zshmisc` — grammar, redirection, functions, traps, prompt escapes, conditionals, job control
+- `zshzle`: line editor, keymaps, widgets, bindkey, highlighting
+- `zshall`: all-in-one, concatenation, searchable, every section, other zsh pages
+- `zshparam`: parameters, arrays, positional, scalars, shell variables
+- `zshoptions`: setopt, completion, globbing, history, emulation
+- `zshbuiltins`: builtin commands, autoload, setopt, zstyle, bindkey
+- `zsh`: overview, invocation, startup files, compatibility, manpage index
+- `zshmisc`: grammar, redirection, functions, traps, prompt escapes, conditionals, job control
 
 and these:
-- `zshroadmap` — overview, startup, interactive use, pattern matching
-- `zshmodules` — zmodload, zsh/complete, zsh/pcre, zsh/zutil, zsh/datetime
-- `zshexpn` — expansion, parameter, history, globbing, brace
-- `zshcontrib` — prompt themes, vcs_info, zle functions, zcalc, zmv
-- `zshcompwid` — completion widgets, compadd, special params, matching control, condition codes
-- `zshcompsys` — compinit, compdef, zstyle, completers, autoload
-- `stty` — terminal settings, control/input/output/local modes, control chars
+- `zshroadmap`: overview, startup, interactive use, pattern matching
+- `zshmodules`: zmodload, zsh/complete, zsh/pcre, zsh/zutil, zsh/datetime
+- `zshexpn`: expansion, parameter, history, globbing, brace
+- `zshcontrib`: prompt themes, vcs_info, zle functions, zcalc, zmv
+- `zshcompwid`: completion widgets, compadd, special params, matching control, condition codes
+- `zshcompsys`: compinit, compdef, zstyle, completers, autoload
+- `stty`: terminal settings, control/input/output/local modes, control chars
 
 Links:
 

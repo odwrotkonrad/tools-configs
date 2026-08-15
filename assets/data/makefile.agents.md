@@ -15,7 +15,7 @@
 
 ### Onto Host:
 
-`host-load-configs` load configs onto host, profile by profile: each profile's full op sequence minus scripts
+`host-load-configs` load configs onto host, profile by profile: each profile's full op sequence minus scripts and package installs
 `host-load-configs-install` install configs onto host, profile by profile: each profile's full op sequence, scripts included
 `host-run-install-scripts` run all of the detected profile's scripts
 `host-run-scripts` run profile scripts whose path matches NAME (substring)

@@ -40,7 +40,6 @@ paths:
 ### Error Handling
 
 - Treat errors as fatal: let them propagate and crash.
-- Handle errors only when asked.
-- Log full error detail: message, cause, context.
 - Add error handling, fallbacks, recovery only when asked.
+- Log full error detail: message, cause, context.
 - Surface errors and their output.

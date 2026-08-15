@@ -7,21 +7,20 @@
 Write an MR/PR title and description from the commit messages against main. Fill `title` and `description`.
 The commit messages are the source of truth: describe what they change. The diff stats are context for scope and size only.
 
-CRITICALLY IMPORTANT: branch commits iterate: later commits rework, rename, move, revert earlier ones. Describe the net effect against main only. Never mention a superseded change; collapse iteration chains into their end state.
+CRITICALLY IMPORTANT: branch commits iterate: later commits rework, rename, move, revert earlier ones. Describe the net effect against main only. Never mention a superseded change. Collapse iteration chains into their end state.
 Describe the branch as one single change against main. A later commit "changes"/"renames"/"moves" something an earlier branch commit introduced → it was never in main → state it as added in its final form ("add ⚙️ manual emoji", not "change manual emoji to ⚙️"). Use change/rename/move/fix only against state present in main.
 
 CRITICALLY IMPORTANT: no list over ~6 bullets, anywhere. Oversized `### <scope>` → split into `#### <feature>` subsections. Oversized `####` → split into finer sibling `####`s. One catch-all `####` is as invalid as a flat area, flat base included: regroup, keep bullet wording. A feature = one capability (a subcommand, a config key, a rename), never the whole change.
 
 Terse, specific, exhaustive: every change that survives to the final state appears, trim words, never changes.
-One line per bullet. No prose, no wrap-around. Drop nothing that survives; drop everything superseded.
+One line per bullet. No prose, no wrap-around. Drop nothing that survives, drop everything superseded.
 State what changed. Never why. Never explain, justify, or guess.
 
-- derive everything from the commit messages, the diff stats are secondary context for scope and size only
 - superseded changes (overwritten, renamed, reverted by a later commit) never appear, even when a commit message states them
 - current description present → treat as base. Scale edits to change size: large change may rewrite, small change modifies in place, preserve existing wording, structure, bullet order. Add or adjust bullets only for what the commits change. Exception: a flat base area over ~6 bullets MUST be regrouped into `#### <feature>` subsections, keep bullet wording
 - a base bullet describing a state later commits superseded is stale: rewrite it to the final state as one added change, never keep or append the intermediate step
 - current description empty (first create) → write fresh from the commit messages
-- never write a `## Commits` or `## Changes` heading, the tool injects them; emit only the `### <scope>` groups
+- never write a `## Commits` or `## Changes` heading, the tool injects them: emit only the `### <scope>` groups
 
 `title` → `<type>(<scope>): <summary>`:
 - summary names what the commits change as a whole, imperative, concise
@@ -29,7 +28,7 @@ State what changed. Never why. Never explain, justify, or guess.
 
 `description` → markdown grouped by area:
 - `### <scope>` heading per area, first-appearance order in the commits
-- over ~6 bullets → `#### <feature>` subsections, one per feature; applies at both `###` and `####` level, split finer instead of growing a list
+- over ~6 bullets → `#### <feature>` subsections, one per feature, at both `###` and `####` level: split finer instead of growing a list
 - one `- ` bullet per change, reviewer-facing
 - flag breaking changes or migrations
 

@@ -52,26 +52,28 @@ dry-run-apply-sync:
     CHE_DEBUG: "1"
   parallel:
     matrix:
-      - CHE_PROFILE: [desktop/macos, cli/macos, virt/linux]
+      - CHE_PROFILE: [virt/linux]
   script:
     - make sync-full
 
 .e2e-macos:
   ##[>] 🤖🤖
-  tags: [saas-macos-medium-m1]
-  image: macos-26-xcode-26
+  tags: [darwin]
+  image: ghcr.io/cirruslabs/macos-tahoe-base:latest
   variables:
     CHE_DEBUG: "1"
   ##[<] 🤖🤖
 
-dry-run-apply-macos-desktop:
+dry-run-apply-macos:
   extends: .e2e-macos
   stage: dry-run-apply
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
     MK_DRY_RUN: all
-    CHE_PROFILE: desktop/macos
+  parallel:
+    matrix:
+      - CHE_PROFILE: [desktop/macos, cli/macos]
   needs: []
   allow_failure: true
   script:
@@ -84,7 +86,7 @@ apply-macos-cli:
     CHE_PROFILE: cli/macos
     MK_DRY_RUN_RENDER_SECRETS: "true"
     GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default 🤖
-  needs: [dry-run-apply-macos-desktop]
+  needs: [dry-run-apply-macos]
   allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
