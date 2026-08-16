@@ -9,7 +9,7 @@ dev/editors/vscode/mac:
     makeLinks:
       - {source: _home/**, dest: $HOME/**}
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - {source: _home/**, dest: $HOME/**}
     installPackages:
       - code
       - font-jetbrains-mono

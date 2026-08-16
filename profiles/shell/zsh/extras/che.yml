@@ -9,5 +9,5 @@ shell/zsh/extras:
       - {source: _home/**, dest: $HOME/**}
       - etc/**
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - {source: _home/**, dest: $HOME/**}
 ##[<] 🤖🤖

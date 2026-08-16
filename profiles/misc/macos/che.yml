@@ -16,7 +16,7 @@ misc/macos/desktop:
   options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
   include:
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - {source: _home/**, dest: $HOME/**}
     installPackages:
       - get-os-open-files-with
       - beekeeper-studio

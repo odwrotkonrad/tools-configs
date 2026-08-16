@@ -16,7 +16,7 @@ cloud/gcp/configs:
     makeLinks:
       - {source: _home/**/zshenv.d/**, dest: $HOME/**}
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - {source: _home/**, dest: $HOME/**}
 
 cloud/gcp/auth:
   options: {runIf: ['builtin:isVirt']}

@@ -8,7 +8,7 @@ llm/codex:
     makeLinks:
       - etc/**
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - {source: _home/**, dest: $HOME/**}
     makeDirs:
       - directories:
           - {dest: [$HOME/.config/codex]}

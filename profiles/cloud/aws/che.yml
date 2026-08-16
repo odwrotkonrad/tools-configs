@@ -13,5 +13,5 @@ cloud/aws/configs:
   options: {runIf: ['builtin:isVirt == false']}
   include:
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - {source: _home/**, dest: $HOME/**}
 ##[<] 🤖🤖

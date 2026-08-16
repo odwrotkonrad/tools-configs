@@ -13,9 +13,8 @@ llm/base:
       - directories:
           - {dest: ["$HOME/.config/{claude,codex}"]}
     renderTemplates:
-      - templates:
-          - source: _home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
-            dest:
-              - ~/.config/claude/CLAUDE.md
-              - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
+      - source: _home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
+        dest:
+          - ~/.config/claude/CLAUDE.md
+          - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
 ##[<] 🤖🤖
