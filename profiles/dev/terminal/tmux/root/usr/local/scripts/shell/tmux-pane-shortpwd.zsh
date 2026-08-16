@@ -20,16 +20,7 @@ done
 git_info=
 if [[ -n $git_root ]]; then
   branch=$(git -C $src branch --show-current 2>/dev/null)
-  [[ -n $branch ]] && git_info=" $branch "
-  added=0 modified=0 deleted=0
-  for line in ${(f)"$(git -C $src status --porcelain 2>/dev/null)"}; do
-    code=${line[1,2]}
-    if [[ $code == '??' || $code == A? || $code == ?A ]]; then ((added++))
-    elif [[ $code == D? || $code == ?D ]]; then ((deleted++))
-    else ((modified++))
-    fi
-  done
-  git_info+="(+$added ~$modified -$deleted) "
+  [[ -n $branch ]] && git_info=" $branch  "
 fi
 case $mode in
   (git) print -r -- "$git_info" ;;
