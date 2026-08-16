@@ -3,6 +3,22 @@
   "lines": [
     [
       {
+        "id": "0be9743f-4732-406a-92ba-9b0d928832fc",
+        "type": "claude-session-id",
+        "rawValue": true
+      },
+      {
+        "id": "e669e5f4-9f21-4e34-908d-acca261a1386",
+        "type": "separator"
+      },
+      {
+        "id": "1730d13f-8516-4a2c-8dea-01d9a3c677b2",
+        "type": "session-name",
+        "rawValue": true
+      }
+    ],
+    [
+      {
         "id": "a04fc29b-7877-40ea-9eae-f8d324f957bd",
         "type": "context-percentage-usable",
         "rawValue": true
@@ -26,13 +42,11 @@
         "color": "cyan",
         "rawValue": true
       }
-    ],
-    []
+    ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
   "colorLevel": 2,
-  "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
   "gitCacheTtlSeconds": 5,
