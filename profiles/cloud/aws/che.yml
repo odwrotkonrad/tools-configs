@@ -10,8 +10,11 @@ cloud/aws:
 
 #[why] op:// template, real host only: virt (cli/macos vm, sandbox pod) has no op and no use for aws config
 cloud/aws/configs:
-  options: {runIf: ['builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isVirt == false
   include:
     renderTemplates:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
 ##[<] 🤖🤖

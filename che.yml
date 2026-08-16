@@ -42,14 +42,21 @@ base:
     makeDirs:
       - chmod: "0755"
         directories:
-          - {dest: [$PWD/ci]}
-          - {dest: [$PWD/ci/zsh]}
-          - {dest: [$PWD/ci/zsh/functions]}
+          - dest:
+              - $PWD/ci
+          - dest:
+              - $PWD/ci/zsh
+          - dest:
+              - $PWD/ci/zsh/functions
     runScripts:
       - ci/zsh/scripts/installs/*.zsh
 
 desktop/macos:
-  options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    autoDiscover: true
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     profiles:
       - base
@@ -63,7 +70,11 @@ desktop/macos:
       - source: "profiles/observability/che.yml::observability/host/macos"
 
 cli/macos:
-  options: {autoDiscover: true, runIf: ['builtin:isOs == macos', 'builtin:isVirt']}
+  options:
+    autoDiscover: true
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt
   include:
     profiles:
       - base
@@ -77,7 +88,10 @@ cli/macos:
       - source: "profiles/observability/che.yml::observability/base/macos"
 
 virt/linux:
-  options: {autoDiscover: true, runIf: ['builtin:isOs == linux']}
+  options:
+    autoDiscover: true
+    runIf:
+      - builtin:isOs == linux
   include:
     profiles:
       - base

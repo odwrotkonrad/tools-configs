@@ -4,12 +4,17 @@ options:
   profileWorkingDirectory: root
 
 dev/editors/vscode/mac:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
     renderTemplates:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
     installPackages:
       - code
       - font-jetbrains-mono

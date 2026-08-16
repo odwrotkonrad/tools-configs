@@ -4,7 +4,10 @@ options:
   profileWorkingDirectory: root
 
 observability/loki:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     makeLinks:
       - etc/**
@@ -16,11 +19,14 @@ observability/loki:
         ownerGroup: "0"
         chmod: "0644"
         files:
-          - {source: Library/LaunchDaemons/loki.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/loki.plist]}
+          - source: Library/LaunchDaemons/loki.plist.ontoHost.cp
+            dest:
+              - /Library/LaunchDaemons/loki.plist
     makeDirs:
       - chmod: "2775"
         directories:
-          - {dest: [/var/log/loki]}
+          - dest:
+              - /var/log/loki
     runScripts:
       - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

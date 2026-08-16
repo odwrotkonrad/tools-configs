@@ -1,7 +1,9 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 misc/base/macos:
-  options: {runIf: ['builtin:isOs == macos']}
+  options:
+    runIf:
+      - builtin:isOs == macos
   include:
     profiles:
       - source: "./che/che.yml::misc/che"
@@ -12,7 +14,10 @@ misc/base/macos:
       - source: "./ssh/che.yml::misc/ssh/virt"
 
 misc/host/macos:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     profiles:
       - misc/base/macos
@@ -20,7 +25,9 @@ misc/host/macos:
       - source: "./onepassword/che.yml::misc/onepassword"
 
 misc/virt/linux:
-  options: {runIf: ['builtin:isOs == linux']}
+  options:
+    runIf:
+      - builtin:isOs == linux
   include:
     profiles:
       - source: "./che/che.yml::misc/che"

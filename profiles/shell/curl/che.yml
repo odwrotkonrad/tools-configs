@@ -6,7 +6,8 @@ options:
 shell/curl:
   include:
     makeLinks:
-      - {source: _home/**, dest: 's:^_home:$HOME:'}
+      - source: _home/**
+        dest: 's:^_home:$HOME:'
     installPackages:
       - curl
 ##[<] 🤖🤖

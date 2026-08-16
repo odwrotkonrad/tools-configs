@@ -13,14 +13,22 @@ observability/otelcol:
         ownerGroup: "0"
         chmod: "0644"
         files:
-          - {source: Library/LaunchDaemons/otelcol.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/otelcol.plist]}
-          - {source: Library/LaunchDaemons/dir-size-exporter.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/dir-size-exporter.plist]}
-          - {source: Library/LaunchDaemons/port-exporter.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/port-exporter.plist]}
+          - source: Library/LaunchDaemons/otelcol.plist.ontoHost.cp
+            dest:
+              - /Library/LaunchDaemons/otelcol.plist
+          - source: Library/LaunchDaemons/dir-size-exporter.plist.ontoHost.cp
+            dest:
+              - /Library/LaunchDaemons/dir-size-exporter.plist
+          - source: Library/LaunchDaemons/port-exporter.plist.ontoHost.cp
+            dest:
+              - /Library/LaunchDaemons/port-exporter.plist
     makeDirs:
       - chmod: "2775"
         directories:
-          - {dest: ["/var/log/{otelcol,dir_size_exporter,port_exporter}"]}
-          - {dest: ["/var/custom/cache/dir_size_exporter"]}
+          - dest:
+              - "/var/log/{otelcol,dir_size_exporter,port_exporter}"
+          - dest:
+              - /var/custom/cache/dir_size_exporter
     installPackages:
       - otelcol
     runScripts:

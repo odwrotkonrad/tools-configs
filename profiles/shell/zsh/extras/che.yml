@@ -6,8 +6,10 @@ options:
 shell/zsh/extras:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
       - etc/**
     renderTemplates:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
 ##[<] 🤖🤖

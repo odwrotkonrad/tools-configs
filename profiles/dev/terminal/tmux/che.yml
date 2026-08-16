@@ -6,7 +6,8 @@ options:
 dev/terminal/tmux:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
       - etc/**
       - usr/**
     installPackages:

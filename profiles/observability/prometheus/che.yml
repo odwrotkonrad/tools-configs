@@ -4,7 +4,10 @@ options:
   profileWorkingDirectory: root
 
 observability/prometheus:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     makeLinks:
       - etc/**
@@ -13,12 +16,16 @@ observability/prometheus:
         ownerGroup: "0"
         chmod: "0644"
         files:
-          - {source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/prometheus.plist]}
+          - source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp
+            dest:
+              - /Library/LaunchDaemons/prometheus.plist
     makeDirs:
       - chmod: "2775"
         directories:
-          - {dest: [/var/log/prometheus]}
-          - {dest: [/usr/local/var/prometheus]}
+          - dest:
+              - /var/log/prometheus
+          - dest:
+              - /usr/local/var/prometheus
     installPackages:
       - prometheus
     runScripts:

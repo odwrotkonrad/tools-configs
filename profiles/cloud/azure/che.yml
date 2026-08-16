@@ -6,7 +6,8 @@ options:
 cloud/azure:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
     installPackages:
       - az
 ##[<] 🤖🤖

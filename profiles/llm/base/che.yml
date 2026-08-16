@@ -6,15 +6,19 @@ options:
 llm/base:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
       - etc/**
       - usr/**
     makeDirs:
       - directories:
-          - {dest: ["$HOME/.config/{claude,codex}"]}
+          - dest:
+              - "$HOME/.config/{claude,codex}"
     renderTemplates:
       - source: _home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
         dest:
           - ~/.config/claude/CLAUDE.md
-          - {path: ~/.config/codex/AGENTS.md, options: {renderReferencedFiles: true}}
+          - path: ~/.config/codex/AGENTS.md
+            options:
+              renderReferencedFiles: true
 ##[<] 🤖🤖

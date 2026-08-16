@@ -6,7 +6,8 @@ options:
 dev/terminal/kitty:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
     installPackages:
       - kitty
 ##[<] 🤖🤖

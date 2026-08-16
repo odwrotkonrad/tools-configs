@@ -6,5 +6,6 @@ options:
 dev/js/prettier:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
 ##[<] 🤖🤖
