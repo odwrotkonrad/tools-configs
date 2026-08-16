@@ -1,6 +1,9 @@
 ##[>] 🤖🤖
 validateSpec: error
 packages:
+  updateCheck:
+    enabled: true
+    cooldown: 15m
   completions:
     zsh:
       enabled: true

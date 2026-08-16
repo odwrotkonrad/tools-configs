@@ -6,5 +6,6 @@ options:
 dev/python/ruff:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
 ##[<] 🤖🤖

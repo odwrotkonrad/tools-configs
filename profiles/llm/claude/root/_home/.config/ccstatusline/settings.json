@@ -3,6 +3,13 @@
   "lines": [
     [
       {
+        "id": "0be9743f-4732-406a-92ba-9b0d928832fc",
+        "type": "claude-session-id",
+        "rawValue": true
+      }
+    ],
+    [
+      {
         "id": "a04fc29b-7877-40ea-9eae-f8d324f957bd",
         "type": "context-percentage-usable",
         "rawValue": true
@@ -26,13 +33,11 @@
         "color": "cyan",
         "rawValue": true
       }
-    ],
-    []
+    ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
   "colorLevel": 2,
-  "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
   "gitCacheTtlSeconds": 5,

@@ -6,7 +6,10 @@ options:
 dev/js/node:
   include:
     installPackages:
-      - {name: node, versions: [24.16.0], globalVersion: 24.16.0}
+      - name: node
+        versions:
+          - 24.16.0
+        globalVersion: 24.16.0
       - corepack
       - tsc
       - typescript-language-server

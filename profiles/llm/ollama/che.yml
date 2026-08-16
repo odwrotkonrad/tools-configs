@@ -6,7 +6,8 @@ options:
 llm/ollama:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
       - usr/**
     installPackages:
       - ollama

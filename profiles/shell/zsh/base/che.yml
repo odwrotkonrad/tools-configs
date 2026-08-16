@@ -6,29 +6,42 @@ options:
 shell/zsh/base:
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
       - etc/**
     makeDirs:
       - directories:
-          - {dest: [$HOME/.cache/zsh]}
-          - {dest: ["$HOME/.local/{bin,share}"]}
-          - {dest: [$HOME/.local/state/log]}
-          - {dest: [$HOME/.local/state/zsh/completions]}
-          - {dest: [$HOME/ScreenCapture]}
-          - {dest: [/var/root/.cache/zsh]}
-          - {dest: [/var/root/.config]}
-          - {dest: [/var/root/.local/state/zsh/completions]}
+          - dest:
+              - $HOME/.cache/zsh
+          - dest:
+              - "$HOME/.local/{bin,share}"
+          - dest:
+              - $HOME/.local/state/log
+          - dest:
+              - $HOME/.local/state/zsh/completions
+          - dest:
+              - $HOME/ScreenCapture
+          - dest:
+              - /var/root/.cache/zsh
+          - dest:
+              - /var/root/.config
+          - dest:
+              - /var/root/.local/state/zsh/completions
       - owner: root
         ownerGroup: "0"
         chmod: "0755"
         directories:
-          - {dest: [/etc/zsh/zshrc.d/completions]}
+          - dest:
+              - /etc/zsh/zshrc.d/completions
     installPackages:
       - zsh
       - rg
 
 shell/zsh/base-macos:
-  options: {runIf: ['builtin:isOs == macos'], profileWorkingDirectory: root-macos}
+  options:
+    runIf:
+      - builtin:isOs == macos
+    profileWorkingDirectory: root-macos
   include:
     profiles:
       - source: "./che.yml::shell/zsh/base"
@@ -38,7 +51,10 @@ shell/zsh/base-macos:
       - brew
 
 shell/zsh/base-linux:
-  options: {runIf: ['builtin:isOs == linux'], profileWorkingDirectory: root-linux}
+  options:
+    runIf:
+      - builtin:isOs == linux
+    profileWorkingDirectory: root-linux
   include:
     profiles:
       - source: "./che.yml::shell/zsh/base"

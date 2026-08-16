@@ -4,7 +4,10 @@ options:
   profileWorkingDirectory: root
 
 observability/grafana:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     makeLinks:
       - etc/**
@@ -15,12 +18,16 @@ observability/grafana:
         ownerGroup: "0"
         chmod: "0644"
         files:
-          - {source: Library/LaunchDaemons/grafana.plist.ontoHost.cp, dest: [/Library/LaunchDaemons/grafana.plist]}
+          - source: Library/LaunchDaemons/grafana.plist.ontoHost.cp
+            dest:
+              - /Library/LaunchDaemons/grafana.plist
     makeDirs:
       - chmod: "2775"
         directories:
-          - {dest: [/var/log/grafana]}
-          - {dest: [/usr/local/var/grafana]}
+          - dest:
+              - /var/log/grafana
+          - dest:
+              - /usr/local/var/grafana
     runScripts:
       - scripts/01-boot-service.zsh
 ##[<] 🤖🤖

@@ -27,10 +27,13 @@ export CHE_VALIDATE_SPEC
 ##[<] Environment Variables
 
 ##[>] Wrappers [genai-include]
+#[why] repo renders run first: the host profiles read prose payloads that ontoRepo generates and
+#   .gitignore keeps out of the tree (AGENTS.md.ontoHost.tpl, claude snippets), so loading the host
+#   before rendering finds nothing to load
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host)
-sync: host-load-configs repo-ci-prepare-hooks repo-render-templates
+sync: repo-render-templates host-load-configs repo-ci-prepare-hooks
 #[what] full sync: full che op sequence per profile (scripts included), hooks, repo renders
-sync-full: host-load-configs-install repo-ci-prepare-hooks repo-render-templates
+sync-full: repo-render-templates host-load-configs-install repo-ci-prepare-hooks
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]

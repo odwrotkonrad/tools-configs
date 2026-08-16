@@ -4,7 +4,9 @@ options:
   profileWorkingDirectory: root
 
 misc/onepassword:
-  options: {runIf: ['builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isVirt == false
   include:
     makeLinks:
       - etc/**

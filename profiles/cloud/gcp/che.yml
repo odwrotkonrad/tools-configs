@@ -11,15 +11,21 @@ cloud/gcp/install:
       - gcloud
 
 cloud/gcp/configs:
-  options: {runIf: ['builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isVirt == false
   include:
     makeLinks:
-      - {source: _home/**/zshenv.d/**, dest: $HOME/**}
+      - source: _home/**/zshenv.d/**
+        dest: $HOME/**
     renderTemplates:
-      - templates: [{source: _home/**, dest: $HOME/**}]
+      - source: _home/**
+        dest: $HOME/**
 
 cloud/gcp/auth:
-  options: {runIf: ['builtin:isVirt']}
+  options:
+    runIf:
+      - builtin:isVirt
   include:
     runScripts:
       - scripts/10-check-auth.zsh

@@ -1,7 +1,9 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 dev/base/macos:
-  options: {runIf: ['builtin:isOs == macos']}
+  options:
+    runIf:
+      - builtin:isOs == macos
   include:
     profiles:
       - source: "./misc/editorconfig/che.yml::dev/misc/editorconfig"
@@ -25,7 +27,10 @@ dev/base/macos:
       - source: "./editors/vim/che.yml::dev/editors/vim"
 
 dev/host/macos:
-  options: {runIf: ['builtin:isOs == macos', 'builtin:isVirt == false']}
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
   include:
     profiles:
       - dev/base/macos
@@ -33,7 +38,9 @@ dev/host/macos:
       - source: "./terminal/kitty/che.yml::dev/terminal/kitty"
 
 dev/virt/linux:
-  options: {runIf: ['builtin:isOs == linux']}
+  options:
+    runIf:
+      - builtin:isOs == linux
   include:
     profiles:
       - source: "./misc/editorconfig/che.yml::dev/misc/editorconfig"

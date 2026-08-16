@@ -9,12 +9,17 @@ misc/brew:
       - etc/**
     makeDirs:
       - directories:
-          - {dest: [$HOME/.cache/homebrew]}
-          - {dest: [$HOME/.local/state/homebrew]}
+          - dest:
+              - $HOME/.cache/homebrew
+          - dest:
+              - $HOME/.local/state/homebrew
 
 misc/brew/macos:
-  options: {runIf: ['builtin:isOs == macos']}
+  options:
+    runIf:
+      - builtin:isOs == macos
   include:
     makeLinks:
-      - {source: _home/**, dest: $HOME/**}
+      - source: _home/**
+        dest: $HOME/**
 ##[<] 🤖🤖
