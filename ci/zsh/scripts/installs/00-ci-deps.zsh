@@ -17,7 +17,11 @@ if { (( ${+commands[che]} )) && che packages --help &> /dev/null } {
   che_version_installed=${${(z)"$(che --version)"}[-1]}
 }
 
-if [[ $che_version_installed != $che_version_latest ]] {
+#[why] a dev build is a local `make install` from the go-modules checkout, deliberately ahead of any
+#   tag: overwriting it with the released binary undoes the developer's build mid-work
+if [[ $che_version_installed == dev ]] {
+  print 'ci-deps: che is a local dev build, keeping it'
+} elif [[ $che_version_installed != $che_version_latest ]] {
   print "ci-deps: installing che ${che_version_latest} (had: ${che_version_installed:-none})"
   curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors https://konradodwrot.gitlab.io/go-modules/install.sh |
     CHE_VERSION=$che_version_latest sh

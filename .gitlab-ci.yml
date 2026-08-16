@@ -39,6 +39,10 @@ variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
+    #[why] fresh container: che's config.yml symlink lands during the very run that installs packages,
+    #   so the file cannot enable this in time. without it che falls back to the definitions embedded in
+    #   the released binary, which lag behind the published che-packages set 🤖🤖
+    CHE_PACKAGES_UPDATE_CHECK: "true"
   cache:
     - key:
         files:
@@ -46,6 +50,19 @@ variables:
       paths:
         - .cache/go-mod
         - .cache/go-build
+  ##[<] 🤖🤖
+
+.as-user:
+  extends: .base
+  ##[>] 🤖🤖
+  variables:
+    CI_USER: ko
+  before_script:
+    #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
+    - useradd -m -s /bin/zsh -G root "$CI_USER" && echo "$CI_USER ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/$CI_USER"
+    - chown -R "$CI_USER" "$CI_PROJECT_DIR"
+    #[why] GOPATH is the image's root-owned /usr/local/go-tools: `go install` as ko cannot create pkg/sumdb there, so pre-create the tree and hand it over
+    - mkdir -p "$GOPATH/bin" "$GOPATH/pkg" && chown -R "$CI_USER" "$GOPATH"
   ##[<] 🤖🤖
 
 validate-pre-commit-all:
@@ -60,7 +77,7 @@ validate-pre-commit-all:
     - git diff --exit-code HEAD
 
 dry-run-apply-sync:
-  extends: .base
+  extends: .as-user
   stage: dry-run-apply
   needs: []
   rules:
@@ -72,7 +89,9 @@ dry-run-apply-sync:
     matrix:
       - CHE_PROFILE: [virt/linux]
   script:
-    - make sync-full
+    ##[>] 🤖🤖
+    - sudo -u "$CI_USER" --preserve-env=CI,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_UPDATE_CHECK,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    ##[<] 🤖🤖
 
 .e2e-macos:
   ##[>] 🤖🤖
@@ -118,7 +137,7 @@ apply-macos-cli:
     - make sync-full
 
 apply-linux-cli:
-  extends: .base
+  extends: .as-user
   stage: smoke-apply
   variables:
     CHE_PROFILE: virt/linux
@@ -131,17 +150,9 @@ apply-linux-cli:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
     - when: on_success
-  before_script:
-    ##[>] 🤖🤖
-    #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
-    - useradd -m -s /bin/zsh -G root ko && echo 'ko ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/ko
-    - chown -R ko "$CI_PROJECT_DIR"
-    #[why] GOPATH is the image's root-owned /usr/local/go-tools: `go install` as ko cannot create pkg/sumdb there, so pre-create the tree and hand it over
-    - mkdir -p "$GOPATH/bin" "$GOPATH/pkg" && chown -R ko "$GOPATH"
-    ##[<] 🤖🤖
   script:
     ##[>] 🤖🤖
-    - sudo -u ko --preserve-env=CI,CHE_PROFILE,CHE_VALIDATE_SPEC,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    - sudo -u "$CI_USER" --preserve-env=CI,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_UPDATE_CHECK,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
     ##[<] 🤖🤖
 
 ##[>] 🤖🤖
