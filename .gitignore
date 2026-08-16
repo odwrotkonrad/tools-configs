@@ -32,4 +32,5 @@ __pycache__/
 /profiles/llm/claude/root/_home/.config/claude/output-styles/*.md
 /profiles/llm/claude/root/_home/.config/claude/rules/**/*.md
 /profiles/llm/claude/root/_home/.config/claude/skills/*/SKILL.md
+/profiles/llm/claude/templates/snippets/*.md
 ##[<] 🤖
