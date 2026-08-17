@@ -151,7 +151,7 @@ last_log_line() {
   REPLY=""
   for t (${(Oaf)"$(tail -n 15 $log_of[$1] 2>/dev/null)"}) {
     t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
-    if [[ -n ${t//[[:space:]]/} ]] { REPLY=$t; return }
+    if [[ $t == *[[:alpha:]]* ]] { REPLY=$t; return }
   }
 }
 
