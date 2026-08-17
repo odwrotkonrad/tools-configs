@@ -31,4 +31,7 @@ __pycache__/
 /profiles/llm/base/root/usr/local/scripts/shell/templates-llm/*.tmpl.md
 /profiles/llm/claude/root/_home/.config/claude/output-styles/*.md
 /profiles/llm/claude/root/_home/.config/claude/rules/**/*.md
+#[why] skills render as directories, so the SKILL.md and any sibling payload are ignored while the
+#   hand-written scripts/ helpers beside them stay tracked
+/profiles/llm/claude/root/_home/.config/claude/skills/**/SKILL.md
 ##[<] 🤖
