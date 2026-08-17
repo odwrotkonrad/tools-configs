@@ -67,10 +67,14 @@ repo/genfiles:
                     dest: code/code.md
                   - source: /code/go/principles.md
                     dest: code/go/principles.md
+                  - source: /code/python/principles.md
+                    dest: code/python/principles.md
                   - source: /code/python/python.md
                     dest: code/python/python.md
                   - source: /code/python/scripts.md
                     dest: code/python/scripts.md
+                  - source: /code/ruby/principles.md
+                    dest: code/ruby/principles.md
                   - source: /code/zsh/zsh.md
                     dest: code/zsh/zsh.md
                   - source: /config/claudecode.md
