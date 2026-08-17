@@ -56,7 +56,6 @@ dev/virt/linux:
       - source: "./infra/cilium/che.yml::dev/infra/cilium"
       - source: "./golang/che.yml::dev/golang"
       - source: "./ruby/che.yml::dev/ruby"
-      - source: "./js/node/che.yml::dev/js/node"
       - source: "./js/nvm/che.yml::dev/js/nvm"
       - source: "./js/pnpm/che.yml::dev/js/pnpm"
       - source: "./js/prettier/che.yml::dev/js/prettier"
