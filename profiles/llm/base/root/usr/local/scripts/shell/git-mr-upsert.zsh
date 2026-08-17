@@ -2,6 +2,8 @@
 #>[what] 🤖🤖
 #   Branch-upsert (sync + name), push, then create/update the MR/PR with llm text.
 #   left on main (merged, nothing new): exit 24, nothing to MR.
+#   unchanged since last run (remote tip == HEAD, an MR/PR already open for the
+#     branch): exit 24 before the llm call, nothing to re-say.
 #   push: plain first; rejected (sync rebased already-pushed commits) -> re-fetch and
 #     force-with-lease pinned to the fetched tip, but only when git cherry proves the
 #     remote holds nothing this branch lacks; remote-only commits -> exit 1, push manually.
@@ -40,6 +42,27 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ $branch == main ]] fn-exit-with 24 "on main, nothing to MR"
 ##[<] 🤖🤖
 
+##[>] cli select 🤖🤖
+case $(git remote get-url origin) {
+  *gitlab.com*) cli=glab ;;
+  *github.com*) cli=gh ;;
+  *) print -r -- "unknown remote host, aborting"; exit 1 ;;
+}
+print -r -- "cli: $cli"
+##[<] cli select 🤖🤖
+
+##[>] 🤖🤖 unchanged since last run: remote tip already this commit, MR already open
+git fetch origin $branch >/dev/null 2>&1 || true
+if [[ $(git rev-parse HEAD) == $(git rev-parse FETCH_HEAD 2>/dev/null) ]] {
+  if [[ $cli == glab ]] {
+    open_for_branch=$(glab mr list --source-branch $branch -F json | jq -r 'length')
+  } else {
+    open_for_branch=$(gh pr list --head $branch --json number --jq 'length')
+  }
+  (( open_for_branch )) && fn-exit-with 24 "no changes since last run, MR already open"
+}
+##[<] 🤖🤖
+
 ##[>] push 🤖🤖
 #[why] sync rebases onto main, rewriting already-pushed commits: the remote tip is then a
 #      stale twin of a local commit, so a plain push is rejected non-fast-forward
@@ -60,15 +83,6 @@ title=$(jq -r .title <<< $out)
 description=$(jq -r .description <<< $out)
 print -r -- "title: $title"
 ##[<] generate text 🤖🤖
-
-##[>] cli select 🤖🤖
-case $(git remote get-url origin) {
-  *gitlab.com*) cli=glab ;;
-  *github.com*) cli=gh ;;
-  *) print -r -- "unknown remote host, aborting"; exit 1 ;;
-}
-print -r -- "cli: $cli"
-##[<] cli select 🤖🤖
 
 ##[>] upsert mr/pr 🤖🤖
 git fetch --prune origin
