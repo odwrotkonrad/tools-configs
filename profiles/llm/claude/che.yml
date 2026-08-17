@@ -18,6 +18,11 @@ llm/claude:
               - $HOME/.config/claude/rules/config/zsh
               - $HOME/.config/claude/rules/docs
               - $HOME/.config/claude/output-styles
+              - $HOME/.config/claude/skills/user-decipher-code
+              - $HOME/.config/claude/skills/user-git-ops
+              - $HOME/.config/claude/skills/user-humanize-prose
+              - $HOME/.config/claude/skills/user-junior-wrote-this-code-refactor-redesign
+              - $HOME/.config/claude/skills/user-prettify-code
     renderTemplates:
       - source: _home/**
         dest: $HOME/**
