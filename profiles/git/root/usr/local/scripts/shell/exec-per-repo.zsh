@@ -10,8 +10,9 @@
 #   status + dur + countdown bar; per repo `### <repo padded> <emoji> <dur>
 #   pid=<pid>`, log:, tail: last log line); non-tty => same frames appended
 #   every 5s, bold/bar dropped.
-#   ## Skipped lists repos exiting 24 (the git-*-upsert skip code), ⏭️ + last
-#   log line, above ## Done; a skip is never ❌ and never fails the run.
+#   ## Passed lists repos exiting 0, ✅ + last log line; ## Skipped lists repos
+#   exiting 24 (the git-*-upsert skip code), ⏭️ + last log line; both above
+#   ## Done. A skip is never ❌ and never fails the run.
 #   ## Done closes the run (Progress-header shape + ✅/⏭️/❌ counts); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
 #   log lines blockquoted). Exit: 0 nothing failed, 1 any fail, 2 bad
@@ -271,15 +272,27 @@ while (( 1 )) {
   (( tick += 1 ))
 }
 
-failed=() skipped=()
+failed=() skipped=() passed=()
 for repo ($repos) {
   if (( status_of[$repo] == skip_code )) {
     skipped+=($repo)
   } elif (( status_of[$repo] )) {
     failed+=($repo)
+  } else {
+    passed+=($repo)
   }
 }
-passed=$(( $#repos - $#failed - $#skipped ))
+
+##[>] 🤖🤖
+if (( $#passed )) {
+  print -r -- "${bold}## Passed $#passed/$#repos ✅${reset}"
+  for repo ($passed) {
+    last_log_line $repo
+    print -r -- "${bold}### ${(r:$repo_w:)repo} ✅ $REPLY${reset}"
+  }
+  print -r -- ""
+}
+##[<] 🤖🤖
 
 if (( $#skipped )) {
   print -r -- "${bold}## Skipped $#skipped/$#repos ⏭️${reset}"
@@ -291,7 +304,7 @@ if (( $#skipped )) {
 }
 
 (( $#failed )) && overall=❌ || overall=✅
-print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $passed ⏭️ $#skipped ❌ $#failed${reset}"
+print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $#passed ⏭️ $#skipped ❌ $#failed${reset}"
 if (( $#failed )) {
   print -r -- $'\n'"${bold}## Failed Executions${reset}"
   for repo ($failed) {
