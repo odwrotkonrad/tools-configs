@@ -2,8 +2,9 @@
 #>[what] 🤖🤖
 #   Branch-upsert (sync + name), push, then create/update the MR/PR with llm text.
 #   left on main (merged, nothing new): exit 24, nothing to MR.
-#   push: always plain (never force in automation); diverged remote -> push fails,
-#     error tails into the log, push manually.
+#   push: plain first; rejected (sync rebased already-pushed commits) -> re-fetch and
+#     force-with-lease pinned to the fetched tip, but only when git cherry proves the
+#     remote holds nothing this branch lacks; remote-only commits -> exit 1, push manually.
 #   cli: gitlab.com -> glab | github.com -> gh.
 #   upsert: match = open MR/PR whose head commits are patch-equivalent (git cherry) to
 #     commits in this branch and not yet in main;
@@ -40,7 +41,17 @@ if [[ $branch == main ]] fn-exit-with 24 "on main, nothing to MR"
 ##[<] 🤖🤖
 
 ##[>] push 🤖🤖
-git push -u origin HEAD
+#[why] sync rebases onto main, rewriting already-pushed commits: the remote tip is then a
+#      stale twin of a local commit, so a plain push is rejected non-fast-forward
+if ! { git push -u origin HEAD } {
+  git fetch origin $branch || { print -r -- "no remote $branch to reconcile, push failed"; exit 1 }
+  if [[ -n ${(M)${(f)"$(git cherry HEAD FETCH_HEAD)"}:#+*} ]] {
+    print -r -- "remote $branch holds commits absent here, refusing to force: push manually"
+    exit 1
+  }
+  print -r -- "remote $branch is a pre-rebase twin, force-with-lease"
+  git push --force-with-lease=$branch:$(git rev-parse FETCH_HEAD) -u origin HEAD
+}
 ##[<] push 🤖🤖
 
 ##[>] generate text 🤖🤖

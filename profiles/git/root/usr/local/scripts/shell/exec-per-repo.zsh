@@ -7,9 +7,10 @@
 #   ## Progress on stderr: only still-running repos; a repo that finishes is
 #   flushed once above the live region (permanent) and drops out of it.
 #   tty => live region redrawn in place every 5s (header done/count + overall
-#   status + dur + countdown bar; per repo `### <repo padded> <emoji> <dur>
+#   status + run dur + countdown bar; per repo `### <repo padded> <emoji>
 #   pid=<pid>`, log:, tail: last log line); non-tty => same frames appended
-#   every 5s, bold/bar dropped.
+#   every 5s, bold/bar dropped. Per-repo <dur> prints only once the repo has
+#   finished: while pending it just tracks the header's run dur.
 #   ## Passed lists repos exiting 0, ✅ + last log line; ## Skipped lists repos
 #   exiting 24 (the git-*-upsert skip code), ⏭️ + last log line; both above
 #   ## Done. A skip is never ❌ and never fails the run.
@@ -213,12 +214,8 @@ repo_block() {
   local repo=$1 cols=$2 emoji dur
   repo_emoji $repo
   emoji=$REPLY
-  if (( ${+status_of[$repo]} )) {
-    dur=$(fmt_dur $elapsed_of[$repo])
-  } else {
-    dur=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
-  }
-  reply=( "${bold}### ${(r:$repo_w:)repo} $emoji $dur pid=$pid_of[$repo]${reset}" "log: $log_of[$repo]" )
+  (( ${+status_of[$repo]} )) && dur=" $(fmt_dur $elapsed_of[$repo])"
+  reply=( "${bold}### ${(r:$repo_w:)repo} $emoji$dur pid=$pid_of[$repo]${reset}" "log: $log_of[$repo]" )
   last_log_line $repo
   reply+=( "tail: > ${REPLY[1,cols]}" "" )
 }
