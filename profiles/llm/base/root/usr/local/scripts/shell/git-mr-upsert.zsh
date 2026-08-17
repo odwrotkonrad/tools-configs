@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 #>[what] 🤖🤖
 #   Branch-upsert (sync + name), push, then create/update the MR/PR with llm text.
-#   left on main (merged, nothing new): exit 0.
+#   left on main (merged, nothing new): exit 24, nothing to MR.
 #   push: always plain (never force in automation); diverged remote -> push fails,
 #     error tails into the log, push manually.
 #   cli: gitlab.com -> glab | github.com -> gh.
@@ -10,12 +10,14 @@
 #     other-source matches close (superseded) | same-source match -> edit | none -> create.
 #   Usage: git-mr-upsert
 #   Downstream: git-branch-name-upsert, llm-git-mr-suggest, git, glab/gh.
-#   Exit Codes: 22 sync conflicts
+#   Exit Codes: 22 sync conflicts · 24 skipped (nothing to MR)
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖
 emulate -LR zsh
 set -e
+
+autoload -Uz fn-exit-with
 
 log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers
 mkdir -p $log_dir
@@ -33,10 +35,7 @@ git-branch-name-upsert.zsh && rc=0 || rc=$?
 (( rc == 22 )) && exit 22
 
 branch=$(git rev-parse --abbrev-ref HEAD)
-if [[ $branch == main ]] {
-  print -r -- "on main, nothing to MR"
-  exit 0
-}
+if [[ $branch == main ]] fn-exit-with 24 "on main, nothing to MR"
 ##[<] 🤖🤖
 
 ##[>] push 🤖🤖

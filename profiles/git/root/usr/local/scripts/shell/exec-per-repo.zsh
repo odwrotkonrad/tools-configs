@@ -8,9 +8,11 @@
 #   done/count + overall status + dur + countdown bar; per repo
 #   `### <repo padded> <emoji> <dur> pid=<pid>`, log:, tail: last log line);
 #   non-tty => the same frames appended every 5s, bold/bar dropped.
-#   ## Done closes the run (Progress-header shape + ✅/❌ counts); ## Failed
+#   ## Skipped lists repos exiting 24 (the git-*-upsert skip code), ⏭️ + last
+#   log line, above ## Done; a skip is never ❌ and never fails the run.
+#   ## Done closes the run (Progress-header shape + ✅/⏭️/❌ counts); ## Failed
 #   Executions blocks follow per failed repo (exit + dur, log path, last 10
-#   log lines blockquoted). Exit: 0 all pass, 1 any fail, 2 bad
+#   log lines blockquoted). Exit: 0 nothing failed, 1 any fail, 2 bad
 #   invocation.
 #   A single command arg runs via `zsh -c` (quote a whole shell line: pipes,
 #   `;`, &&); multiple args exec verbatim.
@@ -132,6 +134,23 @@ zmodload zsh/system
 setopt extendedglob
 fmt_dur() { printf '%dm%02ds' $(( $1 / 60 )) $(( $1 % 60 )) }
 bold=$'\e[1m' reset=$'\e[0m'
+skip_code=24
+
+repo_emoji() {
+  local code=$status_of[$1]
+  if (( ! ${+status_of[$1]} )) { REPLY=🕐; return }
+  if (( code == skip_code )) { REPLY=⏭️; return }
+  if (( code )) { REPLY=❌ } else { REPLY=✅ }
+}
+
+last_log_line() {
+  local t
+  REPLY=""
+  for t (${(Oaf)"$(tail -n 15 $log_of[$1] 2>/dev/null)"}) {
+    t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
+    if [[ -n ${t//[[:space:]]/} ]] { REPLY=$t; return }
+  }
+}
 
 repo_w=0
 for repo ($repos) (( $#repo > repo_w )) && repo_w=$#repo
@@ -168,7 +187,7 @@ progress_header() {
     overall=🕐
   } else {
     overall=✅
-    for repo ($repos) (( status_of[$repo] )) && overall=❌
+    for repo ($repos) (( status_of[$repo] && status_of[$repo] != skip_code )) && overall=❌
   }
   local bar="${(pl:$fill::▰:):-}${(pl:$(( 5 - fill ))::▱:):-}"
   (( $#pending && tty )) || bar=""
@@ -176,7 +195,7 @@ progress_header() {
 }
 
 render_progress() {
-  local repo log line emoji dur t cols
+  local repo log line emoji dur cols
   if (( tty )) {
     cols=${COLUMNS:-$(tput cols 2>/dev/null)}
     : ${cols:=120}
@@ -191,19 +210,16 @@ render_progress() {
       done_drawn[$repo]=1
     }
     log=$log_of[$repo]
+    repo_emoji $repo
+    emoji=$REPLY
     if (( ${+status_of[$repo]} )) {
-      (( status_of[$repo] )) && emoji=❌ || emoji=✅
       dur=$(fmt_dur $elapsed_of[$repo])
     } else {
-      emoji=🕐
       dur=$(fmt_dur $(( EPOCHSECONDS - start_of[$repo] )))
     }
     draw_lines+=( "${bold}### ${(r:$repo_w:)repo} $emoji $dur pid=$pid_of[$repo]${reset}" "log: $log" )
-    line=""
-    for t (${(Oaf)"$(tail -n 15 $log 2>/dev/null)"}) {
-      t=${${t//$'\r'/}//$'\e'\[[0-9;]#[a-zA-Z]/}
-      if [[ -n ${t//[[:space:]]/} ]] { line=$t; break }
-    }
+    last_log_line $repo
+    line=$REPLY
     draw_lines+=( "tail: > ${line[1,cols]}" "" )
   }
 }
@@ -229,11 +245,27 @@ while (( 1 )) {
   (( tick += 1 ))
 }
 
-failed=()
-for repo ($repos) (( status_of[$repo] )) && failed+=($repo)
+failed=() skipped=()
+for repo ($repos) {
+  if (( status_of[$repo] == skip_code )) {
+    skipped+=($repo)
+  } elif (( status_of[$repo] )) {
+    failed+=($repo)
+  }
+}
+passed=$(( $#repos - $#failed - $#skipped ))
+
+if (( $#skipped )) {
+  print -r -- "${bold}## Skipped $#skipped/$#repos ⏭️${reset}"
+  for repo ($skipped) {
+    last_log_line $repo
+    print -r -- "${bold}### ${(r:$repo_w:)repo} ⏭️ $REPLY${reset}"
+  }
+  print -r -- ""
+}
 
 (( $#failed )) && overall=❌ || overall=✅
-print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $(( $#repos - $#failed )) ❌ $#failed${reset}"
+print -r -- "${bold}## Done $(( $#repos - $#failed ))/$#repos $overall $(fmt_dur $(( EPOCHSECONDS - run_start ))) ✅ $passed ⏭️ $#skipped ❌ $#failed${reset}"
 if (( $#failed )) {
   print -r -- $'\n'"${bold}## Failed Executions${reset}"
   for repo ($failed) {
