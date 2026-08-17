@@ -159,7 +159,10 @@ apply-linux-cli:
     ##[<] 🤖🤖
 
 ##[>] 🤖🤖
+#[why] not interruptible: cancelling a trigger job orphans the downstream pipeline it started, which
+#   is left running with nothing watching it
 rebuild-sandbox-image:
+  interruptible: false
   stage: trigger-image
   needs: []
   rules:
