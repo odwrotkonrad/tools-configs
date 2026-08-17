@@ -3,6 +3,13 @@
   "lines": [
     [
       {
+        "id": "e97b698e-8da3-49eb-8e02-e744f256a5f1",
+        "type": "session-name",
+        "rawValue": true
+      }
+    ],
+    [
+      {
         "id": "0be9743f-4732-406a-92ba-9b0d928832fc",
         "type": "claude-session-id",
         "rawValue": true
