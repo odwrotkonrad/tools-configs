@@ -85,6 +85,6 @@ if ! { git commit $commit_args -m $subject -m $description } {
 
 if (( on_main )) {
   print -r -- "committed on main, moving commit onto a branch"
-  git-branch-name-upsert.zsh
+  GIT_WRAPPER_COMMITTED=1 git-branch-name-upsert.zsh
 }
 ##[<] 🤖🤖

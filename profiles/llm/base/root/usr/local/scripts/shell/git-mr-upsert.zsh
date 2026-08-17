@@ -33,6 +33,7 @@ print -r -- "=== ${0:t} $(date +%FT%T) ==="
 
 git-branch-name-upsert.zsh && rc=0 || rc=$?
 (( rc == 22 )) && exit 22
+(( rc == 0 || rc == 24 )) || exit $rc
 
 branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ $branch == main ]] fn-exit-with 24 "on main, nothing to MR"

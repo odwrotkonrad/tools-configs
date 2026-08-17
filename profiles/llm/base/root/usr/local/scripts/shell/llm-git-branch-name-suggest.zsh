@@ -6,6 +6,7 @@
 #   provider, model, template, env resolved from /etc/custom/llm.yml.
 #   Upstream: git-branch-name-upsert. Downstream: llm run script from llm.yml.
 #   Out: { "name": ... }.
+#   Exit Codes: 1 no commits in range
 #/[what]
 
 set -e
@@ -42,11 +43,12 @@ typeset -A template_vars=(
 )
 ##[<] template vars 🤖
 
-if [[ -z $template_vars[RECENT_COMMITS] ]]; then
-  fn-log-msg -t "${0:t}" "no commits in $script_input[opt_range], emitting scratch name" >&2
-  jq -nc --arg n "tmp/scratch-$(date +%Y%m%d-%H%M%S)" '{name:$n}'
-  exit 0
-fi
+##[>] 🤖🤖
+if [[ -z $template_vars[RECENT_COMMITS] ]] {
+  fn-log-msg -t "${0:t}" "no commits in $script_input[opt_range], nothing to name" >&2
+  exit 1
+}
+##[<] 🤖🤖
 fn-log-msg -t "${0:t}" "range $script_input[opt_range], model $llm_model, current branch ${template_vars[CURRENT_BRANCH]:-none}" >&2
 
 
