@@ -4,12 +4,22 @@ options:
   profileWorkingDirectory: root
 
 dev/terminal/tmux:
+  #[why] debian's newest tmux is 3.5a (backports) and brew tracks its own release, so a linux
+  #   session would run a different tmux than the host it mirrors. building from source on every
+  #   platform is the only way both land on one release, so no manager is allowed here
+  options:
+    packages:
+      onlyInstallationMethods: [buildFromSource]
   include:
     makeLinks:
       - source: _home/**
         dest: $HOME/**
       - etc/**
       - usr/**
+    #[why] the catalog entry carries the build recipe but no version: whoever pins the version
+    #   vouches for the tarball, so the checksum travels with it
     installPackages:
-      - tmux
+      - name: tmux
+        versions: 3.7c
+        checksum: sha256:7c60cae9a0e25288e2e24750aafc9e8800fc7fd4555e447e1b29ee4201cfb3bf
 ##[<] 🤖🤖

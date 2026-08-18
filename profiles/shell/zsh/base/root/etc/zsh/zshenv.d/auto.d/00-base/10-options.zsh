@@ -5,6 +5,7 @@ typeset -a opts_enabled=(
   autopushd
   braceccl #[what] print 1{abw-z}2 -> 1a2 1b2 1w2 1x2 1y2 1z2
   cdsilent
+  clobber #[what] > overwrites an existing file instead of erroring
   combiningchars
   cshnullglob
   extendedglob
@@ -18,7 +19,6 @@ typeset -a opts_enabled=(
   interactivecomments
   noappendhistory
   nobeep
-  noclobber
   noflowcontrol
   nohistbeep
   nohup

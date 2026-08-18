@@ -16,5 +16,7 @@ function fn-ssh-generate-keys {
   for key in ${key_paths}; do
       ssh-keygen -t ecdsa-sha2-nistp521 -b 521 -f ${key} -C $email
   done
+
+  fn-ssh-publish-keys $email
 ##[<] 🤖🤖
 }

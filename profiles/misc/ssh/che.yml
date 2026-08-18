@@ -3,6 +3,8 @@
 options:
   profileWorkingDirectory: root
 
+#[why] ~/.ssh/allowed_signers is deliberately untracked: it is per-host key state
+#      that fn-ssh-publish-keys writes on every rotation, not configuration
 misc/ssh:
   include:
     makeLinks:
