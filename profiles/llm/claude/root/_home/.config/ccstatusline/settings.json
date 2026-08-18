@@ -5,7 +5,7 @@
       {
         "id": "3e5e77af-6524-4a4d-aa2f-4ea044a23141",
         "type": "custom-command",
-        "commandPath": "ps -o ppid= -p $PPID | tr -d ' '",
+        "commandPath": "ps -o ppid= -p $PPID | tr -d ' \\n'",
         "preserveColors": true
       },
       {
