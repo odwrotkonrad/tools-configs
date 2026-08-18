@@ -4,18 +4,20 @@
 #   on main: commit there first, branch off (name derived from the commit),
 #   then reset local main to origin/main so main stays clean.
 #   amend arg: git commit --amend, message from HEAD~1..staged diff. Never amend on main.
-#   nothing staged after add: exit 0 (upsert-all continues to mr-upsert).
+#   nothing staged after add: exit 24, warns with ⚠️ when the stash is non-empty.
 #   hook fails leaving an unstaged diff (docsgen regen): restage, retry once.
 #   repo has lefthook.yml but no installed pre-commit hook: install via
 #   make repo-ci-prepare-hooks, fallback lefthook install.
 #   Usage: git-commit-upsert [amend]
 #   Downstream: git-sync-onto-main, git-branch-name-upsert, llm-git-commit-suggest, git.
-#   Exit Codes: 22 sync conflicts
+#   Exit Codes: 22 sync conflicts · 24 skipped (nothing to commit)
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖
 emulate -LR zsh
 set -e
+
+autoload -Uz fn-exit-with
 
 log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers
 mkdir -p $log_dir
@@ -61,7 +63,12 @@ git add .
 
 if [[ $mode != amend ]] && { git diff --cached --quiet } {
   print -r -- "nothing to commit, skipping"
-  exit 0
+  typeset -a stash_entries=(${(f)"$(git stash list)"})
+  if (( $#stash_entries )) {
+    print -rl -- "  $^stash_entries"
+    fn-exit-with 24 "⚠️ stash: $#stash_entries entries"
+  }
+  fn-exit-with 24
 }
 
 out=$(llm-git-commit-suggest.zsh $diff_base)
@@ -78,6 +85,6 @@ if ! { git commit $commit_args -m $subject -m $description } {
 
 if (( on_main )) {
   print -r -- "committed on main, moving commit onto a branch"
-  git-branch-name-upsert.zsh
+  GIT_WRAPPER_COMMITTED=1 git-branch-name-upsert.zsh
 }
 ##[<] 🤖🤖

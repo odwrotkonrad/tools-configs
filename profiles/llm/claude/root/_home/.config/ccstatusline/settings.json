@@ -3,6 +3,23 @@
   "lines": [
     [
       {
+        "id": "3e5e77af-6524-4a4d-aa2f-4ea044a23141",
+        "type": "custom-command",
+        "commandPath": "ps -o ppid= -p $PPID | tr -d ' \\n'",
+        "preserveColors": true
+      },
+      {
+        "id": "fa130693-a0d8-456e-b1f8-6e81f3c4713a",
+        "type": "separator"
+      },
+      {
+        "id": "e97b698e-8da3-49eb-8e02-e744f256a5f1",
+        "type": "session-name",
+        "rawValue": true
+      }
+    ],
+    [
+      {
         "id": "0be9743f-4732-406a-92ba-9b0d928832fc",
         "type": "claude-session-id",
         "rawValue": true

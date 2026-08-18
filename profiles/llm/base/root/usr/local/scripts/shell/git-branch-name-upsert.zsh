@@ -6,14 +6,18 @@
 #   merged (sync exit 23): leaves you on main, exits 0 (nothing to name).
 #   No-op guard: clean tree, on main, main == origin/main => log
 #   `no new commits`, exit 0 before syncing.
+#   No commits in range: dirty tree => hand over to git-commit-upsert (commits,
+#   then calls back with GIT_WRAPPER_COMMITTED=1), clean tree => exit 24.
 #   Usage: git-branch-name-upsert
-#   Downstream: git-sync-onto-main, llm-git-branch-name-suggest, git.
-#   Exit Codes: 22 sync conflicts
+#   Downstream: git-sync-onto-main, git-commit-upsert, llm-git-branch-name-suggest, git.
+#   Exit Codes: 22 sync conflicts · 24 skipped (no commits to name)
 #/[what] 🤖🤖
 
 ##[>] 🤖🤖
 emulate -LR zsh
 set -e
+
+autoload -Uz fn-exit-with
 
 log_dir=${XDG_STATE_HOME:-$HOME/.local/state}/git-wrappers
 mkdir -p $log_dir
@@ -37,6 +41,15 @@ if [[ -z $(git status --porcelain) &&
 git-sync-onto-main.zsh && rc=0 || rc=$?
 (( rc == 22 )) && exit 22
 (( rc == 23 )) && { print -r -- "merged onto main, nothing to name"; exit 0 }
+
+##[>] 🤖🤖
+range=$([[ $(git rev-parse --abbrev-ref HEAD) == main ]] && print origin/main..HEAD || print main..HEAD)
+if [[ -z $(git log --format=%H $range) ]] {
+  if [[ -z $(git status --porcelain) || -n $GIT_WRAPPER_COMMITTED ]] fn-exit-with 24 "no commits to name"
+  print -r -- "no commits, committing first"
+  exec git-commit-upsert.zsh
+}
+##[<] 🤖🤖
 
 name=$(llm-git-branch-name-suggest.zsh | jq -r .name)
 print -r -- "suggested name: $name"

@@ -9,6 +9,9 @@ cloud/gcp/install:
       - etc/**
     installPackages:
       - gcloud
+    installToolPackages:
+      gcloud:
+        - gke-gcloud-auth-plugin
 
 cloud/gcp/configs:
   options:

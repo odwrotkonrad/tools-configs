@@ -43,6 +43,6 @@ lib-llm-prompt-render() {
   local -A vars=("${(@kv)${(P)assoc}}")
 
   for k v in "${(@kv)vars}"; do export "$k"="$v"; done
-  render-tpl -f "$scripts_dir/templates-llm/$template"
+  che render tpl -f "$scripts_dir/templates-llm/$template"
 }
 ##[<] lib-llm-prompt-render 🤖🤖
