@@ -41,6 +41,8 @@ variables:
   image: $CI_IMAGE
   ##[>] 🤖🤖
   variables:
+    #[why] set but deliberately never cached: it holds downloaded dependencies, and cache: here
+    #   carries intermediates only. it stays because it keeps module downloads inside the project dir
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
@@ -52,7 +54,6 @@ variables:
         files:
           - ci/zsh/scripts/installs/00-ci-deps.zsh
       paths:
-        - .cache/go-mod
         - .cache/go-build
   ##[<] 🤖🤖
 
@@ -91,7 +92,7 @@ validate-pre-commit-all:
     #   job added later that runs che's own suites
     CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
+    GITLAB_TOKEN: $GRP_VAR_GITLAB_TOKEN
   needs: []
   parallel:
     matrix:
@@ -130,7 +131,7 @@ apply-linux:
     #[why] the SaaS macOS VM is discarded with the job, so the archive dies with what it protects
     CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
+    GITLAB_TOKEN: $GRP_VAR_GITLAB_TOKEN
   script:
     - make sync-full
   ##[<] 🤖🤖
