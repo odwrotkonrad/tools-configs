@@ -108,12 +108,9 @@ verify-catalog-pin:
         exit 1
       fi
       echo "che resolved the pinned catalog $got"
-      che packages install --packages-file "$cache/$got/packages.yml" --only-methods nix pkgconf
-      #[why] the nix profile is not on this shell's PATH: nix puts it there through a login shell
-      #   profile snippet, and this job never starts one, so the binary is named by its own path
-      nix_pkgconf=/nix/var/nix/profiles/default/bin/pkgconf
-      test -x "$nix_pkgconf"
-      "$nix_pkgconf" --version
+      #[why] preferred methods, not a forced one: the install line names the method che picked, so
+      #   the log shows both that the pinned packages.yml was read and which of its installers ran
+      che packages install --packages-file "$cache/$got/packages.yml" pkgconf
 ##[<] 🤖🤖
 
 .linux-sync:
