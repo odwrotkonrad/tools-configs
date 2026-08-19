@@ -7,6 +7,11 @@ upstream:
   - go-modules/che
   - infra/oci-images/ci-linux
   - control/workspace
+  - infra/iac/ci-var/artifact-registry
+  - infra/iac/ci-var/ci-images-ref
+  - infra/iac/ci-var/che-packages-ref
+  - infra/iac/ci-var/che-backup-auto-create
+  - infra/iac/ci-var/enable-darwin-ci
 downstream:
   - {name: zsh/base-linux, type: che-profile}
   - {name: llm/claude, type: ai-prose}

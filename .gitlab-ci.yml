@@ -33,7 +33,8 @@ default:
 
 ##[>] 🤖🤖
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/oci-images/ci-linux:latest
+  CI_IMAGE: $GRP_VAR_ARTIFACT_REGISTRY/ci-linux:$GRP_VAR_CI_IMAGES_REF
+  CHE_PACKAGES_REF: $GRP_VAR_CHE_PACKAGES_REF
 ##[<] 🤖🤖
 
 .base:
@@ -85,8 +86,12 @@ validate-pre-commit-all:
   variables:
     CHE_PROFILE: virt/linux
     CHE_DEBUG: "1"
+    #[why] the runner pod is deleted with the job, so an archive of what che changed outlives
+    #   nothing. per anchor, never in the top-level variables: block, which would reach any
+    #   job added later that runs che's own suites
+    CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default
+    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
   needs: []
   parallel:
     matrix:
@@ -95,7 +100,7 @@ validate-pre-commit-all:
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
-    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
   ##[<] 🤖🤖
 
 dry-run-apply-linux:
@@ -122,8 +127,10 @@ apply-linux:
   image: macos-15-xcode-16
   variables:
     CHE_DEBUG: "1"
+    #[why] the SaaS macOS VM is discarded with the job, so the archive dies with what it protects
+    CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default
+    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
   script:
     - make sync-full
   ##[<] 🤖🤖
@@ -132,7 +139,7 @@ dry-run-apply-macos:
   extends: .e2e-macos
   stage: dry-run-apply
   rules:
-    - if: $ENABLE_DARWIN_CI != "true"
+    - if: $GRP_VAR_ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
@@ -149,7 +156,7 @@ apply-macos-cli:
     CHE_PROFILE: cli/macos
   needs: [dry-run-apply-macos]
   rules:
-    - if: $ENABLE_DARWIN_CI != "true"
+    - if: $GRP_VAR_ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
