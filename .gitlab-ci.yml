@@ -92,7 +92,7 @@ validate-pre-commit-all:
     #   job added later that runs che's own suites
     CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
+    GITLAB_TOKEN: $GRP_VAR_GITLAB_TOKEN
   needs: []
   parallel:
     matrix:
@@ -131,7 +131,7 @@ apply-linux:
     #[why] the SaaS macOS VM is discarded with the job, so the archive dies with what it protects
     CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
+    GITLAB_TOKEN: $GRP_VAR_GITLAB_TOKEN
   script:
     - make sync-full
   ##[<] 🤖🤖
