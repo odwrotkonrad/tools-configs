@@ -79,6 +79,40 @@ validate-pre-commit-all:
     - make repo-ci-run-precommit-all
     - git diff --exit-code HEAD
 
+##[>] 🤖🤖
+#[what] prove the group's catalog pin reaches che and installs come from it, not from the copy
+#   embedded in the released binary
+#[why] the apply jobs install packages but never say which catalog they came from, so a pin that
+#   silently failed to arrive looked identical to one that worked. this asserts the version
+#[why] pkgconf: its nix installer exists only in a catalog newer than any released che embeds, so
+#   finding it proves the fetched definitions are in play rather than the built-in ones
+verify-catalog-pin:
+  extends: .base
+  stage: validate
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - |
+      set -eu
+      if [ -z "${CHE_PACKAGES_REF:-}" ]; then
+        echo "CHE_PACKAGES_REF unset: the group variable is not reaching this job"
+        exit 1
+      fi
+      echo "pinned catalog: $CHE_PACKAGES_REF"
+      che packages update
+      cache="${XDG_CACHE_HOME:-$HOME/.cache}/che/packages"
+      got=$(cat "$cache/current")
+      if [ "$got" != "$CHE_PACKAGES_REF" ]; then
+        echo "che resolved $got, want $CHE_PACKAGES_REF"
+        exit 1
+      fi
+      echo "che resolved the pinned catalog $got"
+      che packages install --packages-file "$cache/$got/packages.yml" --only-methods nix pkgconf
+      command -v pkgconf
+      pkgconf --version
+##[<] 🤖🤖
+
 .linux-sync:
   extends: .as-user
   ##[>] 🤖🤖
