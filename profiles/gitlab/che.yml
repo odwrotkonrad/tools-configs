@@ -32,4 +32,11 @@ gitlab/virt/linux:
       - source: "@https://gitlab.com/konradodwrot/control//workspace/che.yml::gitlab/projects"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
+
+#[why] index only, no clone: control gates that profile on nothing, so a routine sync refreshes the
+#   workspace map with no gitlab auth. os-agnostic, reached from the root indexWorkspace profile
+gitlab/projects-index:
+  include:
+    profiles:
+      - source: "@https://gitlab.com/konradodwrot/control//workspace/che.yml::gitlab/projects-index"
 ##[<] 🤖🤖
