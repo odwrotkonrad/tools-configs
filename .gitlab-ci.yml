@@ -84,8 +84,10 @@ validate-pre-commit-all:
 #   embedded in the released binary
 #[why] the apply jobs install packages but never say which catalog they came from, so a pin that
 #   silently failed to arrive looked identical to one that worked. this asserts the version
-#[why] pkgconf: its nix installer exists only in a catalog newer than any released che embeds, so
-#   finding it proves the fetched definitions are in play rather than the built-in ones
+#[why] showkey via nix: that installer landed in 0.0.16, after the catalog the current che embeds,
+#   so resolving it proves the fetched definitions are in play rather than the built-in ones. The
+#   probe has to be a package whose entry the builtin lacks: pkgconf stopped proving anything once
+#   a che release vendored the catalog its nix method had shipped in
 verify-catalog-pin:
   extends: .base
   stage: validate
@@ -110,7 +112,15 @@ verify-catalog-pin:
       echo "che resolved the pinned catalog $got"
       #[why] preferred methods, not a forced one: the install line names the method che picked, so
       #   the log shows both that the pinned packages.yml was read and which of its installers ran
-      che packages install --packages-file "$cache/$got/packages.yml" pkgconf
+      #[why] asserted against the builtin, not just present in the fetched file: the point is that
+      #   this entry reaches che only through the fetch, so the builtin must not already carry it
+      if che packages install --packages-file __builtin__.packages.yml --only-methods nix --dry-run=all showkey 2>&1 | grep -q "install showkey"; then
+        echo "builtin already carries showkey via nix: pick a newer probe package"
+        exit 1
+      fi
+      echo "builtin has no nix installer for showkey, as expected"
+      che packages install --packages-file "$cache/$got/packages.yml" --only-methods nix showkey
+      /nix/var/nix/profiles/default/bin/showkey --version
 ##[<] 🤖🤖
 
 .linux-sync:
