@@ -69,11 +69,11 @@ host-index-workspace: | repo-ci-install-deps
 
 ##[>] Release [genai-include]
 #[what] print the next semver tag inferred from the last tag..HEAD diff (override: `semver: major|minor|patch` commit token)
-semver-next: render-templates
+semver-next: repo-render-templates
 	@ci/semver-bump.zsh
 
 #[what] mint and push the next semver tag (CI: authed via TAG_TOKEN)
-tag-mint: render-templates
+tag-mint: repo-render-templates
 	@ci/tag-mint.zsh
 ##[<] Release
 
