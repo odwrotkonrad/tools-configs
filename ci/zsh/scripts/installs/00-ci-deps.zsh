@@ -1,5 +1,5 @@
 #!/bin/zsh
-#[what] ci build deps bootstrap: che installed/upgraded via the pages-hosted install.sh (os/arch resolved there), MR pipelines preferring an open go-modules MR's prerelease over the newest released tag, then go via che packages
+#[what] ci build deps bootstrap: che installed/upgraded via the pages-hosted install.sh (os/arch resolved there), MR pipelines preferring an open go-modules MR's prerelease over the newest published release, then go via che packages
 
 emulate -LR zsh
 setopt errexit
@@ -9,14 +9,15 @@ GO_MODULES_API='https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules'
 CURL=(curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors)
 
 che_version_latest=$(
-  $CURL "${GO_MODULES_API}/repository/tags?search=^che/v&per_page=1" |
-    sed -n 's|.*"name":"che/v\([^"]*\)".*|\1|p'
+  $CURL "${GO_MODULES_API}/packages?package_name=che&package_type=generic&per_page=100" |
+    tr ',' '\n' | sed -n 's|.*"version":"\([0-9][0-9.]*\)".*|\1|p' |
+    sort -t. -k1,1n -k2,2n -k3,3n | tail -1
 )
 [[ -n $che_version_latest ]] || { print -u2 'ci-deps: cannot resolve latest che version'; exit 1 }
 
 #[what] newest prerelease whose MR is still open, empty when none resolves
 #[why] every lookup is best-effort: a prerelease is a convenience, never a reason to redden a
-#   pipeline that is not about che, so any failure falls through to the released tag
+#   pipeline that is not about che, so any failure falls through to the published release
 fn_che_version_prerelease() {
   local packages iid version
   #[why] a real array, not the raw scalar: (Ie) on a scalar matches substrings, so open MR !420 would
