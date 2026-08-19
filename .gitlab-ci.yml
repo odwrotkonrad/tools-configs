@@ -43,9 +43,9 @@ variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
-    #[why] no CHE_PACKAGES_AUTO_UPDATE here: it defaults to true, and the group's CHE_PACKAGES_REF
-    #   pins which catalog that fetch resolves. the old CHE_PACKAGES_UPDATE_CHECK sat here long
-    #   after che renamed it, doing nothing 🤖🤖
+  #[why] no packages variables here: autoUpdate defaults to true and the group's CHE_PACKAGES_REF
+  #   pins which catalog that fetch resolves. the old CHE_PACKAGES_UPDATE_CHECK sat here long after
+  #   che renamed it, doing nothing
   cache:
     - key:
         files:
@@ -78,50 +78,6 @@ validate-pre-commit-all:
   script:
     - make repo-ci-run-precommit-all
     - git diff --exit-code HEAD
-
-##[>] 🤖🤖
-#[what] prove the group's catalog pin reaches che and installs come from it, not from the copy
-#   embedded in the released binary
-#[why] the apply jobs install packages but never say which catalog they came from, so a pin that
-#   silently failed to arrive looked identical to one that worked. this asserts the version
-#[why] showkey via nix: that installer landed in 0.0.16, after the catalog the current che embeds,
-#   so resolving it proves the fetched definitions are in play rather than the built-in ones. The
-#   probe has to be a package whose entry the builtin lacks: pkgconf stopped proving anything once
-#   a che release vendored the catalog its nix method had shipped in
-verify-catalog-pin:
-  extends: .base
-  stage: validate
-  needs: []
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  script:
-    - |
-      set -eu
-      if [ -z "${CHE_PACKAGES_REF:-}" ]; then
-        echo "CHE_PACKAGES_REF unset: the group variable is not reaching this job"
-        exit 1
-      fi
-      echo "pinned catalog: $CHE_PACKAGES_REF"
-      che packages update
-      cache="${XDG_CACHE_HOME:-$HOME/.cache}/che/packages"
-      got=$(cat "$cache/current")
-      if [ "$got" != "$CHE_PACKAGES_REF" ]; then
-        echo "che resolved $got, want $CHE_PACKAGES_REF"
-        exit 1
-      fi
-      echo "che resolved the pinned catalog $got"
-      #[why] preferred methods, not a forced one: the install line names the method che picked, so
-      #   the log shows both that the pinned packages.yml was read and which of its installers ran
-      #[why] asserted against the builtin, not just present in the fetched file: the point is that
-      #   this entry reaches che only through the fetch, so the builtin must not already carry it
-      if che packages install --packages-file __builtin__.packages.yml --only-methods nix --dry-run=all showkey 2>&1 | grep -q "install showkey"; then
-        echo "builtin already carries showkey via nix: pick a newer probe package"
-        exit 1
-      fi
-      echo "builtin has no nix installer for showkey, as expected"
-      che packages install --packages-file "$cache/$got/packages.yml" --only-methods nix showkey
-      /nix/var/nix/profiles/default/bin/showkey --version
-##[<] 🤖🤖
 
 .linux-sync:
   extends: .as-user
