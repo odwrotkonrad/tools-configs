@@ -86,16 +86,6 @@ tools:
           commit-template:
         profiles/misc/ssh/root/etc/zsh/zshenv.d/functions/fn-ssh-test-git-connection:
 
-  - gitlab-projects:
-      files:
-        profiles/gitlab/projects/:
-          che.yml:
-          scripts/:
-            10-clone.zsh:
-            20-index.zsh:
-          templates/subgroup-index.md.ontoRepo.tpl:
-          tree/:
-
   - gitlab-runner:
       files:
         profiles/gitlab/runner/:

@@ -8,6 +8,7 @@ stages:
   - dry-run-apply
   - smoke-apply
   - trigger-image
+  - release
 
 #[why] all CI runs on the self-hosted GKE runners: no SaaS compute minutes remain. set once here so a
 #   new job inherits it instead of silently having no runner. jobs needing arm64 or another size
@@ -32,7 +33,8 @@ default:
 
 ##[>] 🤖🤖
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/oci-images/ci-linux:latest
+  CI_IMAGE: $GRP_VAR_ARTIFACT_REGISTRY/ci-linux:$GRP_VAR_CI_IMAGES_REF
+  CHE_PACKAGES_REF: $GRP_VAR_CHE_PACKAGES_REF
 ##[<] 🤖🤖
 
 .base:
@@ -42,10 +44,9 @@ variables:
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
-    #[why] fresh container: che's config.yml symlink lands during the very run that installs packages,
-    #   so the file cannot enable this in time. without it che falls back to the definitions embedded in
-    #   the released binary, which lag behind the published che-packages set 🤖🤖
-    CHE_PACKAGES_UPDATE_CHECK: "true"
+  #[why] no packages variables here: autoUpdate defaults to true and the group's CHE_PACKAGES_REF
+  #   pins which catalog that fetch resolves. the old CHE_PACKAGES_UPDATE_CHECK sat here long after
+  #   che renamed it, doing nothing
   cache:
     - key:
         files:
@@ -85,15 +86,21 @@ validate-pre-commit-all:
   variables:
     CHE_PROFILE: virt/linux
     CHE_DEBUG: "1"
+    #[why] the runner pod is deleted with the job, so an archive of what che changed outlives
+    #   nothing. per anchor, never in the top-level variables: block, which would reach any
+    #   job added later that runs che's own suites
+    CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default
+    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
   needs: []
   parallel:
     matrix:
       - ARCH: [amd64, arm64]
   tags: [gke-linux-$ARCH]
   script:
-    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_UPDATE_CHECK,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
+    #   catalog pin never reached che and the job silently resolved latest instead of the pin
+    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
   ##[<] 🤖🤖
 
 dry-run-apply-linux:
@@ -120,8 +127,10 @@ apply-linux:
   image: macos-15-xcode-16
   variables:
     CHE_DEBUG: "1"
+    #[why] the SaaS macOS VM is discarded with the job, so the archive dies with what it protects
+    CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: "" #[why] injected (masked) from gitlab ci/cd settings; overrides this default
+    GITLAB_TOKEN: $REPO_VAR_GITLAB_TOKEN
   script:
     - make sync-full
   ##[<] 🤖🤖
@@ -130,7 +139,7 @@ dry-run-apply-macos:
   extends: .e2e-macos
   stage: dry-run-apply
   rules:
-    - if: $ENABLE_DARWIN_CI != "true"
+    - if: $GRP_VAR_ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
@@ -147,7 +156,7 @@ apply-macos-cli:
     CHE_PROFILE: cli/macos
   needs: [dry-run-apply-macos]
   rules:
-    - if: $ENABLE_DARWIN_CI != "true"
+    - if: $GRP_VAR_ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
@@ -174,4 +183,17 @@ rebuild-sandbox-image:
     forward:
       yaml_variables: true
       pipeline_variables: false
+
+#[why] a merge to the default branch is the release event: mint the next semver tag so consumers can
+#   pin a version instead of tracking a moving branch. tag only, no release object: nothing here ships
+#   an artifact
+tag-mint:
+  stage: release
+  image: $CI_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - make tag-mint
 ##[<] 🤖🤖

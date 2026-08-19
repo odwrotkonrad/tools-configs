@@ -34,4 +34,7 @@ __pycache__/
 #[why] skills render as directories, so the SKILL.md and any sibling payload are ignored while the
 #   hand-written scripts/ helpers beside them stay tracked
 /profiles/llm/claude/root/_home/.config/claude/skills/**/SKILL.md
+#[why] tagging scripts: authored in prose, rendered here by the ontoRepo profile
+/ci/semver-bump.zsh
+/ci/tag-mint.zsh
 ##[<] 🤖
