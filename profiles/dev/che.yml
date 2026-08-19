@@ -43,6 +43,7 @@ dev/virt/linux:
       - builtin:isOs == linux
   include:
     profiles:
+      - source: "./terminal/kitty/che.yml::dev/terminal/kitty/terminfo"
       - source: "./misc/editorconfig/che.yml::dev/misc/editorconfig"
       - source: "./python/python/che.yml::dev/python/python"
       - source: "./python/mypy/che.yml::dev/python/mypy"

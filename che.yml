@@ -1,6 +1,9 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
-base:
+#[why] the package set alone, no makeDirs/runScripts: those bind to a configs checkout ($PWD/ci,
+#   ci/zsh/scripts/installs), which an image build composing profiles from a remote ref has not got.
+#   split out so such a build can pull the base packages without the checkout-bound ops
+base/packages:
   include:
     installPackages:
       - bat
@@ -39,6 +42,11 @@ base:
       - yq
       - zlib
       - zstd
+
+base:
+  include:
+    profiles:
+      - base/packages
     makeDirs:
       - chmod: "0755"
         directories:

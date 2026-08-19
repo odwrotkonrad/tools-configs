@@ -1,0 +1,66 @@
+#>[what]
+#   publish the local keypairs so a rotation needs no manual step:
+#   1. register id_access (auth_and_signing) and id_signing (signing) on gitlab,
+#      dropping any stale key held under the same title
+#   2. append the signing key to ~/.ssh/allowed_signers so git verifies locally,
+#      retired keys kept so the commits they signed still verify
+#/[what]
+
+function fn-ssh-publish-keys {
+  emulate -LR zsh
+
+  ##[>] 🤖🤖
+  typeset email=${1:-$(git config --get user.email)}
+  if [[ -z $email ]]; then
+    print -u2 "usage: fn-ssh-publish-keys [email]"
+    return 1
+  fi
+
+  typeset -A key_usage=(
+    ${HOME}/.ssh/id_access auth_and_signing
+    ${HOME}/.ssh/id_signing signing
+  )
+
+  #[why] match on the key body, not the title: a hand-registered key carries an
+  #      arbitrary title and would otherwise collide on fingerprint at POST
+  typeset key title body remote
+  for key usage in ${(kv)key_usage}; do
+    [[ -r ${key}.pub ]] || { print -u2 "missing ${key}.pub"; return 1 }
+    title=${key:t}
+    body=${${(z)"$(<${key}.pub)"}[1,2]}
+
+    remote=$(glab api user/keys --paginate)
+
+    if print -r -- $remote | jq -e --arg b "$body" \
+      'any(.[]; .key | startswith($b))' >/dev/null; then
+      print "already registered $title ($usage)"
+      continue
+    fi
+
+    #[why] a stale key under this title blocks nothing at POST, but leaving it
+    #      means the account accumulates dead keys every rotation
+    for id in ${(f)"$(print -r -- $remote | jq -r --arg t $title \
+      '.[] | select(.title == $t) | .id')"}; do
+      [[ -n $id ]] && glab api user/keys/${id} -X DELETE >/dev/null
+    done
+
+    glab api user/keys -X POST \
+      -f title=$title \
+      -f usage_type=$usage \
+      -f key="$body $email" >/dev/null \
+      || { print -u2 "failed to register $title"; return 1 }
+    print "registered $title ($usage)"
+  done
+
+  #[why] retired signing keys stay listed so commits they signed keep verifying
+  typeset signers=${HOME}/.ssh/allowed_signers
+  typeset -a entries
+  typeset pubkey
+  [[ -r $signers ]] && entries=(${(f)"$(<$signers)"})
+  pubkey="$(<${HOME}/.ssh/id_signing.pub)"
+  entries+=("${email} ${${(z)pubkey}[1,2]}")
+  entries=(${(u)entries:#})
+  print -l $entries >| $signers
+  print "wrote ${#entries} entries to $signers"
+  ##[<] 🤖🤖
+}

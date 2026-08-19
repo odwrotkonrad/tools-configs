@@ -10,4 +10,13 @@ dev/terminal/kitty:
         dest: $HOME/**
     installPackages:
       - kitty
+
+dev/terminal/kitty/terminfo:
+  options:
+    runIf:
+      - builtin:isOs == linux
+  include:
+    installPackages:
+      - kitty-terminfo
+      - ncurses-term
 ##[<] 🤖🤖

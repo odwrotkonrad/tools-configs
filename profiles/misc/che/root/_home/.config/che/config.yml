@@ -1,9 +1,16 @@
 ##[>] 🤖🤖
 validateSpec: error
 packages:
-  updateCheck:
+  source:
+    url:
+    ref:
+  autoUpdate:
     enabled: true
-    cooldown: 15m
+    if:
+      refIsLatest:
+        cooldown: 0s
+      dryRunIsTrue:
+        enabled: true
   completions:
     zsh:
       enabled: true
