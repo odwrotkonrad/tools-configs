@@ -41,6 +41,8 @@ variables:
   image: $CI_IMAGE
   ##[>] 🤖🤖
   variables:
+    #[why] set but deliberately never cached: it holds downloaded dependencies, and cache: here
+    #   carries intermediates only. it stays because it keeps module downloads inside the project dir
     GOMODCACHE: $CI_PROJECT_DIR/.cache/go-mod
     GOCACHE: $CI_PROJECT_DIR/.cache/go-build
     CC: clang
@@ -52,7 +54,6 @@ variables:
         files:
           - ci/zsh/scripts/installs/00-ci-deps.zsh
       paths:
-        - .cache/go-mod
         - .cache/go-build
   ##[<] 🤖🤖
 
