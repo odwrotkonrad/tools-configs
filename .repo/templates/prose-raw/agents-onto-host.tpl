@@ -1,1 +1,1 @@
-{{- remoteFile "gitlab.com/konradodwrot/prose//repos/configs/ai/ai-agents-templates/AGENTS.md.ontoHost.tpl?ref=v0.0.34" -}}
+{{- remoteFile (printf "%s?ref=%s" "gitlab.com/konradodwrot/prose//repos/configs/ai/ai-agents-templates/AGENTS.md.ontoHost.tpl" (env.Getenv "PROSE_REF")) -}}

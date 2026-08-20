@@ -4,7 +4,7 @@ SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
 WRAPPERS := repo-prepare-dev-env sync sync-full
-COMMANDS := semver-next tag-mint host-load-configs host-load-configs-install host-index-workspace repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
+COMMANDS := semver-next tag-mint host-load-configs host-load-configs-install host-index-workspace repo-render-templates repo-render-env repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -30,7 +30,7 @@ export CHE_VALIDATE_SPEC
 #[why] render precedes hooks: the docsgen pre-commit hook runs the repo render and fails on drift,
 #   so a fresh clone whose generated files were never rendered would fail its first commit
 #[what] make a fresh clone a working checkout: generated docs, dependencies, git hooks
-repo-prepare-dev-env: repo-render-templates repo-ci-install-deps repo-ci-prepare-hooks
+repo-prepare-dev-env: repo-render-env repo-render-templates repo-ci-install-deps repo-ci-prepare-hooks
 
 #[why] repo renders run first: the host profiles read prose payloads that ontoRepo generates and
 #   .gitignore keeps out of the tree (AGENTS.md.ontoHost.tpl, claude snippets), so loading the host
@@ -47,6 +47,12 @@ sync-full: repo-render-templates host-load-configs-install repo-ci-prepare-hooks
 #[what] load configs onto host, profile by profile: each profile's full op sequence minus scripts and package installs
 host-load-configs: | repo-ci-install-deps
 	@$(CHE) run --skip-ops=run-scripts,install-packages
+
+##[>] 🤖🤖🤖
+#[what] render .env.tpl to .env: upstream refs and CI variables via glab, secrets via op
+repo-render-env:
+	@CHE_ENV_UNSET=empty che render-templates --profiles=envSeed
+##[<] 🤖🤖🤖
 
 #[what] install configs onto host, profile by profile: each profile's full op sequence, scripts included
 host-load-configs-install: | repo-ci-install-deps

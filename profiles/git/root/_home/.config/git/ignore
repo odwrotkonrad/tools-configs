@@ -34,6 +34,7 @@
 !**/.gitlab-ci.yml
 !**/.golangci.yml
 !**/.env.example
+!**/.env.tpl
 
 **/.claude/settings.local.json
 **/.claude/settings.json
