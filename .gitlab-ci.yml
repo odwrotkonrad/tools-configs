@@ -33,8 +33,13 @@ default:
 
 ##[>] 🤖🤖
 variables:
-  CI_IMAGE: $GRP_VAR_ARTIFACT_REGISTRY/ci-linux:$GRP_VAR_CI_IMAGES_REF
-  CHE_PACKAGES_REF: $GRP_VAR_CHE_PACKAGES_REF
+  ARTIFACT_REGISTRY: $GRP_KO_VAR_ARTIFACT_REGISTRY
+  CI_IMAGES_REF: $GRP_KO_VAR_CI_IMAGES_REF
+  PROSE_REF: $GRP_KO_VAR_PROSE_REF
+  CHE_PACKAGES_REF: $GRP_KO_VAR_CHE_PACKAGES_REF
+  ENABLE_DARWIN_CI: $GRP_KO_VAR_ENABLE_DARWIN_CI
+  GITLAB_TOKEN: $GRP_KO_VAR_GITLAB_TOKEN
+  CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$CI_IMAGES_REF
 ##[<] 🤖🤖
 
 .base:
@@ -90,9 +95,8 @@ validate-pre-commit-all:
     #[why] the runner pod is deleted with the job, so an archive of what che changed outlives
     #   nothing. per anchor, never in the top-level variables: block, which would reach any
     #   job added later that runs che's own suites
-    CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
+    CHE_BACKUP_AUTO_CREATE: $GRP_KO_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: $GRP_VAR_GITLAB_TOKEN
   needs: []
   parallel:
     matrix:
@@ -129,9 +133,8 @@ apply-linux:
   variables:
     CHE_DEBUG: "1"
     #[why] the SaaS macOS VM is discarded with the job, so the archive dies with what it protects
-    CHE_BACKUP_AUTO_CREATE: $GRP_VAR_CHE_BACKUP_AUTO_CREATE
+    CHE_BACKUP_AUTO_CREATE: $GRP_KO_VAR_CHE_BACKUP_AUTO_CREATE
     MK_DRY_RUN_RENDER_SECRETS: "true"
-    GITLAB_TOKEN: $GRP_VAR_GITLAB_TOKEN
   script:
     - make sync-full
   ##[<] 🤖🤖
@@ -140,7 +143,7 @@ dry-run-apply-macos:
   extends: .e2e-macos
   stage: dry-run-apply
   rules:
-    - if: $GRP_VAR_ENABLE_DARWIN_CI != "true"
+    - if: $ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
@@ -157,7 +160,7 @@ apply-macos-cli:
     CHE_PROFILE: cli/macos
   needs: [dry-run-apply-macos]
   rules:
-    - if: $GRP_VAR_ENABLE_DARWIN_CI != "true"
+    - if: $ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
@@ -195,6 +198,7 @@ tag-mint:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   variables:
     GIT_DEPTH: "0"
+    TAG_TOKEN: $REPO_VAR_TAG_TOKEN
   script:
     - make tag-mint
 ##[<] 🤖🤖

@@ -1,1 +1,1 @@
-{{- remoteFile "gitlab.com/konradodwrot/prose//repos/configs/ai/templates-llm/git-commit-msg-suggest.tmpl.md?ref=v0.0.34" -}}
+{{- remoteFile (printf "%s?ref=%s" "gitlab.com/konradodwrot/prose//repos/configs/ai/templates-llm/git-commit-msg-suggest.tmpl.md" (env.Getenv "PROSE_REF")) -}}
