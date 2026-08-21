@@ -33,8 +33,8 @@ export CHE_VALIDATE_SPEC
 repo-prepare-dev-env: repo-render-env repo-render-templates repo-ci-install-deps repo-ci-prepare-hooks
 
 #[why] repo renders run first: the host profiles read prose payloads that ontoRepo generates and
-#   .gitignore keeps out of the tree (AGENTS.md.ontoHost.tpl, claude snippets), so loading the host
-#   before rendering finds nothing to load
+#   .gitignore keeps out of the tree (ai-agents docs, claude rules and snippets), so loading the
+#   host before rendering finds nothing to load
 #[why] the workspace index inlines each repo's rendered purpose doc, which the host load
 #   produces and .gitignore keeps out of the tree: indexing before that load reads nothing
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host), workspace indexes
@@ -51,7 +51,7 @@ host-load-configs: | repo-ci-install-deps
 ##[>] 🤖🤖🤖
 #[what] render .env.tpl to .env: upstream refs and CI variables via glab, secrets via op
 repo-render-env:
-	@CHE_ENV_UNSET=empty che render-templates --profiles=envSeed
+	@che render-templates --profiles=envSeed --env-unset=empty
 ##[<] 🤖🤖🤖
 
 #[what] install configs onto host, profile by profile: each profile's full op sequence, scripts included

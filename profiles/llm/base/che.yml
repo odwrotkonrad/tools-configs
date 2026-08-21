@@ -14,8 +14,18 @@ llm/base:
       - directories:
           - dest:
               - "$HOME/.config/{claude,codex}"
+    makeCopies:
+      - source: "@gitlab.com/konradodwrot/cross-repo/prose/assets//repos/configs/ai/templates-llm?ref=${{ env.PROSE_ASSETS_REF }}"
+        dest: /usr/local/scripts/shell/templates-llm
+        <<<:
+          - source: /git-branch-name-suggest.md.tpl
+            dest: git-branch-name-suggest.md.tpl
+          - source: /git-commit-msg-suggest.md.tpl
+            dest: git-commit-msg-suggest.md.tpl
+          - source: /git-mr-text-suggest.md.tpl
+            dest: git-mr-text-suggest.md.tpl
     renderTemplates:
-      - source: _home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
+      - source: "@gitlab.com/konradodwrot/cross-repo/prose/assets//repos/configs/ai/ai-agents-templates/AGENTS.md.ontoHost.tpl?ref=${{ env.PROSE_ASSETS_REF }}"
         dest:
           - ~/.config/claude/CLAUDE.md
           - path: ~/.config/codex/AGENTS.md

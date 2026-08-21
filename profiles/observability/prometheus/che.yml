@@ -15,10 +15,9 @@ observability/prometheus:
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
-        files:
-          - source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp
-            dest:
-              - /Library/LaunchDaemons/prometheus.plist
+        source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp
+        dest:
+          - /Library/LaunchDaemons/prometheus.plist
     makeDirs:
       - chmod: "2775"
         directories:

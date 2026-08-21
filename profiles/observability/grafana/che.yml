@@ -17,10 +17,9 @@ observability/grafana:
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
-        files:
-          - source: Library/LaunchDaemons/grafana.plist.ontoHost.cp
-            dest:
-              - /Library/LaunchDaemons/grafana.plist
+        source: Library/LaunchDaemons/grafana.plist.ontoHost.cp
+        dest:
+          - /Library/LaunchDaemons/grafana.plist
     makeDirs:
       - chmod: "2775"
         directories:

@@ -20,17 +20,17 @@ scripts:
     provider:
       id: claude-code
       config: {}
-    template: git-branch-name-suggest.tmpl.md
+    template: git-branch-name-suggest.md.tpl
     env: {}
   llm-git-commit-suggest.zsh:
     provider:
       id: claude-code
       config: {}
-    template: git-commit-msg-suggest.tmpl.md
+    template: git-commit-msg-suggest.md.tpl
     env: {}
   llm-git-mr-suggest.zsh:
     provider:
       id: claude-code
       config: {}
-    template: git-mr-text-suggest.tmpl.md
+    template: git-mr-text-suggest.md.tpl
     env: {}

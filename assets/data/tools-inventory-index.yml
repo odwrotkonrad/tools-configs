@@ -5,7 +5,7 @@ references:
   assets/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 ##[>] primary
-agents: profiles/llm/base/root/_home/.config/ai-agents/templates/AGENTS.md.ontoHost.tpl
+agents: profiles/llm/base/che.yml
 ccstatusline: profiles/llm/claude/root/_home/.config/ccstatusline/settings.json
 claude: profiles/llm/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
 codex: profiles/llm/codex/root/_home/.config/codex/config.toml.ontoHost.tpl

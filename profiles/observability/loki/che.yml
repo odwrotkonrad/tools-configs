@@ -18,10 +18,9 @@ observability/loki:
       - owner: root
         ownerGroup: "0"
         chmod: "0644"
-        files:
-          - source: Library/LaunchDaemons/loki.plist.ontoHost.cp
-            dest:
-              - /Library/LaunchDaemons/loki.plist
+        source: Library/LaunchDaemons/loki.plist.ontoHost.cp
+        dest:
+          - /Library/LaunchDaemons/loki.plist
     makeDirs:
       - chmod: "2775"
         directories:
