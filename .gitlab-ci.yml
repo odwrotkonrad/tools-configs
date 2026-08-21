@@ -79,6 +79,8 @@ variables:
 
 validate-pre-commit-all:
   extends: .base
+  tags:
+    - gke-linux-amd64-small
   stage: validate
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -103,7 +105,6 @@ validate-pre-commit-all:
   parallel:
     matrix:
       - ARCH: [amd64, arm64]
-  tags: [gke-linux-$ARCH]
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
@@ -113,6 +114,7 @@ validate-pre-commit-all:
 dry-run-apply-linux:
   extends: .linux-sync
   stage: dry-run-apply
+  tags: [gke-linux-$ARCH-small]
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   variables:
@@ -121,6 +123,7 @@ dry-run-apply-linux:
 apply-linux:
   extends: .linux-sync
   stage: smoke-apply
+  tags: [gke-linux-$ARCH-big]
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
@@ -194,6 +197,8 @@ rebuild-sandbox-image:
 #   pin a version instead of tracking a moving branch. tag only, no release object: nothing here ships
 #   an artifact
 tag-mint:
+  tags:
+    - gke-linux-amd64-small
   stage: release
   image: $CI_IMAGE
   rules:
