@@ -39,10 +39,10 @@ lib-llm-env-export() {
 ##[>] lib-llm-prompt-render 🤖🤖
 lib-llm-prompt-render() {
   local template=$1 assoc=$2
-  local scripts_dir=${${(%):-%x}:A:h:h}
+  local templates_dir=/usr/local/scripts/shell/templates-llm
   local -A vars=("${(@kv)${(P)assoc}}")
 
   for k v in "${(@kv)vars}"; do export "$k"="$v"; done
-  che render tpl -f "$scripts_dir/templates-llm/$template"
+  che render tpl -f "$templates_dir/$template"
 }
 ##[<] lib-llm-prompt-render 🤖🤖

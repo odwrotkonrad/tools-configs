@@ -118,6 +118,11 @@ ontoRepo:
     profiles:
       - source: ".repo/che.yml::repo/genfiles"
 
+envSeed:
+  include:
+    profiles:
+      - source: ".repo/che.yml::envSeed"
+
 #[why] os-agnostic and ungated, like ontoRepo: indexing reads dirs already on disk, so `make
 #   host-index-workspace` refreshes the workspace map with no credential and no network
 indexWorkspace:

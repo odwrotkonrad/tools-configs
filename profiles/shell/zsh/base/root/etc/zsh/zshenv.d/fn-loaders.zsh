@@ -9,11 +9,11 @@ fn-autoload-functions() {
   done
 }
 
-#[what] source regular files in each dir recursively, path name order, skip *.tmpl
+#[what] source regular files in each dir recursively, path name order, skip *.tpl
 fn-source() {
   for d; do
     for rc in ${d}/**/*(N-.on); {
-      [[ $rc == *.tmpl ]] && continue
+      [[ $rc == *.tpl ]] && continue
       . $rc
 
     }
