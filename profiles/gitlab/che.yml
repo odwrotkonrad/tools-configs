@@ -7,7 +7,7 @@ gitlab/base/macos:
   include:
     profiles:
       - source: "./glab/che.yml::gitlab/glab"
-      - source: "@https://gitlab.com/konradodwrot/control//workspace/che.yml::gitlab/projects"
+      - source: "@https://gitlab.com/konradodwrot/cross-repo/automation//workspace/che.yml::gitlab/projects"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
@@ -20,7 +20,7 @@ gitlab/host/macos:
     profiles:
       - gitlab/base/macos
       - source: "./runner/che.yml::gitlab/runner"
-      - source: "@https://gitlab.com/konradodwrot/control//workspace/che.yml::gitlab/projects-parent-links"
+      - source: "@https://gitlab.com/konradodwrot/cross-repo/automation//workspace/che.yml::gitlab/projects-parent-links"
 
 gitlab/virt/linux:
   options:
@@ -29,7 +29,7 @@ gitlab/virt/linux:
   include:
     profiles:
       - source: "./glab/che.yml::gitlab/glab"
-      - source: "@https://gitlab.com/konradodwrot/control//workspace/che.yml::gitlab/projects"
+      - source: "@https://gitlab.com/konradodwrot/cross-repo/automation//workspace/che.yml::gitlab/projects"
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
@@ -38,5 +38,5 @@ gitlab/virt/linux:
 gitlab/projects-index:
   include:
     profiles:
-      - source: "@https://gitlab.com/konradodwrot/control//workspace/che.yml::gitlab/projects-index"
+      - source: "@https://gitlab.com/konradodwrot/cross-repo/automation//workspace/che.yml::gitlab/projects-index"
 ##[<] 🤖🤖
