@@ -129,7 +129,8 @@ apply-linux:
       when: never
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
-    - when: on_success
+    - when: manual
+      allow_failure: true
 
 .e2e-macos:
   ##[>] 🤖🤖
