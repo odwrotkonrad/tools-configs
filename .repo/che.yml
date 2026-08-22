@@ -52,6 +52,8 @@ repo/genfiles:
                     dest: system.md
                   - source: /code.md
                     dest: code.md
+                  - source: /comments.md
+                    dest: comments.md
                   - source: /prose.md
                     dest: prose.md
               - source: /claude-rules
