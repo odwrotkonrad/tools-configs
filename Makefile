@@ -4,9 +4,13 @@ SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
 WRAPPERS := repo-prepare-dev-env sync sync-full
-COMMANDS := semver-next tag-mint host-load-configs host-load-configs-install host-index-workspace repo-render-templates repo-render-env repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
+COMMANDS := semver-next tag-mint host-load-configs host-load-configs-install host-index-workspace repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
 
+#[why] render-templates, repo-ci-render-templates and repo-render-env are declared .PHONY by the shared .mk, never here: a .PHONY name make cannot build reports "nothing to be done" and exits 0, turning a failed bootstrap into a silent success
 .PHONY: $(WRAPPERS) $(COMMANDS)
+
+#[why] this repo installs its own toolchain first: the shared recipes assume che is already runnable
+render-templates repo-ci-render-templates repo-render-env: | repo-ci-install-deps
 
 ##[>] Environment Variables [genai-include]
 #[what] `$ che` - print targets instead of load, if not `$ che` - omit cmd with message
@@ -48,12 +52,6 @@ sync-full: repo-render-templates host-load-configs-install repo-ci-prepare-hooks
 host-load-configs: | repo-ci-install-deps
 	@$(CHE) run --skip-ops=run-scripts,install-packages
 
-##[>] 🤖🤖🤖
-#[what] render .env.tpl to .env: upstream refs and CI variables via glab, secrets via op
-repo-render-env:
-	@che render-templates --profiles=envSeed --env-unset=empty
-##[<] 🤖🤖🤖
-
 #[what] install configs onto host, profile by profile: each profile's full op sequence, scripts included
 host-load-configs-install: | repo-ci-install-deps
 	@$(CHE) run
@@ -76,17 +74,30 @@ host-index-workspace: | repo-ci-install-deps
 ##[>] Release [genai-include]
 #[what] print the next semver tag inferred from the last tag..HEAD diff (override: `semver: major|minor|patch` commit token)
 semver-next: repo-render-templates
-	@ci/semver-bump.zsh
+	@shared/ci/semver-bump.zsh
 
 #[what] mint and push the next semver tag (CI: authed via TAG_TOKEN)
 tag-mint: repo-render-templates
-	@ci/tag-mint.zsh
+	@shared/ci/tag-mint.zsh
 ##[<] Release
 
 ##[>] Onto Repo (CI) [genai-include]
+#[why] this repo names its render repo-render-templates, the shared .mk names it render-templates:
+#   alias rather than rename, so sync, sync-full, semver-next and tag-mint keep their prerequisite
 #[what] render *.ontoRepo.tpl onto repo
-repo-render-templates: | repo-ci-install-deps
-	@che render-templates --profiles=ontoRepo
+repo-render-templates: render-templates
+
+#[what] shared render targets, authored in cross-repo/misc and rendered here by the bootstrap rule below
+-include shared/ci/make/render.mk
+
+#[why] gitignored shared/ tree: a fresh clone has no render.mk, so make renders it, then re-execs itself with the shared targets defined
+#[why] CI carries every ref as a job variable and has no glab auth: seed .env only when the environment names no MISC_REF
+#[why] the seed is a make conditional, not a shell test: this repo's SHELL wrapper glob-expands each recipe word and rejects `[[`
+shared/ci/make/render.mk: | repo-ci-install-deps
+ifeq ($(MISC_REF),)
+	@che render-templates --profiles=envSeed --env-unset=empty
+endif
+	@che render-templates --profiles=bootstrapCrossRepoCI
 
 #[what] install lefthook git hooks
 repo-ci-prepare-hooks:

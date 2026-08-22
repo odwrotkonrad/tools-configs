@@ -55,7 +55,6 @@
       "Bash(git restore *)",
       "Bash(git rev-list *)",
       "Bash(git show *)",
-      "Bash(git stash *)",
       "Bash(git status *)",
       "Bash(git switch *)",
       "Bash(git tag *)",
@@ -119,6 +118,8 @@
     "deny": [
       "Agent(claude-code-guide)",
       "Agent(Explore)",
+      "Bash(git stash)",
+      "Bash(git stash *)",
       "Grep",
       "Agent(general-purpose)",
       "Agent(Plan)",
