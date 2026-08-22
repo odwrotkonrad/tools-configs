@@ -48,17 +48,15 @@ repo/genfiles:
               - source: /ai-agents-docs
                 dest: profiles/llm/base/root/_home/.config/ai-agents/docs
                 <<<:
-                  - source: /comments.md
-                    dest: comments.md
-                  - source: /git.md
-                    dest: git.md
-                  - source: /testing.md
-                    dest: testing.md
+                  - source: /system.md.ontoHost.tpl
+                    dest: system.md
+                  - source: /code.md
+                    dest: code.md
+                  - source: /prose.md
+                    dest: prose.md
               - source: /claude-rules
                 dest: profiles/llm/claude/root/_home/.config/claude/rules
                 <<<:
-                  - source: /code/code.md
-                    dest: code/code.md
                   - source: /code/go/principles.md
                     dest: code/go/principles.md
                   - source: /code/python/principles.md
@@ -83,8 +81,6 @@ repo/genfiles:
                     dest: config/zsh/functions.md
                   - source: /config/zsh/zsh.md
                     dest: config/zsh/zsh.md
-                  - source: /docs/prose.md
-                    dest: docs/prose.md
               - source: /claude-output-styles/interactive-code.md
                 dest: profiles/llm/claude/root/_home/.config/claude/output-styles/interactive-code.md
           - source: //repos/configs/templates/3-audience
