@@ -109,7 +109,7 @@ validate-pre-commit-all:
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
-    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,PROSE_ASSETS_REF,PROSE_SPEC_REF,MISC_REF,AUTOMATION_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,PROSE_ASSETS_REF,PROSE_SPEC_REF,MISC_REF,CONFIGS_REF,AUTOMATION_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
   ##[<] 🤖🤖
 
 dry-run-apply-linux:
