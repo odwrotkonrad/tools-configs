@@ -7,7 +7,6 @@ stages:
   - validate
   - dry-run-apply
   - smoke-apply
-  - trigger-image
   - release
 
 #[why] all CI runs on the self-hosted GKE runners: no SaaS compute minutes remain. set once here so a
@@ -39,6 +38,7 @@ variables:
   AUTOMATION_REF: $GRP_KO_VAR_AUTOMATION_REF
   PROSE_SPEC_REF: $GRP_KO_VAR_PROSE_SPEC_REF
   MISC_REF: $GRP_KO_VAR_MISC_REF
+  CONFIGS_REF: $GRP_KO_VAR_CONFIGS_REF
   CHE_PACKAGES_REF: $GRP_KO_VAR_CHE_PACKAGES_REF
   ENABLE_DARWIN_CI: $GRP_KO_VAR_ENABLE_DARWIN_CI
   GITLAB_TOKEN: $GRP_KO_VAR_GITLAB_TOKEN
@@ -109,7 +109,7 @@ validate-pre-commit-all:
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
-    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,PROSE_ASSETS_REF,PROSE_SPEC_REF,MISC_REF,AUTOMATION_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,PROSE_ASSETS_REF,PROSE_SPEC_REF,MISC_REF,CONFIGS_REF,AUTOMATION_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
   ##[<] 🤖🤖
 
 dry-run-apply-linux:
@@ -176,25 +176,6 @@ apply-macos-cli:
     - when: on_success
 
 ##[>] 🤖🤖
-#[why] not interruptible: cancelling a trigger job orphans the downstream pipeline it started, which
-#   is left running with nothing watching it
-rebuild-sandbox-image:
-  interruptible: false
-  stage: trigger-image
-  needs: []
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  inherit:
-    variables: false
-  variables:
-    BUILD_SANDBOX_IMAGE: "true"
-  trigger:
-    project: konradodwrot/ai-sandbox
-    branch: main
-    forward:
-      yaml_variables: true
-      pipeline_variables: false
-
 #[why] a merge to the default branch is the release event: mint the next semver tag so consumers can
 #   pin a version instead of tracking a moving branch. tag only, no release object: nothing here ships
 #   an artifact
