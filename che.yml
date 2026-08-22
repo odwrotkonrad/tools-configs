@@ -129,4 +129,9 @@ indexWorkspace:
   include:
     profiles:
       - source: "profiles/gitlab/che.yml::gitlab/projects-index"
-##[<] 🤖🤖
+
+bootstrapCrossRepoCI:
+  include:
+    profiles:
+      - source: "git::https://gitlab.com/konradodwrot/cross-repo/misc@${{ env.MISC_REF }}//che.yml::bootstrapCrossRepoCITagging"
+
