@@ -16,7 +16,6 @@ llm/claude:
               - $HOME/.config/claude/rules/code/ruby
               - $HOME/.config/claude/rules/code/zsh
               - $HOME/.config/claude/rules/config/zsh
-              - $HOME/.config/claude/rules/docs
               - $HOME/.config/claude/output-styles
               - $HOME/.config/claude/skills/user-decipher-code
               - $HOME/.config/claude/skills/user-git-ops
@@ -46,8 +45,6 @@ llm/claude:
           - source: //repos/configs/ai/claude-rules
             dest: $HOME/.config/claude/rules
             <<<:
-              - source: /code/code.md
-                dest: code/code.md
               - source: /code/go/principles.md
                 dest: code/go/principles.md
               - source: /code/python/principles.md
@@ -72,8 +69,6 @@ llm/claude:
                 dest: config/zsh/functions.md
               - source: /config/zsh/zsh.md
                 dest: config/zsh/zsh.md
-              - source: /docs/prose.md
-                dest: docs/prose.md
           - source: //repos/configs/ai/claude-output-styles/interactive-code.md
             dest: $HOME/.config/claude/output-styles/interactive-code.md
     installPackages:
