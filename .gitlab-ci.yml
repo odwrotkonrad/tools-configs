@@ -7,7 +7,6 @@ stages:
   - validate
   - dry-run-apply
   - smoke-apply
-  - trigger-image
   - release
 
 #[why] all CI runs on the self-hosted GKE runners: no SaaS compute minutes remain. set once here so a
@@ -176,25 +175,6 @@ apply-macos-cli:
     - when: on_success
 
 ##[>] 🤖🤖
-#[why] not interruptible: cancelling a trigger job orphans the downstream pipeline it started, which
-#   is left running with nothing watching it
-rebuild-sandbox-image:
-  interruptible: false
-  stage: trigger-image
-  needs: []
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  inherit:
-    variables: false
-  variables:
-    BUILD_SANDBOX_IMAGE: "true"
-  trigger:
-    project: konradodwrot/ai-sandbox
-    branch: main
-    forward:
-      yaml_variables: true
-      pipeline_variables: false
-
 #[why] a merge to the default branch is the release event: mint the next semver tag so consumers can
 #   pin a version instead of tracking a moving branch. tag only, no release object: nothing here ships
 #   an artifact
