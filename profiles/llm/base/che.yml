@@ -34,6 +34,8 @@ llm/base:
             dest: system.md
           - source: /code.md
             dest: code.md
+          - source: /comments.md
+            dest: comments.md
           - source: /prose.md
             dest: prose.md
       - source: "@gitlab.com/konradodwrot/cross-repo/prose/assets//repos/configs/ai/ai-agents-templates/AGENTS.md.ontoHost.tpl?ref=${{ env.PROSE_ASSETS_REF }}"
