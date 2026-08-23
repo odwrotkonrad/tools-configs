@@ -8,8 +8,12 @@ setopt errexit
 GO_MODULES_API='https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules'
 CURL=(curl -fsSL --connect-timeout 30 --retry 10 --retry-delay 30 --retry-all-errors)
 
+#[why] order_by=created_at&sort=desc, like the prerelease lookup below: the default ordering is by
+#   id and one page holds 100 packages, so once the project passed that count the newest release
+#   fell off the page and this resolved a stale version. che 0.0.96 was published while 0.0.95 kept
+#   being installed, reintroducing a bug the release had already fixed
 che_version_latest=$(
-  $CURL "${GO_MODULES_API}/packages?package_name=che&package_type=generic&per_page=100" |
+  $CURL "${GO_MODULES_API}/packages?package_name=che&package_type=generic&order_by=created_at&sort=desc&per_page=100" |
     tr ',' '\n' | sed -n 's|.*"version":"\([0-9][0-9.]*\)".*|\1|p' |
     sort -t. -k1,1n -k2,2n -k3,3n | tail -1
 )
