@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
+# yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
 #[why] the package set alone, no makeDirs/runScripts: those bind to a configs checkout ($PWD/ci,
 #   ci/zsh/scripts/installs), which an image build composing profiles from a remote ref has not got.
@@ -8,10 +8,7 @@ base/packages:
     installPackages:
       - bat
       - bats
-      - ccstatusline
       - che
-      - claude
-      - codex
       - copilot
       - corepack
       - fd
@@ -71,7 +68,7 @@ desktop/macos:
       - source: "profiles/shell/che.yml::shell/host/macos"
       - source: "profiles/misc/che.yml::misc/host/macos"
       - source: "profiles/git/che.yml::git/host/macos"
-      - source: "profiles/llm/che.yml::llm/host/macos"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//che.yml::ai/host/macos"
       - source: "profiles/dev/che.yml::dev/host/macos"
       - source: "profiles/cloud/che.yml::cloud/host/macos"
       - source: "profiles/gitlab/che.yml::gitlab/host/macos"
@@ -89,7 +86,7 @@ cli/macos:
       - source: "profiles/shell/che.yml::shell/base/macos"
       - source: "profiles/misc/che.yml::misc/base/macos"
       - source: "profiles/git/che.yml::git/base/macos"
-      - source: "profiles/llm/che.yml::llm/base/macos"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//che.yml::ai/base/macos"
       - source: "profiles/dev/che.yml::dev/base/macos"
       - source: "profiles/cloud/che.yml::cloud/base/macos"
       - source: "profiles/gitlab/che.yml::gitlab/base/macos"
@@ -106,12 +103,12 @@ virt/linux:
       - source: "profiles/shell/che.yml::shell/virt/linux"
       - source: "profiles/misc/che.yml::misc/virt/linux"
       - source: "profiles/git/che.yml::git/virt/linux"
-      - source: "profiles/llm/che.yml::llm/virt/linux"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//che.yml::ai/virt/linux"
       - source: "profiles/dev/che.yml::dev/virt/linux"
       - source: "profiles/cloud/che.yml::cloud/virt/linux"
       - source: "profiles/gitlab/che.yml::gitlab/virt/linux"
       - source: "profiles/observability/che.yml::observability/virt/linux"
-      - source: "profiles/llm/claude/che.yml::llm/claude/virt"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//profiles/claude/che.yml::claude/virt"
 
 ontoRepo:
   include:
