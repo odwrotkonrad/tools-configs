@@ -21,17 +21,9 @@ __pycache__/
 /CLAUDE.md
 /assets/data/makefile.agents.md
 /assets/data/repo-structure.md
-/assets/data/conventions.md
 /assets/docs-agents/purpose.md
 /assets/docs-agents/file-naming.md
 
-#[why] AI prose payloads: authored in prose, rendered here by repo/genfiles, loaded onto the host from this tree
-/profiles/llm/base/root/_home/.config/ai-agents/docs/*.md
-/profiles/llm/claude/root/_home/.config/claude/output-styles/*.md
-/profiles/llm/claude/root/_home/.config/claude/rules/**/*.md
-#[why] skills render as directories, so the SKILL.md and any sibling payload are ignored while the
-#   hand-written scripts/ helpers beside them stay tracked
-/profiles/llm/claude/root/_home/.config/claude/skills/**/SKILL.md
 #[why] shared render + tagging payload: authored in cross-repo/misc, rendered here, never tracked
 /shared/
 /.env

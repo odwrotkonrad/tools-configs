@@ -5,10 +5,6 @@ references:
   assets/data/tools-inventory-full.yml: Full file lists per tool.
 ---
 ##[>] primary
-agents: profiles/llm/base/che.yml
-ccstatusline: profiles/llm/claude/root/_home/.config/ccstatusline/settings.json
-claude: profiles/llm/claude/root/_home/.config/claude/settings.json.ontoHost.tpl
-codex: profiles/llm/codex/root/_home/.config/codex/config.toml.ontoHost.tpl
 defaults: profiles/misc/macos/root/etc/defaults.yml
 duti: profiles/misc/macos/root/etc/custom/os-open-files-with.yml
 git: profiles/git/root/_home/.config/git/config
@@ -42,7 +38,6 @@ loki: profiles/observability/loki/root/etc/loki/config.yml
 man: profiles/shell/man/root/etc/man.conf
 mypy: profiles/dev/python/mypy/root/_home/.config/mypy/config
 nvm: profiles/dev/js/nvm/root/_home/.nvmrc
-ollama: profiles/llm/ollama/root/_home/.ollama/server.json
 onepassword: profiles/misc/onepassword/root/etc/zsh/zshenv.d/auto.d/onepassword/10-token.zsh
 pnpm: profiles/dev/js/pnpm/che.yml
 podman: profiles/dev/infra/podman/che.yml

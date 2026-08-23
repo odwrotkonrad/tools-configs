@@ -3,6 +3,8 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
+include:
+
 stages:
   - validate
   - dry-run-apply
@@ -33,16 +35,18 @@ default:
 ##[>] 🤖🤖
 variables:
   ARTIFACT_REGISTRY: $GRP_KO_VAR_ARTIFACT_REGISTRY
-  CI_IMAGES_REF: $GRP_KO_VAR_CI_IMAGES_REF
+  OCI_IMAGES_CI_LINUX_REF: $GRP_KO_VAR_OCI_IMAGES_CI_LINUX_REF
+  CHE_SCHEMA_REF: $GRP_KO_VAR_CHE_SCHEMA_REF
   PROSE_ASSETS_REF: $GRP_KO_VAR_PROSE_ASSETS_REF
   AUTOMATION_REF: $GRP_KO_VAR_AUTOMATION_REF
   PROSE_SPEC_REF: $GRP_KO_VAR_PROSE_SPEC_REF
   MISC_REF: $GRP_KO_VAR_MISC_REF
   CONFIGS_REF: $GRP_KO_VAR_CONFIGS_REF
+  AI_CONFIGS_REF: $GRP_KO_VAR_AI_CONFIGS_REF
   CHE_PACKAGES_REF: $GRP_KO_VAR_CHE_PACKAGES_REF
   ENABLE_DARWIN_CI: $GRP_KO_VAR_ENABLE_DARWIN_CI
   GITLAB_TOKEN: $GRP_KO_VAR_GITLAB_TOKEN
-  CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$CI_IMAGES_REF
+  CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$OCI_IMAGES_CI_LINUX_REF
 ##[<] 🤖🤖
 
 .base:
@@ -85,6 +89,19 @@ validate-pre-commit-all:
   stage: validate
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - .gitlab-ci.yml
+        - .env.tpl
+        - che.yml
+        - Makefile
+        - lefthook.yml
+        - .repo/*.tpl
+        - .repo/dependency-graph.yml
+        - .repo/artifacts-consumed.yml
+        - assets/**/*
+        - ci/**/*
+        - profiles/**/*
+        - README.md
   variables:
     MK_DRY_RUN_RENDER_SECRETS: "true"
   script:
@@ -118,6 +135,11 @@ dry-run-apply-linux:
   tags: [gke-linux-$ARCH-small]
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - profiles/**/*
+        - ci/**/*
+        - che.yml
+        - .gitlab-ci.yml
   variables:
     MK_DRY_RUN: all
 
@@ -132,6 +154,11 @@ apply-linux:
       when: never
     - when: manual
       allow_failure: true
+      changes:
+        - profiles/**/*
+        - ci/**/*
+        - che.yml
+        - .gitlab-ci.yml
 
 .e2e-macos:
   ##[>] 🤖🤖
@@ -153,6 +180,11 @@ dry-run-apply-macos:
     - if: $ENABLE_DARWIN_CI != "true"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - profiles/**/*
+        - ci/**/*
+        - che.yml
+        - .gitlab-ci.yml
   variables:
     MK_DRY_RUN: all
   parallel:
@@ -174,6 +206,11 @@ apply-macos-cli:
     - if: $CI_MERGE_REQUEST_DRAFT == "true"
       when: never
     - when: on_success
+      changes:
+        - profiles/**/*
+        - ci/**/*
+        - che.yml
+        - .gitlab-ci.yml
 
 ##[>] 🤖🤖
 #[why] a merge to the default branch is the release event: mint the next semver tag so consumers can
@@ -186,9 +223,16 @@ tag-mint:
   image: $CI_IMAGE
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - assets/**/*
+        - ci/**/*
+        - profiles/**/*
+        - che.yml
+        - Makefile
   variables:
     GIT_DEPTH: "0"
     TAG_TOKEN: $REPO_VAR_TAG_TOKEN
   script:
     - make tag-mint
+
 ##[<] 🤖🤖

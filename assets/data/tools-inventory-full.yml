@@ -20,32 +20,8 @@ files:
 
 #>[what] Tool specific files
 tools:
-  - ccstatusline:
-      files:
-        profiles/llm/claude/root/_home/.config/ccstatusline/settings.json:
 
-  - claude:
-      files:
-        profiles/llm/claude/:
-          che.yml:
-          root/_home/.config/claude/:
-            settings.json.ontoHost.tpl:
-            agents/:
-            rules/:
-            skills/:
-            plugins/:
-              known_marketplaces.json:
-              installed_plugins.json:
-          root/_home/.config/zsh/:
-            zshenv.d/auto.d/claude/30-claude.zsh:
-            zshrc.d/auto.d/claude/20-env.zsh:
 
-  - codex:
-      files:
-        profiles/llm/codex/:
-          che.yml:
-          root/_home/.config/codex/config.toml.ontoHost.tpl:
-          root/etc/zsh/zshrc.d/auto.d/codex/10-auth.zsh:
 
   - defaults:
       files:
