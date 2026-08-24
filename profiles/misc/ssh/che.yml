@@ -4,7 +4,10 @@ options:
   profileWorkingDirectory: root
 
 #[why] ~/.ssh/allowed_signers is deliberately untracked: it is per-host key state
-#      that fn-ssh-publish-keys writes on every rotation, not configuration
+#      that user-ssh-util writes on every rotation, not configuration
+#[why] key generation, publishing and rotation moved to user-ssh-util, declared in
+#      _home/.config/user-ssh-util/config.yml: it scopes each key's usage type per
+#      platform and covers github, which the retired fn-ssh-*-keys functions did not
 misc/ssh:
   include:
     makeLinks:
