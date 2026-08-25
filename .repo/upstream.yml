@@ -3,6 +3,9 @@ upstream:
   - uri: gitlab.com/konradodwrot/ai-harness/configs
     type: gitRepository
     versionEnvVar: AI_CONFIGS_REF
+  - uri: gitlab.com/konradodwrot/che-packages
+    type: gitRepository
+    versionEnvVar: CHE_PACKAGES_REF
   - uri: gitlab.com/konradodwrot/cross-repo/automation
     type: gitRepository
     versionEnvVar: AUTOMATION_REF
