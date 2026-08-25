@@ -15,5 +15,5 @@ CHE_PACKAGES_REF={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_CHE_PACK
 CHE_BACKUP_AUTO_CREATE=
 ENABLE_DARWIN_CI={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_ENABLE_DARWIN_CI" }}
 GITLAB_TOKEN={{ secret "op://ProgrammaticAccess/gitlab/access_token" }}
-TAG_TOKEN={{ shell "glab variable get -R konradodwrot/configs REPO_VAR_TAG_TOKEN" }}
+TAG_TOKEN={{ shell "glab variable get -R konradodwrot/configs REPO_PROTECTED_VAR_BOT_TAG_TOKEN" }}
 ##[<] 🤖🤖
