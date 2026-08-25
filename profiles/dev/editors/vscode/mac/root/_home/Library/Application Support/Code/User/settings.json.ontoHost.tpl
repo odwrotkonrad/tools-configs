@@ -666,7 +666,7 @@
   "scm.diffDecorationsGutterWidth": 3,
   "scm.alwaysShowActions": false,
   "scm.diffDecorationsGutterVisibility": "always",
-  "scm.repositories.visible": 10,
+  "scm.repositories.visible": 50,
   /////[<] scm
   ////[<] source control
 
