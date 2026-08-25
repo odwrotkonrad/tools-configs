@@ -57,7 +57,9 @@ if [[ $CI_PIPELINE_SOURCE == merge_request_event ]] {
 
 che_version_installed=''
 if { (( ${+commands[che]} )) && che packages --help &> /dev/null } {
-  che_version_installed=${${(z)"$(che --version)"}[-1]}
+  #[why] `che version <v> (builtin packages <v>)`: the last token is the parenthesised suffix, so
+  #   reading it made every version look unknown and overwrote local dev builds on every hook run
+  che_version_installed=${${(z)"$(che --version)"}[3]}
 }
 
 fn_che_install() {
