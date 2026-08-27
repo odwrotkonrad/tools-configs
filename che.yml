@@ -68,7 +68,7 @@ desktop/macos:
       - source: "profiles/shell/che.yml::shell/host/macos"
       - source: "profiles/misc/che.yml::misc/host/macos"
       - source: "profiles/git/che.yml::git/host/macos"
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//che.yml::ai/host/macos"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ env.AI_TOOLS_CONFIGS_REF }}//che.yml::ai/host/macos"
       - source: "profiles/dev/che.yml::dev/host/macos"
       - source: "profiles/cloud/che.yml::cloud/host/macos"
       - source: "profiles/gitlab/che.yml::gitlab/host/macos"
@@ -86,7 +86,7 @@ cli/macos:
       - source: "profiles/shell/che.yml::shell/base/macos"
       - source: "profiles/misc/che.yml::misc/base/macos"
       - source: "profiles/git/che.yml::git/base/macos"
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//che.yml::ai/base/macos"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ env.AI_TOOLS_CONFIGS_REF }}//che.yml::ai/base/macos"
       - source: "profiles/dev/che.yml::dev/base/macos"
       - source: "profiles/cloud/che.yml::cloud/base/macos"
       - source: "profiles/gitlab/che.yml::gitlab/base/macos"
@@ -103,12 +103,12 @@ virt/linux:
       - source: "profiles/shell/che.yml::shell/virt/linux"
       - source: "profiles/misc/che.yml::misc/virt/linux"
       - source: "profiles/git/che.yml::git/virt/linux"
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//che.yml::ai/virt/linux"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ env.AI_TOOLS_CONFIGS_REF }}//che.yml::ai/virt/linux"
       - source: "profiles/dev/che.yml::dev/virt/linux"
       - source: "profiles/cloud/che.yml::cloud/virt/linux"
       - source: "profiles/gitlab/che.yml::gitlab/virt/linux"
       - source: "profiles/observability/che.yml::observability/virt/linux"
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/configs@${{ env.AI_CONFIGS_REF }}//profiles/claude/che.yml::claude/virt"
+      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ env.AI_TOOLS_CONFIGS_REF }}//profiles/claude/che.yml::claude/virt"
 
 ontoRepo:
   include:

@@ -1,7 +1,7 @@
 ##[>] 🤖
 downstream:
-  - uri: gitlab.com/konradodwrot/configs
+  - uri: gitlab.com/konradodwrot/tools-configs
     type: gitRepository
-    versionEnvVar: CONFIGS_REF
-    version: {{ env.Getenv "CONFIGS_REF" }}
+    versionEnvVar: TOOLS_CONFIGS_REF
+    version: {{ env.Getenv "TOOLS_CONFIGS_REF" }}
 ##[<] 🤖
