@@ -93,6 +93,7 @@ validate-pre-commit-all:
         - Makefile
         - lefthook.yml
         - .repo/*.tpl
+        - .repo/che.yml
         - .repo/deps-graph.yml
         - .repo/upstream.yml
         - .repo/upstream.env
