@@ -6,6 +6,8 @@ include:
 #[why] os-agnostic and ungated, like ontoRepo: indexing reads dirs already on disk, so `make
 #   host-index-workspace` refreshes the workspace map with no credential and no network
 indexWorkspace:
+  options:
+    autoDiscover: false
   include:
     profiles:
       - source: "profiles/gitlab"

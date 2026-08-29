@@ -4,6 +4,8 @@
 #   ci/zsh/scripts/installs), which an image build composing profiles from a remote ref has not got.
 #   split out so such a build can pull the base packages without the checkout-bound ops
 base/packages:
+  options:
+    autoDiscover: false
   include:
     installPackages:
       - bat
@@ -41,6 +43,8 @@ base/packages:
       - zstd
 
 base:
+  options:
+    autoDiscover: false
   include:
     profiles:
       - base/packages
@@ -58,7 +62,6 @@ base:
 
 desktop/macos:
   options:
-    autoDiscover: true
     runIf:
       - builtin:isOs == macos
       - builtin:isVirt == false
@@ -84,7 +87,6 @@ desktop/macos:
 
 cli/macos:
   options:
-    autoDiscover: true
     runIf:
       - builtin:isOs == macos
       - builtin:isVirt
@@ -110,7 +112,6 @@ cli/macos:
 
 virt/linux:
   options:
-    autoDiscover: true
     runIf:
       - builtin:isOs == linux
   include:

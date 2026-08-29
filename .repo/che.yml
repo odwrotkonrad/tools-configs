@@ -4,6 +4,8 @@ options:
   profileWorkingDirectory: ..
 
 repo/genfiles:
+  options:
+    autoDiscover: false
   include:
     profiles:
       - source: "git::https://gitlab.com/konradodwrot/cross-repo/misc@${{ var.MISC_REF }}"
@@ -47,6 +49,8 @@ repo/genfiles:
 
 ##[>] 🤖🤖🤖
 envSeed:
+  options:
+    autoDiscover: false
   include:
     renderTemplates:
       - source: .env.tpl
