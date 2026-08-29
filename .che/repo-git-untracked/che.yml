@@ -4,9 +4,12 @@ envSeed:
   options:
     autoDiscover: false
   include:
-    profiles:
-      - source: ../../.repo
-        profile: envSeed
+    renderTemplates:
+      - source: templates/env.tpl
+        dest:
+          - path: .env
+            options:
+              writeType: mergeUpsert
 
 bootstrapCrossRepoCI:
   include:
