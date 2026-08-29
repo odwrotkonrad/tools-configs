@@ -6,8 +6,11 @@ gitlab/base/macos:
       - builtin:isOs == macos
   include:
     profiles:
-      - source: "./glab/che.yml::gitlab/glab"
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ env.AUTOMATION_REF }}//workspace/che.yml::gitlab/projects"
+      - source: "./glab"
+        profile: gitlab/glab
+      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
+        spec: workspace
+        profile: gitlab/projects
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
@@ -19,8 +22,11 @@ gitlab/host/macos:
   include:
     profiles:
       - gitlab/base/macos
-      - source: "./runner/che.yml::gitlab/runner"
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ env.AUTOMATION_REF }}//workspace/che.yml::gitlab/projects-parent-links"
+      - source: "./runner"
+        profile: gitlab/runner
+      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
+        spec: workspace
+        profile: gitlab/projects-parent-links
 
 gitlab/virt/linux:
   options:
@@ -28,8 +34,11 @@ gitlab/virt/linux:
       - builtin:isOs == linux
   include:
     profiles:
-      - source: "./glab/che.yml::gitlab/glab"
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ env.AUTOMATION_REF }}//workspace/che.yml::gitlab/projects"
+      - source: "./glab"
+        profile: gitlab/glab
+      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
+        spec: workspace
+        profile: gitlab/projects
         env:
           GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
@@ -38,5 +47,7 @@ gitlab/virt/linux:
 gitlab/projects-index:
   include:
     profiles:
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ env.AUTOMATION_REF }}//workspace/che.yml::gitlab/projects-index"
+      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
+        spec: workspace
+        profile: gitlab/projects-index
 ##[<] 🤖🤖

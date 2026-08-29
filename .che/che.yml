@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
+##[>] 🤖🤖
+include:
+  sources: [".", .che/repo-git-tracked, .che/repo-git-untracked]
+
+#[why] os-agnostic and ungated, like ontoRepo: indexing reads dirs already on disk, so `make
+#   host-index-workspace` refreshes the workspace map with no credential and no network
+indexWorkspace:
+  options:
+    autoDiscover: false
+  include:
+    profiles:
+      - source: "profiles/gitlab"
+        profile: gitlab/projects-index
+##[<] 🤖🤖

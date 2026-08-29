@@ -1,5 +1,6 @@
 !profiles/**/.*
 !.repo/
+!.che/
 
 # project-local vscode workspace settings
 !.vscode/

@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
+##[>] 🤖🤖
+misc/base/macos:
+  options:
+    runIf:
+      - builtin:isOs == macos
+  include:
+    profiles:
+      - source: "./che"
+        profile: misc/che
+      - source: "./brew"
+        profiles:
+          - misc/brew
+          - misc/brew/macos
+      - source: "./macos"
+        profile: misc/macos
+      - source: "./ssh"
+        profiles:
+          - misc/ssh
+          - misc/ssh/virt
+
+misc/host/macos:
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
+  include:
+    profiles:
+      - misc/base/macos
+      - source: "./macos"
+        profile: misc/macos/desktop
+      - source: "./onepassword"
+        profile: misc/onepassword
+
+misc/virt/linux:
+  options:
+    runIf:
+      - builtin:isOs == linux
+  include:
+    profiles:
+      - source: "./che"
+        profile: misc/che
+      - source: "./ssh"
+        profiles:
+          - misc/ssh
+          - misc/ssh/virt
+##[<] 🤖🤖

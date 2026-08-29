@@ -6,11 +6,15 @@ cloud/base/macos:
       - builtin:isOs == macos
   include:
     profiles:
-      - source: "./aws/che.yml::cloud/aws"
-      - source: "./azure/che.yml::cloud/azure"
-      - source: "./gcp/che.yml::cloud/gcp/install"
-      - source: "./gcp/che.yml::cloud/gcp/configs"
-      - source: "./gcp/che.yml::cloud/gcp/auth"
+      - source: "./aws"
+        profile: cloud/aws
+      - source: "./azure"
+        profile: cloud/azure
+      - source: "./gcp"
+        profiles:
+          - cloud/gcp/install
+          - cloud/gcp/configs
+          - cloud/gcp/auth
 
 cloud/host/macos:
   options:
@@ -20,7 +24,8 @@ cloud/host/macos:
   include:
     profiles:
       - cloud/base/macos
-      - source: "./aws/che.yml::cloud/aws/configs"
+      - source: "./aws"
+        profile: cloud/aws/configs
 
 cloud/virt/linux:
   options:
@@ -28,8 +33,12 @@ cloud/virt/linux:
       - builtin:isOs == linux
   include:
     profiles:
-      - source: "./aws/che.yml::cloud/aws"
-      - source: "./azure/che.yml::cloud/azure"
-      - source: "./gcp/che.yml::cloud/gcp/install"
-      - source: "./gcp/che.yml::cloud/gcp/configs"
+      - source: "./aws"
+        profile: cloud/aws
+      - source: "./azure"
+        profile: cloud/azure
+      - source: "./gcp"
+        profiles:
+          - cloud/gcp/install
+          - cloud/gcp/configs
 ##[<] 🤖🤖

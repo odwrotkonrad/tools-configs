@@ -22,7 +22,8 @@ git/base/macos:
       - builtin:isOs == macos
   include:
     profiles:
-      - source: "./che.yml::git"
+      - source: "."
+        profile: git
 
 git/host/macos:
   options:
@@ -39,5 +40,6 @@ git/virt/linux:
       - builtin:isOs == linux
   include:
     profiles:
-      - source: "./che.yml::git"
+      - source: "."
+        profile: git
 ##[<] 🤖🤖

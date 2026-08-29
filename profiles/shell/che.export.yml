@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
+##[>] 🤖🤖
+shell/base/macos:
+  options:
+    runIf:
+      - builtin:isOs == macos
+  include:
+    profiles:
+      - source: "./zsh/base"
+        profile: shell/zsh/base-macos
+      - source: "./zsh/extras"
+        profile: shell/zsh/extras
+      - source: "./man"
+        profile: shell/man
+      - source: "./rg"
+        profile: shell/rg
+      - source: "./curl"
+        profile: shell/curl
+
+shell/host/macos:
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
+  include:
+    profiles:
+      - shell/base/macos
+
+shell/virt/linux:
+  options:
+    runIf:
+      - builtin:isOs == linux
+  include:
+    profiles:
+      - source: "./zsh/base"
+        profile: shell/zsh/base-linux
+      - source: "./zsh/extras"
+        profile: shell/zsh/extras
+      - source: "./man"
+        profile: shell/man
+      - source: "./rg"
+        profile: shell/rg
+      - source: "./curl"
+        profile: shell/curl
+##[<] 🤖🤖
