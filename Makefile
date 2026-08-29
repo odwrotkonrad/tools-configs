@@ -3,14 +3,16 @@
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
 CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
-WRAPPERS := repo-prepare-dev-env sync sync-full
-COMMANDS := semver-next tag-mint host-load-configs host-load-configs-install host-index-workspace repo-render-templates repo-ci-prepare-hooks repo-ci-run-precommit-all host-run-install-scripts host-run-scripts repo-ci-install-deps
+WRAPPERS := sync sync-full
+COMMANDS := che-install generic-setup host-load-configs host-load-configs-install host-index-workspace host-run-install-scripts host-run-scripts repo-ci-install-deps
 
-#[why] render-templates, repo-ci-render-templates and repo-render-env are declared .PHONY by the shared .mk, never here: a .PHONY name make cannot build reports "nothing to be done" and exits 0, turning a failed bootstrap into a silent success
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
-#[why] this repo installs its own toolchain first: the shared recipes assume che is already runnable
-render-templates repo-ci-render-templates repo-render-env: | repo-ci-install-deps
+GENERIC_FILES_UNTRACKED_PROFILES := generic/filesUntracked,repo/filesUntracked
+-include shared/generic/make/generic.mk
+
+#[why] this repo installs its own toolchain first: the generic recipes assume che is already runnable
+generic-files-tracked-generate generic-files-untracked-generate generic-files-tracked-verify generic-env-generate generic-setup: | repo-ci-install-deps
 
 ##[>] Environment Variables [genai-include]
 #[what] `$ che` - print targets instead of load, if not `$ che` - omit cmd with message
@@ -31,20 +33,15 @@ export CHE_VALIDATE_SPEC
 ##[<] Environment Variables
 
 ##[>] Wrappers [genai-include]
-#[why] render precedes hooks: the docsgen pre-commit hook runs the repo render and fails on drift,
-#   so a fresh clone whose generated files were never rendered would fail its first commit
-#[what] make a fresh clone a working checkout: generated docs, dependencies, git hooks
-repo-prepare-dev-env: repo-render-env repo-render-templates repo-ci-install-deps repo-ci-prepare-hooks
-
 #[why] repo renders run first: the host profiles read prose payloads that ontoRepo generates and
 #   .gitignore keeps out of the tree (ai-agents docs, claude rules and snippets), so loading the
 #   host before rendering finds nothing to load
 #[why] the workspace index inlines each repo's rendered purpose doc, which the host load
 #   produces and .gitignore keeps out of the tree: indexing before that load reads nothing
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host), workspace indexes
-sync: repo-render-templates host-load-configs host-index-workspace repo-ci-prepare-hooks
+sync: generic-files-untracked-generate generic-files-tracked-generate host-load-configs host-index-workspace generic-precommit-install
 #[what] full sync: full che op sequence per profile (scripts included), hooks, repo renders
-sync-full: repo-render-templates host-load-configs-install repo-ci-prepare-hooks
+sync-full: generic-files-untracked-generate generic-files-tracked-generate host-load-configs-install generic-precommit-install
 ##[<] Wrappers
 
 ##[>] Onto Host [genai-include]
@@ -71,43 +68,17 @@ host-index-workspace: | repo-ci-install-deps
 	@che run-scripts --profiles=indexWorkspace 20-index
 ##[<] Onto Host
 
-##[>] Release [genai-include]
-#[what] print the next semver tag inferred from the last tag..HEAD diff (override: `semver: major|minor|patch` commit token)
-semver-next: repo-render-templates
-	@shared/ci/semver-bump.zsh
+##[>] Setup [genai-include]
+#[what] install the latest released che into ~/.local/bin, only when the one on PATH is older
+che-install:
+	@curl -fsSL https://konradodwrot.gitlab.io/go-modules/che-install.sh | sh -s -- --skip-if-present-is-newer
 
-#[what] mint and push the next semver tag (CI: authed via TAG_TOKEN)
-tag-mint: repo-render-templates
-	@shared/ci/tag-mint.zsh
-##[<] Release
+#[what] render the generic consumer payload (generic.mk, lefthook.yml, shared/generic/) at the pinned CENTRALIZED_ASSETS_GENERIC_REF
+generic-setup:
+	@che render-templates --profiles=genericSetup
 
-##[>] Onto Repo (CI) [genai-include]
-#[why] this repo names its render repo-render-templates, the shared .mk names it render-templates:
-#   alias rather than rename, so sync, sync-full, semver-next and tag-mint keep their prerequisite
-#[what] render *.ontoRepo.tpl onto repo
-repo-render-templates: render-templates
-
-#[what] shared render targets, authored in cross-repo/misc and rendered here by the bootstrap rule below
--include shared/ci/make/render.mk
-
-#[why] gitignored shared/ tree: a fresh clone has no render.mk, so make renders it, then re-execs itself with the shared targets defined
-#[why] CI carries every ref as a job variable and has no glab auth: seed .env only when the environment names no MISC_REF
-#[why] the seed is a make conditional, not a shell test: this repo's SHELL wrapper glob-expands each recipe word and rejects `[[`
-shared/ci/make/render.mk: | repo-ci-install-deps
-ifeq ($(MISC_REF),)
-	@che render-templates --profiles=envSeed --env-unset=empty
-endif
-	@che render-templates --profiles=bootstrapCrossRepoCI
-
-#[what] install lefthook git hooks
-repo-ci-prepare-hooks:
-	@lefthook install --force
-
-#[what] run pre-commit hooks over all files (not just staged)
-repo-ci-run-precommit-all: | repo-ci-install-deps repo-ci-prepare-hooks
-	@lefthook run pre-commit --all-files --force
+shared/generic/make/generic.mk: generic-setup
 
 repo-ci-install-deps:
 	@00-ci-deps.zsh $@
-
-##[<] Onto Repo
+##[<] Setup

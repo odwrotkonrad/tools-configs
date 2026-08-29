@@ -25,7 +25,7 @@ __pycache__/
 /assets/docs-agents/purpose.md
 /assets/docs-agents/file-naming.md
 
-#[why] shared render + tagging payload: authored in cross-repo/misc, rendered here, never tracked
 /shared/
 /.env
+/lefthook.yml
 ##[<] 🤖
