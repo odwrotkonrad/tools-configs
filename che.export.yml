@@ -62,6 +62,7 @@ base:
 
 desktop/macos:
   options:
+    autoDiscover: true
     runIf:
       - builtin:isOs == macos
       - builtin:isVirt == false
@@ -87,6 +88,7 @@ desktop/macos:
 
 cli/macos:
   options:
+    autoDiscover: true
     runIf:
       - builtin:isOs == macos
       - builtin:isVirt
@@ -112,6 +114,7 @@ cli/macos:
 
 virt/linux:
   options:
+    autoDiscover: true
     runIf:
       - builtin:isOs == linux
   include:
