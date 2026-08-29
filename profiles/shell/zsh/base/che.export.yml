@@ -44,7 +44,8 @@ shell/zsh/base-macos:
     profileWorkingDirectory: root-macos
   include:
     profiles:
-      - source: "./che.yml::shell/zsh/base"
+      - source: "."
+        profile: shell/zsh/base
     makeLinks:
       - etc/**
     installPackages:
@@ -57,7 +58,8 @@ shell/zsh/base-linux:
     profileWorkingDirectory: root-linux
   include:
     profiles:
-      - source: "./che.yml::shell/zsh/base"
+      - source: "."
+        profile: shell/zsh/base
     makeLinks:
       #[why] global rc dir is a zsh compile-time option (--enable-etc-dir): debian builds with /etc/zsh, macos keeps the upstream /etc, so linux needs the loader files mirrored there (they source the shared /etc/zsh/*.d dirs)
       #[where] debian zsh packaging (debian/rules --enable-etc-dir=/etc/zsh); man zsh STARTUP/SHUTDOWN FILES per OS

@@ -6,7 +6,8 @@ observability/base/macos:
       - builtin:isOs == macos
   include:
     profiles:
-      - source: "./otelcol/che.yml::observability/otelcol"
+      - source: "./otelcol"
+        profile: observability/otelcol
 
 observability/host/macos:
   options:
@@ -16,10 +17,14 @@ observability/host/macos:
   include:
     profiles:
       - observability/base/macos
-      - source: "./grafana/che.yml::observability/grafana"
-      - source: "./prometheus/che.yml::observability/prometheus"
-      - source: "./jaeger/che.yml::observability/jaeger"
-      - source: "./loki/che.yml::observability/loki"
+      - source: "./grafana"
+        profile: observability/grafana
+      - source: "./prometheus"
+        profile: observability/prometheus
+      - source: "./jaeger"
+        profile: observability/jaeger
+      - source: "./loki"
+        profile: observability/loki
     runScripts:
       - scripts/01-boot-services.zsh
 
@@ -29,5 +34,6 @@ observability/virt/linux:
       - builtin:isOs == linux
   include:
     profiles:
-      - source: "./otelcol/che.yml::observability/otelcol"
+      - source: "./otelcol"
+        profile: observability/otelcol
 ##[<] 🤖🤖

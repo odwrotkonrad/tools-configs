@@ -28,6 +28,7 @@
 #   without this the file is swallowed by **/.*, stays untracked, invisible to git status, and
 #   the graph reports no producer for whatever that repo publishes
 !**/.repo/
+!**/.che/
 
 !**/.gitignore
 !**/.dockerignore

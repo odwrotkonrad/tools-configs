@@ -89,8 +89,7 @@ validate-pre-commit-all:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - .gitlab-ci.yml
-        - .env.tpl
-        - che.yml
+        - .che/**/*
         - Makefile
         - lefthook.yml
         - .repo/*.tpl
@@ -137,7 +136,7 @@ dry-run-apply-linux:
       changes:
         - profiles/**/*
         - ci/**/*
-        - che.yml
+        - .che/**/*
         - .gitlab-ci.yml
   variables:
     MK_DRY_RUN: all
@@ -156,7 +155,7 @@ apply-linux:
       changes:
         - profiles/**/*
         - ci/**/*
-        - che.yml
+        - .che/**/*
         - .gitlab-ci.yml
 
 .e2e-macos:
@@ -182,7 +181,7 @@ dry-run-apply-macos:
       changes:
         - profiles/**/*
         - ci/**/*
-        - che.yml
+        - .che/**/*
         - .gitlab-ci.yml
   variables:
     MK_DRY_RUN: all
@@ -208,7 +207,7 @@ apply-macos-cli:
       changes:
         - profiles/**/*
         - ci/**/*
-        - che.yml
+        - .che/**/*
         - .gitlab-ci.yml
 
 ##[>] 🤖🤖
@@ -226,7 +225,7 @@ tag-mint:
         - assets/**/*
         - ci/**/*
         - profiles/**/*
-        - che.yml
+        - .che/**/*
         - Makefile
   variables:
     GIT_DEPTH: "0"

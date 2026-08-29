@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
+##[>] 🤖🤖
+dev/base/macos:
+  options:
+    runIf:
+      - builtin:isOs == macos
+  include:
+    profiles:
+      - source: "./misc/editorconfig"
+        profile: dev/misc/editorconfig
+      - source: "./python/python"
+        profile: dev/python/python
+      - source: "./python/mypy"
+        profile: dev/python/mypy
+      - source: "./python/ruff"
+        profile: dev/python/ruff
+      - source: "./infra/terraform"
+        profile: dev/infra/terraform
+      - source: "./infra/kubectl"
+        profile: dev/infra/kubectl
+      - source: "./infra/kubectx"
+        profile: dev/infra/kubectx
+      - source: "./infra/kind"
+        profile: dev/infra/kind
+      - source: "./infra/docker"
+        profile: dev/infra/docker
+      - source: "./infra/podman"
+        profile: dev/infra/podman
+      - source: "./infra/cilium"
+        profile: dev/infra/cilium
+      - source: "./golang"
+        profile: dev/golang
+      - source: "./ruby"
+        profile: dev/ruby
+      - source: "./js/node"
+        profile: dev/js/node
+      - source: "./js/nvm"
+        profile: dev/js/nvm
+      - source: "./js/pnpm"
+        profile: dev/js/pnpm
+      - source: "./js/prettier"
+        profile: dev/js/prettier
+      - source: "./terminal/tmux"
+        profile: dev/terminal/tmux
+      - source: "./editors/vim"
+        profile: dev/editors/vim
+
+dev/host/macos:
+  options:
+    runIf:
+      - builtin:isOs == macos
+      - builtin:isVirt == false
+  include:
+    profiles:
+      - dev/base/macos
+      - source: "./editors/vscode/mac"
+        profile: dev/editors/vscode/mac
+      - source: "./terminal/kitty"
+        profile: dev/terminal/kitty
+
+dev/virt/linux:
+  options:
+    runIf:
+      - builtin:isOs == linux
+  include:
+    profiles:
+      - source: "./terminal/kitty"
+        profile: dev/terminal/kitty/terminfo
+      - source: "./misc/editorconfig"
+        profile: dev/misc/editorconfig
+      - source: "./python/python"
+        profile: dev/python/python
+      - source: "./python/mypy"
+        profile: dev/python/mypy
+      - source: "./python/ruff"
+        profile: dev/python/ruff
+      - source: "./infra/terraform"
+        profile: dev/infra/terraform
+      - source: "./infra/kubectl"
+        profile: dev/infra/kubectl
+      - source: "./infra/kubectx"
+        profile: dev/infra/kubectx
+      - source: "./infra/kind"
+        profile: dev/infra/kind
+      - source: "./infra/docker"
+        profile: dev/infra/docker
+      - source: "./infra/podman"
+        profile: dev/infra/podman
+      - source: "./infra/cilium"
+        profile: dev/infra/cilium
+      - source: "./golang"
+        profile: dev/golang
+      - source: "./ruby"
+        profile: dev/ruby
+      - source: "./js/nvm"
+        profile: dev/js/nvm
+      - source: "./js/pnpm"
+        profile: dev/js/pnpm
+      - source: "./js/prettier"
+        profile: dev/js/prettier
+      - source: "./terminal/tmux"
+        profile: dev/terminal/tmux
+      - source: "./editors/vim"
+        profile: dev/editors/vim
+##[<] 🤖🤖
