@@ -3,14 +3,21 @@ include:
   - project: konradodwrot/centralized/assets/generic
     ref: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
     file:
+      - consumer-repo-config/ci/templates/EmitEvents.gitlab-ci.yml
       - consumer-repo-config/files-generation/templates/FilesTrackedVerify.gitlab-ci.yml
+      - consumer-repo-config/ci/templates/UpstreamEnvDrift.gitlab-ci.yml
       - consumer-repo-config/precommit-lefthook/templates/PrecommitChanged.gitlab-ci.yml
       - consumer-repo-config/precommit-lefthook/templates/PrecommitAll.gitlab-ci.yml
   - project: konradodwrot/centralized/assets/generic
     ref: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
     file: consumer-repo-config/release/templates/TagMint.gitlab-ci.yml
     inputs:
-      changes: [assets/**/*, ci/**/*, profiles/**/*, .che/**/*, Makefile]
+      changes:
+        - assets/**/*
+        - ci/**/*
+        - profiles/**/*
+        - .che/**/*
+        - Makefile
 ##[<] 🤖🤖
 
 workflow:
@@ -23,6 +30,7 @@ stages:
   - dry-run-apply
   - smoke-apply
   - release
+  - notify
 
 #[why] all CI runs on the self-hosted GKE runners: no SaaS compute minutes remain. set once here so a
 #   new job inherits it instead of silently having no runner. jobs needing arm64 or another size
@@ -136,7 +144,9 @@ generic:precommit-all:
   needs: []
   parallel:
     matrix:
-      - ARCH: [amd64, arm64]
+      - ARCH:
+          - amd64
+          - arm64
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
@@ -146,7 +156,8 @@ generic:precommit-all:
 dry-run-apply-linux:
   extends: .linux-sync
   stage: dry-run-apply
-  tags: [gke-linux-$ARCH-small]
+  tags:
+    - gke-linux-$ARCH-small
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
@@ -160,7 +171,8 @@ dry-run-apply-linux:
 apply-linux:
   extends: .linux-sync
   stage: smoke-apply
-  tags: [gke-linux-$ARCH-big]
+  tags:
+    - gke-linux-$ARCH-big
   rules:
     - if: $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
@@ -176,7 +188,8 @@ apply-linux:
 
 .e2e-macos:
   ##[>] 🤖🤖
-  tags: [saas-macos-medium-m1]
+  tags:
+    - saas-macos-medium-m1
   image: macos-15-xcode-16
   variables:
     CHE_DEBUG: "1"
@@ -203,7 +216,9 @@ dry-run-apply-macos:
     MK_DRY_RUN: all
   parallel:
     matrix:
-      - CHE_PROFILE: [desktop/macos, cli/macos]
+      - CHE_PROFILE:
+          - desktop/macos
+          - cli/macos
   needs: []
 
 apply-macos-cli:
@@ -211,7 +226,8 @@ apply-macos-cli:
   stage: smoke-apply
   variables:
     CHE_PROFILE: cli/macos
-  needs: [dry-run-apply-macos]
+  needs:
+    - dry-run-apply-macos
   rules:
     - if: $ENABLE_DARWIN_CI != "true"
       when: never
@@ -226,5 +242,7 @@ apply-macos-cli:
         - .che/**/*
         - .gitlab-ci.yml
 
-
+emit-events:
+  extends: .emit-events
+  stage: notify
 ##[<] 🤖🤖
