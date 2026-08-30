@@ -1,29 +1,48 @@
 # yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
-include:
-  sources:
-    - "."
-    - .che/repo-git-tracked
-    - {source: shared/generic/che, optional: true}
+specsInclude:
+  - "."
+  - .che/repo-git-tracked
+  - url: gitlab.com/konradodwrot/centralized/assets/generic
+    ref: "${{ var.CENTRALIZED_ASSETS_GENERIC_REF }}"
+    specDirPath: consumer-repo-config
+    variables:
+      repo: tools-configs
 
 #[why] os-agnostic and ungated, like ontoRepo: indexing reads dirs already on disk, so `make
 #   host-index-workspace` refreshes the workspace map with no credential and no network
-indexWorkspace:
-  options:
-    autoDiscover: false
-  include:
-    profiles:
-      - source: "profiles/gitlab"
-        profile: gitlab/projects-index
+profilesDefinitions:
+  generic/env:
+    type: repo-git-untracked
+    include:
+      renderTemplates:
+        - source: tpl/repo-git-tracked/env.tpl
+          dest:
+            - path: .env
+              options:
+                writeType: mergeUpsert
 
-genericSetup:
-  options:
-    autoDiscover: false
-  include:
-    profiles:
-      - source: "git::https://gitlab.com/konradodwrot/centralized/assets/generic@${{ var.CENTRALIZED_ASSETS_GENERIC_REF }}"
-        spec: consumer-repo-config
-        profile: setup
-        variables:
-          repo: tools-configs
+  indexWorkspace:
+    type: host
+    include:
+      profiles:
+        - specDirPath: ./profiles/gitlab
+          profileName: gitlab/projects-index
+
+variablesDefinitions:
+  all:
+    scope: recursiveSpecsAndProfiles
+    required: true
+  specVariablesDefinitions:
+    AI_TOOLS_CONFIGS_REF: null
+    AUTOMATION_REF: null
+    CENTRALIZED_ASSETS_GENERIC_REF: null
+    CENTRALIZED_ASSETS_PROSE_AI_REF: null
+    CENTRALIZED_ASSETS_PROSE_COMMON_REF: null
+    CENTRALIZED_ASSETS_PROSE_HUMAN_REF: null
+    CHE_PACKAGES_REF: null
+    CHE_SCHEMA_REF: null
+    GO_MODULES_CHE_REF: null
+    OCI_IMAGES_CI_LINUX_REF: null
+    PROSE_SPEC_REF: null
 ##[<] 🤖🤖

@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/kind:
-  include:
-    installPackages:
-      - kind
+profilesDefinitions:
+  'dev/infra/kind':
+    type: host
+    include:
+      installPackages:
+        - kind
+
 ##[<] 🤖🤖

@@ -3,9 +3,12 @@
 options:
   profileWorkingDirectory: root
 
-dev/python/mypy:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
+profilesDefinitions:
+  'dev/python/mypy':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+
 ##[<] 🤖🤖

@@ -3,11 +3,14 @@
 options:
   profileWorkingDirectory: root
 
-shell/curl:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: 's:^_home:$HOME:'
-    installPackages:
-      - curl
+profilesDefinitions:
+  'shell/curl':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: 's:^_home:$HOME:'
+      installPackages:
+        - curl
+
 ##[<] 🤖🤖

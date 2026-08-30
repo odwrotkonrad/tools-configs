@@ -3,13 +3,16 @@
 options:
   profileWorkingDirectory: root
 
-shell/zsh/extras:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-      - etc/**
-    renderTemplates:
-      - source: _home/**
-        dest: $HOME/**
+profilesDefinitions:
+  'shell/zsh/extras':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+        - etc/**
+      renderTemplates:
+        - source: _home/**
+          dest: $HOME/**
+
 ##[<] 🤖🤖

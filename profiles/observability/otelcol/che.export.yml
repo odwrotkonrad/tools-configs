@@ -3,33 +3,36 @@
 options:
   profileWorkingDirectory: root
 
-observability/otelcol:
-  include:
-    makeLinks:
-      - etc/**
-      - usr/**
-    makeCopies:
-      - source: Library/LaunchDaemons
-        dest: /Library/LaunchDaemons
-        owner: root
-        ownerGroup: "0"
-        chmod: "0644"
-        <<<:
-          - source: otelcol.plist.ontoHost.cp
-            dest: otelcol.plist
-          - source: dir-size-exporter.plist.ontoHost.cp
-            dest: dir-size-exporter.plist
-          - source: port-exporter.plist.ontoHost.cp
-            dest: port-exporter.plist
-    makeDirs:
-      - chmod: "2775"
-        directories:
-          - dest:
-              - "/var/log/{otelcol,dir_size_exporter,port_exporter}"
-          - dest:
-              - /var/custom/cache/dir_size_exporter
-    installPackages:
-      - otelcol
-    runScripts:
-      - scripts/01-boot-service.zsh
+profilesDefinitions:
+  'observability/otelcol':
+    type: host
+    include:
+      makeLinks:
+        - etc/**
+        - usr/**
+      makeCopies:
+        - source: Library/LaunchDaemons
+          dest: /Library/LaunchDaemons
+          owner: root
+          ownerGroup: "0"
+          chmod: "0644"
+          <<<:
+            - source: otelcol.plist.ontoHost.cp
+              dest: otelcol.plist
+            - source: dir-size-exporter.plist.ontoHost.cp
+              dest: dir-size-exporter.plist
+            - source: port-exporter.plist.ontoHost.cp
+              dest: port-exporter.plist
+      makeDirs:
+        - chmod: "2775"
+          directories:
+            - dest:
+                - "/var/log/{otelcol,dir_size_exporter,port_exporter}"
+            - dest:
+                - /var/custom/cache/dir_size_exporter
+      installPackages:
+        - otelcol
+      runScripts:
+        - scripts/01-boot-service.zsh
+
 ##[<] 🤖🤖

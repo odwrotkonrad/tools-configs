@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/cilium:
-  include:
-    installPackages:
-      - cilium
+profilesDefinitions:
+  'dev/infra/cilium':
+    type: host
+    include:
+      installPackages:
+        - cilium
+
 ##[<] 🤖🤖

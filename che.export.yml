@@ -3,137 +3,161 @@
 #[why] the package set alone, no makeDirs/runScripts: those bind to a configs checkout ($PWD/ci,
 #   ci/zsh/scripts/installs), which an image build composing profiles from a remote ref has not got.
 #   split out so such a build can pull the base packages without the checkout-bound ops
-base/packages:
-  options:
-    autoDiscover: false
-  include:
-    installPackages:
-      - bat
-      - bats
-      - che
-      - copilot
-      - corepack
-      - fd
-      - ffmpeg
-      - gcc
-      - htop
-      - jq
-      - lefthook
-      - libtool
-      - make
-      - nmap
-      - openssl
-      - pandoc
-      - pcre2
-      - pkgconf
-      - procs
-      - pstree
-      - readline
-      - shellcheck
-      - showkey
-      - sqlite3
-      - stow
-      - tcl
-      - tree
-      - unzip
-      - watch
-      - xz
-      - yq
-      - zlib
-      - zstd
+profilesDefinitions:
+  'base/packages':
+    type: host
+    options:
+      autoDiscover: false
+    include:
+      installPackages:
+        - bat
+        - bats
+        - che
+        - copilot
+        - corepack
+        - fd
+        - ffmpeg
+        - gcc
+        - htop
+        - jq
+        - lefthook
+        - libtool
+        - make
+        - nmap
+        - openssl
+        - pandoc
+        - pcre2
+        - pkgconf
+        - procs
+        - pstree
+        - readline
+        - shellcheck
+        - showkey
+        - sqlite3
+        - stow
+        - tcl
+        - tree
+        - unzip
+        - watch
+        - xz
+        - yq
+        - zlib
+        - zstd
 
-base:
-  options:
-    autoDiscover: false
-  include:
-    profiles:
-      - base/packages
-    makeDirs:
-      - chmod: "0755"
-        directories:
-          - dest:
-              - $PWD/ci
-          - dest:
-              - $PWD/ci/zsh
-          - dest:
-              - $PWD/ci/zsh/functions
-    runScripts:
-      - ci/zsh/scripts/installs/*.zsh
+  base:
+    type: host
+    options:
+      autoDiscover: false
+    include:
+      profiles:
+        - base/packages
+      makeDirs:
+        - chmod: "0755"
+          directories:
+            - dest:
+                - $PWD/ci
+            - dest:
+                - $PWD/ci/zsh
+            - dest:
+                - $PWD/ci/zsh/functions
+      runScripts:
+        - ci/zsh/scripts/installs/*.zsh
 
-desktop/macos:
-  options:
-    autoDiscover: true
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    profiles:
-      - base
-      - source: "profiles/shell"
-        profile: shell/host/macos
-      - source: "profiles/misc"
-        profile: misc/host/macos
-      - source: "profiles/git"
-        profile: git/host/macos
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ var.AI_TOOLS_CONFIGS_REF }}"
-        profile: ai/host/macos
-      - source: "profiles/dev"
-        profile: dev/host/macos
-      - source: "profiles/cloud"
-        profile: cloud/host/macos
-      - source: "profiles/gitlab"
-        profile: gitlab/host/macos
-      - source: "profiles/observability"
-        profile: observability/host/macos
+  'desktop/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      profiles:
+        - base
+        - specDirPath: ./profiles/shell
+          profileName: shell/host/macos
+        - specDirPath: ./profiles/misc
+          profileName: misc/host/macos
+        - specDirPath: ./profiles/git
+          profileName: git/host/macos
+        - url: https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs
+          ref: "${{ var.AI_TOOLS_CONFIGS_REF }}"
+          specDirPath: .
+          profileName: ai/host/macos
+        - specDirPath: ./profiles/dev
+          profileName: dev/host/macos
+        - specDirPath: ./profiles/cloud
+          profileName: cloud/host/macos
+        - specDirPath: ./profiles/gitlab
+          profileName: gitlab/host/macos
+        - specDirPath: ./profiles/observability
+          profileName: observability/host/macos
 
-cli/macos:
-  options:
-    autoDiscover: true
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt
-  include:
-    profiles:
-      - base
-      - source: "profiles/shell"
-        profile: shell/base/macos
-      - source: "profiles/misc"
-        profile: misc/base/macos
-      - source: "profiles/git"
-        profile: git/base/macos
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ var.AI_TOOLS_CONFIGS_REF }}"
-        profile: ai/base/macos
-      - source: "profiles/dev"
-        profile: dev/base/macos
-      - source: "profiles/cloud"
-        profile: cloud/base/macos
-      - source: "profiles/gitlab"
-        profile: gitlab/base/macos
-      - source: "profiles/observability"
-        profile: observability/base/macos
+  'cli/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt
+    include:
+      profiles:
+        - base
+        - specDirPath: ./profiles/shell
+          profileName: shell/base/macos
+        - specDirPath: ./profiles/misc
+          profileName: misc/base/macos
+        - specDirPath: ./profiles/git
+          profileName: git/base/macos
+        - url: https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs
+          ref: "${{ var.AI_TOOLS_CONFIGS_REF }}"
+          specDirPath: .
+          profileName: ai/base/macos
+        - specDirPath: ./profiles/dev
+          profileName: dev/base/macos
+        - specDirPath: ./profiles/cloud
+          profileName: cloud/base/macos
+        - specDirPath: ./profiles/gitlab
+          profileName: gitlab/base/macos
+        - specDirPath: ./profiles/observability
+          profileName: observability/base/macos
 
-virt/linux:
-  options:
-    autoDiscover: true
-    runIf:
-      - builtin:isOs == linux
-  include:
-    profiles:
-      - base
-      - source: "profiles/shell"
-        profile: shell/virt/linux
-      - source: "profiles/misc"
-        profile: misc/virt/linux
-      - source: "profiles/git"
-        profile: git/virt/linux
-      - source: "git::https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs@${{ var.AI_TOOLS_CONFIGS_REF }}"
-        profile: ai/virt/linux
-      - source: "profiles/dev"
-        profile: dev/virt/linux
-      - source: "profiles/cloud"
-        profile: cloud/virt/linux
-      - source: "profiles/gitlab"
-        profile: gitlab/virt/linux
-      - source: "profiles/observability"
-        profile: observability/virt/linux
+  'virt/linux':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+    include:
+      profiles:
+        - base
+        - specDirPath: ./profiles/shell
+          profileName: shell/virt/linux
+        - specDirPath: ./profiles/misc
+          profileName: misc/virt/linux
+        - specDirPath: ./profiles/git
+          profileName: git/virt/linux
+        - url: https://gitlab.com/konradodwrot/ai-harness/ai-tools-configs
+          ref: "${{ var.AI_TOOLS_CONFIGS_REF }}"
+          specDirPath: .
+          profileName: ai/virt/linux
+        - specDirPath: ./profiles/dev
+          profileName: dev/virt/linux
+        - specDirPath: ./profiles/cloud
+          profileName: cloud/virt/linux
+        - specDirPath: ./profiles/gitlab
+          profileName: gitlab/virt/linux
+        - specDirPath: ./profiles/observability
+          profileName: observability/virt/linux
+
+variablesDefinitions:
+  profilesVariablesDefinitions:
+    desktop/macos:
+      AI_TOOLS_CONFIGS_REF:
+        required: true
+        description: "ai-harness/ai-tools-configs tag whose exported profiles compose into this one"
+    cli/macos:
+      AI_TOOLS_CONFIGS_REF:
+        required: true
+        description: "ai-harness/ai-tools-configs tag whose exported profiles compose into this one"
+    virt/linux:
+      AI_TOOLS_CONFIGS_REF:
+        required: true
+        description: "ai-harness/ai-tools-configs tag whose exported profiles compose into this one"
 ##[<] 🤖🤖

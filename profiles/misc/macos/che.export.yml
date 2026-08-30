@@ -3,27 +3,31 @@
 options:
   profileWorkingDirectory: root
 
-misc/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-  include:
-    makeLinks:
-      - etc/**
-      - usr/**
-    installPackages:
-      - duti
+profilesDefinitions:
+  'misc/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+    include:
+      makeLinks:
+        - etc/**
+        - usr/**
+      installPackages:
+        - duti
 
-misc/macos/desktop:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    renderTemplates:
-      - source: _home/**
-        dest: $HOME/**
-    installPackages:
-      - get-os-open-files-with
-      - beekeeper-studio
+  'misc/macos/desktop':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      renderTemplates:
+        - source: _home/**
+          dest: $HOME/**
+      installPackages:
+        - get-os-open-files-with
+        - beekeeper-studio
+
 ##[<] 🤖🤖

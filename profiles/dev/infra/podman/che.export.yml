@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/podman:
-  include:
-    installPackages:
-      - podman
+profilesDefinitions:
+  'dev/infra/podman':
+    type: host
+    include:
+      installPackages:
+        - podman
+
 ##[<] 🤖🤖

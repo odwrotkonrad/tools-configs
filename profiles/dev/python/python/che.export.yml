@@ -3,14 +3,17 @@
 options:
   profileWorkingDirectory: .
 
-dev/python/python:
-  include:
-    installPackages:
-      - name: python3
-        versions:
-          - 3.14.5
-        globalVersion: 3.14.5
-      - pipx
-      - uv
-      - pyright
+profilesDefinitions:
+  'dev/python/python':
+    type: host
+    include:
+      installPackages:
+        - name: python3
+          versions:
+            - 3.14.5
+          globalVersion: 3.14.5
+        - pipx
+        - uv
+        - pyright
+
 ##[<] 🤖🤖

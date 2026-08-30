@@ -3,11 +3,14 @@
 options:
   profileWorkingDirectory: root
 
-dev/js/nvm:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-    installPackages:
-      - nvm
+profilesDefinitions:
+  'dev/js/nvm':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+      installPackages:
+        - nvm
+
 ##[<] 🤖🤖

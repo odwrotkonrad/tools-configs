@@ -3,33 +3,38 @@
 options:
   profileWorkingDirectory: root
 
-cloud/gcp/install:
-  include:
-    makeLinks:
-      - etc/**
-    installPackages:
-      - gcloud
-    installToolPackages:
-      gcloud:
-        - gke-gcloud-auth-plugin
+profilesDefinitions:
+  'cloud/gcp/install':
+    type: host
+    include:
+      makeLinks:
+        - etc/**
+      installPackages:
+        - gcloud
+      installToolPackages:
+        gcloud:
+          - gke-gcloud-auth-plugin
 
-cloud/gcp/configs:
-  options:
-    runIf:
-      - builtin:isVirt == false
-  include:
-    makeLinks:
-      - source: _home/**/zshenv.d/**
-        dest: $HOME/**
-    renderTemplates:
-      - source: _home/**
-        dest: $HOME/**
+  'cloud/gcp/configs':
+    type: host
+    options:
+      runIf:
+        - builtin:isVirt == false
+    include:
+      makeLinks:
+        - source: _home/**/zshenv.d/**
+          dest: $HOME/**
+      renderTemplates:
+        - source: _home/**
+          dest: $HOME/**
 
-cloud/gcp/auth:
-  options:
-    runIf:
-      - builtin:isVirt
-  include:
-    runScripts:
-      - scripts/10-check-auth.zsh
+  'cloud/gcp/auth':
+    type: host
+    options:
+      runIf:
+        - builtin:isVirt
+    include:
+      runScripts:
+        - scripts/10-check-auth.zsh
+
 ##[<] 🤖🤖

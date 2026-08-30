@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: root
 
-shell/man:
-  include:
-    makeLinks:
-      - etc/**
+profilesDefinitions:
+  'shell/man':
+    type: host
+    include:
+      makeLinks:
+        - etc/**
+
 ##[<] 🤖🤖

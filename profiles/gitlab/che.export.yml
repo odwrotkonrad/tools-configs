@@ -1,53 +1,81 @@
 # yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
-gitlab/base/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-  include:
-    profiles:
-      - source: "./glab"
-        profile: gitlab/glab
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
-        spec: workspace
-        profile: gitlab/projects
-        env:
-          GITLAB_GROUPS: "konradodwrot:konradodwrot"
+profilesDefinitions:
+  'gitlab/base/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+    include:
+      profiles:
+        - specDirPath: ./glab
+          profileName: gitlab/glab
+        - url: https://gitlab.com/konradodwrot/cross-repo/automation
+          ref: "${{ var.AUTOMATION_REF }}"
+          specDirPath: workspace
+          profileName: gitlab/projects
+          env:
+            GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
-gitlab/host/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    profiles:
-      - gitlab/base/macos
-      - source: "./runner"
-        profile: gitlab/runner
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
-        spec: workspace
-        profile: gitlab/projects-parent-links
+  'gitlab/host/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      profiles:
+        - gitlab/base/macos
+        - specDirPath: ./runner
+          profileName: gitlab/runner
+        - url: https://gitlab.com/konradodwrot/cross-repo/automation
+          ref: "${{ var.AUTOMATION_REF }}"
+          specDirPath: workspace
+          profileName: gitlab/projects-parent-links
 
-gitlab/virt/linux:
-  options:
-    runIf:
-      - builtin:isOs == linux
-  include:
-    profiles:
-      - source: "./glab"
-        profile: gitlab/glab
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
-        spec: workspace
-        profile: gitlab/projects
-        env:
-          GITLAB_GROUPS: "konradodwrot:konradodwrot"
+  'gitlab/virt/linux':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+    include:
+      profiles:
+        - specDirPath: ./glab
+          profileName: gitlab/glab
+        - url: https://gitlab.com/konradodwrot/cross-repo/automation
+          ref: "${{ var.AUTOMATION_REF }}"
+          specDirPath: workspace
+          profileName: gitlab/projects
+          env:
+            GITLAB_GROUPS: "konradodwrot:konradodwrot"
 
-#[why] index only, no clone: control gates that profile on nothing, so a routine sync refreshes the
-#   workspace map with no gitlab auth. os-agnostic, reached from the root indexWorkspace profile
-gitlab/projects-index:
-  include:
-    profiles:
-      - source: "git::https://gitlab.com/konradodwrot/cross-repo/automation@${{ var.AUTOMATION_REF }}"
-        spec: workspace
-        profile: gitlab/projects-index
+  #[why] index only, no clone: control gates that profile on nothing, so a routine sync refreshes the
+  #   workspace map with no gitlab auth. os-agnostic, reached from the root indexWorkspace profile
+  'gitlab/projects-index':
+    type: host
+    include:
+      profiles:
+        - url: https://gitlab.com/konradodwrot/cross-repo/automation
+          ref: "${{ var.AUTOMATION_REF }}"
+          specDirPath: workspace
+          profileName: gitlab/projects-index
+
+variablesDefinitions:
+  profilesVariablesDefinitions:
+    gitlab/base/macos:
+      AUTOMATION_REF:
+        required: true
+        description: "cross-repo/automation tag whose workspace profiles compose into this one"
+    gitlab/host/macos:
+      AUTOMATION_REF:
+        required: true
+        description: "cross-repo/automation tag whose workspace profiles compose into this one"
+    gitlab/virt/linux:
+      AUTOMATION_REF:
+        required: true
+        description: "cross-repo/automation tag whose workspace profiles compose into this one"
+    gitlab/projects-index:
+      AUTOMATION_REF:
+        required: true
+        description: "cross-repo/automation tag whose workspace profiles compose into this one"
 ##[<] 🤖🤖

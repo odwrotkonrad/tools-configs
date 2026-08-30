@@ -67,7 +67,7 @@ variables:
   #[why] rendered here, outside make: under MK_DRY_RUN the recipe wrapper prints `generic-setup`
   #   instead of running it, so the dry-run jobs would never get generic.mk and fail on its targets
   before_script:
-    - che render-templates --profiles=genericSetup
+    - che render-templates --profiles=generic/setup
   ##[>] 🤖🤖
   variables:
     #[why] set but deliberately never cached: it holds downloaded dependencies, and cache: here
@@ -92,7 +92,7 @@ variables:
   variables:
     CI_USER: ko
   before_script:
-    - che render-templates --profiles=genericSetup
+    - che render-templates --profiles=generic/setup
     #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
     - useradd -m -s /bin/zsh -G root "$CI_USER" && echo "$CI_USER ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/$CI_USER"
     - chown -R "$CI_USER" "$CI_PROJECT_DIR"

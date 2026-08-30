@@ -3,20 +3,24 @@
 options:
   profileWorkingDirectory: root
 
-dev/terminal/kitty:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-    installPackages:
-      - kitty
+profilesDefinitions:
+  'dev/terminal/kitty':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+      installPackages:
+        - kitty
 
-dev/terminal/kitty/terminfo:
-  options:
-    runIf:
-      - builtin:isOs == linux
-  include:
-    installPackages:
-      - kitty-terminfo
-      - ncurses-term
+  'dev/terminal/kitty/terminfo':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+    include:
+      installPackages:
+        - kitty-terminfo
+        - ncurses-term
+
 ##[<] 🤖🤖

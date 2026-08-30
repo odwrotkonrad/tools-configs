@@ -29,3 +29,4 @@ __pycache__/
 /.env
 /lefthook.yml
 ##[<] 🤖
+/.che/cheVariables.local.yml

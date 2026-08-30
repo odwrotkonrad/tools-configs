@@ -2,14 +2,14 @@
 #[why] SHELL is a zsh wrapper (not bare `zsh`) to power MK_DRY_RUN: it prints or omits each target's recipe instead of running it
 SHELL := $(CURDIR)/ci/zsh/scripts/make-run-target.zsh
 .SHELLFLAGS := -c
-CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if)
+CHE := che $(if $(CHE_PROFILE),--profiles=$(CHE_PROFILE) --skip-run-if,--target-profile-types=host)
 WRAPPERS := sync sync-full
-COMMANDS := che-install generic-setup host-load-configs host-load-configs-install host-index-workspace host-run-install-scripts host-run-scripts repo-ci-install-deps
+COMMANDS := che-install generic-setup repo-files-untracked-load repo-files-tracked-load host-load-configs host-load-configs-install host-index-workspace host-run-install-scripts host-run-scripts repo-ci-install-deps
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
-#[why] this repo's SHELL wrapper glob-expands each recipe word and rejects `${CHE_BIN:-che}`: name che plainly
-GENERIC_CHE := che
+#[why] this repo's SHELL wrapper glob-expands each recipe word and rejects `${BIN_CHE:-che}`: name che plainly
+BIN_CHE := che
 GENERIC_FILES_UNTRACKED_PROFILES := generic/filesUntracked,repo/filesUntracked
 -include shared/generic/make/generic.mk
 
@@ -41,10 +41,21 @@ export CHE_VALIDATE_SPEC
 #[why] the workspace index inlines each repo's rendered purpose doc, which the host load
 #   produces and .gitignore keeps out of the tree: indexing before that load reads nothing
 #[what] convenience sync: configs, dirs, hooks, all template renders (repo + host), workspace indexes
-sync: generic-files-untracked-generate generic-files-tracked-generate host-load-configs host-index-workspace generic-precommit-install
+sync: repo-files-untracked-load repo-files-tracked-load host-load-configs host-index-workspace generic-precommit-install
 #[what] full sync: full che op sequence per profile (scripts included), hooks, repo renders
-sync-full: generic-files-untracked-generate generic-files-tracked-generate host-load-configs-install generic-precommit-install
+sync-full: repo-files-untracked-load repo-files-tracked-load host-load-configs-install generic-precommit-install
 ##[<] Wrappers
+
+##[>] Onto Repo [genai-include]
+#[why] untracked first: the tracked renders (README) inline data files the untracked profiles produce
+#[what] run every repo-git-untracked profile: gitignored renders, generic payload, .env seed
+repo-files-untracked-load: | repo-ci-install-deps
+	@che run --target-profile-types=repo-git-untracked
+
+#[what] run every repo-git-tracked profile: git-tracked renders (README, LICENSE)
+repo-files-tracked-load: | repo-ci-install-deps
+	@che run --target-profile-types=repo-git-tracked
+##[<] Onto Repo
 
 ##[>] Onto Host [genai-include]
 #[what] load configs onto host, profile by profile: each profile's full op sequence minus scripts and package installs
@@ -77,7 +88,7 @@ che-install:
 
 #[what] render the generic consumer payload (generic.mk, lefthook.yml, shared/generic/) at the pinned CENTRALIZED_ASSETS_GENERIC_REF
 generic-setup:
-	@che render-templates --profiles=genericSetup
+	@che render-templates --profiles=generic/setup
 
 shared/generic/make/generic.mk: generic-setup
 

@@ -3,10 +3,13 @@
 options:
   profileWorkingDirectory: root
 
-gitlab/glab:
-  include:
-    makeLinks:
-      - etc/**
-    installPackages:
-      - glab
+profilesDefinitions:
+  'gitlab/glab':
+    type: host
+    include:
+      makeLinks:
+        - etc/**
+      installPackages:
+        - glab
+
 ##[<] 🤖🤖

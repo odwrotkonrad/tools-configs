@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/kubectl:
-  include:
-    installPackages:
-      - kubectl
+profilesDefinitions:
+  'dev/infra/kubectl':
+    type: host
+    include:
+      installPackages:
+        - kubectl
+
 ##[<] 🤖🤖
