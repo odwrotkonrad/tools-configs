@@ -3,9 +3,12 @@
 options:
   profileWorkingDirectory: root
 
-dev/misc/editorconfig:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
+profilesDefinitions:
+  'dev/misc/editorconfig':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+
 ##[<] 🤖🤖

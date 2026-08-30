@@ -3,29 +3,32 @@
 options:
   profileWorkingDirectory: root
 
-observability/loki:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    makeLinks:
-      - etc/**
-    installPackages:
-      - loki
-      - logcli
-    makeCopies:
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0644"
-        source: Library/LaunchDaemons/loki.plist.ontoHost.cp
-        dest:
-          - /Library/LaunchDaemons/loki.plist
-    makeDirs:
-      - chmod: "2775"
-        directories:
-          - dest:
-              - /var/log/loki
-    runScripts:
-      - scripts/01-boot-service.zsh
+profilesDefinitions:
+  'observability/loki':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      makeLinks:
+        - etc/**
+      installPackages:
+        - loki
+        - logcli
+      makeCopies:
+        - owner: root
+          ownerGroup: "0"
+          chmod: "0644"
+          source: Library/LaunchDaemons/loki.plist.ontoHost.cp
+          dest:
+            - /Library/LaunchDaemons/loki.plist
+      makeDirs:
+        - chmod: "2775"
+          directories:
+            - dest:
+                - /var/log/loki
+      runScripts:
+        - scripts/01-boot-service.zsh
+
 ##[<] 🤖🤖

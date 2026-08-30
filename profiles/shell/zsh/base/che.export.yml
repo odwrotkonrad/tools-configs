@@ -3,65 +3,70 @@
 options:
   profileWorkingDirectory: root
 
-shell/zsh/base:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-      - etc/**
-    makeDirs:
-      - directories:
-          - dest:
-              - $HOME/.cache/zsh
-          - dest:
-              - "$HOME/.local/{bin,share}"
-          - dest:
-              - $HOME/.local/state/log
-          - dest:
-              - $HOME/.local/state/zsh/completions
-          - dest:
-              - $HOME/ScreenCapture
-          - dest:
-              - /var/root/.cache/zsh
-          - dest:
-              - /var/root/.config
-          - dest:
-              - /var/root/.local/state/zsh/completions
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0755"
-        directories:
-          - dest:
-              - /etc/zsh/zshrc.d/completions
-    installPackages:
-      - zsh
-      - rg
+profilesDefinitions:
+  'shell/zsh/base':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+        - etc/**
+      makeDirs:
+        - directories:
+            - dest:
+                - $HOME/.cache/zsh
+            - dest:
+                - "$HOME/.local/{bin,share}"
+            - dest:
+                - $HOME/.local/state/log
+            - dest:
+                - $HOME/.local/state/zsh/completions
+            - dest:
+                - $HOME/ScreenCapture
+            - dest:
+                - /var/root/.cache/zsh
+            - dest:
+                - /var/root/.config
+            - dest:
+                - /var/root/.local/state/zsh/completions
+        - owner: root
+          ownerGroup: "0"
+          chmod: "0755"
+          directories:
+            - dest:
+                - /etc/zsh/zshrc.d/completions
+      installPackages:
+        - zsh
+        - rg
 
-shell/zsh/base-macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-    profileWorkingDirectory: root-macos
-  include:
-    profiles:
-      - source: "."
-        profile: shell/zsh/base
-    makeLinks:
-      - etc/**
-    installPackages:
-      - brew
+  'shell/zsh/base-macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+      profileWorkingDirectory: root-macos
+    include:
+      profiles:
+        - specDirPath: .
+          profileName: shell/zsh/base
+      makeLinks:
+        - etc/**
+      installPackages:
+        - brew
 
-shell/zsh/base-linux:
-  options:
-    runIf:
-      - builtin:isOs == linux
-    profileWorkingDirectory: root-linux
-  include:
-    profiles:
-      - source: "."
-        profile: shell/zsh/base
-    makeLinks:
-      #[why] global rc dir is a zsh compile-time option (--enable-etc-dir): debian builds with /etc/zsh, macos keeps the upstream /etc, so linux needs the loader files mirrored there (they source the shared /etc/zsh/*.d dirs)
-      #[where] debian zsh packaging (debian/rules --enable-etc-dir=/etc/zsh); man zsh STARTUP/SHUTDOWN FILES per OS
-      - etc/**
+  'shell/zsh/base-linux':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+      profileWorkingDirectory: root-linux
+    include:
+      profiles:
+        - specDirPath: .
+          profileName: shell/zsh/base
+      makeLinks:
+        #[why] global rc dir is a zsh compile-time option (--enable-etc-dir): debian builds with /etc/zsh, macos keeps the upstream /etc, so linux needs the loader files mirrored there (they source the shared /etc/zsh/*.d dirs)
+        #[where] debian zsh packaging (debian/rules --enable-etc-dir=/etc/zsh); man zsh STARTUP/SHUTDOWN FILES per OS
+        - etc/**
+
 ##[<] 🤖🤖

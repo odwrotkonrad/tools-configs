@@ -3,30 +3,33 @@
 options:
   profileWorkingDirectory: root
 
-observability/prometheus:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    makeLinks:
-      - etc/**
-    makeCopies:
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0644"
-        source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp
-        dest:
-          - /Library/LaunchDaemons/prometheus.plist
-    makeDirs:
-      - chmod: "2775"
-        directories:
-          - dest:
-              - /var/log/prometheus
-          - dest:
-              - /usr/local/var/prometheus
-    installPackages:
-      - prometheus
-    runScripts:
-      - scripts/01-boot-service.zsh
+profilesDefinitions:
+  'observability/prometheus':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      makeLinks:
+        - etc/**
+      makeCopies:
+        - owner: root
+          ownerGroup: "0"
+          chmod: "0644"
+          source: Library/LaunchDaemons/prometheus.plist.ontoHost.cp
+          dest:
+            - /Library/LaunchDaemons/prometheus.plist
+      makeDirs:
+        - chmod: "2775"
+          directories:
+            - dest:
+                - /var/log/prometheus
+            - dest:
+                - /usr/local/var/prometheus
+      installPackages:
+        - prometheus
+      runScripts:
+        - scripts/01-boot-service.zsh
+
 ##[<] 🤖🤖

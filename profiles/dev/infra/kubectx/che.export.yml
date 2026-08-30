@@ -3,9 +3,12 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/kubectx:
-  include:
-    installPackages:
-      - kubectx
-      - kubens
+profilesDefinitions:
+  'dev/infra/kubectx':
+    type: host
+    include:
+      installPackages:
+        - kubectx
+        - kubens
+
 ##[<] 🤖🤖

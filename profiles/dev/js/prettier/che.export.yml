@@ -3,9 +3,12 @@
 options:
   profileWorkingDirectory: root
 
-dev/js/prettier:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
+profilesDefinitions:
+  'dev/js/prettier':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+
 ##[<] 🤖🤖

@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/js/pnpm:
-  include:
-    installPackages:
-      - pnpm
+profilesDefinitions:
+  'dev/js/pnpm':
+    type: host
+    include:
+      installPackages:
+        - pnpm
+
 ##[<] 🤖🤖

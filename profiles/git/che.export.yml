@@ -3,43 +3,49 @@
 options:
   profileWorkingDirectory: root
 
-git:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-      - etc/**
-      - usr/**
-    installPackages:
-      - git
-      - gh
-    runScripts:
-      - scripts/02-install-completions.zsh
+profilesDefinitions:
+  git:
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+        - etc/**
+        - usr/**
+      installPackages:
+        - git
+        - gh
+      runScripts:
+        - scripts/02-install-completions.zsh
 
-git/base/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-  include:
-    profiles:
-      - source: "."
-        profile: git
+  'git/base/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+    include:
+      profiles:
+        - specDirPath: .
+          profileName: git
 
-git/host/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    profiles:
-      - git/base/macos
+  'git/host/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      profiles:
+        - git/base/macos
 
-git/virt/linux:
-  options:
-    runIf:
-      - builtin:isOs == linux
-  include:
-    profiles:
-      - source: "."
-        profile: git
+  'git/virt/linux':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+    include:
+      profiles:
+        - specDirPath: .
+          profileName: git
+
 ##[<] 🤖🤖

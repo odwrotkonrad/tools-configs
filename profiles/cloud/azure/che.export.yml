@@ -3,11 +3,14 @@
 options:
   profileWorkingDirectory: root
 
-cloud/azure:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-    installPackages:
-      - az
+profilesDefinitions:
+  'cloud/azure':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+      installPackages:
+        - az
+
 ##[<] 🤖🤖

@@ -3,11 +3,14 @@
 options:
   profileWorkingDirectory: .
 
-dev/golang:
-  include:
-    installPackages:
-      - go
-      - gopls
-      - goreleaser
-      - zig
+profilesDefinitions:
+  'dev/golang':
+    type: host
+    include:
+      installPackages:
+        - go
+        - gopls
+        - goreleaser
+        - zig
+
 ##[<] 🤖🤖

@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/terraform:
-  include:
-    installPackages:
-      - terraform
+profilesDefinitions:
+  'dev/infra/terraform':
+    type: host
+    include:
+      installPackages:
+        - terraform
+
 ##[<] 🤖🤖

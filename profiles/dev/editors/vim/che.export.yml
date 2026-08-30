@@ -3,13 +3,16 @@
 options:
   profileWorkingDirectory: root
 
-dev/editors/vim:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-    makeDirs:
-      - directories:
-          - dest:
-              - $HOME/.local/state/vim/undo
+profilesDefinitions:
+  'dev/editors/vim':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+      makeDirs:
+        - directories:
+            - dest:
+                - $HOME/.local/state/vim/undo
+
 ##[<] 🤖🤖

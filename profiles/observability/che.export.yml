@@ -1,39 +1,44 @@
 # yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
-observability/base/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-  include:
-    profiles:
-      - source: "./otelcol"
-        profile: observability/otelcol
+profilesDefinitions:
+  'observability/base/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+    include:
+      profiles:
+        - specDirPath: ./otelcol
+          profileName: observability/otelcol
 
-observability/host/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    profiles:
-      - observability/base/macos
-      - source: "./grafana"
-        profile: observability/grafana
-      - source: "./prometheus"
-        profile: observability/prometheus
-      - source: "./jaeger"
-        profile: observability/jaeger
-      - source: "./loki"
-        profile: observability/loki
-    runScripts:
-      - scripts/01-boot-services.zsh
+  'observability/host/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      profiles:
+        - observability/base/macos
+        - specDirPath: ./grafana
+          profileName: observability/grafana
+        - specDirPath: ./prometheus
+          profileName: observability/prometheus
+        - specDirPath: ./jaeger
+          profileName: observability/jaeger
+        - specDirPath: ./loki
+          profileName: observability/loki
+      runScripts:
+        - scripts/01-boot-services.zsh
 
-observability/virt/linux:
-  options:
-    runIf:
-      - builtin:isOs == linux
-  include:
-    profiles:
-      - source: "./otelcol"
-        profile: observability/otelcol
+  'observability/virt/linux':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+    include:
+      profiles:
+        - specDirPath: ./otelcol
+          profileName: observability/otelcol
+
 ##[<] 🤖🤖

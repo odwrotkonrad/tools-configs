@@ -3,15 +3,18 @@
 options:
   profileWorkingDirectory: root
 
-misc/che:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
-    makeDirs:
-      - directories:
-          - dest:
-              - $HOME/.local/state/che/backups
-    installPackages:
-      - che
+profilesDefinitions:
+  'misc/che':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+      makeDirs:
+        - directories:
+            - dest:
+                - $HOME/.local/state/che/backups
+      installPackages:
+        - che
+
 ##[<] 🤖🤖

@@ -3,10 +3,13 @@
 options:
   profileWorkingDirectory: root
 
-shell/rg:
-  include:
-    makeLinks:
-      - etc/**
-    installPackages:
-      - rg
+profilesDefinitions:
+  'shell/rg':
+    type: host
+    include:
+      makeLinks:
+        - etc/**
+      installPackages:
+        - rg
+
 ##[<] 🤖🤖

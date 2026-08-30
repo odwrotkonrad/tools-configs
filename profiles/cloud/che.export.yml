@@ -1,44 +1,49 @@
 # yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
-cloud/base/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-  include:
-    profiles:
-      - source: "./aws"
-        profile: cloud/aws
-      - source: "./azure"
-        profile: cloud/azure
-      - source: "./gcp"
-        profiles:
-          - cloud/gcp/install
-          - cloud/gcp/configs
-          - cloud/gcp/auth
+profilesDefinitions:
+  'cloud/base/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+    include:
+      profiles:
+        - specDirPath: ./aws
+          profileName: cloud/aws
+        - specDirPath: ./azure
+          profileName: cloud/azure
+        - specDirPath: ./gcp
+          profileNames:
+            - cloud/gcp/install
+            - cloud/gcp/configs
+            - cloud/gcp/auth
 
-cloud/host/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    profiles:
-      - cloud/base/macos
-      - source: "./aws"
-        profile: cloud/aws/configs
+  'cloud/host/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      profiles:
+        - cloud/base/macos
+        - specDirPath: ./aws
+          profileName: cloud/aws/configs
 
-cloud/virt/linux:
-  options:
-    runIf:
-      - builtin:isOs == linux
-  include:
-    profiles:
-      - source: "./aws"
-        profile: cloud/aws
-      - source: "./azure"
-        profile: cloud/azure
-      - source: "./gcp"
-        profiles:
-          - cloud/gcp/install
-          - cloud/gcp/configs
+  'cloud/virt/linux':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == linux
+    include:
+      profiles:
+        - specDirPath: ./aws
+          profileName: cloud/aws
+        - specDirPath: ./azure
+          profileName: cloud/azure
+        - specDirPath: ./gcp
+          profileNames:
+            - cloud/gcp/install
+            - cloud/gcp/configs
+
 ##[<] 🤖🤖

@@ -3,9 +3,12 @@
 options:
   profileWorkingDirectory: .
 
-dev/ruby:
-  include:
-    installPackages:
-      - ruby
-      - ruby-lsp
+profilesDefinitions:
+  'dev/ruby':
+    type: host
+    include:
+      installPackages:
+        - ruby
+        - ruby-lsp
+
 ##[<] 🤖🤖

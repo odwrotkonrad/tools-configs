@@ -3,8 +3,11 @@
 options:
   profileWorkingDirectory: .
 
-dev/infra/docker:
-  include:
-    installPackages:
-      - docker
+profilesDefinitions:
+  'dev/infra/docker':
+    type: host
+    include:
+      installPackages:
+        - docker
+
 ##[<] 🤖🤖

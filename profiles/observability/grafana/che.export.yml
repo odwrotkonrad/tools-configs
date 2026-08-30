@@ -3,30 +3,33 @@
 options:
   profileWorkingDirectory: root
 
-observability/grafana:
-  options:
-    runIf:
-      - builtin:isOs == macos
-      - builtin:isVirt == false
-  include:
-    makeLinks:
-      - etc/**
-    installPackages:
-      - grafana
-    makeCopies:
-      - owner: root
-        ownerGroup: "0"
-        chmod: "0644"
-        source: Library/LaunchDaemons/grafana.plist.ontoHost.cp
-        dest:
-          - /Library/LaunchDaemons/grafana.plist
-    makeDirs:
-      - chmod: "2775"
-        directories:
-          - dest:
-              - /var/log/grafana
-          - dest:
-              - /usr/local/var/grafana
-    runScripts:
-      - scripts/01-boot-service.zsh
+profilesDefinitions:
+  'observability/grafana':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+        - builtin:isVirt == false
+    include:
+      makeLinks:
+        - etc/**
+      installPackages:
+        - grafana
+      makeCopies:
+        - owner: root
+          ownerGroup: "0"
+          chmod: "0644"
+          source: Library/LaunchDaemons/grafana.plist.ontoHost.cp
+          dest:
+            - /Library/LaunchDaemons/grafana.plist
+      makeDirs:
+        - chmod: "2775"
+          directories:
+            - dest:
+                - /var/log/grafana
+            - dest:
+                - /usr/local/var/grafana
+      runScripts:
+        - scripts/01-boot-service.zsh
+
 ##[<] 🤖🤖

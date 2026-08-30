@@ -3,9 +3,12 @@
 options:
   profileWorkingDirectory: root
 
-dev/python/ruff:
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
+profilesDefinitions:
+  'dev/python/ruff':
+    type: host
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+
 ##[<] 🤖🤖

@@ -3,23 +3,27 @@
 options:
   profileWorkingDirectory: root
 
-misc/brew:
-  include:
-    makeLinks:
-      - etc/**
-    makeDirs:
-      - directories:
-          - dest:
-              - $HOME/.cache/homebrew
-          - dest:
-              - $HOME/.local/state/homebrew
+profilesDefinitions:
+  'misc/brew':
+    type: host
+    include:
+      makeLinks:
+        - etc/**
+      makeDirs:
+        - directories:
+            - dest:
+                - $HOME/.cache/homebrew
+            - dest:
+                - $HOME/.local/state/homebrew
 
-misc/brew/macos:
-  options:
-    runIf:
-      - builtin:isOs == macos
-  include:
-    makeLinks:
-      - source: _home/**
-        dest: $HOME/**
+  'misc/brew/macos':
+    type: host
+    options:
+      runIf:
+        - builtin:isOs == macos
+    include:
+      makeLinks:
+        - source: _home/**
+          dest: $HOME/**
+
 ##[<] 🤖🤖

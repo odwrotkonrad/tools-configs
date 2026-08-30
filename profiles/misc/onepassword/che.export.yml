@@ -3,15 +3,18 @@
 options:
   profileWorkingDirectory: root
 
-misc/onepassword:
-  options:
-    runIf:
-      - builtin:isVirt == false
-  include:
-    makeLinks:
-      - etc/**
-    installPackages:
-      - op
-    runScripts:
-      - scripts/02-init-auth.zsh
+profilesDefinitions:
+  'misc/onepassword':
+    type: host
+    options:
+      runIf:
+        - builtin:isVirt == false
+    include:
+      makeLinks:
+        - etc/**
+      installPackages:
+        - op
+      runScripts:
+        - scripts/02-init-auth.zsh
+
 ##[<] 🤖🤖
