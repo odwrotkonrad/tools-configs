@@ -1,6 +1,6 @@
+# [>] generic
+# [<] generic
 !profiles/**/.*
-!.repo/
-!.che/
 
 # project-local vscode workspace settings
 !.vscode/
@@ -17,16 +17,7 @@ __pycache__/
 
 
 /root/etc/**/*local*
-##[>] 🤖
-/AGENTS.md
-/CLAUDE.md
-/assets/data/makefile.agents.md
-/assets/data/repo-structure.md
-/assets/docs-agents/purpose.md
 /assets/docs-agents/file-naming.md
 
 /shared/
-/.env
-/lefthook.yml
-##[<] 🤖
 /.che/cheVariables.local.yml
