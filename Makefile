@@ -8,6 +8,8 @@ COMMANDS := che-install generic-setup host-load-configs host-load-configs-instal
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
+#[why] this repo's SHELL wrapper glob-expands each recipe word and rejects `${CHE_BIN:-che}`: name che plainly
+GENERIC_CHE := che
 GENERIC_FILES_UNTRACKED_PROFILES := generic/filesUntracked,repo/filesUntracked
 -include shared/generic/make/generic.mk
 
