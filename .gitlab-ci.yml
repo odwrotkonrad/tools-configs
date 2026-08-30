@@ -1,3 +1,18 @@
+##[>] 🤖🤖
+include:
+  - project: konradodwrot/centralized/assets/generic
+    ref: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
+    file:
+      - consumer-repo-config/files-generation/templates/FilesTrackedVerify.gitlab-ci.yml
+      - consumer-repo-config/precommit-lefthook/templates/PrecommitChanged.gitlab-ci.yml
+      - consumer-repo-config/precommit-lefthook/templates/PrecommitAll.gitlab-ci.yml
+  - project: konradodwrot/centralized/assets/generic
+    ref: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
+    file: consumer-repo-config/release/templates/TagMint.gitlab-ci.yml
+    inputs:
+      changes: [assets/**/*, ci/**/*, profiles/**/*, .che/**/*, Makefile]
+##[<] 🤖🤖
+
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -35,10 +50,10 @@ variables:
   ARTIFACT_REGISTRY: $GRP_KO_VAR_ARTIFACT_REGISTRY
   OCI_IMAGES_CI_LINUX_REF: $GRP_KO_VAR_OCI_IMAGES_CI_LINUX_REF
   CHE_SCHEMA_REF: $GRP_KO_VAR_CHE_SCHEMA_REF
-  PROSE_ASSETS_REF: $GRP_KO_VAR_PROSE_ASSETS_REF
+  CENTRALIZED_ASSETS_GENERIC_REF: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
+  CENTRALIZED_ASSETS_PROSE_HUMAN_REF: $GRP_KO_VAR_CENTRALIZED_ASSETS_PROSE_HUMAN_REF
   AUTOMATION_REF: $GRP_KO_VAR_AUTOMATION_REF
   PROSE_SPEC_REF: $GRP_KO_VAR_PROSE_SPEC_REF
-  MISC_REF: $GRP_KO_VAR_MISC_REF
   TOOLS_CONFIGS_REF: $GRP_KO_VAR_TOOLS_CONFIGS_REF
   AI_TOOLS_CONFIGS_REF: $GRP_KO_VAR_AI_TOOLS_CONFIGS_REF
   CHE_PACKAGES_REF: $GRP_KO_VAR_CHE_PACKAGES_REF
@@ -49,6 +64,10 @@ variables:
 
 .base:
   image: $CI_IMAGE
+  #[why] rendered here, outside make: under MK_DRY_RUN the recipe wrapper prints `generic-setup`
+  #   instead of running it, so the dry-run jobs would never get generic.mk and fail on its targets
+  before_script:
+    - che render-templates --profiles=genericSetup
   ##[>] 🤖🤖
   variables:
     #[why] set but deliberately never cached: it holds downloaded dependencies, and cache: here
@@ -73,6 +92,7 @@ variables:
   variables:
     CI_USER: ko
   before_script:
+    - che render-templates --profiles=genericSetup
     #[why] ci-linux carries no user (ko moved to the sandbox image): create it here for the as-user apply
     - useradd -m -s /bin/zsh -G root "$CI_USER" && echo "$CI_USER ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/$CI_USER"
     - chown -R "$CI_USER" "$CI_PROJECT_DIR"
@@ -80,31 +100,27 @@ variables:
     - mkdir -p "$GOPATH/bin" "$GOPATH/pkg" && chown -R "$CI_USER" "$GOPATH"
   ##[<] 🤖🤖
 
-validate-pre-commit-all:
+#[why] render secrets dry: the verify renders every tracked template and CI holds no vault credential
+generic:files-tracked-verify:
   extends: .base
   tags:
     - gke-linux-amd64-small
-  stage: validate
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - .gitlab-ci.yml
-        - .che/**/*
-        - Makefile
-        - lefthook.yml
-        - .repo/*.tpl
-        - .repo/deps-graph.yml
-        - .repo/upstream.yml
-        - .repo/upstream.env
-        - assets/**/*
-        - ci/**/*
-        - profiles/**/*
-        - README.md
   variables:
     MK_DRY_RUN_RENDER_SECRETS: "true"
-  script:
-    - make repo-ci-run-precommit-all
-    - git diff --exit-code HEAD
+
+generic:precommit-changed:
+  extends: .base
+  tags:
+    - gke-linux-amd64-small
+  variables:
+    MK_DRY_RUN_RENDER_SECRETS: "true"
+
+generic:precommit-all:
+  extends: .base
+  tags:
+    - gke-linux-amd64-small
+  variables:
+    MK_DRY_RUN_RENDER_SECRETS: "true"
 
 .linux-sync:
   extends: .as-user
@@ -124,7 +140,7 @@ validate-pre-commit-all:
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
-    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,PROSE_ASSETS_REF,PROSE_SPEC_REF,MISC_REF,TOOLS_CONFIGS_REF,AI_TOOLS_CONFIGS_REF,OCI_IMAGES_CI_LINUX_REF,CHE_SCHEMA_REF,AUTOMATION_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
+    - sudo -u "$CI_USER" --preserve-env=CI,CI_PIPELINE_SOURCE,CHE_PROFILE,CHE_DEBUG,CHE_VALIDATE_SPEC,CHE_PACKAGES_REF,CENTRALIZED_ASSETS_GENERIC_REF,CENTRALIZED_ASSETS_PROSE_HUMAN_REF,PROSE_SPEC_REF,TOOLS_CONFIGS_REF,AI_TOOLS_CONFIGS_REF,OCI_IMAGES_CI_LINUX_REF,CHE_SCHEMA_REF,AUTOMATION_REF,CHE_BACKUP_AUTO_CREATE,MK_DRY_RUN,MK_DRY_RUN_RENDER_SECRETS,GITLAB_TOKEN,GOMODCACHE,GOCACHE,CC,GOPATH make -C "$CI_PROJECT_DIR" sync-full
   ##[<] 🤖🤖
 
 dry-run-apply-linux:
@@ -210,27 +226,5 @@ apply-macos-cli:
         - .che/**/*
         - .gitlab-ci.yml
 
-##[>] 🤖🤖
-#[why] a merge to the default branch is the release event: mint the next semver tag so consumers can
-#   pin a version instead of tracking a moving branch. tag only, no release object: nothing here ships
-#   an artifact
-tag-mint:
-  tags:
-    - gke-linux-amd64-small
-  stage: release
-  image: $CI_IMAGE
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:
-        - assets/**/*
-        - ci/**/*
-        - profiles/**/*
-        - .che/**/*
-        - Makefile
-  variables:
-    GIT_DEPTH: "0"
-    TAG_TOKEN: $REPO_PROTECTED_VAR_BOT_TAG_TOKEN
-  script:
-    - make tag-mint
 
 ##[<] 🤖🤖

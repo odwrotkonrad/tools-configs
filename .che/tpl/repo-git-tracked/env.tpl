@@ -2,7 +2,9 @@ PATH=$PWD/ci/zsh/scripts:$PWD/ci/zsh/scripts/installs:$PATH
 MK_DRY_RUN=
 MK_DRY_RUN_RENDER_SECRETS=
 ##[>] 🤖🤖
-{{ localFile ".repo/upstream.env" | alwaysUpdate }}
+##[>] dependencies
+{{ localFile ".repo/upstream.env" | dependency }}
+##[<] dependencies
 TOOLS_CONFIGS_REF={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_TOOLS_CONFIGS_REF" }}
 ARTIFACT_REGISTRY={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_ARTIFACT_REGISTRY" }}
 CHE_BACKUP_AUTO_CREATE=
