@@ -144,7 +144,9 @@ generic:precommit-all:
   needs: []
   parallel:
     matrix:
-      - ARCH: [amd64, arm64]
+      - ARCH:
+          - amd64
+          - arm64
   script:
     #[why] CHE_PACKAGES_REF on the list: sudo drops every variable it does not name, so the group's
     #   catalog pin never reached che and the job silently resolved latest instead of the pin
@@ -214,7 +216,9 @@ dry-run-apply-macos:
     MK_DRY_RUN: all
   parallel:
     matrix:
-      - CHE_PROFILE: [desktop/macos, cli/macos]
+      - CHE_PROFILE:
+          - desktop/macos
+          - cli/macos
   needs: []
 
 apply-macos-cli:
