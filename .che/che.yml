@@ -1,14 +1,27 @@
 # yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
 specsInclude:
+  - url: gitlab.com/konradodwrot/centralized/assets/generic
+    ref: "${{ var.CENTRALIZED_ASSETS_GENERIC_REF }}"
+    specDirPath: consumer-repo-config
+    variables:
+      repo: tools-configs
   - "."
   - .che/repo-git-tracked
-  - specDirPath: ./shared/generic/che
-    optional: true
 
 #[why] os-agnostic and ungated, like ontoRepo: indexing reads dirs already on disk, so `make
 #   host-index-workspace` refreshes the workspace map with no credential and no network
 profilesDefinitions:
+  generic/env:
+    type: repo-git-untracked
+    include:
+      renderTemplates:
+        - source: tpl/repo-git-tracked/env.tpl
+          dest:
+            - path: .env
+              options:
+                writeType: mergeUpsert
+
   indexWorkspace:
     type: host
     include:
@@ -16,46 +29,18 @@ profilesDefinitions:
         - specDirPath: ./profiles/gitlab
           profileName: gitlab/projects-index
 
-  genericSetup:
-    type: repo-git-untracked
-    include:
-      profiles:
-        - url: https://gitlab.com/konradodwrot/centralized/assets/generic
-          ref: "${{ var.CENTRALIZED_ASSETS_GENERIC_REF }}"
-          specDirPath: consumer-repo-config
-          profileName: setup
-          variables:
-            repo: tools-configs
-
 variablesDefinitions:
+  all: {scope: recursiveSpecsAndProfiles, required: true}
   specVariablesDefinitions:
-    CENTRALIZED_ASSETS_PROSE_AI_REF: {required: true, scope: recursiveSpecsAndProfiles}
-    CENTRALIZED_ASSETS_PROSE_COMMON_REF: {required: true, scope: recursiveSpecsAndProfiles}
-    AI_TOOLS_CONFIGS_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    AUTOMATION_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    CENTRALIZED_ASSETS_GENERIC_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    CENTRALIZED_ASSETS_PROSE_HUMAN_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    CHE_PACKAGES_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    CHE_SCHEMA_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    GO_MODULES_CHE_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    OCI_IMAGES_CI_LINUX_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
-    PROSE_SPEC_REF:
-      required: true
-      scope: recursiveSpecsAndProfiles
+    AI_TOOLS_CONFIGS_REF: null
+    AUTOMATION_REF: null
+    CENTRALIZED_ASSETS_GENERIC_REF: null
+    CENTRALIZED_ASSETS_PROSE_AI_REF: null
+    CENTRALIZED_ASSETS_PROSE_COMMON_REF: null
+    CENTRALIZED_ASSETS_PROSE_HUMAN_REF: null
+    CHE_PACKAGES_REF: null
+    CHE_SCHEMA_REF: null
+    GO_MODULES_CHE_REF: null
+    OCI_IMAGES_CI_LINUX_REF: null
+    PROSE_SPEC_REF: null
 ##[<] 🤖🤖
